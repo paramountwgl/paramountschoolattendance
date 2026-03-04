@@ -11,7 +11,6 @@
         :root { --forest: #006633; --gold: #ffd700; }
         body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; margin: 0; padding: 0; }
         
-        /* HEADER: Logo left, Name and Subtext centered next to it */
         header { 
             background: var(--forest); 
             color: white; 
@@ -22,20 +21,9 @@
             gap: 20px;
         }
         .logo-img { height: 85px; width: auto; display: block; }
-        
         .school-info { text-align: left; }
-        .school-name { 
-            font-size: 2.2rem; 
-            font-weight: 900; 
-            margin: 0;
-            white-space: nowrap; 
-        }
-        .school-tagline { 
-            font-size: 1.1rem; 
-            opacity: 0.9; 
-            margin-top: 5px; 
-            font-weight: 500;
-        }
+        .school-name { font-size: 2.2rem; font-weight: 900; margin: 0; white-space: nowrap; }
+        .school-tagline { font-size: 1.1rem; opacity: 0.9; margin-top: 5px; font-weight: 500; }
 
         .container { max-width: 500px; margin: 20px auto; padding: 15px; }
         .card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
@@ -50,14 +38,13 @@
         .excel-btn { background: #1D6F42; color: white; }
         .whatsapp-btn { background: #25D366; color: white; }
 
-        /* Hidden Export Table Styles for Excel formatting */
         #exportTableWrapper { display: none; }
     </style>
 </head>
 <body>
 
 <header>
-    <img src="logo.png" alt="Logo" class="logo-img" onerror="this.style.display='none'">
+    <img src="logo.png" alt="Logo" class="logo-img" id="webLogo" onerror="this.style.display='none'">
     <div class="school-info">
         <h1 class="school-name">PARAMOUNT ENGLISH MEDIUM SCHOOL</h1>
         <p class="school-tagline">Teachers Official Attendance Portal</p>
@@ -99,8 +86,13 @@
 <div id="exportTableWrapper">
     <table id="attendanceExcelTable" border="1">
         <thead>
+            <tr>
+                <th colspan="4" style="text-align: center; background-color: #ffffff; height: 80pt;">
+                    <img id="excelLogo" width="100" height="100">
+                </th>
+            </tr>
             <tr style="background-color: #006633; color: #ffffff;">
-                <th colspan="4" style="font-size: 20pt; height: 50pt; text-align: center;">PARAMOUNT ENGLISH MEDIUM SCHOOL</th>
+                <th colspan="4" style="font-size: 20pt; height: 40pt; text-align: center;">PARAMOUNT ENGLISH MEDIUM SCHOOL</th>
             </tr>
             <tr style="background-color: #ffd700;">
                 <th colspan="4" style="font-size: 14pt; text-align: center;">TEACHERS OFFICIAL ATTENDANCE PORTAL</th>
@@ -130,19 +122,26 @@ const schoolData = {
     "9th-B": ["Shaik Minhaj Ali", "Sana Khan", "Aryan Raj"]
 };
 
+// Convert logo to Base64 so Excel can see it
+function prepareExcelLogo() {
+    const img = document.getElementById('webLogo');
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.height = img.naturalHeight;
+    canvas.width = img.naturalWidth;
+    ctx.drawImage(img, 0, 0);
+    const dataURL = canvas.toDataURL('image/png');
+    document.getElementById('excelLogo').src = dataURL;
+}
+
 function generateList() {
     const cls = document.getElementById('classSelect').value;
     const listDiv = document.getElementById('listContainer');
     const reportBox = document.getElementById('reportSection');
     listDiv.innerHTML = "";
-    
     if (schoolData[cls]) {
         schoolData[cls].forEach(name => {
-            listDiv.innerHTML += `
-                <div class="student-row">
-                    <span class="name-text" style="font-weight: 600;">${name}</span>
-                    <input type="checkbox" class="present-toggle" checked onchange="updateStats()">
-                </div>`;
+            listDiv.innerHTML += `<div class="student-row"><span class="name-text" style="font-weight: 600;">${name}</span><input type="checkbox" class="present-toggle" checked onchange="updateStats()"></div>`;
         });
         reportBox.style.display = "block";
     } else { reportBox.style.display = "none"; }
@@ -154,6 +153,9 @@ function exportToExcel() {
     const dateStr = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
 
     if(!teacher || !cls) return alert("Select Teacher and Class First!");
+
+    // Convert logo for Excel embed
+    prepareExcelLogo();
 
     document.getElementById('xl-date').innerText = "Date: " + dateStr;
     document.getElementById('xl-teacher').innerText = "Teacher: " + teacher;
@@ -168,18 +170,16 @@ function exportToExcel() {
         const status = isPresent ? "PRESENT" : "ABSENT";
         const color = isPresent ? "#c8e6c9" : "#ffcdd2";
 
-        xlBody.innerHTML += `
-            <tr>
-                <td style="text-align: center;">${index + 1}</td>
-                <td>${name}</td>
-                <td style="text-align: center; background-color: ${color}; font-weight: bold;">${status}</td>
-                <td></td>
-            </tr>`;
+        xlBody.innerHTML += `<tr><td style="text-align: center;">${index + 1}</td><td>${name}</td><td style="text-align: center; background-color: ${color}; font-weight: bold;">${status}</td><td></td></tr>`;
     });
 
     const table = document.getElementById("attendanceExcelTable");
     const html = table.outerHTML;
-    const url = 'data:application/vnd.ms-excel,' + encodeURIComponent(html);
+    
+    // Professional Excel Header for styled download
+    const template = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head></head><body>${html}</body></html>`;
+
+    const url = 'data:application/vnd.ms-excel;base64,' + window.btoa(unescape(encodeURIComponent(template)));
     const link = document.createElement("a");
     link.download = `Attendance_${cls}_${dateStr.replace(/ /g, '-')}.xls`;
     link.href = url;
