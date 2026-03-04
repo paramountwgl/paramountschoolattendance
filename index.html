@@ -2,14 +2,9 @@
 <html lang="en">
 <head>
     <meta name="google-site-verification" content="HfUz-EU1H47JaSu4YL5FQYaeUnSfoJA8MHfD1PR1kZk" />
-    <head>
-    
     <meta name="description" content="Official Attendance Portal for Paramount English Medium School. Teachers can mark attendance and export to Excel.">
-    <meta name="keywords" content="Paramount English Medium School, Paramount Attendance, School Attendance Portal">
+    <meta name="keywords" content="Paramouant English Medium School, Paramount Attendance, School Attendance Portal">
     <meta name="author" content="Shaik Tauseef Ali">
-    
-    <title>Paramount English Medium School | Attendance Portal</title>
-</head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Paramount School | Teachers Portal</title>
@@ -43,6 +38,11 @@
         
         .student-row { display: flex; justify-content: space-between; align-items: center; padding: 15px 5px; border-bottom: 1px solid #f0f0f0; }
         .name-text { font-weight: 600; font-size: 16px; }
+        .percent-badge { font-size: 12px; padding: 3px 8px; border-radius: 10px; margin-left: 10px; font-weight: bold; }
+        .percent-good { background: #e8f5e9; color: #2e7d32; }
+        .percent-bad { background: #ffebee; color: #c62828; }
+        .percent-new { background: #f0f0f0; color: #666; }
+        
         .present-toggle { width: 28px; height: 28px; accent-color: var(--forest); cursor: pointer; }
 
         .submit-btn, .reset-btn { 
@@ -124,12 +124,12 @@
 <div id="exportTableWrapper">
     <table id="attendanceExcelTable" border="1" style="border-collapse: collapse;">
         <thead>
-            <tr><th colspan="4" style="background-color: #006633; color: #ffffff; font-size: 18pt; height: 45pt; text-align: center;">PARAMOUNT ENGLISH MEDIUM SCHOOL</th></tr>
-            <tr><th colspan="4" style="background-color: #ffd700; color: #000000; font-size: 12pt; height: 25pt; text-align: center;">TEACHERS OFFICIAL ATTENDANCE PORTAL</th></tr>
-            <tr><th colspan="2" id="xl-date" style="text-align: left; padding: 5px;">Date: </th><th colspan="2" id="xl-teacher" style="text-align: left; padding: 5px;">Teacher: </th></tr>
-            <tr><th colspan="2" id="xl-class" style="text-align: left; padding: 5px;">Class: </th><th colspan="2" style="text-align: left; padding: 5px;">Status: FINALIZED</th></tr>
+            <tr><th colspan="5" style="background-color: #006633; color: #ffffff; font-size: 18pt; height: 45pt; text-align: center;">PARAMOUNT ENGLISH MEDIUM SCHOOL</th></tr>
+            <tr><th colspan="5" style="background-color: #ffd700; color: #000000; font-size: 12pt; height: 25pt; text-align: center;">TEACHERS OFFICIAL ATTENDANCE PORTAL</th></tr>
+            <tr><th colspan="3" id="xl-date" style="text-align: left; padding: 5px;">Date: </th><th colspan="2" id="xl-teacher" style="text-align: left; padding: 5px;">Teacher: </th></tr>
+            <tr><th colspan="3" id="xl-class" style="text-align: left; padding: 5px;">Class: </th><th colspan="2" style="text-align: left; padding: 5px;">Status: FINALIZED</th></tr>
             <tr style="background-color: #eeeeee; font-weight: bold;">
-                <th style="width: 50px;">S.No</th><th style="width: 250px;">STUDENT NAME</th><th style="width: 100px;">STATUS</th><th style="width: 150px;">REMARKS</th>
+                <th style="width: 50px;">S.No</th><th style="width: 250px;">STUDENT NAME</th><th style="width: 100px;">STATUS</th><th style="width: 120px;">OVERALL %</th><th style="width: 150px;">REMARKS</th>
             </tr>
         </thead>
         <tbody id="xl-body"></tbody>
@@ -137,26 +137,58 @@
 </div>
 
 <script>
+// Base student list
 const schoolData = {
     "10th-A": ["Shaik Tauseef Ali", "Rahul Sharma", "Zoya Khan", "Abhishek Das"],
     "9th-B": ["Shaik Minhaj Ali", "Sana Khan", "Aryan Raj"]
 };
+
+// Initialize LocalStorage for tracking Attendance Percentages
+let attendanceRecords = JSON.parse(localStorage.getItem('paramountAttendance'));
+
+if (!attendanceRecords) {
+    attendanceRecords = {};
+    for (let cls in schoolData) {
+        attendanceRecords[cls] = {};
+        schoolData[cls].forEach(name => {
+            attendanceRecords[cls][name] = { presentDays: 0, totalDays: 0 };
+        });
+    }
+    localStorage.setItem('paramountAttendance', JSON.stringify(attendanceRecords));
+}
 
 function generateList() {
     const cls = document.getElementById('classSelect').value;
     const listDiv = document.getElementById('listContainer');
     const submitBtn = document.getElementById('submitBtn');
     listDiv.innerHTML = "";
+    
     if (schoolData[cls]) {
         schoolData[cls].forEach(name => {
+            // Calculate current percentage
+            const stats = attendanceRecords[cls][name];
+            let percentText = "New";
+            let badgeClass = "percent-new";
+            
+            if (stats && stats.totalDays > 0) {
+                const percent = Math.round((stats.presentDays / stats.totalDays) * 100);
+                percentText = percent + "%";
+                badgeClass = percent >= 50 ? "percent-good" : "percent-bad";
+            }
+
             listDiv.innerHTML += `
-                <div class="student-row">
-                    <span class="name-text">${name}</span>
+                <div class="student-row" data-name="${name}">
+                    <div>
+                        <span class="name-text">${name}</span>
+                        <span class="percent-badge ${badgeClass}">${percentText}</span>
+                    </div>
                     <input type="checkbox" class="present-toggle" checked>
                 </div>`;
         });
         submitBtn.style.display = "flex";
-    } else { submitBtn.style.display = "none"; }
+    } else { 
+        submitBtn.style.display = "none"; 
+    }
 }
 
 function submitAttendance() {
@@ -176,12 +208,37 @@ function submitAttendance() {
     document.getElementById('xl-class').innerText = "Class: " + cls;
     const xlBody = document.getElementById('xl-body');
     xlBody.innerHTML = "";
+
     document.querySelectorAll('.student-row').forEach((row, index) => {
-        const name = row.querySelector('.name-text').innerText;
-        const status = row.querySelector('.present-toggle').checked ? "PRESENT" : "ABSENT";
-        const color = row.querySelector('.present-toggle').checked ? "#c8e6c9" : "#ffcdd2";
-        xlBody.innerHTML += `<tr><td style="text-align: center;">${index+1}</td><td>${name}</td><td style="text-align: center; background-color: ${color}; font-weight: bold;">${status}</td><td></td></tr>`;
+        const name = row.getAttribute('data-name');
+        const isPresent = row.querySelector('.present-toggle').checked;
+        
+        // Update LocalStorage Data
+        if (attendanceRecords[cls][name]) {
+            attendanceRecords[cls][name].totalDays += 1;
+            if (isPresent) {
+                attendanceRecords[cls][name].presentDays += 1;
+            }
+        }
+
+        // Calculate New Percentage for Excel
+        const stats = attendanceRecords[cls][name];
+        const newPercent = Math.round((stats.presentDays / stats.totalDays) * 100) + "%";
+
+        // Setup Excel Row
+        const status = isPresent ? "PRESENT" : "ABSENT";
+        const color = isPresent ? "#c8e6c9" : "#ffcdd2";
+        xlBody.innerHTML += `<tr>
+            <td style="text-align: center;">${index+1}</td>
+            <td>${name}</td>
+            <td style="text-align: center; background-color: ${color}; font-weight: bold;">${status}</td>
+            <td style="text-align: center; font-weight: bold;">${newPercent}</td>
+            <td></td>
+        </tr>`;
     });
+
+    // Save updated data to browser storage
+    localStorage.setItem('paramountAttendance', JSON.stringify(attendanceRecords));
 
     // Excel Download
     const html = document.getElementById("attendanceExcelTable").outerHTML;
@@ -193,7 +250,6 @@ function submitAttendance() {
 }
 
 function resetForm() {
-    // Reset inputs and show form again
     document.getElementById('teacherName').value = "";
     document.getElementById('classSelect').value = "";
     document.getElementById('listContainer').innerHTML = "";
@@ -205,8 +261,3 @@ function resetForm() {
 </script>
 </body>
 </html>
-
-
-
-
-
