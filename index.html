@@ -11,25 +11,20 @@
         :root { --forest: #006633; --gold: #ffd700; }
         body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; margin: 0; padding: 0; }
         
-        /* HEADER WITH LOGO FIX */
+        /* UPDATED HEADER: Logo on the left, Name on the right */
         header { 
             background: var(--forest); 
             color: white; 
-            padding: 20px; 
-            text-align: center; 
+            padding: 20px 5%; 
             display: flex; 
-            flex-direction: column; 
+            justify-content: center; 
             align-items: center; 
-            gap: 10px;
+            gap: 20px;
         }
-        .school-logo {
-            height: 80px;
-            width: auto;
-            background: white;
-            padding: 5px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
+        .logo-img { height: 75px; width: auto; display: block; }
+        .school-name-box { display: flex; flex-direction: column; text-align: left; }
+        .name-main { font-size: 1.4rem; font-weight: 900; line-height: 1.2; }
+        .name-sub { font-size: 0.8rem; font-weight: 700; letter-spacing: 1px; opacity: 0.9; }
 
         .container { max-width: 500px; margin: 20px auto; padding: 15px; }
         .card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
@@ -41,7 +36,7 @@
 
         .summary-report { background: #e8f5e9; padding: 20px; border-radius: 12px; margin-top: 25px; display: none; text-align: center; }
         .stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-        .stat-item { background: white; padding: 10px; border-radius: 8px; font-weight: bold; }
+        .stat-item { background: white; padding: 10px; border-radius: 8px; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
         
         .action-btn { 
             border: none; padding: 15px; border-radius: 35px; width: 100%; 
@@ -50,31 +45,37 @@
         }
         .excel-btn { background: #1D6F42; color: white; }
         .whatsapp-btn { background: #25D366; color: white; }
+
+        @media (max-width: 600px) {
+            header { gap: 10px; }
+            .logo-img { height: 60px; }
+            .name-main { font-size: 1.1rem; }
+            .name-sub { font-size: 0.65rem; }
+        }
     </style>
 </head>
 <body>
 
-<header id="home">
-    <div class="logo-container">
-        <img src="logo.png" alt="Logo" class="logo-img">
-        <div class="school-name-box">
-            <span class="name-main">PARAMOUNT</span>
-            <span class="name-sub">ENGLISH MEDIUM SCHOOL</span>
-        </div>
+<header>
+    <img src="logo.png" alt="Logo" class="logo-img" onerror="this.style.display='none'">
+    <div class="school-name-box">
+        <span class="name-main">PARAMOUNT</span>
+        <span class="name-sub">ENGLISH MEDIUM SCHOOL</span>
     </div>
+</header>
 
 <div class="container">
     <div class="card">
         <h2>Mark Attendance</h2>
         
-        <label>Teacher Name</label>
+        <label style="font-size: 12px; font-weight: bold; color: #666;">Teacher Name</label>
         <select id="teacherName">
             <option value="">-- Select Teacher --</option>
             <option value="Mr. Shaik Ahmad">Mr. Shaik Ahmad</option>
             <option value="Ms. Geethika">Ms. Geethika</option>
         </select>
 
-        <label>Class</label>
+        <label style="font-size: 12px; font-weight: bold; color: #666;">Class</label>
         <select id="classSelect" onchange="generateList()">
             <option value="">-- Choose Class --</option>
             <option value="10th-A">10th Grade - A</option>
@@ -184,4 +185,3 @@ function openWhatsApp() {
 </script>
 </body>
 </html>
-
