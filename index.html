@@ -11,7 +11,6 @@
         :root { --forest: #006633; --gold: #ffd700; }
         body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; margin: 0; padding: 0; }
         
-        /* HEADER: Restored to your preferred layout with logo left and large name */
         header { 
             background: var(--forest); 
             color: white; 
@@ -37,12 +36,23 @@
         .name-text { font-weight: 600; font-size: 16px; }
         .present-toggle { width: 28px; height: 28px; accent-color: var(--forest); cursor: pointer; }
 
-        /* ONE-CLICK SUBMIT BUTTON */
         .submit-btn { 
             background: #1D6F42; color: white; border: none; padding: 18px; 
             border-radius: 35px; width: 100%; font-weight: bold; font-size: 16px; 
             cursor: pointer; margin-top: 25px; display: none; align-items: center; 
             justify-content: center; gap: 10px;
+        }
+
+        /* THANK YOU MESSAGE STYLING */
+        #thankYouMessage {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            background: #e8f5e9;
+            color: #2e7d32;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-weight: bold;
         }
 
         @media (max-width: 768px) {
@@ -66,7 +76,7 @@
 </header>
 
 <div class="container">
-    <div class="card">
+    <div class="card" id="mainCard">
         <h2>Mark Attendance</h2>
         
         <label>Teacher Name</label>
@@ -86,8 +96,14 @@
         <div id="listContainer"></div>
 
         <button id="submitBtn" class="submit-btn" onclick="submitAttendance()">
-            <i class="fas fa-file-excel"></i> Submit & Download Excel
+            <i class="fas fa-file-excel"></i> Submit Attendance
         </button>
+
+        <div id="thankYouMessage">
+            <i class="fas fa-check-circle" style="font-size: 24px; margin-bottom: 10px;"></i><br>
+            Thank you for submitting!<br>
+            <span style="font-size: 12px; font-weight: normal;">Your Excel report is downloading...</span>
+        </div>
     </div>
 </div>
 
@@ -129,7 +145,10 @@ function generateList() {
     const cls = document.getElementById('classSelect').value;
     const listDiv = document.getElementById('listContainer');
     const submitBtn = document.getElementById('submitBtn');
+    const thanks = document.getElementById('thankYouMessage');
+    
     listDiv.innerHTML = "";
+    thanks.style.display = "none"; // Hide message if changing class
     
     if (schoolData[cls]) {
         schoolData[cls].forEach(name => {
@@ -151,7 +170,11 @@ function submitAttendance() {
 
     if(!teacher || !cls) return alert("Select Teacher and Class First!");
 
-    // Update Hidden Table Info
+    // Display Thank You Message
+    document.getElementById('submitBtn').style.display = "none";
+    document.getElementById('thankYouMessage').style.display = "block";
+
+    // Prepare Hidden Table for Export
     document.getElementById('xl-date').innerText = "Date: " + dateStr;
     document.getElementById('xl-teacher').innerText = "Teacher: " + teacher;
     document.getElementById('xl-class').innerText = "Class: " + cls;
@@ -174,22 +197,7 @@ function submitAttendance() {
             </tr>`;
     });
 
-    // MOBILE OPTIMIZED EXPORT METHOD
+    // Mobile Optimized Download Method
     const table = document.getElementById("attendanceExcelTable");
     const html = table.outerHTML;
-    
-    // Using Blob with proper MIME type for better mobile file handling
-    const template = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
-    <head><meta charset="UTF-8"></head>
-    <body>${html}</body></html>`;
-
-    const blob = new Blob([template], { type: 'application/vnd.ms-excel' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `Attendance_${cls}_${dateStr.replace(/ /g, '-')}.xls`;
-    link.click();
-}
-</script>
-</body>
-</html>
+    const template = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="
