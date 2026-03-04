@@ -149,9 +149,12 @@ let attendanceRecords = JSON.parse(localStorage.getItem('paramountAttendance'));
 if (!attendanceRecords) {
     attendanceRecords = {};
     for (let cls in schoolData) {
-        attendanceRecords[cls] = {};
+        attendanceRecords[cls] = { 
+            lastSubmittedDate: null, 
+            students: {} 
+        };
         schoolData[cls].forEach(name => {
-            attendanceRecords[cls][name] = { presentDays: 0, totalDays: 0 };
+            attendanceRecords[cls].students[name] = { presentDays: 0, totalDays: 0 };
         });
     }
     localStorage.setItem('paramountAttendance', JSON.stringify(attendanceRecords));
@@ -160,104 +163,4 @@ if (!attendanceRecords) {
 function generateList() {
     const cls = document.getElementById('classSelect').value;
     const listDiv = document.getElementById('listContainer');
-    const submitBtn = document.getElementById('submitBtn');
-    listDiv.innerHTML = "";
-    
-    if (schoolData[cls]) {
-        schoolData[cls].forEach(name => {
-            // Calculate current percentage
-            const stats = attendanceRecords[cls][name];
-            let percentText = "New";
-            let badgeClass = "percent-new";
-            
-            if (stats && stats.totalDays > 0) {
-                const percent = Math.round((stats.presentDays / stats.totalDays) * 100);
-                percentText = percent + "%";
-                badgeClass = percent >= 50 ? "percent-good" : "percent-bad";
-            }
-
-            listDiv.innerHTML += `
-                <div class="student-row" data-name="${name}">
-                    <div>
-                        <span class="name-text">${name}</span>
-                        <span class="percent-badge ${badgeClass}">${percentText}</span>
-                    </div>
-                    <input type="checkbox" class="present-toggle" checked>
-                </div>`;
-        });
-        submitBtn.style.display = "flex";
-    } else { 
-        submitBtn.style.display = "none"; 
-    }
-}
-
-function submitAttendance() {
-    const teacher = document.getElementById('teacherName').value;
-    const cls = document.getElementById('classSelect').value;
-    const dateStr = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
-
-    if(!teacher || !cls) return alert("Select Teacher and Class First!");
-
-    // Hide input form and show Thank You section
-    document.getElementById('formContent').style.display = "none";
-    document.getElementById('thankYouSection').style.display = "block";
-
-    // Prepare Hidden Table
-    document.getElementById('xl-date').innerText = "Date: " + dateStr;
-    document.getElementById('xl-teacher').innerText = "Teacher: " + teacher;
-    document.getElementById('xl-class').innerText = "Class: " + cls;
-    const xlBody = document.getElementById('xl-body');
-    xlBody.innerHTML = "";
-
-    document.querySelectorAll('.student-row').forEach((row, index) => {
-        const name = row.getAttribute('data-name');
-        const isPresent = row.querySelector('.present-toggle').checked;
-        
-        // Update LocalStorage Data
-        if (attendanceRecords[cls][name]) {
-            attendanceRecords[cls][name].totalDays += 1;
-            if (isPresent) {
-                attendanceRecords[cls][name].presentDays += 1;
-            }
-        }
-
-        // Calculate New Percentage for Excel
-        const stats = attendanceRecords[cls][name];
-        const newPercent = Math.round((stats.presentDays / stats.totalDays) * 100) + "%";
-
-        // Setup Excel Row
-        const status = isPresent ? "PRESENT" : "ABSENT";
-        const color = isPresent ? "#c8e6c9" : "#ffcdd2";
-        xlBody.innerHTML += `<tr>
-            <td style="text-align: center;">${index+1}</td>
-            <td>${name}</td>
-            <td style="text-align: center; background-color: ${color}; font-weight: bold;">${status}</td>
-            <td style="text-align: center; font-weight: bold;">${newPercent}</td>
-            <td></td>
-        </tr>`;
-    });
-
-    // Save updated data to browser storage
-    localStorage.setItem('paramountAttendance', JSON.stringify(attendanceRecords));
-
-    // Excel Download
-    const html = document.getElementById("attendanceExcelTable").outerHTML;
-    const blob = new Blob([`<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="UTF-8"></head><body>${html}</body></html>`], { type: 'application/vnd.ms-excel' });
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = `Attendance_${cls}_${dateStr.replace(/ /g, '-')}.xls`;
-    setTimeout(() => link.click(), 500);
-}
-
-function resetForm() {
-    document.getElementById('teacherName').value = "";
-    document.getElementById('classSelect').value = "";
-    document.getElementById('listContainer').innerHTML = "";
-    document.getElementById('submitBtn').style.display = "none";
-    
-    document.getElementById('thankYouSection').style.display = "none";
-    document.getElementById('formContent').style.display = "block";
-}
-</script>
-</body>
-</html>
+    const submitBtn =
