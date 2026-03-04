@@ -11,20 +11,30 @@
         :root { --forest: #006633; --gold: #ffd700; }
         body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; margin: 0; padding: 0; }
         
-        /* UPDATED HEADER: Logo on the left, Name on the right */
+        /* UPDATED HEADER: Single line name, Big size, Logo on left */
         header { 
             background: var(--forest); 
             color: white; 
-            padding: 20px 5%; 
+            padding: 30px 5%; 
             display: flex; 
             justify-content: center; 
             align-items: center; 
             gap: 20px;
         }
-        .logo-img { height: 75px; width: auto; display: block; }
-        .school-name-box { display: flex; flex-direction: column; text-align: left; }
-        .name-main { font-size: 1.4rem; font-weight: 900; line-height: 1.2; }
-        .name-sub { font-size: 0.8rem; font-weight: 700; letter-spacing: 1px; opacity: 0.9; }
+        .logo-img { height: 85px; width: auto; display: block; }
+        
+        .school-info { text-align: left; }
+        .school-name { 
+            font-size: 2.2rem; /* Big size as before */
+            font-weight: 900; 
+            margin: 0;
+            white-space: nowrap; /* Forces single line */
+        }
+        .school-tagline { 
+            font-size: 1rem; 
+            opacity: 0.9; 
+            margin-top: 5px; 
+        }
 
         .container { max-width: 500px; margin: 20px auto; padding: 15px; }
         .card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
@@ -46,11 +56,11 @@
         .excel-btn { background: #1D6F42; color: white; }
         .whatsapp-btn { background: #25D366; color: white; }
 
-        @media (max-width: 600px) {
-            header { gap: 10px; }
-            .logo-img { height: 60px; }
-            .name-main { font-size: 1.1rem; }
-            .name-sub { font-size: 0.65rem; }
+        /* Responsive adjustment for mobile screens */
+        @media (max-width: 768px) {
+            header { flex-direction: column; text-align: center; gap: 10px; padding: 20px; }
+            .school-name { font-size: 1.5rem; white-space: normal; }
+            .school-info { text-align: center; }
         }
     </style>
 </head>
@@ -58,9 +68,9 @@
 
 <header>
     <img src="logo.png" alt="Logo" class="logo-img" onerror="this.style.display='none'">
-    <div class="school-name-box">
-        <span class="name-main">PARAMOUNT</span>
-        <span class="name-sub">ENGLISH MEDIUM SCHOOL</span>
+    <div class="school-info">
+        <h1 class="school-name">PARAMOUNT ENGLISH MEDIUM SCHOOL</h1>
+        <p class="school-tagline">Attendance to Excel Portal</p>
     </div>
 </header>
 
@@ -174,7 +184,7 @@ function openWhatsApp() {
     const present = document.getElementById('countPresent').innerText;
     const absent = document.getElementById('countAbsent').innerText;
 
-    const msg = `*PARAMOUNT SCHOOL ATTENDANCE*%0A` +
+    const msg = `*PARAMOUNT SCHOOL ATTENDANCE REPORT*%0A` +
                 `*Teacher:* ${teacher}%0A` +
                 `*Class:* ${cls}%0A` +
                 `*Summary:* Total: ${total}, Present: ${present}, Absent: ${absent}%0A` +
