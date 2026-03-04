@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Paramount School | Teachers Portal</title>
+    <title>Paramount School | Professional Portal</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="icon" type="image/png" href="logo.png">
@@ -11,7 +11,7 @@
         :root { --forest: #006633; --gold: #ffd700; }
         body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; margin: 0; padding: 0; }
         
-        /* HEADER: Logo left, Name and Subtext on right */
+        /* HEADER: Logo left, Name and Subtext centered next to it */
         header { 
             background: var(--forest); 
             color: white; 
@@ -46,21 +46,12 @@
         .present-toggle { width: 25px; height: 25px; accent-color: var(--forest); cursor: pointer; }
 
         .summary-report { background: #e8f5e9; padding: 20px; border-radius: 12px; margin-top: 25px; display: none; text-align: center; }
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-        .stat-item { background: white; padding: 10px; border-radius: 8px; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        
         .action-btn { border: none; padding: 15px; border-radius: 35px; width: 100%; font-weight: bold; font-size: 16px; cursor: pointer; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 10px; }
         .excel-btn { background: #1D6F42; color: white; }
         .whatsapp-btn { background: #25D366; color: white; }
 
         /* Hidden Export Table Styles for Excel formatting */
         #exportTableWrapper { display: none; }
-
-        @media (max-width: 768px) {
-            header { flex-direction: column; text-align: center; gap: 10px; padding: 20px; }
-            .school-name { font-size: 1.5rem; white-space: normal; }
-            .school-info { text-align: center; }
-        }
     </style>
 </head>
 <body>
@@ -94,12 +85,6 @@
         <div id="listContainer"></div>
 
         <div id="reportSection" class="summary-report">
-            <div class="stats-grid">
-                <div class="stat-item">T: <span id="countTotal">0</span></div>
-                <div class="stat-item" style="color: green;">P: <span id="countPresent">0</span></div>
-                <div class="stat-item" style="color: red;">A: <span id="countAbsent">0</span></div>
-            </div>
-
             <button class="action-btn excel-btn" onclick="exportToExcel()">
                 <i class="fas fa-file-excel"></i> 1. Download Professional Excel
             </button>
@@ -160,16 +145,7 @@ function generateList() {
                 </div>`;
         });
         reportBox.style.display = "block";
-        updateStats();
     } else { reportBox.style.display = "none"; }
-}
-
-function updateStats() {
-    const total = document.querySelectorAll('.present-toggle').length;
-    const present = document.querySelectorAll('.present-toggle:checked').length;
-    document.getElementById('countTotal').innerText = total;
-    document.getElementById('countPresent').innerText = present;
-    document.getElementById('countAbsent').innerText = total - present;
 }
 
 function exportToExcel() {
@@ -179,7 +155,6 @@ function exportToExcel() {
 
     if(!teacher || !cls) return alert("Select Teacher and Class First!");
 
-    // Update Hidden Table Info
     document.getElementById('xl-date').innerText = "Date: " + dateStr;
     document.getElementById('xl-teacher').innerText = "Teacher: " + teacher;
     document.getElementById('xl-class').innerText = "Class: " + cls;
@@ -202,7 +177,6 @@ function exportToExcel() {
             </tr>`;
     });
 
-    // Create Excel Download using HTML table method for styling
     const table = document.getElementById("attendanceExcelTable");
     const html = table.outerHTML;
     const url = 'data:application/vnd.ms-excel,' + encodeURIComponent(html);
@@ -215,11 +189,7 @@ function exportToExcel() {
 function openWhatsApp() {
     const teacher = document.getElementById('teacherName').value;
     const cls = document.getElementById('classSelect').value;
-    const total = document.getElementById('countTotal').innerText;
-    const present = document.getElementById('countPresent').innerText;
-    const absent = document.getElementById('countAbsent').innerText;
-
-    const msg = `*PARAMOUNT ATTENDANCE REPORT*%0A*Teacher:* ${teacher}%0A*Class:* ${cls}%0A*Summary:* Total: ${total}, Present: ${present}, Absent: ${absent}%0A_Detailed Excel attached._`;
+    const msg = `*PARAMOUNT ATTENDANCE REPORT*%0A*Teacher:* ${teacher}%0A*Class:* ${cls}%0A_Detailed Excel attached._`;
     window.open(`https://wa.me/919550791538?text=${msg}`, '_blank');
 }
 </script>
