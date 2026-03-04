@@ -200,4 +200,19 @@ function submitAttendance() {
     // Mobile Optimized Download Method
     const table = document.getElementById("attendanceExcelTable");
     const html = table.outerHTML;
-    const template = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="
+    const template = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="UTF-8"></head><body>${html}</body></html>`;
+
+    const blob = new Blob([template], { type: 'application/vnd.ms-excel' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `Attendance_${cls}_${dateStr.replace(/ /g, '-')}.xls`;
+    
+    // Slight delay to ensure UI update before download starts
+    setTimeout(() => {
+        link.click();
+    }, 800);
+}
+</script>
+</body>
+</html>
