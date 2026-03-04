@@ -2,70 +2,40 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Paramount School | Attendance Portal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paramount School | Attendance to Excel</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="icon" type="image/png" href="logo.png">
     <style>
-        :root { --forest: #006633; --gold: #ffd700; --light-bg: #f4f7f6; }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; background: var(--light-bg); color: #333; }
-        
-        header { background: var(--forest); color: white; padding: 25px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        :root { --forest: #006633; --gold: #ffd700; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; margin: 0; padding: 0; }
+        header { background: var(--forest); color: white; padding: 20px; text-align: center; }
         .container { max-width: 500px; margin: 20px auto; padding: 15px; }
-        .card { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        .card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        h2 { color: var(--forest); text-align: center; border-bottom: 2px solid var(--gold); padding-bottom: 10px; }
         
-        h2 { color: var(--forest); text-align: center; border-bottom: 2px solid var(--gold); padding-bottom: 10px; margin-top: 0; }
-        label { display: block; font-size: 11px; font-weight: bold; color: #888; margin: 15px 0 5px; text-transform: uppercase; }
-        
-        select { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #ddd; font-size: 16px; background: #fafafa; outline: none; transition: 0.3s; }
-        select:focus { border-color: var(--forest); }
+        select { width: 100%; padding: 12px; margin: 10px 0 20px; border-radius: 10px; border: 1px solid #ddd; font-size: 16px; }
+        .student-row { display: flex; justify-content: space-between; padding: 12px 5px; border-bottom: 1px solid #f0f0f0; }
+        .present-toggle { width: 25px; height: 25px; accent-color: var(--forest); cursor: pointer; }
 
-        /* Attendance List Styles */
-        #listContainer { margin-top: 25px; border-top: 1px solid #eee; }
-        .student-row { display: flex; justify-content: space-between; align-items: center; padding: 15px 5px; border-bottom: 1px solid #f9f9f9; }
-        .student-name { font-weight: 600; color: #444; }
-        .present-toggle { width: 28px; height: 28px; accent-color: var(--forest); cursor: pointer; }
-
-        /* Calculation Summary Box */
-        .summary-report { 
-            background: #e8f5e9; 
-            padding: 20px; 
-            border-radius: 12px; 
-            margin-top: 25px; 
-            border: 1px solid #c8e6c9;
-            text-align: center;
-            display: none; /* Hidden until class is selected */
-        }
+        .summary-report { background: #e8f5e9; padding: 20px; border-radius: 12px; margin-top: 25px; display: none; text-align: center; }
         .stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-        .stat-item { padding: 10px; background: white; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .stat-item span { display: block; font-size: 10px; color: #888; text-transform: uppercase; }
-        .stat-item strong { font-size: 18px; color: var(--forest); }
-
-        .whatsapp-btn { 
-            background: #25D366; 
-            color: white; 
-            border: none; 
-            padding: 16px; 
-            border-radius: 35px; 
-            width: 100%; 
-            font-weight: bold; 
-            font-size: 16px; 
-            cursor: pointer; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            gap: 10px;
-            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
-            transition: transform 0.2s;
+        .stat-item { background: white; padding: 10px; border-radius: 8px; font-weight: bold; }
+        
+        .action-btn { 
+            border: none; padding: 15px; border-radius: 35px; width: 100%; 
+            font-weight: bold; font-size: 16px; cursor: pointer; margin-bottom: 10px;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
         }
-        .whatsapp-btn:active { transform: scale(0.98); }
+        .excel-btn { background: #1D6F42; color: white; } /* Excel Green */
+        .whatsapp-btn { background: #25D366; color: white; }
     </style>
 </head>
 <body>
 
 <header>
-    <h1 style="margin:0; letter-spacing: 1px;">PARAMOUNT SCHOOL</h1>
-    <p style="margin:5px 0 0; opacity:0.9; font-size: 14px;">Daily Teacher Attendance Portal</p>
+    <h1 style="margin:0;">PARAMOUNT SCHOOL</h1>
+    <p style="margin:5px 0 0; opacity:0.9;">Attendance to Excel Portal</p>
 </header>
 
 <div class="container">
@@ -74,13 +44,13 @@
         
         <label>Teacher Name</label>
         <select id="teacherName">
-            <option value="">-- Select Your Name --</option>
+            <option value="">-- Select Teacher --</option>
             <option value="Mr. Shaik Ahmad">Mr. Shaik Ahmad</option>
             <option value="Ms. Geethika">Ms. Geethika</option>
         </select>
 
-        <label>Class / Section</label>
-        <select id="classSelect" onchange="generateStudentList()">
+        <label>Class</label>
+        <select id="classSelect" onchange="generateList()">
             <option value="">-- Choose Class --</option>
             <option value="10th-A">10th Grade - A</option>
             <option value="9th-B">9th Grade - B</option>
@@ -90,101 +60,96 @@
 
         <div id="reportSection" class="summary-report">
             <div class="stats-grid">
-                <div class="stat-item"><span>Total</span><strong id="countTotal">0</strong></div>
-                <div class="stat-item"><span>Present</span><strong id="countPresent">0</strong></div>
-                <div class="stat-item"><span>Absent</span><strong id="countAbsent" style="color: #d32f2f;">0</strong></div>
+                <div class="stat-item">T: <span id="countTotal">0</span></div>
+                <div class="stat-item">P: <span id="countPresent">0</span></div>
+                <div class="stat-item">A: <span id="countAbsent">0</span></div>
             </div>
 
-            <button class="whatsapp-btn" onclick="sendToWhatsApp()">
-                <i class="fab fa-whatsapp"></i> Send Detailed Report
+            <button class="action-btn excel-btn" onclick="exportToExcel()">
+                <i class="fas fa-file-excel"></i> 1. Generate Excel Sheet
             </button>
+
+            <button class="action-btn whatsapp-btn" onclick="openWhatsApp()">
+                <i class="fab fa-whatsapp"></i> 2. Open WhatsApp to Attach
+            </button>
+            <p style="font-size: 11px; color: #666;">Generate the Excel first, then attach it in WhatsApp.</p>
         </div>
     </div>
 </div>
 
 <script>
-// Student Database
 const schoolData = {
-    "10th-A": ["Shaik Tauseef Ali", "Rahul Sharma", "Zoya Khan", "Abhishek Das", "Anjali Singh"],
-    "9th-B": ["Shaik Minhaj Ali", "Sana Khan", "Aryan Raj", "Priya Verma"]
+    "10th-A": ["Shaik Tauseef Ali", "Rahul Sharma", "Zoya Khan", "Abhishek Das"],
+    "9th-B": ["Shaik Minhaj Ali", "Sana Khan", "Aryan Raj"]
 };
 
-function generateStudentList() {
+function generateList() {
     const cls = document.getElementById('classSelect').value;
     const listDiv = document.getElementById('listContainer');
     const reportBox = document.getElementById('reportSection');
-    
-    listDiv.innerHTML = ""; // Clear existing list
+    listDiv.innerHTML = "";
     
     if (schoolData[cls]) {
-        schoolData[cls].forEach((name, index) => {
+        schoolData[cls].forEach(name => {
             listDiv.innerHTML += `
                 <div class="student-row">
-                    <span class="student-name">${index + 1}. ${name}</span>
-                    <input type="checkbox" class="present-toggle" checked onchange="calculateStats()">
+                    <span class="name-text">${name}</span>
+                    <input type="checkbox" class="present-toggle" checked onchange="updateStats()">
                 </div>`;
         });
-        
-        // Make the report and send button visible
         reportBox.style.display = "block";
-        calculateStats(); // Initial count
-    } else {
-        reportBox.style.display = "none";
-    }
+        updateStats();
+    } else { reportBox.style.display = "none"; }
 }
 
-function calculateStats() {
+function updateStats() {
     const total = document.querySelectorAll('.present-toggle').length;
     const present = document.querySelectorAll('.present-toggle:checked').length;
-    const absent = total - present;
-    
     document.getElementById('countTotal').innerText = total;
     document.getElementById('countPresent').innerText = present;
-    document.getElementById('countAbsent').innerText = absent;
+    document.getElementById('countAbsent').innerText = total - present;
 }
 
-function sendToWhatsApp() {
+function exportToExcel() {
     const teacher = document.getElementById('teacherName').value;
     const cls = document.getElementById('classSelect').value;
-    
-    if(!teacher || !cls) {
-        alert("Please select Teacher Name and Class before sending!");
-        return;
-    }
+    const date = new Date().toLocaleDateString();
 
-    const total = document.getElementById('countTotal').innerText;
-    const present = document.getElementById('countPresent').innerText;
-    const absent = document.getElementById('countAbsent').innerText;
-    
-    let absentNames = [];
-    document.querySelectorAll('.student-row').forEach(row => {
-        if(!row.querySelector('input').checked) {
-            // Get name and remove the "1. " numbering
-            let name = row.querySelector('.student-name').innerText.split(". ")[1];
-            absentNames.push(name);
-        }
+    if(!teacher || !cls) return alert("Select Teacher and Class");
+
+    // Prepare Data for Excel
+    let rows = [
+        ["PARAMOUNT ENGLISH MEDIUM SCHOOL"],
+        ["Attendance Report"],
+        ["Date:", date],
+        ["Teacher:", teacher],
+        ["Class:", cls],
+        [],
+        ["S.No", "Student Name", "Status"]
+    ];
+
+    document.querySelectorAll('.student-row').forEach((row, index) => {
+        const name = row.querySelector('.name-text').innerText;
+        const status = row.querySelector('.present-toggle').checked ? "Present" : "Absent";
+        rows.push([index + 1, name, status]);
     });
 
-    const absenteeString = absentNames.length > 0 ? absentNames.join(", ") : "None (All Present)";
-    const date = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+    // Create Worksheet
+    const ws = XLSX.utils.aoa_to_sheet(rows);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Attendance");
 
-    // Detailed Report Formatting
-    const finalReport = `*PARAMOUNT SCHOOL ATTENDANCE*%0A` +
-                        `----------------------------%0A` +
-                        `*Teacher:* ${teacher}%0A` +
-                        `*Class:* ${cls}%0A` +
-                        `*Date:* ${date}%0A` +
-                        `----------------------------%0A` +
-                        `*Total Students:* ${total}%0A` +
-                        `*Present:* ${present}%0A` +
-                        `*Absent:* ${absent}%0A%0A` +
-                        `*Absentees:* ${absenteeString}%0A` +
-                        `----------------------------`;
+    // Download File
+    const filename = `Attendance_${cls}_${date.replace(/\//g, '-')}.xlsx`;
+    XLSX.writeFile(wb, filename);
+}
 
-    window.open(`https://wa.me/919550791538?text=${finalReport}`, '_blank');
+function openWhatsApp() {
+    const teacher = document.getElementById('teacherName').value;
+    const cls = document.getElementById('classSelect').value;
+    const msg = `*PARAMOUNT ATTENDANCE*%0A*Teacher:* ${teacher}%0A*Class:* ${cls}%0A_Excel report generated. Please attach the downloaded file below._`;
+    window.open(`https://wa.me/919550791538?text=${msg}`, '_blank');
 }
 </script>
-
 </body>
 </html>
-
