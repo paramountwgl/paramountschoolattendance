@@ -10,73 +10,33 @@
         :root { --forest: #006633; --gold: #ffd700; --danger: #c62828; }
         body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; margin: 0; padding: 0; }
         
-        /* LOGIN & RESET SCREENS */
-        .overlay-screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #f4f7f6; z-index: 9999; 
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-        }
-        .auth-box {
-            background: white; padding: 40px; border-radius: 15px; 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center;
-            width: 90%; max-width: 350px;
-            position: relative; /* This allows the logo to stick to the corner */
-        }
-
-        /* NEW: Pinned Corner Logo */
-        .corner-logo {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            height: 40px;
-            width: auto;
-        }
-
-        .auth-box input {
-            padding: 12px; width: 100%; margin: 10px 0; 
-            border: 2px solid #ddd; border-radius: 8px; font-size: 16px; outline: none;
-            box-sizing: border-box;
-        }
+        .overlay-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f4f7f6; z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .auth-box { background: white; padding: 40px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; width: 90%; max-width: 350px; position: relative; }
+        .corner-logo { position: absolute; top: 20px; left: 20px; height: 40px; width: auto; }
+        .auth-box input { padding: 12px; width: 100%; margin: 10px 0; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; outline: none; box-sizing: border-box; }
         .auth-box input:focus { border-color: var(--forest); }
-        .auth-btn {
-            background: var(--forest); color: white; border: none; 
-            padding: 12px; width: 100%; border-radius: 8px; font-size: 16px; 
-            font-weight: bold; cursor: pointer; transition: 0.2s; margin-top: 10px;
-        }
+        .auth-btn { background: var(--forest); color: white; border: none; padding: 12px; width: 100%; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.2s; margin-top: 10px; }
         .auth-btn:hover { background: #004d26; }
+        .forgot-link { display: block; margin-top: 15px; color: var(--forest); text-decoration: none; font-size: 14px; font-weight: bold; cursor: pointer; }
         
-        .forgot-link {
-            display: block; margin-top: 15px; color: var(--forest); 
-            text-decoration: none; font-size: 14px; font-weight: bold; cursor: pointer;
-        }
-        .forgot-link:hover { text-decoration: underline; }
-
-        /* MAIN APP STYLES */
         #mainApp, #resetScreen { display: none; } 
 
-        header { 
-            background: var(--forest); color: white; padding: 20px 5%; 
-            display: flex; justify-content: center; align-items: center; gap: 20px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
+        header { background: var(--forest); color: white; padding: 20px 5%; display: flex; justify-content: center; align-items: center; gap: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .logo-img { height: 70px; width: auto; display: block; }
         .school-info { text-align: left; }
         .school-name { font-size: 1.8rem; font-weight: 900; margin: 0; white-space: nowrap; }
         .school-tagline { font-size: 1rem; opacity: 0.9; margin-top: 5px; font-weight: bold; color: var(--gold); }
 
-        .container { max-width: 800px; margin: 30px auto; padding: 0 15px; }
+        .container { max-width: 900px; margin: 30px auto; padding: 0 15px; }
         .card { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
         
         .controls { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 25px; flex-wrap: wrap; gap: 15px; }
-        .select-group { flex: 1; min-width: 250px; }
+        .select-group { flex: 1; min-width: 200px; }
         label { display: block; font-size: 13px; font-weight: bold; color: #666; margin-bottom: 8px; text-transform: uppercase; }
         select { width: 100%; padding: 12px; border-radius: 8px; border: 2px solid #ddd; font-size: 16px; outline: none; box-sizing: border-box; }
         select:focus { border-color: var(--forest); }
 
-        .danger-btn {
-            background: #ffebee; color: var(--danger); border: 1px solid #ef9a9a;
-            padding: 12px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s;
-        }
+        .danger-btn { background: #ffebee; color: var(--danger); border: 1px solid #ef9a9a; padding: 12px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; }
         .danger-btn:hover { background: var(--danger); color: white; }
 
         table { width: 100%; border-collapse: collapse; margin-top: 10px; }
@@ -106,19 +66,13 @@
 <div id="loginScreen" class="overlay-screen">
     <div class="auth-box">
         <img src="logo.png" alt="School Logo" class="corner-logo" onerror="this.style.display='none'">
-        
         <i class="fas fa-lock" style="font-size: 40px; color: #006633; margin-bottom: 15px; display: block;"></i>
-        
         <h2 style="color: #006633; margin-top: 0; font-size: 22px;">Admin Access</h2>
         <input type="password" id="adminPassword" placeholder="Enter Password" onkeypress="if(event.key === 'Enter') checkPassword()">
         <button class="auth-btn" onclick="checkPassword()">Login</button>
         <p id="loginError" style="color: #c62828; display: none; margin-top: 15px; font-weight: bold; font-size: 14px;">Incorrect Password</p>
-        
         <a class="forgot-link" onclick="showResetScreen()">Forgot Password?</a>
-        
-        <button onclick="window.location.href='index.html'" style="background: none; border: none; color: #666; margin-top: 15px; cursor: pointer; text-decoration: underline;">
-            Cancel & Return
-        </button>
+        <button onclick="window.location.href='index.html'" style="background: none; border: none; color: #666; margin-top: 15px; cursor: pointer; text-decoration: underline;">Cancel & Return</button>
     </div>
 </div>
 
@@ -126,20 +80,14 @@
     <div class="auth-box">
         <img src="logo.png" alt="School Logo" class="corner-logo" onerror="this.style.display='none'">
         <i class="fas fa-key" style="font-size: 40px; color: #ffd700; margin-bottom: 15px; display: block;"></i>
-        
         <h2 style="color: #333; margin-top: 0; font-size: 20px;">Reset Password</h2>
         <p style="font-size: 13px; color: #666; margin-bottom: 15px;">Enter the Master Recovery Key to set a new password.</p>
-        
         <input type="password" id="recoveryKey" placeholder="Master Recovery Key">
         <input type="password" id="newPassword" placeholder="Enter New Password">
-        
         <button class="auth-btn" onclick="resetPassword()">Save New Password</button>
         <p id="resetError" style="color: #c62828; display: none; margin-top: 15px; font-weight: bold; font-size: 14px;">Invalid Recovery Key!</p>
         <p id="resetSuccess" style="color: #2e7d32; display: none; margin-top: 15px; font-weight: bold; font-size: 14px;">Password Changed Successfully!</p>
-        
-        <button onclick="showLoginScreen()" style="background: none; border: none; color: #666; margin-top: 15px; cursor: pointer; text-decoration: underline;">
-            Back to Login
-        </button>
+        <button onclick="showLoginScreen()" style="background: none; border: none; color: #666; margin-top: 15px; cursor: pointer; text-decoration: underline;">Back to Login</button>
     </div>
 </div>
 
@@ -160,11 +108,21 @@
         <div class="card">
             <div class="controls">
                 <div class="select-group">
-                    <label>Select Class to View</label>
+                    <label>Select Class</label>
                     <select id="classSelect" onchange="loadClassData()">
                         <option value="">-- Choose Class --</option>
                         <option value="10th-A">10th Grade - A</option>
                         <option value="9th-B">9th Grade - B</option>
+                    </select>
+                </div>
+
+                <div class="select-group">
+                    <label>Select Month</label>
+                    <select id="monthSelect" onchange="loadClassData()">
+                        <option value="All">Overall (All Time)</option>
+                        <option value="2026-03">March 2026</option>
+                        <option value="2026-04">April 2026</option>
+                        <option value="2026-05">May 2026</option>
                     </select>
                 </div>
                 
@@ -178,14 +136,15 @@
                     <thead>
                         <tr>
                             <th>Student Name</th>
-                            <th>Classes Attended</th>
+                            <th>Present</th>
+                            <th>Absent</th>
                             <th>Total Classes</th>
-                            <th>Overall %</th>
+                            <th>Percentage</th>
                         </tr>
                     </thead>
                     <tbody id="tableBody">
                         <tr>
-                            <td colspan="4" class="empty-state">Select a class above to view attendance records.</td>
+                            <td colspan="5" class="empty-state">Select a class above to view attendance records.</td>
                         </tr>
                     </tbody>
                 </table>
@@ -199,14 +158,10 @@
 const DEFAULT_PASSWORD = "Ahmad@07";
 const MASTER_RECOVERY_KEY = "paramount"; 
 
-function getSavedPassword() {
-    return localStorage.getItem('paramountAdminPwd') || DEFAULT_PASSWORD;
-}
+function getSavedPassword() { return localStorage.getItem('paramountAdminPwd') || DEFAULT_PASSWORD; }
 
 function checkPassword() {
-    const pass = document.getElementById('adminPassword').value;
-    
-    if (pass === getSavedPassword()) {
+    if (document.getElementById('adminPassword').value === getSavedPassword()) {
         document.getElementById('loginScreen').style.display = "none";
         document.getElementById('mainApp').style.display = "block";
     } else {
@@ -219,65 +174,72 @@ function showResetScreen() {
     document.getElementById('resetScreen').style.display = "flex";
     document.getElementById('resetError').style.display = "none";
     document.getElementById('resetSuccess').style.display = "none";
-    document.getElementById('recoveryKey').value = "";
-    document.getElementById('newPassword').value = "";
 }
 
 function showLoginScreen() {
     document.getElementById('resetScreen').style.display = "none";
     document.getElementById('loginScreen').style.display = "flex";
-    document.getElementById('adminPassword').value = "";
     document.getElementById('loginError').style.display = "none";
 }
 
 function resetPassword() {
-    const keyInput = document.getElementById('recoveryKey').value;
-    const newPassInput = document.getElementById('newPassword').value;
-
-    if (keyInput === MASTER_RECOVERY_KEY && newPassInput.length > 0) {
-        localStorage.setItem('paramountAdminPwd', newPassInput);
+    const key = document.getElementById('recoveryKey').value;
+    const pass = document.getElementById('newPassword').value;
+    if (key === MASTER_RECOVERY_KEY && pass.length > 0) {
+        localStorage.setItem('paramountAdminPwd', pass);
         document.getElementById('resetError').style.display = "none";
         document.getElementById('resetSuccess').style.display = "block";
-        
         setTimeout(() => { showLoginScreen(); }, 1500);
     } else {
         document.getElementById('resetError').style.display = "block";
-        document.getElementById('resetSuccess').style.display = "none";
     }
 }
 
 // --- DATA LOGIC ---
-function getAttendanceData() {
-    return JSON.parse(localStorage.getItem('paramountAttendance')) || {};
-}
+function getAttendanceData() { return JSON.parse(localStorage.getItem('paramountAttendance')) || {}; }
 
 function loadClassData() {
     const cls = document.getElementById('classSelect').value;
+    const month = document.getElementById('monthSelect').value;
     const tbody = document.getElementById('tableBody');
     const data = getAttendanceData();
 
     if (!cls) {
-        tbody.innerHTML = '<tr><td colspan="4" class="empty-state">Select a class above to view attendance records.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="5" class="empty-state">Select a class above to view attendance records.</td></tr>';
         return;
     }
 
     if (!data[cls] || !data[cls].students) {
-        tbody.innerHTML = `<tr><td colspan="4" class="empty-state">No attendance data recorded for ${cls} yet.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="5" class="empty-state">No attendance data recorded for ${cls} yet.</td></tr>`;
         return;
     }
 
     const students = data[cls].students;
     tbody.innerHTML = ""; 
-
     let hasStudents = false;
 
     for (const [studentName, stats] of Object.entries(students)) {
         hasStudents = true;
+        
+        let present = 0;
+        let total = 0;
+
+        if (month === "All") {
+            present = stats.presentDays || 0;
+            total = stats.totalDays || 0;
+        } else {
+            if (stats.months && stats.months[month]) {
+                present = stats.months[month].present;
+                total = stats.months[month].total;
+            }
+        }
+
+        let absent = total - present;
         let percentText = "0%";
         let badgeClass = "badge-neutral";
 
-        if (stats.totalDays > 0) {
-            const percent = Math.round((stats.presentDays / stats.totalDays) * 100);
+        if (total > 0) {
+            const percent = Math.round((present / total) * 100);
             percentText = percent + "%";
             badgeClass = percent >= 50 ? "badge-good" : "badge-bad";
         }
@@ -285,29 +247,25 @@ function loadClassData() {
         tbody.innerHTML += `
             <tr>
                 <td class="student-name">${studentName}</td>
-                <td>${stats.presentDays}</td>
-                <td>${stats.totalDays}</td>
+                <td style="color: #2e7d32; font-weight: bold;">${present}</td>
+                <td style="color: #c62828; font-weight: bold;">${absent}</td>
+                <td>${total}</td>
                 <td><span class="badge ${badgeClass}">${percentText}</span></td>
             </tr>
         `;
     }
 
     if (!hasStudents) {
-        tbody.innerHTML = `<tr><td colspan="4" class="empty-state">No students found in ${cls}.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="5" class="empty-state">No students found in ${cls}.</td></tr>`;
     }
 }
 
 function resetAllData() {
-    const confirmReset = confirm("CRITICAL WARNING:\n\nAre you sure you want to delete ALL attendance data? This will reset every student's percentage to 0% and cannot be undone.\n\nOnly do this at the start of a new term.");
-    
-    if (confirmReset) {
-        const doubleCheck = prompt("Type 'RESET' to confirm deletion:");
-        if (doubleCheck === "RESET") {
+    if (confirm("CRITICAL WARNING:\n\nAre you sure you want to delete ALL attendance data? This will reset every student's percentage to 0% and cannot be undone.")) {
+        if (prompt("Type 'RESET' to confirm deletion:") === "RESET") {
             localStorage.removeItem('paramountAttendance');
             alert("All attendance data has been successfully cleared.");
             loadClassData(); 
-        } else {
-            alert("Reset cancelled.");
         }
     }
 }
