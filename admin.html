@@ -10,16 +10,20 @@
         :root { --forest: #006633; --gold: #ffd700; --danger: #c62828; }
         body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; margin: 0; padding: 0; }
         
-        .overlay-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f4f7f6; z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .overlay-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(244, 247, 246, 0.95); z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; }
         .auth-box { background: white; padding: 40px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; width: 90%; max-width: 350px; position: relative; }
         .corner-logo { position: absolute; top: 20px; left: 20px; height: 40px; width: auto; }
         .auth-box input { padding: 12px; width: 100%; margin: 10px 0; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; outline: none; box-sizing: border-box; }
         .auth-box input:focus { border-color: var(--forest); }
         .auth-btn { background: var(--forest); color: white; border: none; padding: 12px; width: 100%; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.2s; margin-top: 10px; }
         .auth-btn:hover { background: #004d26; }
+        
+        .danger-auth-btn { background: var(--danger); color: white; border: none; padding: 12px; width: 100%; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.2s; margin-top: 10px; }
+        .danger-auth-btn:hover { background: #8e0000; }
+
         .forgot-link { display: block; margin-top: 15px; color: var(--forest); text-decoration: none; font-size: 14px; font-weight: bold; cursor: pointer; }
         
-        #mainApp, #resetScreen { display: none; } 
+        #mainApp, #resetScreen, #resetDataScreen { display: none; } 
 
         header { background: var(--forest); color: white; padding: 20px 5%; display: flex; justify-content: center; align-items: center; gap: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .logo-img { height: 70px; width: auto; display: block; }
@@ -63,7 +67,7 @@
 </head>
 <body>
 
-<div id="loginScreen" class="overlay-screen">
+<div id="loginScreen" class="overlay-screen" style="background: #f4f7f6;">
     <div class="auth-box">
         <img src="logo.png" alt="School Logo" class="corner-logo" onerror="this.style.display='none'">
         <i class="fas fa-lock" style="font-size: 40px; color: #006633; margin-bottom: 15px; display: block;"></i>
@@ -76,7 +80,7 @@
     </div>
 </div>
 
-<div id="resetScreen" class="overlay-screen">
+<div id="resetScreen" class="overlay-screen" style="background: #f4f7f6;">
     <div class="auth-box">
         <img src="logo.png" alt="School Logo" class="corner-logo" onerror="this.style.display='none'">
         <i class="fas fa-key" style="font-size: 40px; color: #ffd700; margin-bottom: 15px; display: block;"></i>
@@ -88,6 +92,24 @@
         <p id="resetError" style="color: #c62828; display: none; margin-top: 15px; font-weight: bold; font-size: 14px;">Invalid Recovery Key!</p>
         <p id="resetSuccess" style="color: #2e7d32; display: none; margin-top: 15px; font-weight: bold; font-size: 14px;">Password Changed Successfully!</p>
         <button onclick="showLoginScreen()" style="background: none; border: none; color: #666; margin-top: 15px; cursor: pointer; text-decoration: underline;">Back to Login</button>
+    </div>
+</div>
+
+<div id="resetDataScreen" class="overlay-screen">
+    <div class="auth-box" style="border: 2px solid #c62828;">
+        <i class="fas fa-exclamation-triangle" style="font-size: 40px; color: #c62828; margin-bottom: 15px; display: block;"></i>
+        <h2 style="color: #c62828; margin-top: 0; font-size: 20px;">Are you sure?</h2>
+        <p style="font-size: 13px; color: #333; margin-bottom: 15px; font-weight: bold;">This will permanently delete ALL student attendance data and reset percentages to zero.</p>
+        <p style="font-size: 12px; color: #666; margin-bottom: 15px;">Enter the Admin access password to authorize this reset.</p>
+        
+        <input type="password" id="resetDataPassword" placeholder="Admin Password" onkeypress="if(event.key === 'Enter') confirmDataReset()">
+        
+        <button class="danger-auth-btn" onclick="confirmDataReset()">Confirm Reset Data</button>
+        <p id="resetDataError" style="color: #c62828; display: none; margin-top: 15px; font-weight: bold; font-size: 14px;">Incorrect Password!</p>
+        
+        <button onclick="cancelResetData()" style="background: none; border: none; color: #666; margin-top: 15px; cursor: pointer; text-decoration: underline; font-weight: bold;">
+            Cancel
+        </button>
     </div>
 </div>
 
@@ -126,7 +148,7 @@
                     </select>
                 </div>
                 
-                <button class="danger-btn" onclick="resetAllData()">
+                <button class="danger-btn" onclick="showResetDataScreen()">
                     <i class="fas fa-trash-alt"></i> Reset Term Data
                 </button>
             </div>
@@ -195,7 +217,30 @@ function resetPassword() {
     }
 }
 
-// --- DATA LOGIC ---
+// --- SECURE DATA RESET LOGIC ---
+function showResetDataScreen() {
+    document.getElementById('resetDataScreen').style.display = "flex";
+    document.getElementById('resetDataPassword').value = "";
+    document.getElementById('resetDataError').style.display = "none";
+}
+
+function cancelResetData() {
+    document.getElementById('resetDataScreen').style.display = "none";
+}
+
+function confirmDataReset() {
+    const pass = document.getElementById('resetDataPassword').value;
+    if (pass === getSavedPassword()) {
+        localStorage.removeItem('paramountAttendance');
+        document.getElementById('resetDataScreen').style.display = "none";
+        alert("Success: All attendance data has been permanently cleared.");
+        loadClassData(); // Refresh the table to show zero data
+    } else {
+        document.getElementById('resetDataError').style.display = "block";
+    }
+}
+
+// --- DATA DISPLAY LOGIC ---
 function getAttendanceData() { return JSON.parse(localStorage.getItem('paramountAttendance')) || {}; }
 
 function loadClassData() {
@@ -257,16 +302,6 @@ function loadClassData() {
 
     if (!hasStudents) {
         tbody.innerHTML = `<tr><td colspan="5" class="empty-state">No students found in ${cls}.</td></tr>`;
-    }
-}
-
-function resetAllData() {
-    if (confirm("CRITICAL WARNING:\n\nAre you sure you want to delete ALL attendance data? This will reset every student's percentage to 0% and cannot be undone.")) {
-        if (prompt("Type 'RESET' to confirm deletion:") === "RESET") {
-            localStorage.removeItem('paramountAttendance');
-            alert("All attendance data has been successfully cleared.");
-            loadClassData(); 
-        }
     }
 }
 </script>
