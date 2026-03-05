@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Paramount School</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="logo.png">
+    <style>
+        :root { --forest: #006633; --gold: #ffd700; --danger: #c62828; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; margin: 0; padding: 0; }
+        
+        /* HEADER SECTION */
+        header { 
+            background: var(--forest); 
+            color: white; 
+            padding: 20px 5%; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            gap: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .logo-img { height: 70px; width: auto; display: block; }
+        .school-info { text-align: left; }
+        .school-name { font-size: 1.8rem; font-weight: 900; margin: 0; white-space: nowrap; }
+        .school-tagline { font-size: 1rem; opacity: 0.9; margin-top: 5px; font-weight: bold; color: var(--gold); }
+
+        /* MAIN CONTAINER */
+        .container { max-width: 800px; margin: 30px auto; padding: 0 15px; }
+        .card { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .select-group { flex: 1; min-width: 250px; }
+        label { display: block; font-size: 13px; font-weight: bold; color: #666; margin-bottom: 8px; text-transform: uppercase; }
+        select { width: 100%; padding: 12px; border-radius: 8px; border: 2px solid #ddd; font-size: 16px; outline: none; }
+        select:focus { border-color: var(--forest); }
+
+        .danger-btn {
+            background: #ffebee;
+            color: var(--danger);
+            border: 1px solid #ef9a9a;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .danger-btn:hover { background: var(--danger); color: white; }
+
+        /* DATA TABLE */
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; }
+        th { background: var(--forest); color: white; font-weight: bold; text-transform: uppercase; font-size: 13px; }
+        th:first-child { border-top-left-radius: 8px; }
+        th:last-child { border-top-right-radius: 8px; }
+        
+        tr:hover { background-color: #f9f9f9; }
+        .student-name { font-weight: bold; color: #333; }
+        
+        /* BADGES */
+        .badge { padding: 5px 12px; border-radius: 20px; font-size: 13px; font-weight: bold; text-align: center; display: inline-block; min-width: 50px;}
+        .badge-good { background: #e8f5e9; color: #2e7d32; }
+        .badge-bad { background: #ffebee; color: #c62828; }
+        .badge-neutral { background: #f0f0f0; color: #666; }
+
+        .empty-state { text-align: center; padding: 40px; color: #888; font-style: italic; }
+
+        @media (max-width: 600px) {
+            header { flex-direction: column; text-align: center; }
+            .school-name { font-size: 1.4rem; white-space: normal; }
+            .controls { flex-direction: column; align-items: stretch; }
+            th, td { padding: 10px; font-size: 14px; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <img src="logo.png" alt="Logo" class="logo-img" onerror="this.style.display='none'">
+    <div class="school-info">
+        <h1 class="school-name">PARAMOUNT ENGLISH MEDIUM SCHOOL</h1>
+        <p class="school-tagline"><i class="fas fa-user-shield"></i> Admin Dashboard - Attendance Overview</p>
+    </div>
+</header>
+
+<div class="container">
+    <div class="card">
+        <div class="controls">
+            <div class="select-group">
+                <label>Select Class to View</label>
+                <select id="classSelect" onchange="loadClassData()">
+                    <option value="">-- Choose Class --</option>
+                    <option value="10th-A">10th Grade - A</option>
+                    <option value="9th-B">9th Grade - B</option>
+                </select>
+            </div>
+            
+            <button class="danger-btn" onclick="resetAllData()">
+                <i class="fas fa-trash-alt"></i> Reset Term Data
+            </button>
+        </div>
+
+        <div style="overflow-x: auto;">
+            <table id="dataTable">
+                <thead>
+                    <tr>
+                        <th>Student Name</th>
+                        <th>Classes Attended</th>
+                        <th>Total Classes</th>
+                        <th>Overall %</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <tr>
+                        <td colspan="4" class="empty-state">Select a class above to view attendance records.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+    </div>
+</div>
+
+<script>
+// Load the database from LocalStorage
+function getAttendanceData() {
+    return JSON.parse(localStorage.getItem('paramountAttendance')) || {};
+}
+
+function loadClassData() {
+    const cls = document.getElementById('classSelect').value;
+    const tbody = document.getElementById('tableBody');
+    const data = getAttendanceData();
+
+    if (!cls) {
+        tbody.innerHTML = '<tr><td colspan="4" class="empty-state">Select a class above to view attendance records.</td></tr>';
+        return;
+    }
+
+    if (!data[cls] || !data[cls].students) {
+        tbody.innerHTML = `<tr><td colspan="4" class="empty-state">No attendance data recorded for ${cls} yet.</td></tr>`;
+        return;
+    }
+
+    const students = data[cls].students;
+    tbody.innerHTML = ""; // Clear existing rows
+
+    let hasStudents = false;
+
+    for (const [studentName, stats] of Object.entries(students)) {
+        hasStudents = true;
+        let percentText = "0%";
+        let badgeClass = "badge-neutral";
+
+        if (stats.totalDays > 0) {
+            const percent = Math.round((stats.presentDays / stats.totalDays) * 100);
+            percentText = percent + "%";
+            badgeClass = percent >= 50 ? "badge-good" : "badge-bad";
+        }
+
+        tbody.innerHTML += `
+            <tr>
+                <td class="student-name">${studentName}</td>
+                <td>${stats.presentDays}</td>
+                <td>${stats.totalDays}</td>
+                <td><span class="badge ${badgeClass}">${percentText}</span></td>
+            </tr>
+        `;
+    }
+
+    if (!hasStudents) {
+        tbody.innerHTML = `<tr><td colspan="4" class="empty-state">No students found in ${cls}.</td></tr>`;
+    }
+}
+
+function resetAllData() {
+    const confirmReset = confirm("CRITICAL WARNING:\n\nAre you sure you want to delete ALL attendance data? This will reset every student's percentage to 0% and cannot be undone.\n\nOnly do this at the start of a new term.");
+    
+    if (confirmReset) {
+        const doubleCheck = prompt("Type 'RESET' to confirm deletion:");
+        if (doubleCheck === "RESET") {
+            localStorage.removeItem('paramountAttendance');
+            alert("All attendance data has been successfully cleared.");
+            loadClassData(); // Refresh the table
+        } else {
+            alert("Reset cancelled.");
+        }
+    }
+}
+</script>
+
+</body>
+</html>
