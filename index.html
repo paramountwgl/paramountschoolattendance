@@ -1,3 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="google-site-verification" content="HfUz-EU1H47JaSu4YL5FQYaeUnSfoJA8MHfD1PR1kZk" />
+    <meta name="description" content="Official Attendance Portal for Paramount English Medium School. Teachers can mark attendance and export to Excel.">
+    <meta name="keywords" content="Paramouant English Medium School, Paramount Attendance, School Attendance Portal">
+    <meta name="author" content="Shaik Tauseef Ali">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paramount School | Teachers Portal</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="logo.png">
+    <style>
+        :root { --forest: #006633; --gold: #ffd700; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; margin: 0; padding: 0; }
+        
+        header { 
+            background: var(--forest); 
+            color: white; 
+            padding: 30px 5%; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            gap: 20px;
+        }
+        .logo-img { height: 85px; width: auto; display: block; }
+        .school-info { text-align: left; }
+        .school-name { font-size: 2.2rem; font-weight: 900; margin: 0; white-space: nowrap; }
+        .school-tagline { font-size: 1.1rem; opacity: 0.9; margin-top: 5px; font-weight: 500; }
+
+        .container { max-width: 500px; margin: 15px auto; padding: 10px; }
+        .card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        h2 { color: var(--forest); text-align: center; border-bottom: 2px solid var(--gold); padding-bottom: 10px; margin-top: 0; }
+        
+        label { display: block; font-size: 13px; font-weight: bold; color: #666; margin-top: 15px; }
+        select { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #ddd; font-size: 16px; margin-top: 5px; }
+        
+        .student-row { display: flex; justify-content: space-between; align-items: center; padding: 15px 5px; border-bottom: 1px solid #f0f0f0; }
+        .name-text { font-weight: 600; font-size: 16px; }
+        .percent-badge { font-size: 12px; padding: 3px 8px; border-radius: 10px; margin-left: 10px; font-weight: bold; }
+        .percent-good { background: #e8f5e9; color: #2e7d32; }
+        .percent-bad { background: #ffebee; color: #c62828; }
+        .percent-new { background: #f0f0f0; color: #666; }
+        
+        .present-toggle { width: 28px; height: 28px; accent-color: var(--forest); cursor: pointer; }
+
+        .submit-btn, .reset-btn, .admin-btn { 
+            border: none; padding: 18px; border-radius: 35px; width: 100%; 
+            font-weight: bold; font-size: 16px; cursor: pointer; margin-top: 25px; 
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+        .submit-btn { background: #1D6F42; color: white; display: none; }
+        .reset-btn { background: var(--forest); color: white; margin-top: 15px; }
+        
+        .admin-btn { 
+            background: #e8f5e9; color: #006633; border: 1px solid #c8e6c9; 
+            padding: 12px; border-radius: 8px; margin-bottom: 20px; transition: 0.2s; 
+            margin-top: 0;
+        }
+        .admin-btn:hover { background: #c8e6c9; }
+
+        #thankYouSection {
+            display: none; text-align: center; padding: 30px 20px;
+            background: #e8f5e9; color: #2e7d32; border-radius: 15px; margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            header { flex-direction: column; text-align: center; gap: 10px; padding: 20px; }
+            .school-name { font-size: 1.5rem; white-space: normal; }
+            .school-info { text-align: center; }
+            .logo-img { height: 70px; }
+        }
+
+        #exportTableWrapper { display: none; }
+    </style>
+</head>
+<body>
+
+<header>
+    <img src="logo.png" alt="Logo" class="logo-img" id="webLogo" onerror="this.style.display='none'">
+    <div class="school-info">
+        <h1 class="school-name">PARAMOUNT ENGLISH MEDIUM SCHOOL</h1>
+        <p class="school-tagline">Teachers Official Attendance Portal</p>
+    </div>
+</header>
+
+<div class="container">
+    <div class="card">
+        <h2>Mark Attendance</h2>
+        
+        <button class="admin-btn" onclick="window.location.href='admin.html'">
+            <i class="fas fa-user-shield"></i> Go to Admin Dashboard
+        </button>
+        
+        <div id="formContent">
+            <label>Teacher Name</label>
+            <select id="teacherName">
+                <option value="">-- Select Teacher --</option>
+                <option value="Mr. Shaik Ahmad">Mr. Shaik Ahmad</option>
+                <option value="Ms. Geethika">Ms. Geethika</option>
+            </select>
+
+            <label>Class</label>
+            <select id="classSelect" onchange="generateList()">
+                <option value="">-- Choose Class --</option>
+                <option value="10th-A">10th Grade - A</option>
+                <option value="9th-B">9th Grade - B</option>
+            </select>
+
+            <div id="listContainer"></div>
+
+            <button id="submitBtn" class="submit-btn" onclick="submitAttendance()">
+                <i class="fas fa-file-excel"></i> Submit Attendance
+            </button>
+        </div>
+
+        <div id="thankYouSection">
+            <i class="fas fa-check-circle" style="font-size: 40px; margin-bottom: 15px;"></i><br>
+            <strong style="font-size: 20px;">Thank you for submitting!</strong><br>
+            <p style="font-size: 14px; font-weight: normal; margin: 10px 0;">Your Excel report is downloading...</p>
+            
+            <button class="reset-btn" onclick="resetForm()">
+                <i class="fas fa-redo"></i> Take Another Attendance
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="exportTableWrapper">
+    <table id="attendanceExcelTable" border="1" style="border-collapse: collapse;">
+        <thead>
+            <tr><th colspan="5" style="background-color: #006633; color: #ffffff; font-size: 18pt; height: 45pt; text-align: center;">PARAMOUNT ENGLISH MEDIUM SCHOOL</th></tr>
+            <tr><th colspan="5" style="background-color: #ffd700; color: #000000; font-size: 12pt; height: 25pt; text-align: center;">TEACHERS OFFICIAL ATTENDANCE PORTAL</th></tr>
+            <tr><th colspan="3" id="xl-date" style="text-align: left; padding: 5px;">Date: </th><th colspan="2" id="xl-teacher" style="text-align: left; padding: 5px;">Teacher: </th></tr>
+            <tr><th colspan="3" id="xl-class" style="text-align: left; padding: 5px;">Class: </th><th colspan="2" style="text-align: left; padding: 5px;">Status: FINALIZED</th></tr>
+            <tr style="background-color: #eeeeee; font-weight: bold;">
+                <th style="width: 50px;">S.No</th><th style="width: 250px;">STUDENT NAME</th><th style="width: 100px;">STATUS</th><th style="width: 120px;">OVERALL %</th><th style="width: 150px;">REMARKS</th>
+            </tr>
+        </thead>
+        <tbody id="xl-body"></tbody>
+    </table>
+</div>
+
 <script>
 // Base student list
 const schoolData = {
@@ -8,12 +152,25 @@ const schoolData = {
 // Initialize LocalStorage for tracking Attendance Percentages
 let attendanceRecords = JSON.parse(localStorage.getItem('paramountAttendance'));
 
-if (!attendanceRecords || !attendanceRecords["10th-A"] || !attendanceRecords["10th-A"].students) {
+// Check if data is missing or if the new 'months' feature hasn't been added yet
+let needsInit = false;
+if (!attendanceRecords) {
+    needsInit = true;
+} else {
+    for (let cls in schoolData) {
+        if (!attendanceRecords[cls] || !attendanceRecords[cls].students || !attendanceRecords[cls].students[schoolData[cls][0]].months) {
+            needsInit = true;
+            break;
+        }
+    }
+}
+
+// If data is old or missing, build the new structure
+if (needsInit) {
     attendanceRecords = {};
     for (let cls in schoolData) {
         attendanceRecords[cls] = { lastSubmittedDate: null, students: {} };
         schoolData[cls].forEach(name => {
-            // Added 'months' object to track monthly data
             attendanceRecords[cls].students[name] = { presentDays: 0, totalDays: 0, months: {} };
         });
     }
@@ -58,7 +215,7 @@ function submitAttendance() {
     const cls = document.getElementById('classSelect').value;
     const dateStr = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
     
-    // Create a specific month key, e.g., "2026-03" for March 2026
+    // Create a specific month key, e.g., "2026-03"
     const monthKey = new Date().toISOString().slice(0, 7); 
 
     if(!teacher || !cls) return alert("Select Teacher and Class First!");
@@ -134,3 +291,5 @@ function resetForm() {
     document.getElementById('formContent').style.display = "block";
 }
 </script>
+</body>
+</html>
