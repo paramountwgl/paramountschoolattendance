@@ -138,23 +138,40 @@ const db = firebase.database();
 const teacherDropdown = document.getElementById('teacherName');
 const classDropdown = document.getElementById('classSelect');
 
-// --- NEW SECURITY: INTERNAL PASSWORD LOGIC ---
+// --- 🔐 TEACHER PASSWORD REGISTRY (MANUAL SETTINGS) ---
+// You can change the passwords below inside the quotes!
+const teacherPasswords = {
+    "Mr. Shaik Ahmad": "ahmad@123",
+    "Ms. Roqiya Begum": "roqiya@123",
+    "Ms. G. Rajitha": "rajitha@123",
+    "Ms. Ameena Tabassum": "ameena@123",
+    "Ms. Shaik Shabana": "shabana@123",
+    "Ms. B. Ravali": "ravali@123",
+    "Ms. L. Kalyani": "kalyani@123",
+    "Ms. J. Alaya Sree": "alaya@123",
+    "Ms. S. Sujatha": "sujatha@123",
+    "Ms. J. Prathibha": "prathibha@123",
+    "Ms. P. Shailaja": "shailaja@123",
+    "Ms. A. Jhansi Rani": "jhansi@123",
+    "Ms. S. Neelima": "neelima@123"
+};
+
 teacherDropdown.addEventListener('change', async (e) => {
     const name = e.target.value;
     if (!name) return;
 
     const { value: password } = await Swal.fire({
         title: `Hello, ${name}`,
-        text: 'Please enter your teacher password:',
+        text: 'Please enter your private teacher password:',
         input: 'password',
-        inputPlaceholder: 'Password',
+        inputPlaceholder: 'Enter Password',
         showCancelButton: true,
         confirmButtonColor: '#006633'
     });
 
     if (password) {
-        // Verification Logic: Name + @123
-        const correctPassword = `${name}@123`;
+        // Compare what the teacher typed with the manual list above
+        const correctPassword = teacherPasswords[name];
         
         if (password === correctPassword) {
             Swal.fire({ icon: 'success', title: 'Verified!', timer: 1000, showConfirmButton: false });
