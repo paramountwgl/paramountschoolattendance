@@ -3,24 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Teacher Portal | Paramount School</title>
+    <title>Paramount School | Teacher Portal</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="icon" type="image/png" href="logo.png">
     <style>
-        :root { --forest: #006633; --gold: #ffd700; --danger: #c62828; }
-        body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; margin: 0; padding-bottom: 50px; }
-        header { background: var(--forest); color: white; padding: 20px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .container { max-width: 850px; margin: 20px auto; padding: 0 15px; }
-        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 25px; }
-        h3 { color: var(--forest); margin-top: 0; border-bottom: 2px solid #f0f0f0; padding-bottom: 10px; }
-        label { display: block; font-size: 12px; font-weight: bold; color: #666; margin: 10px 0 5px; text-transform: uppercase; }
+        :root { --forest: #006633; --gold: #ffd700; --danger: #e53935; --light: #f4f7f6; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; padding-bottom: 50px; }
+        
+        header { background: var(--forest); color: white; padding: 25px 5%; display: flex; align-items: center; gap: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .logo-img { height: 80px; width: auto; }
+        .school-name { font-size: 2rem; font-weight: 800; margin: 0; text-transform: uppercase; letter-spacing: 1px; }
+        .portal-subtitle { color: white; margin: 5px 0 0; font-size: 1.1rem; opacity: 0.9; }
+
+        #announcementBar { 
+            background: var(--danger); color: white; padding: 15px; text-align: center; font-weight: bold; 
+            display: none; align-items: center; justify-content: center; gap: 12px; margin: 15px auto;
+            width: 90%; max-width: 800px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            animation: pulse-brightness 2s infinite ease-in-out;
+        }
+
+        @keyframes pulse-brightness { 0% { filter: brightness(0.8); } 50% { filter: brightness(1.2); } 100% { filter: brightness(0.8); } }
+
+        .container { max-width: 850px; margin: 0 auto; padding: 0 15px; }
+        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 25px; border-top: 6px solid var(--forest); }
+        h3 { color: var(--forest); margin: 0 0 20px; font-size: 1.4rem; display: flex; align-items: center; gap: 10px; border-bottom: 2px solid #eee; padding-bottom: 10px; justify-content: center; }
+        label { display: block; font-size: 11px; font-weight: bold; color: #666; margin: 15px 0 5px; text-transform: uppercase; }
         select, input, textarea { width: 100%; padding: 12px; border-radius: 8px; border: 2px solid #ddd; font-size: 15px; outline: none; box-sizing: border-box; }
-        .btn { background: var(--forest); color: white; border: none; padding: 12px 25px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; }
-        .student-item { display: flex; align-items: center; justify-content: space-between; padding: 10px; border-bottom: 1px solid #eee; }
+        .btn { background: var(--forest); color: white; border: none; padding: 14px 25px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 20px; font-size: 16px; transition: 0.3s; }
+        .admin-btn { background: #e8f5e9; color: var(--forest); border: 1px solid var(--forest); margin-bottom: 20px; display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 12px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 14px; }
+        .student-item { display: flex; align-items: center; justify-content: space-between; padding: 12px; border-bottom: 1px solid #eee; }
         .student-item input[type="checkbox"] { width: 22px; height: 22px; cursor: pointer; accent-color: var(--forest); }
-        #classSelectionGroup, #attendanceListArea, #submitAttBtn { display: none; }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; font-size: 14px; }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -29,14 +40,23 @@
 <body>
 
 <header>
-    <h1 style="margin:0;">TEACHER PORTAL</h1>
-    <p style="margin:5px 0 0; opacity:0.9;">Paramount English Medium School</p>
+    <img src="logo.png" alt="Logo" class="logo-img" onerror="this.style.display='none'">
+    <div class="school-info">
+        <h1 class="school-name">PARAMOUNT ENGLISH MEDIUM SCHOOL</h1>
+        <p class="portal-subtitle">Teachers Official Attendance Portal</p>
+    </div>
 </header>
 
+<div id="announcementBar">
+    <i class="fas fa-bell"></i> <span id="announcementText"></span>
+</div>
+
 <div class="container">
-    <div class="card" style="border-top: 6px solid var(--forest);">
-        <h3><i class="fas fa-lock"></i> Step 1: Teacher Verification</h3>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+    <a href="admin.html" class="admin-btn"><i class="fas fa-user-shield"></i> Go to Admin Dashboard</a>
+
+    <div class="card">
+        <h3>Mark Attendance</h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
             <div>
                 <label>Select Teacher</label>
                 <select id="teacherSelect" onchange="verifyTeacher()">
@@ -56,55 +76,35 @@
                     <option value="Ms. S. Neelima">Ms. S. Neelima</option>
                 </select>
             </div>
-            <div id="classSelectionGroup">
+            <div id="classGroup" style="display:none;">
                 <label>Select Class</label>
                 <select id="attClass" onchange="loadStudents()">
                     <option value="">-- Choose Class --</option>
-                    <option value="Pre-KG">Pre-KG (Diamond)</option>
-                    <option value="KG-1">KG-1 (Ruby)</option>
-                    <option value="KG-2">KG-2 (Amber)</option>
-                    <option value="Grade-1">Grade-1 (Opal)</option>
-                    <option value="Grade-2">Grade-2 (Emerald)</option>
-                    <option value="Grade-3">Grade-3 (Crystal)</option>
-                    <option value="Grade-4">Grade-4 (Citrine)</option>
-                    <option value="Grade-5">Grade-5 (Moonstone)</option>
-                    <option value="Grade-6">Grade-6 (Alluri)</option>
-                    <option value="Grade-7">Grade-7 (Kalam)</option>
-                    <option value="Grade-8">Grade-8 (Bhagat)</option>
+                    <option value="Pre-KG">Pre-KG</option><option value="KG-1">KG-1</option><option value="KG-2">KG-2</option>
+                    <option value="Grade-1">Grade-1</option><option value="Grade-2">Grade-2</option><option value="Grade-3">Grade-3</option>
+                    <option value="Grade-4">Grade-4</option><option value="Grade-5">Grade-5</option><option value="Grade-6">Grade-6</option>
+                    <option value="Grade-7">Grade-7</option><option value="Grade-8">Grade-8</option>
                 </select>
             </div>
         </div>
-        
-        <div id="attendanceListArea"></div>
-        <button id="submitAttBtn" class="btn" style="width:100%; margin-top:20px;" onclick="saveAttendance()">Submit Attendance</button>
+        <div id="studentList" style="margin-top:20px;"></div>
+        <button id="submitAtt" class="btn" style="display:none;" onclick="saveAndDownload()">Submit & Download Excel</button>
     </div>
 
-    <div class="card" style="border-top: 6px solid var(--gold);">
-        <h3><i class="fas fa-edit"></i> Step 2: Post Homework</h3>
+    <div class="card" style="border-top-color: var(--gold);">
+        <h3>Daily Homework</h3>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-            <div>
-                <label>Target Class</label>
-                <select id="hwClass" onchange="updateHWSubjects()">
-                    <option value="Pre-KG">Pre-KG</option>
-                    <option value="KG-1">KG-1</option>
-                    <option value="KG-2">KG-2</option>
-                    <option value="Grade-1">Grade-1</option>
-                    <option value="Grade-2">Grade-2</option>
-                    <option value="Grade-3">Grade-3</option>
-                    <option value="Grade-4">Grade-4</option>
-                    <option value="Grade-5">Grade-5</option>
-                    <option value="Grade-6">Grade-6</option>
-                    <option value="Grade-7">Grade-7</option>
-                    <option value="Grade-8">Grade-8</option>
-                </select>
-            </div>
+            <div><label>Class</label><select id="hwClass" onchange="updateHWSubjects()">
+                <option value="Pre-KG">Pre-KG</option><option value="KG-1">KG-1</option><option value="KG-2">KG-2</option>
+                <option value="Grade-1">Grade-1</option><option value="Grade-2">Grade-2</option><option value="Grade-3">Grade-3</option>
+                <option value="Grade-4">Grade-4</option><option value="Grade-5">Grade-5</option><option value="Grade-6">Grade-6</option>
+                <option value="Grade-7">Grade-7</option><option value="Grade-8">Grade-8</option>
+            </select></div>
             <div><label>Date</label><input type="date" id="hwDate"></div>
         </div>
-        <label>Subject</label>
-        <select id="hwSubjectSelect"></select>
-        <label>Task Details</label>
-        <textarea id="hwTaskInput" placeholder="Enter instructions..."></textarea>
-        <button class="btn" style="margin-top:15px; width:100%;" onclick="publishDiary()">Publish to Diary</button>
+        <label>Subject</label><select id="hwSubSelect"></select>
+        <label>Task Details</label><textarea id="hwTask" placeholder="Enter instructions..."></textarea>
+        <button class="btn" onclick="postHomework()">Post to Student Portal</button>
     </div>
 </div>
 
@@ -117,24 +117,13 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // TEACHER PASSWORD REGISTRY
     const teacherRegistry = {
-        "Mr. Shaik Ahmad": "ahmad@123",
-        "Ms. Roqiya Begum": "roqiya@123",
-        "Ms. G.Rajitha": "rajitha@123",
-        "Ms. Ameena Tabassum": "ameena@123",
-        "Ms. Shaik Shabana": "shabana@123",
-        "Ms. B.Ravali": "ravali@123",
-        "Ms. L.Kalyani": "kalyani@123",
-        "Ms. J.Alaya Sree": "alaya@123",
-        "Ms. S.Sujatha": "sujatha@123",
-        "Ms. J.Prathibha": "prathibha@123",
-        "Ms. P.Shailaja": "shailaja@123",
-        "Ms. A.Jhansi Rani": "jhansi@123",
-        "Ms. S. Neelima": "neelima@123"
+        "Mr. Shaik Ahmad": "Ahmad@07", "Ms. Roqiya Begum": "Roqiya@01", "Ms. G.Rajitha": "Rajitha@02",
+        "Ms. Ameena Tabassum": "Ameena@03", "Ms. Shaik Shabana": "Shabana@04", "Ms. B.Ravali": "Ravali@05",
+        "Ms. L.Kalyani": "Kalyani@06", "Ms. J.Alaya Sree": "Alaya@07", "Ms. S.Sujatha": "Sujatha@08",
+        "Ms. J.Prathibha": "Prathibha@09", "Ms. P.Shailaja": "Shailaja@10", "Ms. A.Jhansi Rani": "Jhansi@11", "Ms. S. Neelima": "Neelima@12"
     };
 
-    // COMPLETE STUDENT DATA
     const studentData = {
         "Pre-KG": ["Hanish Macharla", "Arjun Vihaar Illandula", "Thanu sree Allakunta", "Aadhya Gangaraboina", "Aadhya Sri Oggula", "Aadhyasri Shivagoni", "Afraha Begum", "Aliya Sultana", "Anvika Bandi", "Aradana Devara konda", "Devansh Bandi", "Hanvitha Mulkalapelli", "Harsha Vardhan Seenapelli", "Hiranya Bandi", "Jashritha Boina", "Konreddy Shreyanvi", "Kriyansh Sammeta", "Mohammed Mohiuddin Sayyad", "Nethra Narkurthi", "Reeyansh Bandi", "Rishi Manupati", "Rudransh Bandi", "Sanvika Bandi", "Shanvith Khatha", "Shishira Jalagam", "Shiva Sai Mekala", "Shree Rudhraveer Chevvu", "Shreyansh Gangaraboina", "Sreeja Thalla", "Srikrithini Myakala", "Srivatsav Vanam", "Sriyansh Mekala", "Thanvika Lakka", "Thrilokansh Vudari", "Ujjwal Chekka", "Vaishnavi Lakka", "Vedansh Myakala", "Vishnu Priya Molugu", "Vyshnav Tej Boina", "Yafiah Mohammad"],
         "KG-1": ["Aadhya Sri Amaravadi", "Aditya Manda", "Aadhya Jella", "Advaita Gauri Bandi", "Aizah Amna Shaik", "Akshara Singaram", "Bhahuveer Raj Somishetti", "Gayathri Erroju", "Hanvika Mulkalapelli", "Manvith Kondoju", "Sayyad Vajeed", "Mekala Manu sri", "Oliva Grace Vallapu", "Rithwik Oggula", "Rithwika Kandagatla", "Srimahi Chevvu", "Thanvesh Thalla", "Trishul Nanduri", "Yoganshika Nanduri", "Yusra Mohammad", "Zainul Abideen Syed"],
@@ -149,66 +138,55 @@
         "Grade-8": ["Sathwika Nagavelly", "Vyshnavi Uppala", "Akshaya Gampala", "Ganesh Oggula", "Gayathri Renukuntla", "Khaja Sadeemuddin Mohammed"]
     };
 
+    db.ref('announcement').on('value', (snap) => {
+        const msg = snap.val(); const bar = document.getElementById('announcementBar');
+        if(msg) { document.getElementById('announcementText').innerText = msg; bar.style.display = 'flex'; } 
+        else { bar.style.display = 'none'; }
+    });
+
     async function verifyTeacher() {
-        const name = document.getElementById('teacherSelect').value;
-        if(!name) return;
-        const correctPassword = teacherRegistry[name];
-        const { value: password } = await Swal.fire({
-            title: 'Verify Identity',
-            input: 'password',
-            inputLabel: `Enter password for ${name}`,
-            showCancelButton: true
-        });
-        if (password === correctPassword) {
-            document.getElementById('classSelectionGroup').style.display = "block";
-            Swal.fire('Verified', `Welcome, ${name}`, 'success');
-        } else {
-            document.getElementById('teacherSelect').value = "";
-            document.getElementById('classSelectionGroup').style.display = "none";
-            if(password) Swal.fire('Error', 'Incorrect Password', 'error');
-        }
+        const name = document.getElementById('teacherSelect').value; if(!name) return;
+        const { value: pw } = await Swal.fire({ title: 'Verify Identity', input: 'password', showCancelButton: true });
+        if(pw === teacherRegistry[name]) { document.getElementById('classGroup').style.display = 'block'; Swal.fire('Verified', 'Access Granted', 'success'); } 
+        else { document.getElementById('teacherSelect').value = ""; document.getElementById('classGroup').style.display = 'none'; if(pw) Swal.fire('Error', 'Incorrect Password', 'error'); }
     }
 
     function loadStudents() {
-        const cls = document.getElementById('attClass').value;
-        const area = document.getElementById('attendanceListArea');
+        const cls = document.getElementById('attClass').value; const list = document.getElementById('studentList');
         const students = studentData[cls] || [];
-        if(!cls) return area.innerHTML = "";
-        area.innerHTML = students.map(name => `
-            <div class="student-item">
-                <span style="font-weight:bold;">${name}</span>
-                <input type="checkbox" class="att-check" data-name="${name}" checked>
-            </div>`).join('');
-        area.style.display = "block";
-        document.getElementById('submitAttBtn').style.display = "block";
+        list.innerHTML = students.map(name => `<div class="student-item"><span>${name}</span><input type="checkbox" class="att-check" data-name="${name}" checked></div>`).join('');
+        document.getElementById('submitAtt').style.display = students.length ? 'block' : 'none';
     }
 
-    function saveAttendance() {
-        Swal.fire('Success', 'Attendance marked successfully.', 'success');
+    function saveAndDownload() {
+        const cls = document.getElementById('attClass').value; const teacher = document.getElementById('teacherSelect').value;
+        const checks = document.querySelectorAll('.att-check'); const month = new Date().toISOString().slice(0, 7);
+        let csv = "Student Name,Status,Class,Teacher,Date\n";
+        checks.forEach(cb => {
+            const name = cb.getAttribute('data-name'); const isP = cb.checked;
+            db.ref(`attendance/${cls}/students/${name}`).transaction(c => {
+                if(!c) return { presentDays: isP?1:0, totalDays: 1, months: {[month]: {present: isP?1:0, total: 1}} };
+                c.presentDays += isP?1:0; c.totalDays += 1; return c;
+            });
+            csv += `"${name}","${isP?'Present':'Absent'}","${cls}","${teacher}","${new Date().toLocaleDateString()}"\n`;
+        });
+        const blob = new Blob([csv], { type: 'text/csv' }); const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob); link.download = `Attendance_${cls}.csv`; link.click();
+        Swal.fire('Success', 'Attendance saved and Excel downloaded.', 'success');
     }
 
     function updateHWSubjects() {
-        const cls = document.getElementById('hwClass').value;
-        const subSelect = document.getElementById('hwSubjectSelect');
-        const common = ["TELUGU", "HINDI", "ENGLISH", "MATHS", "SOCIAL STUDIES"];
+        const cls = document.getElementById('hwClass').value; const common = ["TELUGU", "HINDI", "ENGLISH", "MATHS", "SOCIAL STUDIES"];
         const subjects = (["Grade-6", "Grade-7", "Grade-8"].includes(cls)) ? [...common, "PHYSICS", "CHEMISTRY", "BIOLOGY"] : [...common, "SCIENCE"];
-        subSelect.innerHTML = subjects.map(s => `<option value="${s}">${s}</option>`).join('');
+        document.getElementById('hwSubSelect').innerHTML = subjects.map(s => `<option value="${s}">${s}</option>`).join('');
     }
 
-    function publishDiary() {
-        const date = document.getElementById('hwDate').value;
-        const sub = document.getElementById('hwSubjectSelect').value;
-        const task = document.getElementById('hwTaskInput').value;
-        if(!date || !task) return;
-        const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        db.ref(`homework/${date}`).update({ [sub]: task, lastUpdated: now }).then(() => {
-            Swal.fire('Published!', `${sub} task is now live.`, 'success');
-            document.getElementById('hwTaskInput').value = "";
-        });
+    function postHomework() {
+        const date = document.getElementById('hwDate').value; const sub = document.getElementById('hwSubSelect').value; const task = document.getElementById('hwTask').value;
+        if(!date || !task) return Swal.fire('Error', 'Fill details', 'error');
+        db.ref(`homework/${date}`).update({ [sub]: task, lastUpdated: new Date().toLocaleTimeString() }).then(() => Swal.fire('Posted!', 'Homework is live.', 'success'));
     }
-
     updateHWSubjects();
 </script>
 </body>
 </html>
-
