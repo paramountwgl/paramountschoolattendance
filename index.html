@@ -104,13 +104,13 @@
             <div><label>Date</label><input type="date" id="hwDate" onchange="fetchExistingHW()"></div>
         </div>
         <label>Subject</label><select id="hwSubSelect" onchange="fetchExistingHW()"></select>
-        <label>Task Details</label><textarea id="hwTask" rows="3" placeholder="Type homework instructions here..."></textarea>
+        <label>Task Details</label><textarea id="hwTask" rows="3" placeholder="Type instructions..."></textarea>
         <button class="btn" onclick="postHomework()">Publish Homework</button>
     </div>
 
     <div class="card" style="border-top-color: #2196f3;">
         <h3>Quiz Portal Access</h3>
-        <label>Select Teacher (Quiz)</label>
+        <label>Select Teacher (For Quiz)</label>
         <select id="quizTeacherSelect" onchange="verifyAccess('quiz')" autocomplete="off">
             <option value="">-- Choose Name --</option>
             <option value="Mr. Shaik Ahmad">Mr. Shaik Ahmad</option><option value="Ms. Roqiya Begum">Ms. Roqiya Begum</option>
@@ -144,7 +144,7 @@
                     <option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>
                 </select></div>
             </div>
-            <label>Question</label><textarea id="quizQ" rows="2" placeholder="Type question here..."></textarea>
+            <label>Question Details</label><textarea id="quizQ" rows="2" placeholder="Type here..."></textarea>
             <label>Media Link</label><input type="text" id="mediaUrl" placeholder="Paste link here...">
             <div class="row-grid" style="margin-top:10px;">
                 <input type="text" id="optA" placeholder="Option A"><input type="text" id="optB" placeholder="Option B">
@@ -167,7 +167,7 @@
         "Ms. J.Prathibha": "Prathibha@123", "Ms. P.Shailaja": "Shailaja@123", "Ms. A.Jhansi Rani": "Jhansi@123", "Ms. S. Neelima": "Neelima@123"
     };
 
-    // SECURE ACCESS LOGIC
+    // SECURE ACCESS VERIFICATION
     async function verifyAccess(section) {
         let selectId = section === 'attendance' ? 'teacherSelect' : 'quizTeacherSelect';
         const name = document.getElementById(selectId).value;
@@ -175,7 +175,7 @@
 
         const { value: pw } = await Swal.fire({
             title: `Welcome ${name}!`,
-            html: `<b>Enter password to proceed.</b>`,
+            text: 'Enter password to proceed.',
             input: 'password',
             showCancelButton: true,
             inputAttributes: { autocomplete: 'new-password' }
@@ -190,7 +190,7 @@
         }
     }
 
-    // QUIZ REQUEST
+    // QUIZ REQUEST SYSTEM
     async function requestQuizAccess() {
         const teacher = document.getElementById('quizTeacherSelect').value;
         const cls = document.getElementById('reqQuizClass').value;
@@ -201,8 +201,15 @@
         });
         
         document.getElementById('reqBtn').disabled = true;
-        document.getElementById('reqBtn').innerText = "Pending Approval...";
-        Swal.fire('Submitted!', 'Your request has successfully submitted. Please wait for the Admin to accept.', 'success');
+        document.getElementById('reqBtn').innerText = "Waiting for Admin Approval...";
+        
+        // SUCCESS CONFIRMATION
+        Swal.fire({
+            title: 'Request Submitted!',
+            text: 'Your request has successfully submitted. Please wait for the Admin to accept.',
+            icon: 'success',
+            confirmButtonColor: '#006633'
+        });
         
         db.ref(`quiz_requests/${teacher}/status`).on('value', (snap) => {
             if(snap.val() === 'approved') {
@@ -249,17 +256,23 @@
     function updateHWSubjects() { const cls = document.getElementById('hwClass').value; const common = ["TELUGU", "HINDI", "ENGLISH", "MATHS", "SOCIAL STUDIES"]; let subs = (["Grade-6", "Grade-7", "Grade-8"].includes(cls)) ? [...common, "PHYSICS", "CHEMISTRY", "BIOLOGY"] : [...common, "SCIENCE"]; document.getElementById('hwSubSelect').innerHTML = subs.map(s => `<option value="${s}">${s}</option>`).join(''); }
     function updateQuizSubjects() { const cls = document.getElementById('reqQuizClass').value; const common = ["TELUGU", "HINDI", "ENGLISH", "MATHS", "SOCIAL STUDIES"]; let subs = (["Grade-6", "Grade-7", "Grade-8"].includes(cls)) ? [...common, "PHYSICS", "CHEMISTRY", "BIOLOGY"] : [...common, "SCIENCE"]; document.getElementById('reqQuizSubject').innerHTML = subs.map(s => `<option value="${s}">${s}</option>`).join(''); }
     
+    function fetchExistingHW() {
+        const date = document.getElementById('hwDate').value; const cls = document.getElementById('hwClass').value; const sub = document.getElementById('hwSubSelect').value;
+        if(!date) return;
+        db.ref(`homework/${date}/${cls}/${sub}`).once('value', (snap) => { document.getElementById('hwTask').value = snap.val() || ""; });
+    }
+
     function postHomework() { 
         const d = document.getElementById('hwDate').value; const c = document.getElementById('hwClass').value; const s = document.getElementById('hwSubSelect').value; const t = document.getElementById('hwTask').value; 
-        if(!d || !t) return Swal.fire('Error', 'Date and task details are required.', 'error');
-        db.ref(`homework/${d}/${c}`).update({ [s]: t, lastUpdated: new Date().toLocaleTimeString() }).then(() => Swal.fire('Published!', 'Homework is now visible to parents.', 'success')); 
+        if(!d || !t) return Swal.fire('Error', 'Date and task required.', 'error');
+        db.ref(`homework/${d}/${c}`).update({ [s]: t, lastUpdated: new Date().toLocaleTimeString() }).then(() => Swal.fire('Published!', '', 'success')); 
     }
 
     function publishSubjectQuiz() {
         const cls = document.getElementById('reqQuizClass').value; const sub = document.getElementById('reqQuizSubject').value;
         const data = { question: document.getElementById('quizQ').value, mediaUrl: document.getElementById('mediaUrl').value, mediaType: document.getElementById('mediaType').value, options: { A: document.getElementById('optA').value, B: document.getElementById('optB').value, C: document.getElementById('optC').value, D: document.getElementById('optD').value }, correct: document.getElementById('correctOpt').value };
         if(!data.question || !data.options.A) return Swal.fire('Error', 'Fill all fields', 'error');
-        db.ref(`daily_quiz/${cls}/${sub}`).set(data).then(() => { Swal.fire('Quiz Live!', 'Question published successfully.', 'success'); location.reload(); });
+        db.ref(`daily_quiz/${cls}/${sub}`).set(data).then(() => { Swal.fire('Quiz Live!', 'Question published.', 'success'); location.reload(); });
     }
 
     document.getElementById('hwDate').valueAsDate = new Date();
