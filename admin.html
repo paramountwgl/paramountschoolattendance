@@ -12,7 +12,6 @@
         * { box-sizing: border-box; } 
         body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; padding-bottom: 120px; overflow-x: hidden; }
         
-        /* LOGIN & RECOVERY */
         .overlay-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--light); z-index: 9999; display: flex; justify-content: center; align-items: center; padding: 15px; }
         .auth-box { background: white; padding: 40px 25px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); width: 100%; max-width: 400px; border-bottom: 5px solid var(--forest); position: relative; text-align: center; }
         .auth-logo-corner { position: absolute; top: 20px; left: 20px; height: 45px; width: auto; }
@@ -20,7 +19,6 @@
         .auth-title { color: var(--forest); margin: 0; font-family: 'Montserrat', sans-serif; font-size: 1.5rem; font-weight: 800; }
         .auth-input { width: 100%; max-width: 320px; padding: 12px; border-radius: 10px; border: 2px solid #eee; margin: 20px auto; text-align: center; font-size: 16px; outline: none; display: block; }
         
-        /* POLISHED HEADER: NO VERTICAL LINE */
         header { background: var(--forest); color: white; padding: 20px 3%; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .header-content { display: flex; align-items: center; justify-content: center; gap: 10px; max-width: 1400px; margin: 0 auto; width: 100%; }
         .header-logo { height: 65px; width: auto; flex-shrink: 0; }
@@ -37,7 +35,6 @@
         .card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); margin-bottom: 25px; border-top: 6px solid var(--forest); }
         h3 { color: var(--forest); margin: 0 0 20px; font-size: 1.3rem; border-bottom: 1px solid #eee; padding-bottom: 10px; display: flex; align-items: center; gap: 10px; }
         
-        /* BUTTONS & INPUTS */
         .btn-attract { 
             background: linear-gradient(135deg, var(--forest), #004d26); 
             color: white; padding: 14px 35px; border-radius: 50px; 
@@ -47,16 +44,17 @@
             display: inline-flex; align-items: center; justify-content: center; gap: 8px;
         }
         .btn-attract:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0, 102, 51, 0.5); border-color: var(--gold); }
+        .btn-attract.danger { background: linear-gradient(135deg, #d32f2f, #b71c1c); border-color: rgba(255,255,255,0.2); }
+        .btn-attract.warning { background: linear-gradient(135deg, #fb8c00, #ef6c00); border-color: rgba(255,255,255,0.2); }
+        
         .class-select { flex: 1; min-width: 200px; padding: 12px; border-radius: 10px; border: 2px solid #eee; font-size: 15px; outline: none; }
 
-        /* CURVED TABLE DESIGN: AS REQUESTED */
         .table-container { width: 100%; overflow: hidden; border-radius: 10px; }
         table { width: 100%; border-collapse: separate; border-spacing: 0; table-layout: fixed; }
         th { 
             background: var(--forest); color: white; text-transform: uppercase; 
             padding: 12px 2px; font-size: 11px; font-weight: 800;
         }
-        /* Top Rounded Corners for Table */
         th:first-child { border-top-left-radius: 10px; text-align: left; padding-left: 10px; width: 45%; }
         th:last-child { border-top-right-radius: 10px; }
         
@@ -134,6 +132,21 @@
                 </table>
             </div>
         </div>
+
+        <div class="card" style="border-top-color: var(--danger);">
+            <h3><i class="fas fa-tools"></i> Database Management</h3>
+            <p style="font-size: 13px; color: #666; text-align: center; margin-bottom: 20px;">
+                Choose a reset option. Monthly reset clears current month logs only.
+            </p>
+            <div style="display: flex; gap: 10px; flex-direction: column;">
+                <button onclick="resetMonthlyData()" class="btn-attract warning" style="width: 100%;">
+                    <i class="fas fa-calendar-minus"></i> Reset Current Month Only
+                </button>
+                <button onclick="resetAttendanceData()" class="btn-attract danger" style="width: 100%;">
+                    <i class="fas fa-trash-alt"></i> Backup & Reset All Attendance
+                </button>
+            </div>
+        </div>
     </div>
 
     <div class="bottom-nav">
@@ -146,6 +159,8 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
+
 <script>
     const firebaseConfig = { apiKey: "AIzaSyDRYk9KOK-ga0c88dnYMsAoifW2NJTd_Y8", databaseURL: "https://paramount-school-d55bc-default-rtdb.firebaseio.com", projectId: "paramount-school-d55bc" };
     firebase.initializeApp(firebaseConfig);
@@ -186,8 +201,118 @@
             }
         });
     }
+
     function postAnn() { db.ref('announcement').set(document.getElementById('annMsg').value).then(() => Swal.fire('Published', '', 'success')); }
     function clearAnn() { db.ref('announcement').remove().then(() => { document.getElementById('annMsg').value = ""; Swal.fire('Cleared', '', 'info'); }); }
+
+    /* RESET MONTHLY DATA LOGIC */
+    async function resetMonthlyData() {
+        const currentMonth = new Date().toISOString().slice(0, 7);
+        const confirmResult = await Swal.fire({
+            title: 'Confirm Monthly Reset',
+            text: `Clear stats for ${currentMonth}? Yearly totals remain safe.`,
+            icon: 'info',
+            showCancelButton: true,
+            confirmButtonText: 'Clear Month'
+        });
+
+        if (confirmResult.isConfirmed) {
+            const { value: password } = await Swal.fire({
+                title: 'Authorization',
+                input: 'password',
+                showCancelButton: true
+            });
+
+            if (password === "ParamountAdmin@2026") { //
+                try {
+                    Swal.fire({ title: 'Cleaning...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+                    const snapshot = await db.ref('attendance').once('value');
+                    const data = snapshot.val();
+                    if (data) {
+                        const updates = {};
+                        Object.keys(data).forEach(cls => {
+                            const students = data[cls].students;
+                            if (students) Object.keys(students).forEach(name => {
+                                updates[`attendance/${cls}/students/${name}/months/${currentMonth}`] = null;
+                            });
+                        });
+                        await db.ref().update(updates);
+                        Swal.fire('Success', `Logs for ${currentMonth} cleared.`, 'success');
+                    }
+                } catch (error) { Swal.fire('Error', error.message, 'error'); }
+            } else if (password) { Swal.fire('Denied', 'Incorrect Password', 'error'); }
+        }
+    }
+
+    /* MASTER RESET & BACKUP LOGIC */
+    async function resetAttendanceData() {
+        const confirmResult = await Swal.fire({
+            title: 'WARNING: PERMANENT RESET',
+            text: "This will delete all student records. A master backup file will be generated first.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d32f2f',
+            confirmButtonText: 'Backup & Reset Now'
+        });
+
+        if (confirmResult.isConfirmed) {
+            const { value: password } = await Swal.fire({
+                title: 'Authorization Required',
+                text: 'Enter Master Admin Password to proceed:',
+                input: 'password',
+                showCancelButton: true
+            });
+
+            if (password === "ParamountAdmin@2026") { //
+                try {
+                    Swal.fire({ title: 'Running Backup...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+                    const snapshot = await db.ref('attendance').once('value');
+                    const allData = snapshot.val();
+
+                    if (allData) await generateMasterBackup(allData); //
+
+                    await db.ref('attendance').remove(); //
+                    Swal.fire('Success', 'Database cleared. Backup downloaded.', 'success');
+                } catch (error) {
+                    Swal.fire('Error', 'Reset failed: ' + error.message, 'error');
+                }
+            } else if (password) {
+                Swal.fire('Denied', 'Incorrect Password', 'error');
+            }
+        }
+    }
+
+    async function generateMasterBackup(data) { //
+        const workbook = new ExcelJS.Workbook();
+        const sheet = workbook.addWorksheet('Attendance_Archive');
+        sheet.columns = [
+            { header: 'Class', key: 'class', width: 15 },
+            { header: 'Student Name', key: 'name', width: 30 },
+            { header: 'Present Days', key: 'present', width: 15 },
+            { header: 'Total Days', key: 'total', width: 15 }
+        ];
+
+        Object.keys(data).forEach(className => {
+            const students = data[className].students;
+            if (students) {
+                Object.keys(students).forEach(name => {
+                    sheet.addRow({
+                        class: className,
+                        name: name,
+                        present: students[name].presentDays || 0,
+                        total: students[name].totalDays || 0
+                    });
+                });
+            }
+        });
+
+        const buffer = await workbook.xlsx.writeBuffer();
+        const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = `Paramount_Archive_${new Date().toISOString().split('T')[0]}.xlsx`;
+        link.click();
+    }
 </script>
 </body>
 </html>
