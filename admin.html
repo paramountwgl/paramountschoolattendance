@@ -14,10 +14,6 @@
         
         .overlay-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--light); z-index: 9999; display: flex; justify-content: center; align-items: center; padding: 15px; }
         .auth-box { background: white; padding: 40px 25px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); width: 100%; max-width: 400px; border-bottom: 5px solid var(--forest); position: relative; text-align: center; }
-        
-        /* RESTORED LOGO STYLING */
-        .auth-logo-corner { position: absolute; top: 20px; left: 20px; height: 45px; width: auto; }
-        
         .secure-icon { font-size: 50px; color: var(--forest); margin: 0 auto 15px auto; display: block; }
         .auth-title { color: var(--forest); margin: 0; font-family: 'Montserrat', sans-serif; font-size: 1.5rem; font-weight: 800; }
         .auth-input { width: 100%; max-width: 320px; padding: 12px; border-radius: 10px; border: 2px solid #eee; margin: 20px auto; text-align: center; font-size: 16px; outline: none; display: block; }
@@ -32,12 +28,16 @@
         .admin-portal-title { font-family: 'Montserrat', sans-serif; font-size: clamp(1rem, 2.5vw, 1.8rem); font-weight: 800; color: white; text-transform: uppercase; border-left: 3px solid var(--gold); padding-left: 15px; margin-left: 15px; }
 
         /* NOTIFICATION BOX STYLES */
-        #notifBadge { position: absolute; top: -5px; right: -5px; background: var(--danger); color: white; border-radius: 50%; padding: 2px 6px; font-size: 10px; font-weight: bold; border: 2px solid var(--forest); }
+        #notifBadge { position: absolute; top: -5px; right: -5px; background: var(--danger); color: white; border-radius: 50%; padding: 2px 6px; font-size: 10px; font-weight: bold; border: 2px solid var(--forest); display: none; }
         #notifDropdown { display: none; position: absolute; top: 60px; right: 0; width: 320px; background: white; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); z-index: 10000; color: #333; overflow: hidden; }
         .notif-header { padding: 12px 15px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; background: #fafafa; }
         #notifList { max-height: 350px; overflow-y: auto; }
         .notif-item { padding: 15px; border-bottom: 1px solid #f5f5f5; transition: 0.3s; }
         .notif-item:hover { background: #f9f9f9; }
+
+        /* PULSING ANIMATION FOR BELL */
+        .fa-beat { animation: fa-beat 1.5s ease-in-out infinite; }
+        @keyframes fa-beat { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
 
         .container { max-width: 850px; margin: 30px auto; padding: 0 15px; }
         .card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); margin-bottom: 25px; border-top: 6px solid var(--forest); }
@@ -68,11 +68,10 @@
 
 <div id="loginScreen" class="overlay-screen">
     <div class="auth-box">
-        <img src="logo.png" class="auth-logo-corner" onerror="this.style.display='none'">
         <i class="fas fa-user-shield secure-icon"></i>
         <h2 class="auth-title">Admin Access</h2>
         <input type="password" id="adminPass" class="auth-input" placeholder="Admin Password">
-        <button onclick="login()" class="btn-attract" style="width:100%;">Unlock Dashboard</button>
+        <button onclick="login()" class="btn-attract" style="width:100%;">Unlock Dashboard <i class="fas fa-unlock-alt"></i></button>
         <div style="margin-top:15px; display:flex; flex-direction:column; gap:8px;">
             <span style="color:#666; font-size:13px; text-decoration:underline; cursor:pointer;" onclick="window.location.href='index.html'">Cancel & Return</span>
             <span style="color:#666; font-size:13px; text-decoration:underline; cursor:pointer;" onclick="openRecovery()">Forgot Password?</span>
@@ -105,13 +104,13 @@
 
             <div style="position: relative;">
                 <div onclick="toggleNotifBox()" style="cursor: pointer; padding: 10px;">
-                    <i class="fas fa-bell" style="font-size: 22px; color: white;"></i>
-                    <span id="notifBadge" style="display:none;">0</span>
+                    <i id="bellIcon" class="fas fa-bell" style="font-size: 24px; color: white;"></i>
+                    <span id="notifBadge">0</span>
                 </div>
                 <div id="notifDropdown">
                     <div class="notif-header">
-                        <b>Quiz Requests</b>
-                        <small onclick="clearAllRequests()" style="cursor:pointer; color:var(--forest);">Clear</small>
+                        <b>Quiz Requests <i class="fas fa-paper-plane"></i></b>
+                        <small onclick="clearAllRequests()" style="cursor:pointer; color:var(--danger); font-weight: bold;">Clear All</small>
                     </div>
                     <div id="notifList">
                         <p style="padding:20px; text-align:center; color:#999; font-size:13px;">No new requests</p>
@@ -126,7 +125,7 @@
             <h3><i class="fas fa-bullhorn"></i> Announcement Control</h3>
             <textarea id="annMsg" style="width:100%; height:110px; padding:15px; border-radius:10px; border:2px solid #eee; outline:none; margin-bottom:20px; resize:none;" placeholder="Type school announcement here..."></textarea>
             <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
-                <button onclick="postAnn()" class="btn-attract">Publish Now</button>
+                <button onclick="postAnn()" class="btn-attract">Publish Now <i class="fas fa-check-circle"></i></button>
                 <button onclick="clearAnn()" style="background:#eee; color:#666; border:none; padding:14px 25px; border-radius:50px; font-weight:bold; cursor:pointer;">Clear Message</button>
             </div>
         </div>
@@ -136,7 +135,7 @@
             <div style="display:flex; flex-direction:column; gap:15px; margin-bottom:25px;">
                 <div style="display:flex; gap:10px; flex-wrap:wrap;">
                     <select id="clsPick" class="class-select">
-                        <option value="">-- Class --</option>
+                        <option value="">-- Choose Class --</option>
                         <option value="Pre-KG">Pre-KG</option><option value="KG-1">KG-1</option><option value="KG-2">KG-2</option>
                         <option value="Grade-1">Grade-1</option><option value="Grade-2">Grade-2</option><option value="Grade-3">Grade-3</option>
                         <option value="Grade-4">Grade-4</option><option value="Grade-5">Grade-5</option><option value="Grade-6">Grade-6</option>
@@ -160,9 +159,9 @@
                 </div>
 
                 <div style="display:flex; gap:10px; flex-wrap:wrap;">
-                    <button onclick="viewAtt()" class="btn-attract" style="flex:1;">View Report</button>
+                    <button onclick="viewAtt()" class="btn-attract" style="flex:1;">View Report <i class="fas fa-file-invoice"></i></button>
                     <button onclick="downloadFilteredReport()" id="dlBtn" class="btn-attract warning" style="display:none; flex:1;">
-                        <i class="fas fa-file-excel"></i> Download Attractive Report
+                        <i class="fas fa-file-excel"></i> Download Excel Report
                     </button>
                 </div>
             </div>
@@ -178,17 +177,16 @@
 
         <div class="card" style="border-top-color: var(--danger);">
             <h3><i class="fas fa-tools"></i> Database Management</h3>
-            <p style="font-size: 13px; color: #666; text-align: center; margin-bottom: 20px;">Monthly reset clears history for the current month period.</p>
             <div style="display: flex; gap: 10px; flex-direction: column;">
-                <button onclick="resetMonthlyData()" class="btn-attract warning" style="width: 100%;"><i class="fas fa-calendar-minus"></i> Reset Current Month Only</button>
-                <button onclick="resetAttendanceData()" class="btn-attract danger" style="width: 100%;"><i class="fas fa-trash-alt"></i> Backup & Reset All Attendance</button>
+                <button onclick="resetMonthlyData()" class="btn-attract warning"><i class="fas fa-calendar-minus"></i> Reset Current Month Only</button>
+                <button onclick="resetAttendanceData()" class="btn-attract danger"><i class="fas fa-trash-alt"></i> Master Database Reset</button>
             </div>
         </div>
     </div>
 
     <div class="bottom-nav">
         <button onclick="window.location.href='index.html'" class="btn-attract" style="width: 90%; max-width: 400px;">
-            <i class="fas fa-arrow-left"></i> Return to Attendance Portal
+            <i class="fas fa-arrow-left"></i> Return to Teacher Portal
         </button>
     </div>
 </div>
@@ -234,7 +232,7 @@
     }
 
     function recoverPass() {
-        if(document.getElementById('masterKey').value === "PARAMOUNT@2026") {
+        if(document.getElementById('masterKey').value === "paramount") {
             db.ref('admin/password').set(document.getElementById('newPass').value).then(() => {
                 Swal.fire('Success', 'Password Updated!', 'success');
                 closeRecovery();
@@ -254,24 +252,54 @@
         box.style.display = (box.style.display === 'none' || box.style.display === '') ? 'block' : 'none';
     }
 
+    // UPDATED REAL-TIME LISTENER
     db.ref('quiz_requests').on('value', (snap) => {
         const requests = snap.val();
         const list = document.getElementById('notifList');
         const badge = document.getElementById('notifBadge');
+        const bell = document.getElementById('bellIcon');
         let count = 0; list.innerHTML = "";
-        if(!requests) { badge.style.display = 'none'; list.innerHTML = '<p style="padding:20px; text-align:center; color:#999; font-size:13px;">No new requests</p>'; return; }
+
+        if(!requests) {
+            badge.style.display = 'none';
+            bell.classList.remove('fa-beat');
+            list.innerHTML = '<p style="padding:20px; text-align:center; color:#999; font-size:13px;">No new requests</p>';
+            return;
+        }
+
         Object.keys(requests).forEach(id => {
             const req = requests[id];
             if(req.status === 'pending') {
                 count++;
-                list.innerHTML += `<div class="notif-item"><b style="font-size:13px; color:var(--forest);">${req.teacher}</b><div style="font-size:11px; color:#666; margin:4px 0;">wants Quiz Access for ${req.class} (${req.subject})</div><div style="display:flex; gap:8px; margin-top:8px;"><button onclick="approveReq('${id}')" style="flex:1; background:var(--forest); color:white; border:none; padding:6px; border-radius:6px; font-size:11px; cursor:pointer; font-weight:bold;">Accept</button><button onclick="rejectReq('${id}')" style="flex:0.4; background:#f5f5f5; color:#666; border:none; padding:6px; border-radius:6px; font-size:11px; cursor:pointer;">Decline</button></div></div>`;
+                list.innerHTML += `
+                    <div class="notif-item">
+                        <b style="font-size:13px; color:var(--forest);">${req.teacher}</b>
+                        <div style="font-size:11px; color:#666; margin:4px 0;">wants Quiz Access for ${req.class} (${req.subject})</div>
+                        <div style="display:flex; gap:8px; margin-top:8px;">
+                            <button onclick="approveReq('${id}')" style="flex:1; background:var(--forest); color:white; border:none; padding:6px; border-radius:6px; font-size:11px; cursor:pointer; font-weight:bold;">Accept</button>
+                            <button onclick="rejectReq('${id}')" style="flex:0.4; background:#f5f5f5; color:#666; border:none; padding:6px; border-radius:6px; font-size:11px; cursor:pointer;">Decline</button>
+                        </div>
+                    </div>`;
             }
         });
-        if(count > 0) { badge.innerText = count; badge.style.display = 'block'; }
-        else { badge.style.display = 'none'; list.innerHTML = '<p style="padding:20px; text-align:center; color:#999; font-size:13px;">All caught up! ✨</p>'; }
+
+        if(count > 0) {
+            badge.innerText = count;
+            badge.style.display = 'block';
+            bell.classList.add('fa-beat');
+        } else {
+            badge.style.display = 'none';
+            bell.classList.remove('fa-beat');
+            list.innerHTML = '<p style="padding:20px; text-align:center; color:#999; font-size:13px;">All caught up! ✨</p>';
+        }
     });
 
-    function approveReq(id) { db.ref(`quiz_requests/${id}`).update({ status: 'approved' }); }
+    function approveReq(id) {
+        db.ref(`quiz_requests/${id}`).update({ status: 'approved' }).then(() => {
+            Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Request Accepted', showConfirmButton: false, timer: 2000 });
+        });
+    }
+
     function rejectReq(id) { db.ref(`quiz_requests/${id}`).remove(); }
     function clearAllRequests() { db.ref('quiz_requests').remove(); }
 
@@ -302,6 +330,7 @@
                     let p = 0, t = 0;
                     if(type === 'monthly') {
                         const selMonth = document.getElementById('monthInput').value;
+                        if(!selMonth) return;
                         const mData = (data[name].months && data[name].months[selMonth]) ? data[name].months[selMonth] : null;
                         p = mData ? (mData.present || 0) : 0; t = mData ? (mData.total || 0) : 0;
                     } else {
