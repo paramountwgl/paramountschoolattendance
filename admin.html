@@ -15,8 +15,10 @@
         .auth-box { background: white; padding: 40px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; width: 90%; max-width: 350px; position: relative; }
         .corner-logo { position: absolute; top: 20px; left: 20px; height: 40px; width: auto; }
         .auth-box input { padding: 12px; width: 100%; margin: 10px 0; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; outline: none; box-sizing: border-box; }
+        .auth-box input:focus { border-color: var(--forest); }
         .auth-btn { background: var(--forest); color: white; border: none; padding: 12px; width: 100%; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.2s; margin-top: 10px; }
         .danger-auth-btn { background: var(--danger); color: white; border: none; padding: 12px; width: 100%; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .return-link { background: none; border: none; color: #666; margin-top: 15px; cursor: pointer; text-decoration: underline; font-size: 14px; }
         
         /* MAIN APP STYLING */
         #mainApp, #resetDataScreen { display: none; }
@@ -45,6 +47,7 @@
         <input type="password" id="adminPassword" placeholder="Enter Password" onkeypress="if(event.key === 'Enter') checkPassword()">
         <button class="auth-btn" onclick="checkPassword()">Login</button>
         <p id="loginError" style="color: var(--danger); display: none; margin-top: 15px; font-weight: bold;">Incorrect Password</p>
+        <button onclick="window.location.href='index.html'" class="return-link">Cancel & Return</button>
     </div>
 </div>
 
@@ -55,7 +58,7 @@
         <p style="font-size: 13px; color: #333; font-weight: bold;">This will permanently delete ALL Cloud attendance data.</p>
         <input type="password" id="resetDataPassword" placeholder="Enter Admin Password">
         <button class="danger-auth-btn" onclick="confirmDataReset()">Yes, Clear Everything</button>
-        <button onclick="document.getElementById('resetDataScreen').style.display='none'" style="background: none; border: none; color: #666; margin-top: 15px; cursor: pointer; text-decoration: underline; font-weight: bold;">Cancel</button>
+        <button onclick="document.getElementById('resetDataScreen').style.display='none'" class="return-link">Cancel</button>
     </div>
 </div>
 
@@ -73,7 +76,7 @@
             <h3><i class="fas fa-bullhorn"></i> Live Cloud Announcement</h3>
             <textarea id="announcementInput" placeholder="Broadcast a message instantly..."></textarea>
             <div style="display: flex; gap: 10px;">
-                <button onclick="publishAnnouncement()" class="auth-btn" style="flex:1;">Publish</button>
+                <button onclick="publishAnnouncement()" class="auth-btn" style="flex:1;">Publish to All Devices</button>
                 <button onclick="clearAnnouncement()" class="auth-btn" style="background: var(--danger); width:100px;">Clear</button>
             </div>
         </div>
@@ -84,27 +87,30 @@
                 <div style="flex: 1;">
                     <label>Select Class</label>
                     <select id="classSelect">
-                        <option value="Pre-KG">Pre-KG</option>
-                        <option value="KG-1">KG-1</option>
-                        <option value="KG-2">KG-2</option>
-                        <option value="Grade-1">Grade-1</option>
-                        <option value="Grade-2">Grade-2</option>
-                        <option value="Grade-3">Grade-3</option>
-                        <option value="Grade-4">Grade-4</option>
-                        <option value="Grade-5">Grade-5</option>
-                        <option value="Grade-6">Grade-6</option>
-                        <option value="Grade-7">Grade-7</option>
+                        <option value="Pre-KG">Pre-KG</option><option value="KG-1">KG-1</option>
+                        <option value="KG-2">KG-2</option><option value="Grade-1">Grade-1</option>
+                        <option value="Grade-2">Grade-2</option><option value="Grade-3">Grade-3</option>
+                        <option value="Grade-4">Grade-4</option><option value="Grade-5">Grade-5</option>
+                        <option value="Grade-6">Grade-6</option><option value="Grade-7">Grade-7</option>
                         <option value="Grade-8">Grade-8</option>
                     </select>
                 </div>
                 <button class="auth-btn" onclick="loadAttendance()" style="width: auto; height: 48px; margin: 0;">View Data</button>
             </div>
             <table id="attTable">
-                <thead><tr><th>Student Name</th><th>Present</th><th>Total</th><th>Percentage</th></tr></thead>
+                <thead>
+                    <tr>
+                        <th>Student Name</th>
+                        <th>Present</th>
+                        <th>Absent</th>
+                        <th>Total</th>
+                        <th>Percentage</th>
+                    </tr>
+                </thead>
                 <tbody id="attBody"></tbody>
             </table>
             
-            <button class="danger-auth-btn" onclick="document.getElementById('resetDataScreen').style.display='flex'" style="width: auto; padding: 10px 20px; font-size: 13px; margin-top: 30px;">
+            <button class="danger-auth-btn" onclick="document.getElementById('resetDataScreen').style.display='flex'" style="width: auto; padding: 10px 20px; font-size: 12px; margin-top: 30px;">
                 <i class="fas fa-trash-alt"></i> Reset Cloud Data
             </button>
         </div>
@@ -139,24 +145,35 @@ function clearAnnouncement() { db.ref('announcement').remove(); }
 function confirmDataReset() {
     if(document.getElementById('resetDataPassword').value === ADMIN_PASSWORD) {
         db.ref('attendance').remove().then(() => {
-            Swal.fire('Cleared!', 'All attendance data permanently deleted.', 'success');
+            Swal.fire('Cleared!', 'Attendance records deleted.', 'success');
             setTimeout(() => location.reload(), 1500);
         });
     } else { alert("Incorrect Password!"); }
 }
 
+// ATTENDANCE LOGIC WITH ABSENT CALCULATION
 function loadAttendance() {
     const cls = document.getElementById('classSelect').value;
     const body = document.getElementById('attBody');
-    body.innerHTML = '<tr><td colspan="4" style="text-align:center;">Fetching...</td></tr>';
+    body.innerHTML = '<tr><td colspan="5" style="text-align:center;">Fetching...</td></tr>';
     db.ref('attendance').once('value').then((snap) => {
         const data = snap.val() || {}; body.innerHTML = "";
-        if(!data[cls]) { body.innerHTML = '<tr><td colspan="4" style="text-align:center;">No data found.</td></tr>'; return; }
+        if(!data[cls]) { body.innerHTML = '<tr><td colspan="5" style="text-align:center;">No data found.</td></tr>'; return; }
         const students = data[cls].students;
         for(const name in students) {
             const stats = students[name];
-            const percent = stats.totalDays > 0 ? Math.round((stats.presentDays / stats.totalDays) * 100) : 0;
-            body.innerHTML += `<tr><td>${name}</td><td>${stats.presentDays}</td><td>${stats.totalDays}</td><td>${percent}%</td></tr>`;
+            const p = stats.presentDays || 0;
+            const t = stats.totalDays || 0;
+            const a = t - p; // Calculation for Absent days
+            const pct = t > 0 ? Math.round((p / t) * 100) : 0;
+            
+            body.innerHTML += `<tr>
+                <td>${name}</td>
+                <td style="color:green; font-weight:bold;">${p}</td>
+                <td style="color:red; font-weight:bold;">${a}</td>
+                <td>${t}</td>
+                <td>${pct}%</td>
+            </tr>`;
         }
     });
 }
