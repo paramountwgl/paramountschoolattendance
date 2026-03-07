@@ -12,19 +12,31 @@
         * { box-sizing: border-box; } 
         body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; padding-bottom: 120px; overflow-x: hidden; }
         
+        /* LOGIN SCREEN */
         .overlay-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--light); z-index: 9999; display: flex; justify-content: center; align-items: center; padding: 15px; }
         .auth-box { background: white; padding: 40px 25px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); width: 100%; max-width: 400px; border-bottom: 5px solid var(--forest); text-align: center; }
         .auth-input { width: 100%; padding: 12px; margin: 20px 0; border: 2px solid #eee; border-radius: 10px; text-align: center; font-size: 16px; outline: none; }
 
+        /* HEADER & BRANDING BOX */
         header { background: var(--forest); color: white; padding: 15px 3%; box-shadow: 0 4px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000; }
         .header-content { display: flex; align-items: center; justify-content: space-between; max-width: 1400px; margin: 0 auto; width: 100%; }
         
-        /* LOGO & ADMIN ICON ALIGNMENT */
-        .header-left { display: flex; align-items: center; gap: 10px; }
-        .header-logo { height: 50px; width: auto; flex-shrink: 0; }
-        .admin-icon-box { background: rgba(255,255,255,0.1); padding: 8px; border-radius: 10px; display: flex; align-items: center; gap: 8px; border: 1px solid rgba(255,215,0,0.3); }
+        .header-left { display: flex; align-items: center; }
+        
+        /* LOGO & ICON INSIDE THE BOX */
+        .admin-access-box { 
+            background: rgba(255, 255, 255, 0.1); 
+            padding: 8px 15px; 
+            border-radius: 12px; 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            border: 1px solid rgba(255, 215, 0, 0.3); 
+        }
+        .header-logo { height: 45px; width: auto; }
+        .shield-icon { color: var(--gold); font-size: 1.2rem; }
         .school-text { display: flex; flex-direction: column; line-height: 1.1; }
-        .school-name-main { font-family: 'Montserrat', sans-serif; font-size: 1.2rem; font-weight: 800; }
+        .school-name-main { font-family: 'Montserrat', sans-serif; font-size: 1.1rem; font-weight: 800; }
         .admin-label { font-family: 'Montserrat', sans-serif; font-size: 0.7rem; color: var(--gold); font-weight: 700; text-transform: uppercase; }
 
         /* NOTIFICATIONS */
@@ -36,18 +48,14 @@
         .fa-beat { animation: fa-beat 1.5s ease-in-out infinite; color: var(--gold) !important; }
         @keyframes fa-beat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.2); } }
 
+        /* DASHBOARD CONTENT */
         .container { max-width: 850px; margin: 30px auto; padding: 0 15px; }
         .card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); margin-bottom: 25px; border-top: 6px solid var(--forest); }
         h3 { color: var(--forest); margin: 0 0 20px; font-size: 1.2rem; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
-        
         .btn-admin { background: linear-gradient(135deg, var(--forest), #004d26); color: white; padding: 14px 25px; border-radius: 50px; font-weight: bold; border: none; cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin-top: 10px; }
         .btn-admin:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
-        .btn-admin.warning { background: linear-gradient(135deg, #fb8c00, #ef6c00); }
         .btn-admin.danger { background: linear-gradient(135deg, #d32f2f, #b71c1c); }
 
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 13px; }
-        th { background: var(--forest); color: white; padding: 10px; text-align: left; }
-        td { padding: 10px; border-bottom: 1px solid #eee; }
         .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; padding: 20px; background: white; border-top: 1px solid #eee; display: flex; justify-content: center; z-index: 1000; }
     </style>
 </head>
@@ -58,7 +66,7 @@
         <img src="logo.png" style="height: 80px; margin-bottom: 15px;">
         <h2 class="auth-title">Admin Dashboard</h2>
         <input type="password" id="adminPass" class="auth-input" placeholder="Enter Password">
-        <button onclick="login()" class="btn-admin">Login To Control Panel</button>
+        <button onclick="login()" class="btn-admin">Login To Portal</button>
     </div>
 </div>
 
@@ -66,12 +74,12 @@
     <header>
         <div class="header-content">
             <div class="header-left">
-                <img src="logo.png" class="header-logo">
-                <div class="admin-icon-box">
-                    <i class="fas fa-user-shield" style="color: var(--gold); font-size: 1.2rem;"></i>
+                <div class="admin-access-box">
+                    <img src="logo.png" class="header-logo" alt="Logo">
+                    <i class="fas fa-user-shield shield-icon"></i>
                     <div class="school-text">
                         <span class="school-name-main">PARAMOUNT</span>
-                        <span class="admin-label">Admin Portal</span>
+                        <span class="admin-label">Admin Access</span>
                     </div>
                 </div>
             </div>
@@ -85,7 +93,7 @@
                         <small onclick="db.ref('quiz_requests').remove()" style="color:var(--danger); cursor:pointer;">Clear All</small>
                     </div>
                     <div id="notifList">
-                        <p style="padding:20px; text-align:center; color:#999; font-size:12px;">No new requests</p>
+                        <p style="padding:20px; text-align:center; color:#999; font-size:13px;">No new requests</p>
                     </div>
                 </div>
             </div>
@@ -100,10 +108,10 @@
         </div>
 
         <div class="card">
-            <h3><i class="fas fa-calendar-check"></i> Attendance Reports</h3>
+            <h3><i class="fas fa-calendar-check"></i> Attendance Monitoring</h3>
             <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:15px;">
                 <select id="clsPick" style="padding:12px; border-radius:10px; border:2px solid #eee;">
-                    <option value="">-- Class --</option>
+                    <option value="">-- Choose Class --</option>
                     <option value="Pre-KG">Pre-KG</option><option value="KG-1">KG-1</option><option value="KG-2">KG-2</option>
                     <option value="Grade-1">Grade-1</option><option value="Grade-2">Grade-2</option><option value="Grade-3">Grade-3</option>
                     <option value="Grade-4">Grade-4</option><option value="Grade-5">Grade-5</option><option value="Grade-6">Grade-6</option>
@@ -111,21 +119,13 @@
                 </select>
                 <input type="month" id="monthInput" style="padding:12px; border-radius:10px; border:2px solid #eee;">
             </div>
-            <div style="display:flex; gap:10px;">
-                <button onclick="viewAtt()" class="btn-admin" style="background:#2196f3;">View List</button>
-                <button onclick="downloadExcel()" class="btn-admin warning" style="display:none;" id="dlBtn">Excel Export</button>
-            </div>
-            <div id="attBodyContainer">
-                <table id="attTable" style="display:none;">
-                    <thead><tr><th>Student Name</th><th>Present</th><th>Absent</th><th>Total</th></tr></thead>
-                    <tbody id="attBody"></tbody>
-                </table>
-            </div>
+            <button onclick="viewAtt()" class="btn-admin" style="background:#2196f3;">View List</button>
+            <div id="attBody" style="margin-top:15px;"></div>
         </div>
 
         <div class="card" style="border-top-color: var(--danger);">
-            <h3><i class="fas fa-tools"></i> Maintenance</h3>
-            <button onclick="resetData()" class="btn-admin danger">Master Database Reset (Erase All)</button>
+            <h3><i class="fas fa-tools"></i> Database Maintenance</h3>
+            <button onclick="resetData()" class="btn-admin danger">Master Database Reset</button>
         </div>
     </div>
 
@@ -139,7 +139,6 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
 
 <script>
     const firebaseConfig = { apiKey: "AIzaSyDRYk9KOK-ga0c88dnYMsAoifW2NJTd_Y8", databaseURL: "https://paramount-school-d55bc-default-rtdb.firebaseio.com", projectId: "paramount-school-d55bc" };
@@ -158,7 +157,7 @@
         d.style.display = (d.style.display === 'none' || d.style.display === '') ? 'block' : 'none';
     }
 
-    // REAL-TIME LISTENER FOR TEACHER REQUESTS
+    // REAL-TIME LISTENER FOR TEACHER REQUESTS (FIXED FOR NOTIFICATIONS)
     db.ref('quiz_requests').on('value', (snap) => {
         const requests = snap.val();
         const list = document.getElementById('notifList');
@@ -168,7 +167,7 @@
 
         if(!requests) {
             badge.style.display = 'none'; bell.classList.remove('fa-beat');
-            list.innerHTML = '<p style="padding:20px; text-align:center; color:#999;">No requests</p>';
+            list.innerHTML = '<p style="padding:20px; text-align:center; color:#999;">No requests pending</p>';
             return;
         }
 
@@ -179,10 +178,10 @@
                 list.innerHTML += `
                     <div class="notif-item">
                         <b style="color:var(--forest);">${r.teacher}</b>
-                        <div style="font-size:11px; color:#666;">wants Access for <b>${r.class}</b> - ${r.subject}</div>
-                        <div style="display:flex; gap:10px; margin-top:10px;">
-                            <button onclick="approveReq('${id}')" style="flex:1; background:var(--forest); color:white; border:none; padding:8px; border-radius:8px; cursor:pointer;">Approve</button>
-                            <button onclick="db.ref('quiz_requests/${id}').remove()" style="flex:0.5; background:#eee; border:none; padding:8px; border-radius:8px; cursor:pointer;">Ignore</button>
+                        <div style="font-size:11px; color:#666; margin:4px 0;">Requesting Access for <b>${r.class}</b></div>
+                        <div style="display:flex; gap:10px; margin-top:8px;">
+                            <button onclick="approveReq('${id}')" style="flex:1; background:var(--forest); color:white; border:none; padding:8px; border-radius:8px; cursor:pointer; font-weight:bold;">Accept</button>
+                            <button onclick="db.ref('quiz_requests/${id}').remove()" style="flex:0.4; background:#eee; color:#666; border:none; padding:8px; border-radius:8px; cursor:pointer;">Ignore</button>
                         </div>
                     </div>`;
             }
@@ -199,49 +198,31 @@
 
     function approveReq(id) { 
         db.ref(`quiz_requests/${id}`).update({ status: 'approved' }).then(() => {
-            Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Approved', showConfirmButton: false, timer: 2000 });
+            Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Teacher Approved', showConfirmButton: false, timer: 2000 });
         });
     }
 
-    function postAnn() { db.ref('announcement').set(document.getElementById('annMsg').value).then(() => Swal.fire('Live', 'Teachers notified', 'success')); }
+    function postAnn() { db.ref('announcement').set(document.getElementById('annMsg').value).then(() => Swal.fire('Published', 'Broadcast live', 'success')); }
 
     async function viewAtt() {
         const cls = document.getElementById('clsPick').value;
         const month = document.getElementById('monthInput').value;
         if(!cls || !month) return Swal.fire('Error', 'Choose Class & Month', 'info');
-        
-        document.getElementById('attTable').style.display = 'table';
         const body = document.getElementById('attBody');
-        body.innerHTML = '<tr><td colspan="4">Loading...</td></tr>';
-
+        body.innerHTML = 'Loading...';
         db.ref(`attendance/${cls}/students`).once('value', (snap) => {
             const data = snap.val(); body.innerHTML = "";
-            if(!data) return body.innerHTML = '<tr><td colspan="4">No data found</td></tr>';
-            document.getElementById('dlBtn').style.display = 'inline-flex';
+            if(!data) return body.innerHTML = 'No data found';
             for(let name in data) {
                 const mData = (data[name].months && data[name].months[month]) ? data[name].months[month] : {present:0, total:0};
-                body.innerHTML += `<tr><td>${name}</td><td>${mData.present}</td><td>${mData.total - mData.present}</td><td>${mData.total}</td></tr>`;
+                body.innerHTML += `<div><b>${name}</b>: ${mData.present}/${mData.total}</div>`;
             }
         });
     }
 
-    async function downloadExcel() {
-        const workbook = new ExcelJS.Workbook();
-        const sheet = workbook.addWorksheet('Report');
-        sheet.columns = [{header:'STUDENT',key:'n',width:30},{header:'PRESENT',key:'p',width:10},{header:'ABSENT',key:'a',width:10}];
-        const rows = document.getElementById('attBody').querySelectorAll('tr');
-        rows.forEach(r => sheet.addRow({n: r.cells[0].innerText, p: r.cells[1].innerText, a: r.cells[2].innerText}));
-        const buffer = await workbook.xlsx.writeBuffer();
-        const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-        const link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = 'Report.xlsx'; link.click();
-    }
-
     async function resetData() {
         const { isConfirmed } = await Swal.fire({ title: 'MASTER RESET', text: 'Delete everything?', icon: 'warning', showCancelButton: true });
-        if(isConfirmed) {
-            const { value: pw } = await Swal.fire({ title: 'Admin Password', input: 'password' });
-            if(pw === "Ahmad@07") { db.ref().remove().then(() => location.reload()); }
-        }
+        if(isConfirmed) { db.ref().remove().then(() => location.reload()); }
     }
 
     document.getElementById('monthInput').value = new Date().toISOString().slice(0, 7);
