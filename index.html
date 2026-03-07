@@ -1,302 +1,164 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta name="google-site-verification" content="HfUz-EU1H47JaSu4YL5FQYaeUnSfoJA8MHfD1PR1kZk" />
-    <meta name="description" content="Official Attendance Portal for Paramount English Medium School.">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Paramount School | Teachers Portal</title>
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <title>Teacher Portal | Paramount School</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="icon" type="image/png" href="logo.png">
-    
     <style>
-        :root { --forest: #006633; --gold: #ffd700; }
-        body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; margin: 0; padding: 0; }
-        #liveAnnouncementBanner { display: none; background-color: #c62828; color: white; text-align: center; padding: 15px 20px; font-weight: bold; font-size: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); animation: pulseBanner 2.5s infinite; border-radius: 12px; margin-bottom: 20px; }
-        @keyframes pulseBanner { 0% { background-color: #c62828; } 50% { background-color: #e53935; } 100% { background-color: #c62828; } }
-        header { background: var(--forest); color: white; padding: 30px 5%; display: flex; justify-content: center; align-items: center; gap: 20px; }
-        .logo-img { height: 85px; width: auto; display: block; }
-        .school-info { text-align: left; }
-        .school-name { font-size: 2.2rem; font-weight: 900; margin: 0; white-space: nowrap; }
-        .school-tagline { font-size: 1.1rem; opacity: 0.9; margin-top: 5px; font-weight: 500; }
-        .container { max-width: 500px; margin: 20px auto; padding: 10px; }
-        .card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
-        h2 { color: var(--forest); text-align: center; border-bottom: 2px solid var(--gold); padding-bottom: 10px; margin-top: 0; }
-        label { display: block; font-size: 13px; font-weight: bold; color: #666; margin-top: 15px; }
-        select { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #ddd; font-size: 16px; margin-top: 5px; }
-        select:disabled { background-color: #eeeeee; cursor: not-allowed; }
-        .student-row { display: flex; justify-content: space-between; align-items: center; padding: 15px 5px; border-bottom: 1px solid #f0f0f0; }
-        .name-text { font-weight: 600; font-size: 16px; }
-        .percent-badge { font-size: 12px; padding: 3px 8px; border-radius: 10px; margin-left: 10px; font-weight: bold; }
-        .percent-good { background: #e8f5e9; color: #2e7d32; }
-        .percent-bad { background: #ffebee; color: #c62828; }
-        .percent-new { background: #f0f0f0; color: #666; }
-        .present-toggle { width: 28px; height: 28px; accent-color: var(--forest); cursor: pointer; }
-        .submit-btn, .reset-btn, .admin-btn { border: none; padding: 18px; border-radius: 35px; width: 100%; font-weight: bold; font-size: 16px; cursor: pointer; margin-top: 25px; display: flex; align-items: center; justify-content: center; gap: 10px; }
-        .submit-btn { background: #1D6F42; color: white; display: none; }
-        .reset-btn { background: var(--forest); color: white; margin-top: 15px; }
-        .admin-btn { background: #e8f5e9; color: #006633; border: 1px solid #c8e6c9; padding: 12px; border-radius: 8px; margin-bottom: 20px; transition: 0.2s; margin-top: 0; }
-        .admin-btn:hover { background: #c8e6c9; }
-        #thankYouSection { display: none; text-align: center; padding: 30px 20px; background: #e8f5e9; color: #2e7d32; border-radius: 15px; margin-top: 20px; }
-        @media (max-width: 768px) { header { flex-direction: column; text-align: center; gap: 10px; padding: 20px; } .school-name { font-size: 1.5rem; white-space: normal; } .school-info { text-align: center; } .logo-img { height: 70px; } }
-        #exportTableWrapper { display: none; }
+        :root { --forest: #006633; --gold: #ffd700; --danger: #c62828; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; margin: 0; padding-bottom: 50px; }
+        header { background: var(--forest); color: white; padding: 20px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .container { max-width: 800px; margin: 20px auto; padding: 0 15px; }
+        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        h3 { color: var(--forest); margin-top: 0; border-bottom: 2px solid #f0f0f0; padding-bottom: 10px; }
+        label { display: block; font-size: 12px; font-weight: bold; color: #666; margin: 10px 0 5px; text-transform: uppercase; }
+        select, input, textarea { width: 100%; padding: 12px; border-radius: 8px; border: 2px solid #ddd; font-size: 15px; outline: none; box-sizing: border-box; }
+        .btn { background: var(--forest); color: white; border: none; padding: 12px 25px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; display: inline-block; }
+        .btn-danger { background: var(--danger); }
+        
+        /* EDITING LIST STYLE */
+        .hw-edit-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #eee; background: #fafafa; border-radius: 5px; margin-top: 5px; }
+        .hw-edit-item span { font-weight: bold; font-size: 14px; color: #333; }
+        .edit-controls { display: flex; gap: 10px; }
+        .icon-btn { cursor: pointer; border: none; background: none; font-size: 16px; }
+        .icon-edit { color: var(--forest); }
+        .icon-delete { color: var(--danger); }
     </style>
-    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 </head>
 <body>
 
 <header>
-    <img src="logo.png" alt="Logo" class="logo-img" id="webLogo" onerror="this.style.display='none'">
-    <div class="school-info">
-        <h1 class="school-name">PARAMOUNT ENGLISH MEDIUM SCHOOL</h1>
-        <p class="school-tagline">Teachers Official Attendance Portal</p>
-    </div>
+    <h1 style="margin:0;">TEACHER PORTAL</h1>
+    <p style="margin:5px 0 0; opacity:0.9;">Paramount English Medium School</p>
 </header>
 
 <div class="container">
-    <div id="liveAnnouncementBanner"><i class="fas fa-bell" style="color: #ffd700; margin-right: 8px; font-size: 18px;"></i> <span id="announcementMessageText"></span></div>
-    <div class="card">
-        <h2>Mark Attendance</h2>
-        <button class="admin-btn" onclick="window.location.href='admin.html'"><i class="fas fa-user-shield"></i> Go to Admin Dashboard</button>
-        <div id="formContent">
-            <label>Teacher Name</label>
-            <select id="teacherName">
-                <option value="">-- Select Teacher --</option>
-                <option value="Mr. Shaik Ahmad">Mr. Shaik Ahmad</option>
-                <option value="Ms. Roqiya Begum">Ms. Roqiya Begum</option>
-                <option value="Ms. G. Rajitha">Ms. G. Rajitha</option>
-                <option value="Ms. Ameena Tabassum">Ms. Ameena Tabassum</option> 
-                <option value="Ms. Shaik Shabana">Ms. Shaik Shabana</option> 
-                <option value="Ms. B. Ravali">Ms. B. Ravali</option>
-                <option value="Ms. L. Kalyani">Ms. L. Kalyani</option>
-                <option value="Ms. J. Alaya Sree">Ms. J. Alaya Sree</option>
-                <option value="Ms. S. Sujatha">Ms. S. Sujatha</option>
-                <option value="Ms. J. Prathibha">Ms. J. Prathibha</option> 
-                <option value="Ms. P. Shailaja">Ms. P. Shailaja</option>
-                <option value="Ms. A. Jhansi Rani">Ms. A. Jhansi Rani</option>
-                <option value="Ms. S. Neelima">Ms. S. Neelima</option>
-            </select>
-            <label>Class</label>
-            <select id="classSelect" onchange="generateList()" disabled>
-                <option value="">-- Choose Class --</option>
-                <option value="Pre-KG">Pre-KG (Diamond)</option>
-                <option value="KG-1">KG-1 (Ruby)</option>
-                <option value="KG-2">KG-2 (Amber)</option>
-                <option value="Grade-1">Grade-1 (Opal)</option>
-                <option value="Grade-2">Grade-2 (Emerald)</option>
-                <option value="Grade-3">Grade-3 (Crystal)</option>
-                <option value="Grade-4">Grade-4 (Citrine)</option>
-                <option value="Grade-5">Grade-5 (Moonstone)</option>
-                <option value="Grade-6">Grade-6 (Alluri)</option>
-                <option value="Grade-7">Grade-7 (Kalam)</option>
-                <option value="Grade-8">Grade-8 (Bhagat)</option>
-            </select>
-            <div id="listContainer"></div>
-            <button id="submitBtn" class="submit-btn" onclick="submitAttendance()"><i class="fas fa-cloud-upload-alt"></i> Submit to Cloud</button>
+    <div class="card" style="border-top: 5px solid var(--forest);">
+        <h3><i class="fas fa-plus-circle"></i> Post New Homework</h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+            <div>
+                <label>Class</label>
+                <select id="hwClass" onchange="updateHWSubjects()">
+                    <option value="Pre-KG">Pre-KG</option><option value="Grade-1">Grade-1</option>
+                    <option value="Grade-6">Grade-6</option><option value="Grade-7">Grade-7</option><option value="Grade-8">Grade-8</option>
+                </select>
+            </div>
+            <div><label>Date</label><input type="date" id="hwDate"></div>
         </div>
-        <div id="thankYouSection">
-            <i class="fas fa-check-circle" style="font-size: 40px; margin-bottom: 15px;"></i><br>
-            <strong style="font-size: 20px;">Saved to Cloud!</strong><br>
-            <p style="font-size: 14px; font-weight: normal; margin: 10px 0;">Your Excel report is downloading...</p>
-            <button class="reset-btn" onclick="resetForm()"><i class="fas fa-redo"></i> Take Another Attendance</button>
+        <label>Subject</label>
+        <select id="hwSubject"></select>
+        <label>Instructions</label>
+        <textarea id="hwTask" placeholder="Enter assignment details..."></textarea>
+        <button class="btn" onclick="postHomework()" style="margin-top:10px;"><i class="fas fa-paper-plane"></i> Publish</button>
+    </div>
+
+    <div class="card" style="border-top: 5px solid var(--danger);">
+        <h3><i class="fas fa-edit"></i> Manage Posted Homework</h3>
+        <p style="font-size: 12px; color: #666;">Select a date to view and edit current assignments.</p>
+        <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+            <input type="date" id="manageDate" style="flex: 1;">
+            <button class="btn" onclick="loadHomeworkForEditing()" style="background: #333;">Load Diary</button>
         </div>
+        <div id="editListArea"></div>
+    </div>
+
+    <div class="card" style="border-top: 5px solid var(--gold);">
+        <h3><i class="fas fa-user-check"></i> Parent Verification</h3>
+        <input type="date" id="verifyDate" style="margin-bottom:10px;">
+        <button class="btn" onclick="checkParentStatus()" style="background: #333; width:100%;">Check Status</button>
+        <div id="verifyBodyArea" style="margin-top:15px;"></div>
     </div>
 </div>
 
-<div id="exportTableWrapper">
-    <table id="attendanceExcelTable" border="1" style="border-collapse: collapse;">
-        <thead>
-            <tr><th colspan="5" style="background-color: #006633; color: #ffffff; font-size: 18pt; height: 45pt; text-align: center;">PARAMOUNT ENGLISH MEDIUM SCHOOL</th></tr>
-            <tr><th colspan="5" style="background-color: #ffd700; color: #000000; font-size: 12pt; height: 25pt; text-align: center;">TEACHERS OFFICIAL ATTENDANCE PORTAL</th></tr>
-            <tr><th colspan="3" id="xl-date" style="text-align: left; padding: 5px;">Date: </th><th colspan="2" id="xl-teacher" style="text-align: left; padding: 5px;">Teacher: </th></tr>
-            <tr><th colspan="3" id="xl-class" style="text-align: left; padding: 5px;">Class: </th><th colspan="2" style="text-align: left; padding: 5px;">Status: FINALIZED</th></tr>
-            <tr style="background-color: #eeeeee; font-weight: bold;"><th style="width: 50px;">S.No</th><th style="width: 250px;">STUDENT NAME</th><th style="width: 100px;">STATUS</th><th style="width: 120px;">OVERALL %</th><th style="width: 150px;">REMARKS</th></tr>
-        </thead>
-        <tbody id="xl-body"></tbody>
-    </table>
-</div>
-
 <script>
-// --- FIREBASE INITIALIZATION ---
-const firebaseConfig = {
-  apiKey: "AIzaSyDRYk9KOK-ga0c88dnYMsAoifW2NJTd_Y8",
-  authDomain: "paramount-school-d55bc.firebaseapp.com",
-  databaseURL: "https://paramount-school-d55bc-default-rtdb.firebaseio.com",
-  projectId: "paramount-school-d55bc",
-  storageBucket: "paramount-school-d55bc.firebasestorage.app",
-  messagingSenderId: "130979432562",
-  appId: "1:130979432562:web:4cd94787b23f9daba51aeb"
-};
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
+    const firebaseConfig = { 
+        apiKey: "AIzaSyDRYk9KOK-ga0c88dnYMsAoifW2NJTd_Y8", 
+        databaseURL: "https://paramount-school-d55bc-default-rtdb.firebaseio.com", 
+        projectId: "paramount-school-d55bc" 
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
 
-const teacherDropdown = document.getElementById('teacherName');
-const classDropdown = document.getElementById('classSelect');
+    function updateHWSubjects() {
+        const cls = document.getElementById('hwClass').value;
+        const subSelect = document.getElementById('hwSubject');
+        const common = ["TELUGU", "HINDI", "ENGLISH", "MATHS", "SOCIAL STUDIES"];
+        const subjects = (["Grade-6", "Grade-7", "Grade-8"].includes(cls)) ? [...common, "PHYSICS", "CHEMISTRY", "BIOLOGY"] : [...common, "SCIENCE"];
+        subSelect.innerHTML = subjects.map(s => `<option value="${s}">${s}</option>`).join('');
+    }
 
-// --- 🔐 TEACHER PASSWORD REGISTRY (MANUAL SETTINGS) ---
-// You can change the passwords below inside the quotes!
-const teacherPasswords = {
-    "Mr. Shaik Ahmad": "ahmad@123",
-    "Ms. Roqiya Begum": "roqiya@123",
-    "Ms. G. Rajitha": "rajitha@123",
-    "Ms. Ameena Tabassum": "ameena@123",
-    "Ms. Shaik Shabana": "shabana@123",
-    "Ms. B. Ravali": "ravali@123",
-    "Ms. L. Kalyani": "kalyani@123",
-    "Ms. J. Alaya Sree": "alaya@123",
-    "Ms. S. Sujatha": "sujatha@123",
-    "Ms. J. Prathibha": "prathibha@123",
-    "Ms. P. Shailaja": "shailaja@123",
-    "Ms. A. Jhansi Rani": "jhansi@123",
-    "Ms. S. Neelima": "neelima@123"
-};
+    function postHomework() {
+        const date = document.getElementById('hwDate').value;
+        const sub = document.getElementById('hwSubject').value;
+        const task = document.getElementById('hwTask').value;
+        if(!date || !task) return Swal.fire('Error', 'Date and Details required', 'error');
+        const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        db.ref(`homework/${date}`).update({ [sub]: task, lastUpdated: now }).then(() => {
+            Swal.fire('Posted!', `${sub} added.`, 'success');
+            document.getElementById('hwTask').value = "";
+        });
+    }
 
-teacherDropdown.addEventListener('change', async (e) => {
-    const name = e.target.value;
-    if (!name) return;
-
-    const { value: password } = await Swal.fire({
-        title: `Hello, ${name}`,
-        text: 'Please enter your private teacher password:',
-        input: 'password',
-        inputPlaceholder: 'Enter Password',
-        showCancelButton: true,
-        confirmButtonColor: '#006633'
-    });
-
-    if (password) {
-        // Compare what the teacher typed with the manual list above
-        const correctPassword = teacherPasswords[name];
-        
-        if (password === correctPassword) {
-            Swal.fire({ icon: 'success', title: 'Verified!', timer: 1000, showConfirmButton: false });
-            classDropdown.disabled = false; // Unlock class selection
-        } else {
-            Swal.fire({ icon: 'error', title: 'Invalid Password', text: 'Identity check failed.' });
-            resetForm();
-        }
-    } else { resetForm(); }
-});
-
-// Listen for Live Announcements
-db.ref('announcement').on('value', (snap) => {
-    const msg = snap.val();
-    const banner = document.getElementById('liveAnnouncementBanner');
-    if (msg) { document.getElementById('announcementMessageText').innerText = msg; banner.style.display = 'block'; } 
-    else { banner.style.display = 'none'; }
-});
-
-const schoolData = {
-    "Pre-KG": ["Hanish Macharla", "Arjun Vihaar Illandula", "Thanu sree Allakunta", "Aadhya Gangaraboina", "Aadhya Sri Oggula", "Aadhyasri Shivagoni", "Afraha Begum", "Aliya Sultana", "Anvika Bandi", "Aradana Devara konda", "Devansh Bandi", "Hanvitha Mulkalapelli", "Harsha Vardhan Seenapelli", "Hiranya Bandi", "Jashritha Boina", "Konreddy Shreyanvi", "Kriyansh Sammeta", "Mohammed Mohiuddin Sayyad", "Nethra Narkurthi", "Reeyansh Bandi", "Rishi Manupati", "Rudransh Bandi", "Sanvika Bandi", "Shanvith Khatha", "Shishira Jalagam", "Shiva Sai Mekala", "Shree Rudhraveer Chevvu", "Shreyansh Gangaraboina", "Sreeja Thalla", "Srikrithini Myakala", "Srivatsav Vanam", "Sriyansh Mekala", "Thanvika Lakka", "Thrilokansh Vudari", "Ujjwal Chekka", "Vaishnavi Lakka", "Vedansh Myakala", "Vishnu Priya Molugu", "Vyshnav Tej Boina", "Yafiah Mohammad"],
-    "KG-1": ["Aadhya Sri Amaravadi", "Aditya Manda", "Aadhya Jella", "Advaita Gauri Bandi", "Aizah Amna Shaik", "Akshara Singaram", "Bhahuveer Raj Somishetti", "Gayathri Erroju", "Hanvika Mulkalapelli", "Manvith Kondoju", "Sayyad Vajeed", "Mekala Manu sri", "Oliva Grace Vallapu", "Rithwik Oggula", "Rithwika Kandagatla", "Srimahi Chevvu", "Thanvesh Thalla", "Trishul Nanduri", "Yoganshika Nanduri", "Yusra Mohammad", "Zainul Abideen Syed"],
-    "KG-2": ["Deekshanth Sammeta", "Hanshith Erroju", "Harika Bandi", "Himarsha Naini", "Karthik Vallepu", "Kruthika Bandi", "Rajavardhan Gampala", "Roshan Kaitha", "Sri Anshu Ayaan Lyadala", "Srihansh Bandi", "Srikshitha Guduri", "Varshith Gonela", "Adyasri Makala", "Anvik Boini", "Anvith Pokanati", "Awais Ur Rehman Mohammad", "Dakshu Pothuganti", "Hansith Reddy Katukuri", "Harshith Pokanati", "Jella Aditya", "Krishank Nallabothula", "Kundana Katkuri", "Munukuntla Revanth Rudhra", "Niraja Nethri Siluveru", "Pranav Mattepelli", "Sreenith Yadav Naini", "Uvan Reddy Dasari", "Zayan Mohammad", "Zoya Mohammed"],
-    "Grade-1": ["Dheeraj Gattu", "Preetham Sannayala", "Shiva nandu Gonela", "Shrayan Nuthanakanti", "Sriyanksha Mandala", "Advitha Garige", "Harika Bandi", "Himansi Kondoju", "Izhaan Rahamath Syed", "Jaisurya Myakala", "Khadeeja Fathima", "Manaswini Dandugula", "Manusri Bandi", "Rithwik krishna Amaravadi", "Rohan Bandi", "Shiva Junnu", "Shivanandh Bandi", "Sridha Thalla", "Srinika Chengelly", "Sriyanshi Oggula", "Vishwak Chekka"],
-    "Grade-2": ["Aliza Manha Shaik", "Dhruvan Reddy Katukuri", "Druthika Enugala", "Manaswini Bandi", "Rakshith Macharla", "Sathwika Katkuri", "Shalini Uppala", "Chandu Devarakonda", "Gnaneshwar Pokanati", "Hasnain Syed", "Koushik Siluveru", "Senen Desabattula", "Shivarajan Pothuganti"],
-    "Grade-3": ["Nagavelly Manikanta", "Mirja Ismail", "Bandi Aryan", "Dandugula Mahesh Babu", "Bandi Tejasri", "Bandi Harshavardhan", "Gampala Vyshnavi", "Gampala Laxmi", "Garige Harshith", "Katkuri Hanish", "Katukuri Manideep", "MD Abdul Quddus", "Muppa Sathwik Patel", "Nuthanakanti Sansita", "Pasarakonda Ritwin", "Pinninti Rakshith Rao", "Rayi Sriman Adithya"],
-    "Grade-4": ["Abdul Saqib Mohammad", "Anudeep Chintha", "Bhavan Bandi", "Harshavardhan Gonela", "Jayadev Chiluveru", "Mahaboob Syed", "Nandith Reddy Enugala", "Sai Charan Goud Mandala", "Sai Prasanna Keerthi", "Ajmeri Shaik", "Akshith Chiluveru", "Jayasri Mykala", "Rahul Kanjarla", "Saketh Devarakonda"],
-    "Grade-5": ["Adya Reddy Vangala", "Kowshik Patel Muppa", "Siri Singaram", "Srikar Mandala", "Abdus Salaam MD", "Akshith Ram Kalvacharla", "Jaffar Anas Shaik", "Khaja Azeemuddin Mohammed", "Nihan Mohammed", "Saif Shaik", "Saketh Renukuntla", "Sreeja Dasari", "Vidhaatri Sahani"],
-    "Grade-6": ["Abdul Razzak Mohammad", "Anudeepthi Chintha", "Saketh Ranaveni", "Shiva Sri Katukuri", "Aklees Shaik", "Akshya Kalvacharla", "Prince Katkuri"],
-    "Grade-7": ["Manikanta Sannayala", "Sreeyan Reddy Karra", "Jayadhithya Chiluveru"],
-    "Grade-8": ["Akshaya Gampala", "Ganesh Oggula", "Gayathri Renukuntla", "Khaja Sadeemuddin Mohammed", "Sathwika Nagavelly", "Vyshnavi Uppala"]
-};
-
-let attendanceRecords = {};
-
-db.ref('attendance').on('value', (snapshot) => {
-    attendanceRecords = snapshot.val() || {};
-    let needsInit = false;
-    for (let cls in schoolData) {
-        if (!attendanceRecords[cls]) { attendanceRecords[cls] = { lastSubmittedDate: null, students: {} }; needsInit = true; }
-        schoolData[cls].forEach(name => {
-            if (!attendanceRecords[cls].students[name]) {
-                attendanceRecords[cls].students[name] = { presentDays: 0, totalDays: 0, months: {} };
-                needsInit = true;
+    // NEW: EDITING LOGIC
+    function loadHomeworkForEditing() {
+        const date = document.getElementById('manageDate').value;
+        const area = document.getElementById('editListArea');
+        if(!date) return;
+        db.ref(`homework/${date}`).once('value', (snap) => {
+            const data = snap.val();
+            area.innerHTML = "";
+            if(!data) { area.innerHTML = "<p style='color:red; text-align:center;'>No homework found for this date.</p>"; return; }
+            for(let sub in data) {
+                if(sub === 'lastUpdated') continue;
+                area.innerHTML += `
+                <div class="hw-edit-item">
+                    <span>${sub}</span>
+                    <div class="edit-controls">
+                        <button class="icon-btn icon-edit" onclick="editTask('${date}', '${sub}', '${data[sub]}')"><i class="fas fa-pen"></i></button>
+                        <button class="icon-btn icon-delete" onclick="deleteTask('${date}', '${sub}')"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>`;
             }
         });
     }
-    if (needsInit) { db.ref('attendance').set(attendanceRecords); }
-    if (classDropdown.value !== "" && document.getElementById('submitBtn').style.display === "flex") {
-        generateList();
-    }
-});
 
-function generateList() {
-    const cls = classDropdown.value;
-    const listDiv = document.getElementById('listContainer');
-    const submitBtn = document.getElementById('submitBtn');
-    listDiv.innerHTML = "";
-    if (schoolData[cls] && attendanceRecords[cls]) {
-        schoolData[cls].forEach(name => {
-            const stats = attendanceRecords[cls].students[name];
-            let percentText = "New"; let badgeClass = "percent-new";
-            if (stats && stats.totalDays > 0) {
-                const percent = Math.round((stats.presentDays / stats.totalDays) * 100);
-                percentText = percent + "%";
-                badgeClass = percent >= 50 ? "percent-good" : "percent-bad";
-            }
-            listDiv.innerHTML += `<div class="student-row" data-name="${name}"><div><span class="name-text">${name}</span><span class="percent-badge ${badgeClass}">${percentText}</span></div><input type="checkbox" class="present-toggle" checked></div>`;
+    async function editTask(date, sub, oldTask) {
+        const { value: newTask } = await Swal.fire({
+            title: `Edit ${sub}`,
+            input: 'textarea',
+            inputValue: oldTask,
+            showCancelButton: true
         });
-        submitBtn.style.display = "flex";
-    } else { submitBtn.style.display = "none"; }
-}
-
-function submitAttendance() {
-    const teacher = teacherDropdown.value;
-    const cls = classDropdown.value;
-    const dateStr = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
-    const monthKey = new Date().toISOString().slice(0, 7); 
-    if(!teacher || !cls) return Swal.fire('Wait!', 'Select Teacher and Class First!', 'warning');
-    
-    document.getElementById('formContent').style.display = "none";
-    document.getElementById('thankYouSection').style.display = "block";
-    const xlBody = document.getElementById('xl-body');
-    xlBody.innerHTML = "";
-    document.getElementById('xl-date').innerText = "Date: " + dateStr;
-    document.getElementById('xl-teacher').innerText = "Teacher: " + teacher;
-    document.getElementById('xl-class').innerText = "Class: " + cls;
-    
-    document.querySelectorAll('.student-row').forEach((row, index) => {
-        const name = row.getAttribute('data-name');
-        const isPresent = row.querySelector('.present-toggle').checked;
-        if (attendanceRecords[cls].students[name]) {
-            attendanceRecords[cls].students[name].totalDays += 1; 
-            if (isPresent) attendanceRecords[cls].students[name].presentDays += 1; 
-            if (!attendanceRecords[cls].students[name].months) attendanceRecords[cls].students[name].months = {};
-            if (!attendanceRecords[cls].students[name].months[monthKey]) attendanceRecords[cls].students[name].months[monthKey] = { present: 0, total: 0 };
-            attendanceRecords[cls].students[name].months[monthKey].total += 1;
-            if (isPresent) attendanceRecords[cls].students[name].months[monthKey].present += 1;
+        if (newTask) {
+            const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            db.ref(`homework/${date}`).update({ [sub]: newTask, lastUpdated: now }).then(() => {
+                Swal.fire('Updated!', '', 'success');
+                loadHomeworkForEditing();
+            });
         }
-        const stats = attendanceRecords[cls].students[name];
-        const newPercent = Math.round((stats.presentDays / stats.totalDays) * 100) + "%";
-        const status = isPresent ? "PRESENT" : "ABSENT";
-        xlBody.innerHTML += `<tr><td style="text-align: center;">${index+1}</td><td>${name}</td><td style="text-align: center; font-weight: bold;">${status}</td><td style="text-align: center;">${newPercent}</td><td></td></tr>`;
-    });
-    
-    attendanceRecords[cls].lastSubmittedDate = dateStr;
-    db.ref('attendance').set(attendanceRecords).then(() => {
-        const html = document.getElementById("attendanceExcelTable").outerHTML;
-        const blob = new Blob([`<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="UTF-8"></head><body>${html}</body></html>`], { type: 'application/vnd.ms-excel' });
-        const link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
-        link.download = `Attendance_${cls}_${dateStr.replace(/ /g, '-')}.xls`;
-        setTimeout(() => link.click(), 500);
-    });
-}
+    }
 
-function resetForm() {
-    teacherDropdown.value = "";
-    classDropdown.value = "";
-    classDropdown.disabled = true;
-    document.getElementById('listContainer').innerHTML = "";
-    document.getElementById('submitBtn').style.display = "none";
-    document.getElementById('thankYouSection').style.display = "none";
-    document.getElementById('formContent').style.display = "block";
-}
+    function deleteTask(date, sub) {
+        Swal.fire({
+            title: 'Delete this subject?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                db.ref(`homework/${date}/${sub}`).remove().then(() => {
+                    loadHomeworkForEditing();
+                });
+            }
+        });
+    }
+
+    updateHWSubjects();
 </script>
 </body>
 </html>
