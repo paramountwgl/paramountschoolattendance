@@ -8,11 +8,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Segoe+UI:wght@400;700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/png" href="logo.png">
     <style>
-        :root { --forest: #006633; --gold: #ffd700; --light: #f4f7f6; }
+        :root { --forest: #006633; --gold: #ffd700; --danger: #c62828; --light: #f4f7f6; }
         * { box-sizing: border-box; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; padding-bottom: 50px; }
 
-        /* UNIFIED HEADER */
         header { background: var(--forest); color: white; padding: 20px 3%; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .header-content { display: flex; align-items: center; justify-content: center; gap: 12px; max-width: 1400px; margin: 0 auto; width: 100%; }
         .header-logo { height: 60px; width: auto; }
@@ -24,15 +23,12 @@
         .container { max-width: 900px; margin: 30px auto; padding: 0 15px; }
         .card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); border-top: 6px solid var(--forest); }
         
-        /* DROPDOWN GRID */
-        .search-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 20px; }
+        .search-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 20px; }
         label { display: block; font-size: 11px; font-weight: bold; color: #666; margin-bottom: 5px; text-transform: uppercase; }
         select { width: 100%; padding: 12px; border-radius: 8px; border: 2px solid #eee; outline: none; font-size: 14px; }
 
         .btn-submit { background: linear-gradient(135deg, var(--forest), #004d26); color: white; border: none; padding: 15px; border-radius: 50px; font-weight: bold; cursor: pointer; width: 100%; font-size: 16px; margin-top: 10px; transition: 0.3s; }
-        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,102,51,0.3); }
 
-        /* DATA DISPLAY */
         .result-table { width: 100%; border-collapse: collapse; margin-top: 30px; border-radius: 10px; overflow: hidden; }
         .result-table th { background: var(--forest); color: white; padding: 12px; font-size: 11px; text-transform: uppercase; }
         .result-table td { padding: 15px 10px; background: white; border-bottom: 1px solid #eee; text-align: center; font-size: 14px; }
@@ -82,15 +78,18 @@
             <div>
                 <label>Year</label>
                 <select id="vYear">
-                    <option value="2026">2026</option><option value="2025">2025</option>
+                    <option value="2026">2026</option>
+                    <option value="2025">2025</option>
                 </select>
             </div>
             <div>
-                <label>Class</label>
+                <label>Select Class</label>
                 <select id="vClass">
-                    <option value="Pre-KG">Pre-KG</option><option value="KG-1">KG-1</option>
-                    <option value="Grade-1">Grade-1</option><option value="Grade-2">Grade-2</option>
-                    </select>
+                    <option value="Pre-KG">Pre-KG</option><option value="KG-1">KG-1</option><option value="KG-2">KG-2</option>
+                    <option value="Grade-1">Grade-1</option><option value="Grade-2">Grade-2</option><option value="Grade-3">Grade-3</option>
+                    <option value="Grade-4">Grade-4</option><option value="Grade-5">Grade-5</option><option value="Grade-6">Grade-6</option>
+                    <option value="Grade-7">Grade-7</option><option value="Grade-8">Grade-8</option>
+                </select>
             </div>
         </div>
         <button class="btn-submit" onclick="fetchAknowledgment()">Submit & View Data</button>
@@ -110,33 +109,40 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // Populate Days
+    // Populate Day dropdown
     const daySelect = document.getElementById('vDay');
+    const now = new Date();
     for(let i=1; i<=31; i++) {
         let val = i < 10 ? '0' + i : i;
-        daySelect.innerHTML += `<option value="${val}">${val}</option>`;
+        daySelect.innerHTML += `<option value="${val}" ${now.getDate() == i ? 'selected' : ''}>${val}</option>`;
     }
 
-    // Student Database Reference
+    // Set current month/year as default
+    document.getElementById('vMonth').value = (now.getMonth() + 1).toString().padStart(2, '0');
+
+    // Reference Student Database for Parent Mapping
     const studentInfo = {
+        /* Pre-KG */
         "Hanish Macharla": { parent: "M.Vinay", phone: "9182861346" },
         "Arjun Vihaar Illandula": { parent: "Illandula Ravi", phone: "9848742172" },
-        // ... include your full studentData object here for parent mapping
+        "Thanu sree Allakunta": { parent: "Srinu", phone: "9533030806" },
+        /* Grade-1 */
+        "Dheeraj Gattu": { parent: "Raju", phone: "9346457748" },
+        /* ... Add other student details as needed ... */
     };
 
     function fetchAknowledgment() {
         const d = document.getElementById('vDay').value;
         const m = document.getElementById('vMonth').value;
         const y = document.getElementById('vYear').value;
-        const cls = document.getElementById('vClass').value;
         const dateKey = `${y}-${m}-${d}`;
         const wrapper = document.getElementById('tableWrapper');
 
-        wrapper.innerHTML = "<p style='text-align:center; padding:20px;'>Checking database...</p>";
+        wrapper.innerHTML = "<p style='text-align:center; padding:20px;'>Syncing with Parent Portal...</p>";
 
         db.ref(`homework_status/${dateKey}`).once('value', (snap) => {
             const data = snap.val() || {};
-            let html = `<table class="result-table"><thead><tr><th>Parent Details</th><th>Subject</th><th>Acknowledge</th></tr></thead><tbody>`;
+            let html = `<table class="result-table"><thead><tr><th>Parent & Student</th><th>Subject</th><th>Status</th></tr></thead><tbody>`;
             
             let found = false;
             for(let stName in data) {
@@ -149,12 +155,12 @@
                         <td class="parent-info">
                             <span class="parent-name">${info.parent}</span>
                             <span class="parent-phone"><i class="fas fa-phone-alt"></i> ${info.phone}</span>
-                            <small style="display:block; margin-top:4px;">Student: ${stName}</small>
+                            <small style="display:block; margin-top:4px; color:var(--forest); font-weight:700;">Student: ${stName}</small>
                         </td>
                         <td><strong>${sub}</strong></td>
                         <td>
                             <span class="check-box-status ${isDone ? 'status-signed' : 'status-pending'}">
-                                ${isDone ? '<i class="fas fa-check-square"></i>' : '<i class="far fa-square"></i>'}
+                                ${isDone ? '<i class="fas fa-check-square"></i> Signed' : '<i class="far fa-square"></i> Pending'}
                             </span>
                         </td>
                     </tr>`;
@@ -162,7 +168,7 @@
             }
 
             if(!found) {
-                wrapper.innerHTML = "<div class='card' style='margin-top:20px; text-align:center; color:red;'>No parent signatures found for this date.</div>";
+                wrapper.innerHTML = "<div class='card' style='margin-top:20px; text-align:center; color:var(--danger);'>No parent signatures found for this date.</div>";
             } else {
                 html += "</tbody></table>";
                 wrapper.innerHTML = html;
