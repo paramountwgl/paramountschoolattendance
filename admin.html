@@ -5,21 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard | Paramount School</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="logo.png">
     <style>
         :root { --forest: #006633; --gold: #ffd700; --danger: #c62828; }
-        body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; margin: 0; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; margin: 0; padding: 0; }
+        
+        /* RESTORED AUTHENTICATION BOX STYLING */
         .overlay-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(244, 247, 246, 0.95); z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-        .auth-box { background: white; padding: 40px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; width: 90%; max-width: 350px; }
-        .auth-btn { background: var(--forest); color: white; border: none; padding: 12px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        header { background: var(--forest); color: white; padding: 20px; text-align: center; }
-        .container { max-width: 900px; margin: 30px auto; padding: 0 15px; }
+        .auth-box { background: white; padding: 40px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; width: 90%; max-width: 350px; position: relative; }
+        .corner-logo { position: absolute; top: 20px; left: 20px; height: 40px; width: auto; }
+        .auth-box input { padding: 12px; width: 100%; margin: 10px 0; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; outline: none; box-sizing: border-box; }
+        .auth-box input:focus { border-color: var(--forest); }
+        .auth-btn { background: var(--forest); color: white; border: none; padding: 12px; width: 100%; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.2s; margin-top: 10px; }
+        
+        /* MAIN DASHBOARD STYLING */
+        #mainApp { display: none; }
+        header { background: var(--forest); color: white; padding: 20px 5%; display: flex; justify-content: center; align-items: center; gap: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .logo-img { height: 70px; width: auto; display: block; }
+        .container { max-width: 1000px; margin: 30px auto; padding: 0 15px; }
         .card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 25px; }
-        select, textarea { width: 100%; padding: 12px; border-radius: 8px; border: 2px solid #ddd; margin-bottom: 10px; }
+        
+        label { display: block; font-size: 12px; font-weight: bold; color: #666; margin-bottom: 5px; text-transform: uppercase; }
+        select, textarea { width: 100%; padding: 12px; border-radius: 8px; border: 2px solid #ddd; margin-bottom: 10px; font-family: inherit; }
         table { width: 100%; border-collapse: collapse; margin-top: 15px; }
         th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
-        th { background: var(--forest); color: white; }
-        .badge-verified { background: #e8f5e9; color: #2e7d32; padding: 4px 8px; border-radius: 10px; font-size: 10px; font-weight: bold; }
-        #mainApp { display: none; }
+        th { background: var(--forest); color: white; font-size: 12px; }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -29,44 +39,57 @@
 
 <div id="loginScreen" class="overlay-screen">
     <div class="auth-box">
-        <h2 style="color: var(--forest);">Admin Login</h2>
-        <input type="password" id="adminPassword" placeholder="Enter Password">
+        <img src="logo.png" alt="Logo" class="corner-logo" onerror="this.style.display='none'">
+        <i class="fas fa-lock" style="font-size: 40px; color: var(--forest); margin-bottom: 15px; display: block;"></i>
+        <h2 style="color: var(--forest); margin-top: 0;">Admin Access</h2>
+        <input type="password" id="adminPassword" placeholder="Enter Password" onkeypress="if(event.key === 'Enter') checkPassword()">
         <button class="auth-btn" onclick="checkPassword()">Login</button>
+        <p id="loginError" style="color: var(--danger); display: none; margin-top: 15px; font-weight: bold;">Incorrect Password</p>
     </div>
 </div>
 
 <div id="mainApp">
     <header>
-        <h1 style="margin:0;">PARAMOUNT ADMIN</h1>
-        <p style="color: var(--gold); margin:0; font-weight:bold;">Tracking & Announcements</p>
+        <img src="logo.png" alt="Logo" class="logo-img" onerror="this.style.display='none'">
+        <div class="school-info">
+            <h1 style="margin:0; font-size: 1.6rem;">PARAMOUNT ADMIN</h1>
+            <p style="color: var(--gold); margin:0; font-weight:bold;">Tracking & Announcements</p>
+        </div>
     </header>
 
     <div class="container">
         <div class="card" style="border-left: 6px solid var(--gold);">
             <h3><i class="fas fa-bullhorn"></i> Live Cloud Announcement</h3>
-            <textarea id="announcementInput" placeholder="Broadcast message to all devices..."></textarea>
+            <textarea id="announcementInput" placeholder="Broadcast a message instantly..."></textarea>
             <div style="display: flex; gap: 10px;">
-                <button onclick="publishAnnouncement()" class="auth-btn" style="flex:1;">Publish</button>
+                <button onclick="publishAnnouncement()" class="auth-btn" style="flex:1;">Publish to All Devices</button>
                 <button onclick="clearAnnouncement()" class="auth-btn" style="background: var(--danger); width:100px;">Clear</button>
             </div>
         </div>
 
         <div class="card">
-            <h3><i class="fas fa-user-check"></i> Parent Verification Tracker</h3>
-            <input type="date" id="trackDate" style="width: 200px; padding: 10px;">
-            <button class="auth-btn" onclick="loadVerifications()" style="width:auto; padding: 10px 20px;">Track</button>
-            <table id="verifyTable">
-                <thead><tr><th>Student</th><th>Subject</th><th>Status</th><th>Time</th></tr></thead>
-                <tbody id="verifyBody"></tbody>
-            </table>
-        </div>
-
-        <div class="card">
             <h3><i class="fas fa-chart-bar"></i> Attendance Monitoring</h3>
-            <select id="classSelect" style="width: 200px;"><option value="Grade-1">Grade-1</option></select>
-            <button class="auth-btn" onclick="loadAttendance()" style="width:auto; padding: 10px 20px;">View Data</button>
+            <div style="display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap;">
+                <div style="flex: 1; min-width: 200px;">
+                    <label>Select Class</label>
+                    <select id="classSelect">
+                        <option value="Pre-KG">Pre-KG</option>
+                        <option value="KG-1">KG-1</option>
+                        <option value="KG-2">KG-2</option>
+                        <option value="Grade-1">Grade-1</option>
+                        <option value="Grade-2">Grade-2</option>
+                        <option value="Grade-3">Grade-3</option>
+                        <option value="Grade-4">Grade-4</option>
+                        <option value="Grade-5">Grade-5</option>
+                        <option value="Grade-6">Grade-6</option>
+                        <option value="Grade-7">Grade-7</option>
+                        <option value="Grade-8">Grade-8</option>
+                    </select>
+                </div>
+                <button class="auth-btn" onclick="loadAttendance()" style="width: auto; height: 48px; margin-bottom: 10px;">View Class Data</button>
+            </div>
             <table id="attTable">
-                <thead><tr><th>Student Name</th><th>Present</th><th>Total</th><th>%</th></tr></thead>
+                <thead><tr><th>Student Name</th><th>Present</th><th>Total Classes</th><th>Percentage</th></tr></thead>
                 <tbody id="attBody"></tbody>
             </table>
         </div>
@@ -74,8 +97,11 @@
 </div>
 
 <script>
-// Paste your Firebase Config here
-const firebaseConfig = { apiKey: "AIzaSyDRYk9KOK-ga0c88dnYMsAoifW2NJTd_Y8", databaseURL: "https://paramount-school-d55bc-default-rtdb.firebaseio.com", projectId: "paramount-school-d55bc" };
+const firebaseConfig = { 
+    apiKey: "AIzaSyDRYk9KOK-ga0c88dnYMsAoifW2NJTd_Y8", 
+    databaseURL: "https://paramount-school-d55bc-default-rtdb.firebaseio.com", 
+    projectId: "paramount-school-d55bc" 
+};
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
@@ -83,30 +109,33 @@ function checkPassword() {
     if(document.getElementById('adminPassword').value === "Ahmad@07") {
         document.getElementById('loginScreen').style.display = "none";
         document.getElementById('mainApp').style.display = "block";
-    }
+    } else { document.getElementById('loginError').style.display = "block"; }
 }
 
 function publishAnnouncement() {
     const txt = document.getElementById('announcementInput').value;
+    if(!txt) return alert("Type a message");
     db.ref('announcement').set(txt).then(() => Swal.fire('Success', 'Announcement Live!', 'success'));
 }
 
 function clearAnnouncement() { db.ref('announcement').remove(); }
 
-function loadVerifications() {
-    const date = document.getElementById('trackDate').value;
-    const body = document.getElementById('verifyBody');
-    db.ref(`homework_status/${date}`).once('value', (snap) => {
-        const data = snap.val(); body.innerHTML = "";
-        if(!data) return;
-        for(let st in data) {
-            for(let sub in data[st]) {
-                body.innerHTML += `<tr><td>${st}</td><td>${sub}</td><td><span class="badge-verified">VERIFIED</span></td><td>${data[st][sub].verifiedAt}</td></tr>`;
-            }
+function loadAttendance() {
+    const cls = document.getElementById('classSelect').value;
+    const body = document.getElementById('attBody');
+    body.innerHTML = '<tr><td colspan="4" style="text-align:center;">Fetching...</td></tr>';
+    db.ref('attendance').once('value').then((snap) => {
+        const data = snap.val() || {}; body.innerHTML = "";
+        if(!data[cls]) { body.innerHTML = '<tr><td colspan="4" style="text-align:center;">No data found.</td></tr>'; return; }
+        const students = data[cls].students;
+        for(const name in students) {
+            const p = students[name].presentDays || 0; 
+            const t = students[name].totalDays || 0;
+            const pct = t > 0 ? Math.round((p/t)*100) : 0;
+            body.innerHTML += `<tr><td>${name}</td><td>${p}</td><td>${t}</td><td>${pct}%</td></tr>`;
         }
     });
 }
-// Add Attendance Logic here as per previous versions
 </script>
 </body>
 </html>
