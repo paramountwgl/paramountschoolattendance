@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Parent Verifier | Paramount School</title>
+    <title>Compliance Hub | Paramount School</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Segoe+UI:wght@400;700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/png" href="logo.png">
     <style>
-        :root { --forest: #006633; --gold: #ffd700; --danger: #c62828; --light: #f4f7f6; --whatsapp: #25D366; }
+        :root { --forest: #006633; --gold: #ffd700; --danger: #e53935; --whatsapp: #25D366; --light: #f4f7f6; }
         * { box-sizing: border-box; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; padding-bottom: 50px; }
         header { background: var(--forest); color: white; padding: 20px 3%; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
@@ -18,23 +18,25 @@
         .school-name-main { font-family: 'Montserrat'; font-size: clamp(1rem, 3vw, 2rem); font-weight: 800; }
         .school-name-sub { font-family: 'Montserrat'; font-size: clamp(0.5rem, 2vw, 0.8rem); color: var(--gold); font-weight: 700; }
         .admin-portal-title { font-family: 'Montserrat'; font-size: clamp(1rem, 3vw, 2.2rem); font-weight: 800; border-left: 3px solid var(--gold); padding-left: 15px; margin-left: 15px; text-transform: uppercase; }
-        .container { max-width: 950px; margin: 30px auto; padding: 0 15px; }
+        .container { max-width: 1100px; margin: 30px auto; padding: 0 15px; }
         .card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); border-top: 6px solid var(--forest); }
         .search-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 20px; }
         label { display: block; font-size: 11px; font-weight: bold; color: #666; margin-bottom: 5px; text-transform: uppercase; }
         select { width: 100%; padding: 12px; border-radius: 8px; border: 2px solid #eee; outline: none; font-size: 14px; background: white; }
         .btn-submit { background: linear-gradient(135deg, var(--forest), #004d26); color: white; border: none; padding: 15px; border-radius: 50px; font-weight: bold; cursor: pointer; width: 100%; font-size: 16px; margin-top: 10px; transition: 0.3s; }
-        .result-table { width: 100%; border-collapse: collapse; margin-top: 30px; border-radius: 12px; overflow: hidden; }
+        .result-table { width: 100%; border-collapse: collapse; margin-top: 30px; border-radius: 12px; overflow: hidden; background: white; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
         .result-table th { background: var(--forest); color: white; padding: 15px; font-size: 11px; text-transform: uppercase; }
-        .result-table td { padding: 18px 15px; background: white; border-bottom: 1px solid #eee; text-align: center; font-size: 14px; }
-        .status-badge { padding: 6px 15px; border-radius: 20px; font-weight: 800; font-size: 12px; display: inline-flex; align-items: center; gap: 6px; }
-        .status-signed { background: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9; }
-        .status-pending { background: #fafafa; color: #9e9e9e; border: 1px solid #eee; }
-        
-        /* WHATSAPP BUTTON STYLE */
-        .wa-btn { background: var(--whatsapp); color: white; padding: 8px 15px; border-radius: 20px; text-decoration: none; font-size: 11px; font-weight: bold; display: inline-flex; align-items: center; gap: 6px; transition: 0.3s; }
-        .wa-btn:hover { background: #128C7E; transform: scale(1.05); }
-
+        .result-table td { padding: 15px; border-bottom: 1px solid #eee; text-align: left; font-size: 14px; vertical-align: top; }
+        .name-cell b { display: block; color: var(--forest); font-size: 15px; }
+        .name-cell small { color: #666; font-weight: 600; }
+        .missing-list { display: flex; flex-direction: column; gap: 4px; }
+        .missing-item { color: var(--danger); font-size: 11px; font-weight: 800; background: #fff5f5; padding: 4px 8px; border-radius: 4px; border: 1px solid #ffebeb; text-transform: uppercase; }
+        .signed-all { color: #2e7d32; font-weight: 800; font-size: 11px; background: #e8f5e9; padding: 4px 8px; border-radius: 4px; display: inline-block; }
+        .action-cell { display: flex; gap: 8px; flex-wrap: wrap; }
+        .btn-action { text-decoration: none; padding: 8px 12px; border-radius: 50px; font-size: 11px; font-weight: bold; color: white; display: inline-flex; align-items: center; gap: 6px; transition: 0.2s; }
+        .btn-wa { background: var(--whatsapp); }
+        .btn-call { background: #333; }
+        .btn-action:hover { opacity: 0.8; transform: translateY(-1px); }
         .back-nav { display: flex; justify-content: center; margin-top: 30px; }
         .btn-back { text-decoration: none; color: #666; font-weight: bold; font-size: 14px; display: flex; align-items: center; gap: 8px; }
     </style>
@@ -48,13 +50,13 @@
             <span class="school-name-main">PARAMOUNT</span>
             <span class="school-name-sub">ENGLISH MEDIUM SCHOOL</span>
         </div>
-        <h1 class="admin-portal-title">Verification</h1>
+        <h1 class="admin-portal-title">Compliance</h1>
     </div>
 </header>
 
 <div class="container">
     <div class="card">
-        <h3><i class="fas fa-user-check"></i> Parent Checkbox Tracker</h3>
+        <h3><i class="fas fa-search"></i> Parent Search Portal</h3>
         <div class="search-grid">
             <div><label>Day</label><select id="vDay"></select></div>
             <div><label>Month</label><select id="vMonth">
@@ -65,7 +67,7 @@
             </select></div>
             <div><label>Year</label><select id="vYear"><option value="2026">2026</option><option value="2025">2025</option></select></div>
             <div><label>Class</label><select id="vClass" onchange="updateStudentList()">
-                <option value="">-- Class --</option>
+                <option value="">-- Choose Class --</option>
                 <option value="Pre-KG">Pre-KG</option><option value="KG-1">KG-1</option><option value="KG-2">KG-2</option>
                 <option value="Grade-1">Grade-1</option><option value="Grade-2">Grade-2</option><option value="Grade-3">Grade-3</option>
                 <option value="Grade-4">Grade-4</option><option value="Grade-5">Grade-5</option><option value="Grade-6">Grade-6</option>
@@ -73,7 +75,7 @@
             </select></div>
             <div><label>Student</label><select id="vStudent"><option value="">-- Select Student --</option></select></div>
         </div>
-        <button class="btn-submit" onclick="fetchAknowledgment()">View Acknowledgment</button>
+        <button class="btn-submit" onclick="fetchComplianceReport()">Run Compliance Check</button>
     </div>
     <div id="tableWrapper"></div>
     <div class="back-nav"><a href="index.html" class="btn-back"><i class="fas fa-arrow-left"></i> Return to Teacher Portal</a></div>
@@ -86,6 +88,7 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
+    // FULL STUDENT REGISTRY
     const studentData = {
         "Pre-KG": ["Hanish Macharla", "Arjun Vihaar Illandula", "Thanu sree Allakunta", "Aadhya Gangaraboina", "Aadhya Sri Oggula", "Aadhyasri Shivagoni", "Afraha Begum", "Aliya Sultana", "Anvika Bandi", "Aradana Devara konda", "Devansh Bandi", "Hanvitha Mulkalapelli", "Harsha Vardhan Seenapelli", "Hiranya Bandi", "Jashritha Boina", "Konreddy Shreyanvi", "Kriyansh Sammeta", "Mohammed Mohiuddin Sayyad", "Nethra Narkurthi", "Reeyansh Bandi", "Rishi Manupati", "Rudransh Bandi", "Sanvika Bandi", "Shanvith Khatha", "Shishira Jalagam", "Shiva Sai Mekala", "Shree Rudhraveer Chevvu", "Shreyansh Gangaraboina", "Sreeja Thalla", "Srikrithini Myakala", "Srivatsav Vanam", "Sriyansh Mekala", "Thanvika Lakka", "Thrilokansh Vudari", "Ujjwal Chekka", "Vaishnavi Lakka", "Vedansh Myakala", "Vishnu Priya Molugu", "Vyshnav Tej Boina", "Yafiah Mohammad"],
         "KG-1": ["Aadhya Sri Amaravadi", "Aditya Manda", "Aadhya Jella", "Advaita Gauri Bandi", "Aizah Amna Shaik", "Akshara Singaram", "Bhahuveer Raj Somishetti", "Gayathri Erroju", "Hanvika Mulkalapelli", "Manvith Kondoju", "Sayyad Vajeed", "Mekala Manu sri", "Oliva Grace Vallapu", "Rithwik Oggula", "Rithwika Kandagatla", "Srimahi Chevvu", "Thanvesh Thalla", "Trishul Nanduri", "Yoganshika Nanduri", "Yusra Mohammad", "Zainul Abideen Syed"],
@@ -100,194 +103,11 @@
         "Grade-8": ["Sathwika Nagavelly", "Vyshnavi Uppala", "Akshaya Gampala", "Ganesh Oggula", "Gayathri Renukuntla", "Khaja Sadeemuddin Mohammed"]
     };
 
-    // CONTACT MAPPING FOR WHATSAPP
+    // FULL CONTACT DATABASE
     const contactMap = {
-        "Hanish Macharla": { parent: "M.Vinay", phone: "9182861346" },
-        "Arjun Vihaar Illandula": { parent: "Illandula Ravi", phone: "9848742172" },
-        "Thanu sree Allakunta": { parent: "Srinu", phone: "9533030806" },
-        "Aadhya Gangaraboina": { parent: "Vijay", phone: "8686191768" },
-        "Aadhya Sri Oggula": { parent: "Raju", phone: "9704592874" },
-        "Aadhyasri Shivagoni": { parent: "S.Abhinav", phone: "8074771010" },
-        "Afraha Begum": { parent: "Amjad Khan", phone: "9440107489" },
-        "Aliya Sultana": { parent: "MD.Allayar Khan", phone: "6304312988" },
-        "Anvika Bandi": { parent: "Sridhar", phone: "9398418487" },
-        "Aradana Devara konda": { parent: "Rajendraprasad", phone: "6305756873" },
-        "Devansh Bandi": { parent: "Rajukumar", phone: "9121285781" },
-        "Hanvitha Mulkalapelli": { parent: "M.Rajkumar", phone: "7780262276" },
-        "Harsha Vardhan Seenapelli": { parent: "S.Prashanth", phone: "9515837322" },
-        "Hiranya Bandi": { parent: "Ramesh", phone: "8790611868" },
-        "Jashritha Boina": { parent: "B.Poorna Chander", phone: "6302186195" },
-        "Konreddy Shreyanvi": { parent: "K.Akhil", phone: "8179316869" },
-        "Kriyansh Sammeta": { parent: "Shivakumar", phone: "7842370658" },
-        "Mohammed Mohiuddin Sayyad": { parent: "Sayeed", phone: "9948172033" },
-        "Nethra Narkurthi": { parent: "Shivaram", phone: "9347825403" },
-        "Reeyansh Bandi": { parent: "Ramesh", phone: "7386940719" },
-        "Rishi Manupati": { parent: "Kittu", phone: "9391993955" },
-        "Rudransh Bandi": { parent: "Raju", phone: "8686262543" },
-        "Sanvika Bandi": { parent: "Bixapathi", phone: "7702551738" },
-        "Shanvith Khatha": { parent: "K.Venkateshwarlu", phone: "8712525233" },
-        "Shishira Jalagam": { parent: "Yaka Swami", phone: "9052020711" },
-        "Shiva Sai Mekala": { parent: "VASU", phone: "9912101753" },
-        "Shree Rudhraveer Chevvu": { parent: "Shivaramakrishna", phone: "9398065483" },
-        "Shreyansh Gangaraboina": { parent: "Vijay", phone: "8686191768" },
-        "Sreeja Thalla": { parent: "Arun", phone: "9346300709" },
-        "Srikrithini Myakala": { parent: "Srikanth", phone: "8309708832" },
-        "Srivatsav Vanam": { parent: "V.Kiran Kumar", phone: "9642539015" },
-        "Sriyansh Mekala": { parent: "RANGITH", phone: "9949327643" },
-        "Thanvika Lakka": { parent: "L.Rahul", phone: "9010913855" },
-        "Thrilokansh Vudari": { parent: "Bharat Kumar", phone: "8074833651" },
-        "Ujjwal Chekka": { parent: "Kranthi", phone: "9963987952" },
-        "Vaishnavi Lakka": { parent: "L.Shiva", phone: "9182045866" },
-        "Vedansh Myakala": { parent: "Anil Kumar", phone: "9703293930" },
-        "Vishnu Priya Molugu": { parent: "MM Suresh kumar", phone: "8247448532" },
-        "Vyshnav Tej Boina": { parent: "Shekar", phone: "7671807331" },
-        "Yafiah Mohammad": { parent: "Yousuf Shareef", phone: "9392670257" },
-        "Aadhya Sri Amaravadi": { parent: "Rakesh", phone: "9502626801" },
-        "Aditya Manda": { parent: "Mohan Lal", phone: "8374173873" },
-        "Aadhya Jella": { parent: "Bhikshapathi", phone: "9959633484" },
-        "Advaita Gauri Bandi": { parent: "B. Karnakar", phone: "9550011612" },
-        "Aizah Amna Shaik": { parent: "Jahed Ali", phone: "9014984808" },
-        "Akshara Singaram": { parent: "S.Prasanth", phone: "7095527244" },
-        "Bhahuveer Raj Somishetti": { parent: "Harinivas", phone: "9951394609" },
-        "Gayathri Erroju": { parent: "Rajesh", phone: "9010050059" },
-        "Hanvika Mulkalapelli": { parent: "Raju", phone: "9177159519" },
-        "Manvith Kondoju": { parent: "K.Sai Kumar", phone: "7075175578" },
-        "Sayyad Vajeed": { parent: "Mariyam", phone: "8885451958" },
-        "Mekala Manu sri": { parent: "Rangith", phone: "7793959897" },
-        "Oliva Grace Vallapu": { parent: "Naveen", phone: "9951886334" },
-        "Rithwik Oggula": { parent: "Sampath", phone: "8464872522" },
-        "Rithwika Kandagatla": { parent: "Ajay", phone: "8106023490" },
-        "Srimahi Chevvu": { parent: "Gavaskaar", phone: "9966573771" },
-        "Thanvesh Thalla": { parent: "Rajesh", phone: "9550995231" },
-        "Trishul Nanduri": { parent: "Vijaykanth", phone: "9949668558" },
-        "Yoganshika Nanduri": { parent: "Vijay Kanth", phone: "9949668558" },
-        "Yusra Mohammad": { parent: "Yousuf Shareef", phone: "9392661854" },
-        "Zainul Abideen Syed": { parent: "Akbar", phone: "8106972447" },
-        "Deekshanth Sammeta": { parent: "Shivakumar", phone: "7842370658" },
-        "Hanshith Erroju": { parent: "Rajesh", phone: "9010150059" },
-        "Harika Bandi": { parent: "Raju", phone: "9573818773" },
-        "Himarsha Naini": { parent: "Raju", phone: "7993636204" },
-        "Karthik Vallepu": { parent: "Ramesh", phone: "9704840650" },
-        "Kruthika Bandi": { parent: "Ramesh", phone: "8790611868" },
-        "Rajavardhan Gampala": { parent: "Kanaka Raju", phone: "8074393994" },
-        "Roshan Kaitha": { parent: "Rajashekar", phone: "6300582916" },
-        "Sri Anshu Ayaan Lyadala": { parent: "Rajashekar", phone: "8008113407" },
-        "Srihansh Bandi": { parent: "Sridhar", phone: "9398418487" },
-        "Srikshitha Guduri": { parent: "Raju", phone: "9398716665" },
-        "Varshith Gonela": { parent: "Ramu", phone: "9966960107" },
-        "Adyasri Makala": { parent: "Laxmi Narayana", phone: "9985420659" },
-        "Anvik Boini": { parent: "B.Raju", phone: "9705653666" },
-        "Anvith Pokanati": { parent: "Keshavulu (Late)", phone: "6300854330" },
-        "Awais Ur Rehman Mohammad": { parent: "Imran Mahammad", phone: "9705839237" },
-        "Dakshu Pothuganti": { parent: "Rajashekhar", phone: "8074781031" },
-        "Hansith Reddy Katukuri": { parent: "Thirupathi Reddy", phone: "7995553736" },
-        "Harshith Pokanati": { parent: "Keshavulu (Late)", phone: "6300854330" },
-        "Jella Aditya": { parent: "J.Bhikshapathi", phone: "6281221851" },
-        "Krishank Nallabothula": { parent: "Lingaraju", phone: "9014498296" },
-        "Kundana Katkuri": { parent: "Chiranjeevi", phone: "8247004380" },
-        "Munukuntla Revanth Rudhra": { parent: "Subhash", phone: "8686799532" },
-        "Niraja Nethri Siluveru": { parent: "Kapil", phone: "7286805213" },
-        "Pranav Mattepelli": { parent: "Vijay", phone: "9704839982" },
-        "Sreenith Yadav Naini": { parent: "Ramesh", phone: "8121293251" },
-        "Uvan Reddy Dasari": { parent: "Raghupathi Reddy", phone: "9573557696" },
-        "Zayan Mohammad": { parent: "Zaffar", phone: "9182909190" },
-        "Zoya Mohammed": { parent: "Chand Pasha", phone: "9848465650" },
-        "Dheeraj Gattu": { parent: "Raju", phone: "9346457748" },
-        "Preetham Sannayala": { parent: "Shiva", phone: "9000283858" },
-        "Shiva nandu Gonela": { parent: "Ramu", phone: "9966960107" },
-        "Shrayan Nuthanakanti": { parent: "Sridhar", phone: "7075567649" },
-        "Sriyanksha Mandala": { parent: "Arun Kumar", phone: "8885767607" },
-        "Advitha Garige": { parent: "Chiranjeevi", phone: "9959114639" },
-        "Himansi Kondoju": { parent: "Sai kumar", phone: "7075175578" },
-        "Izhaan Rahamath Syed": { parent: "Syed Fayaz", phone: "8074667438" },
-        "Jaisurya Myakala": { parent: "Sravan Kumar", phone: "9010506760" },
-        "Khadeeja Fathima": { parent: "Khaja Faheemuddin", phone: "9959414786" },
-        "Manaswini Dandugula": { parent: "Srinivas", phone: "7075342014" },
-        "Manusri Bandi": { parent: "Ramesh", phone: "9177313069" },
-        "Rithwik krishna Amaravadi": { parent: "Rakesh", phone: "9502626801" },
-        "Rohan Bandi": { parent: "Vijay kumar", phone: "6309561181" },
-        "Shiva Junnu": { parent: "Parusharamulu", phone: "8096253875" },
-        "Shivanandh Bandi": { parent: "Rajesh", phone: "9848509341" },
-        "Sridha Thalla": { parent: "Rajesh", phone: "9550995231" },
-        "Srinika Chengelly": { parent: "Vykunta Chary", phone: "9703045606" },
-        "Sriyanshi Oggula": { parent: "Sampath", phone: "7730886474" },
-        "Vishwak Chekka": { parent: "Naresh", phone: "9912945240" },
-        "Aliza Manha Shaik": { parent: "Moin Pasha", phone: "7989482920" },
-        "Dhruvan Reddy Katukuri": { parent: "Thirupathi Reddy", phone: "7995553736" },
-        "Druthika Enugala": { parent: "Karthik Reddy", phone: "8686077799" },
-        "Manaswini Bandi": { parent: "Bixapathi", phone: "7702551738" },
-        "Rakshith Macharla": { parent: "Ganesh", phone: "8074638822" },
-        "Sathwika Katkuri": { parent: "Shivaiah", phone: "6300199764" },
-        "Shalini Uppala": { parent: "Anji", phone: "9701160185" },
-        "Chandu Devarakonda": { parent: "Ramesh", phone: "9392270984" },
-        "Gnaneshwar Pokanati": { parent: "Keshavulu (Late)", phone: "6300854330" },
-        "Hasnain Syed": { parent: "Khader Syed", phone: "833021076" },
-        "Koushik Siluveru": { parent: "Kapil", phone: "7286805213" },
-        "Senen Desabattula": { parent: "Samuel Sparjan Babu", phone: "9052820502" },
-        "Shivarajan Pothuganti": { parent: "Rajashekhar", phone: "8074781031" },
-        "Nagavelly Manikanta": { parent: "Ravi kumar", phone: "9492098006" },
-        "Mirja Ismail": { parent: "Yusuf Baig", phone: "9989367263" },
-        "Bandi Aryan": { parent: "Anil", phone: "9502098594" },
-        "Dandugula Mahesh Babu": { parent: "Srinivas", phone: "7075342014" },
-        "Bandi Tejasri": { parent: "Raghu", phone: "9618791981" },
-        "Bandi Harshavardhan": { parent: "Rajkumar", phone: "8008707668" },
-        "Gampala Vyshnavi": { parent: "Kanakaraju", phone: "8074393994" },
-        "Gampala Laxmi": { parent: "Kanakaraju", phone: "8074393994" },
-        "Garige Harshith": { parent: "Chiranjeevi", phone: "9959114639" },
-        "Katkuri Hanish": { parent: "Katkuri Suryaprasad", phone: "9000557009" },
-        "Katukuri Manideep": { parent: "Chiranjeevi", phone: "8247004380" },
-        "MD Abdul Quddus": { parent: "Raja.S", phone: "7300303319" },
-        "Muppa Sathwik Patel": { parent: "Janardhan", phone: "9553800447" },
-        "Nuthanakanti Sansita": { parent: "Sridhar", phone: "7989663380" },
-        "Pasarakonda Ritwin": { parent: "Karnakar", phone: "7702007402" },
-        "Pinninti Rakshith Rao": { parent: "Chander Rao (Late)", phone: "9848523514" },
-        "Rayi Sriman Adithya": { parent: "Venkataramana", phone: "6305872732" },
-        "Abdul Saqib Mohammad": { parent: "Abdul Rawoof", phone: "8328695850" },
-        "Anudeep Chintha": { parent: "Anil", phone: "9848448941" },
-        "Bhavan Bandi": { parent: "Devendar", phone: "8897141289" },
-        "Harshavardhan Gonela": { parent: "Raju", phone: "9391704022" },
-        "Jayadev Chiluveru": { parent: "Madhavarao", phone: "9700409933" },
-        "Mahaboob Syed": { parent: "Khader", phone: "8333021076" },
-        "Nandith Reddy Enugala": { parent: "Karthik Reddy", phone: "8686077799" },
-        "Sai Charan Goud Mandala": { parent: "Arun Kumar", phone: "8885767607" },
-        "Sai Prasanna Keerthi": { parent: "Venkateshwarlu", phone: "9951567253" },
-        "Ajmeri Shaik": { parent: "Hidayath Pasha", phone: "9302145468" },
-        "Akshith Chiluveru": { parent: "Kranthi Kumar", phone: "8179352423" },
-        "Jayasri Mykala": { parent: "Sravan kumar", phone: "9010506760" },
-        "Rahul Kanjarla": { parent: "Kumaraswamy", phone: "8897047979" },
-        "Saketh Devarakonda": { parent: "Ramesh", phone: "9392270984" },
-        "Adya Reddy Vangala": { parent: "Mahipal Reddy", phone: "9949109221" },
-        "Kowshik Patel Muppa": { parent: "Janardhan", phone: "9553800447" },
-        "Siri Singaram": { parent: "Madhu", phone: "9550726263" },
-        "Srikar Mandala": { parent: "Ramesh", phone: "9550073190" },
-        "Abdus Salaam MD": { parent: "Raja.S", phone: "7300303319" },
-        "Akshith Ram Kalvacharla": { parent: "Hareen Chary", phone: "7672058517" },
-        "Jaffar Anas Shaik": { parent: "Khaja Pasha", phone: "9391854024" },
-        "Khaja Azeemuddin Mohammed": { parent: "Khaja Faheemuddin", phone: "9959414786" },
-        "Nihan Mohammed": { parent: "Chand Pasha", phone: "9848465650" },
-        "Saif Shaik": { parent: "Salmaan", phone: "8179352120" },
-        "Saketh Renukuntla": { parent: "Rajesh", phone: "7569518371" },
-        "Sreeja Dasari": { parent: "Kumar", phone: "6301871704" },
-        "Vidhaatri Sahani": { parent: "Abhishek Sahani", phone: "9704394869" },
-        "Abdul Razzak Mohammad": { parent: "Abdul Rawoof", phone: "9573226386" },
-        "Anudeepthi Chintha": { parent: "Anil", phone: "9052927765" },
-        "Saketh Ranaveni": { parent: "Sampath", phone: "8688129606" },
-        "Shiva Sri Katukuri": { parent: "Shivaiah", phone: "6300199764" },
-        "Aklees Shaik": { parent: "Hidayath Pasha", phone: "9302145468" },
-        "Akshya Kalvacharla": { parent: "Hareen Chary", phone: "7672058517" },
-        "Prince Katkuri": { parent: "Katkuri Suryaprasad", phone: "9000557009" },
-        "Manikanta Sannayala": { parent: "Shiva", phone: "9000283858" },
-        "Sreeyan Reddy Karra": { parent: "Krishna Reddy", phone: "9848774257" },
-        "Jayadhithya Chiluveru": { parent: "CH.Madhava Rao", phone: "8886826838" },
-        "Akshaya Gampala": { parent: "Balaiah", phone: "9948184498" },
-        "Ganesh Oggula": { parent: "Cheralu", phone: "6304381153" },
-        "Gayathri Renukuntla": { parent: "Rajesh", phone: "7569518371" },
-        "Khaja Sadeemuddin Mohammed": { parent: "Khaja Faheemuddin", phone: "9959414786" },
-        "Sathwika Nagavelly": { parent: "Ravi", phone: "9492098006" },
-        "Vyshnavi Uppala": { parent: "Ramesh", phone: "8179254251" }
+        "Hanish Macharla": { parent: "M.Vinay", phone: "9182861346" }, "Arjun Vihaar Illandula": { parent: "Illandula Ravi", phone: "9848742172" }, "Thanu sree Allakunta": { parent: "Srinu", phone: "9533030806" }, "Aadhya Gangaraboina": { parent: "Vijay", phone: "8686191768" }, "Aadhya Sri Oggula": { parent: "Raju", phone: "9704592874" }, "Aadhyasri Shivagoni": { parent: "S.Abhinav", phone: "8074771010" }, "Afraha Begum": { parent: "Amjad Khan", phone: "9440107489" }, "Aliya Sultana": { parent: "MD.Allayar Khan", phone: "6304312988" }, "Anvika Bandi": { parent: "Sridhar", phone: "9398418487" }, "Aradana Devara konda": { parent: "Rajendraprasad", phone: "6305756873" }, "Devansh Bandi": { parent: "Rajukumar", phone: "9121285781" }, "Hanvitha Mulkalapelli": { parent: "M.Rajkumar", phone: "7780262276" }, "Harsha Vardhan Seenapelli": { parent: "S.Prashanth", phone: "9515837322" }, "Hiranya Bandi": { parent: "Ramesh", phone: "8790611868" }, "Jashritha Boina": { parent: "B.Poorna Chander", phone: "6302186195" }, "Konreddy Shreyanvi": { parent: "K.Akhil", phone: "8179316869" }, "Kriyansh Sammeta": { parent: "Shivakumar", phone: "7842370658" }, "Mohammed Mohiuddin Sayyad": { parent: "Sayeed", phone: "9948172033" }, "Nethra Narkurthi": { parent: "Shivaram", phone: "9347825403" }, "Reeyansh Bandi": { parent: "Ramesh", phone: "7386940719" }, "Rishi Manupati": { parent: "Kittu", phone: "9391993955" }, "Rudransh Bandi": { parent: "Raju", phone: "8686262543" }, "Sanvika Bandi": { parent: "Bixapathi", phone: "7702551738" }, "Shanvith Khatha": { parent: "K.Venkateshwarlu", phone: "8712525233" }, "Shishira Jalagam": { parent: "Yaka Swami", phone: "9052020711" }, "Shiva Sai Mekala": { parent: "VASU", phone: "9912101753" }, "Shree Rudhraveer Chevvu": { parent: "Shivaramakrishna", phone: "9398065483" }, "Shreyansh Gangaraboina": { parent: "Vijay", phone: "8686191768" }, "Sreeja Thalla": { parent: "Arun", phone: "9346300709" }, "Srikrithini Myakala": { parent: "Srikanth", phone: "8309708832" }, "Srivatsav Vanam": { parent: "V.Kiran Kumar", phone: "9642539015" }, "Sriyansh Mekala": { parent: "RANGITH", phone: "9949327643" }, "Thanvika Lakka": { parent: "L.Rahul", phone: "9010913855" }, "Thrilokansh Vudari": { parent: "Bharat Kumar", phone: "8074833651" }, "Ujjwal Chekka": { parent: "Kranthi", phone: "9963987952" }, "Vaishnavi Lakka": { parent: "L.Shiva", phone: "9182045866" }, "Vedansh Myakala": { parent: "Anil Kumar", phone: "9703293930" }, "Vishnu Priya Molugu": { parent: "MM Suresh kumar", phone: "8247448532" }, "Vyshnav Tej Boina": { parent: "Shekar", phone: "7671807331" }, "Yafiah Mohammad": { parent: "Yousuf Shareef", phone: "9392670257" }, "Aadhya Sri Amaravadi": { parent: "Rakesh", phone: "9502626801" }, "Aditya Manda": { parent: "Mohan Lal", phone: "8374173873" }, "Aadhya Jella": { parent: "Bhikshapathi", phone: "9959633484" }, "Advaita Gauri Bandi": { parent: "B. Karnakar", phone: "9550011612" }, "Aizah Amna Shaik": { parent: "Jahed Ali", phone: "9014984808" }, "Akshara Singaram": { parent: "S.Prasanth", phone: "7095527244" }, "Bhahuveer Raj Somishetti": { parent: "Harinivas", phone: "9951394609" }, "Gayathri Erroju": { parent: "Rajesh", phone: "9010050059" }, "Hanvika Mulkalapelli": { parent: "Raju", phone: "9177159519" }, "Manvith Kondoju": { parent: "K.Sai Kumar", phone: "7075175578" }, "Sayyad Vajeed": { parent: "Mariyam", phone: "8885451958" }, "Mekala Manu sri": { parent: "Rangith", phone: "7793959897" }, "Oliva Grace Vallapu": { parent: "Naveen", phone: "9951886334" }, "Rithwik Oggula": { parent: "Sampath", phone: "8464872522" }, "Rithwika Kandagatla": { parent: "Ajay", phone: "8106023490" }, "Srimahi Chevvu": { parent: "Gavaskaar", phone: "9966573771" }, "Thanvesh Thalla": { parent: "Rajesh", phone: "9550995231" }, "Trishul Nanduri": { parent: "Vijaykanth", phone: "9949668558" }, "Yoganshika Nanduri": { parent: "Vijay Kanth", phone: "9949668558" }, "Yusra Mohammad": { parent: "Yousuf Shareef", phone: "9392661854" }, "Zainul Abideen Syed": { parent: "Akbar", phone: "8106972447" }, "Deekshanth Sammeta": { parent: "Shivakumar", phone: "7842370658" }, "Hanshith Erroju": { parent: "Rajesh", phone: "9010150059" }, "Harika Bandi": { parent: "Raju", phone: "9573818773" }, "Himarsha Naini": { parent: "Raju", phone: "7993636204" }, "Karthik Vallepu": { parent: "Ramesh", phone: "9704840650" }, "Kruthika Bandi": { parent: "Ramesh", phone: "8790611868" }, "Rajavardhan Gampala": { parent: "Kanaka Raju", phone: "8074393994" }, "Roshan Kaitha": { parent: "Rajashekar", phone: "6300582916" }, "Sri Anshu Ayaan Lyadala": { parent: "Rajashekar", phone: "8008113407" }, "Srihansh Bandi": { parent: "Sridhar", phone: "9398418487" }, "Srikshitha Guduri": { parent: "Raju", phone: "9398716665" }, "Varshith Gonela": { parent: "Ramu", phone: "9966960107" }, "Adyasri Makala": { parent: "Laxmi Narayana", phone: "9985420659" }, "Anvik Boini": { parent: "B.Raju", phone: "9705653666" }, "Anvith Pokanati": { parent: "Keshavulu (Late)", phone: "6300854330" }, "Awais Ur Rehman Mohammad": { parent: "Imran Mahammad", phone: "9705839237" }, "Dakshu Pothuganti": { parent: "Rajashekhar", phone: "8074781031" }, "Hansith Reddy Katukuri": { parent: "Thirupathi Reddy", phone: "7995553736" }, "Harshith Pokanati": { parent: "Keshavulu (Late)", phone: "6300854330" }, "Jella Aditya": { parent: "J.Bhikshapathi", phone: "6281221851" }, "Krishank Nallabothula": { parent: "Lingaraju", phone: "9014498296" }, "Kundana Katkuri": { parent: "Chiranjeevi", phone: "8247004380" }, "Munukuntla Revanth Rudhra": { parent: "Subhash", phone: "8686799532" }, "Niraja Nethri Siluveru": { parent: "Kapil", phone: "7286805213" }, "Pranav Mattepelli": { parent: "Vijay", phone: "9704839982" }, "Sreenith Yadav Naini": { parent: "Ramesh", phone: "8121293251" }, "Uvan Reddy Dasari": { parent: "Raghupathi Reddy", phone: "9573557696" }, "Zayan Mohammad": { parent: "Zaffar", phone: "9182909190" }, "Zoya Mohammed": { parent: "Chand Pasha", phone: "9848465650" }, "Dheeraj Gattu": { parent: "Raju", phone: "9346457748" }, "Preetham Sannayala": { parent: "Shiva", phone: "9000283858" }, "Shiva nandu Gonela": { parent: "Ramu", phone: "9966960107" }, "Shrayan Nuthanakanti": { parent: "Sridhar", phone: "7075567649" }, "Sriyanksha Mandala": { parent: "Arun Kumar", phone: "8885767607" }, "Advitha Garige": { parent: "Chiranjeevi", phone: "9959114639" }, "Himansi Kondoju": { parent: "Sai kumar", phone: "7075175578" }, "Izhaan Rahamath Syed": { parent: "Syed Fayaz", phone: "8074667438" }, "Jaisurya Myakala": { parent: "Sravan Kumar", phone: "9010506760" }, "Khadeeja Fathima": { parent: "Khaja Faheemuddin", phone: "9959414786" }, "Manaswini Dandugula": { parent: "Srinivas", phone: "7075342014" }, "Manusri Bandi": { parent: "Ramesh", phone: "9177313069" }, "Rithwik krishna Amaravadi": { parent: "Rakesh", phone: "9502626801" }, "Rohan Bandi": { parent: "Vijay kumar", phone: "6309561181" }, "Shiva Junnu": { parent: "Parusharamulu", phone: "8096253875" }, "Shivanandh Bandi": { parent: "Rajesh", phone: "9848509341" }, "Sridha Thalla": { parent: "Rajesh", phone: "9550995231" }, "Srinika Chengelly": { parent: "Vykunta Chary", phone: "9703045606" }, "Sriyanshi Oggula": { parent: "Sampath", phone: "7730886474" }, "Vishwak Chekka": { parent: "Naresh", phone: "9912945240" }, "Aliza Manha Shaik": { parent: "Moin Pasha", phone: "7989482920" }, "Dhruvan Reddy Katukuri": { parent: "Thirupathi Reddy", phone: "7995553736" }, "Druthika Enugala": { parent: "Karthik Reddy", phone: "8686077799" }, "Manaswini Bandi": { parent: "Bixapathi", phone: "7702551738" }, "Rakshith Macharla": { parent: "Ganesh", phone: "8074638822" }, "Sathwika Katkuri": { parent: "Shivaiah", phone: "6300199764" }, "Shalini Uppala": { parent: "Anji", phone: "9701160185" }, "Chandu Devarakonda": { parent: "Ramesh", phone: "9392270984" }, "Gnaneshwar Pokanati": { parent: "Keshavulu (Late)", phone: "6300854330" }, "Hasnain Syed": { parent: "Khader Syed", phone: "833021076" }, "Koushik Siluveru": { parent: "Kapil", phone: "7286805213" }, "Senen Desabattula": { parent: "Samuel Sparjan Babu", phone: "9052820502" }, "Shivarajan Pothuganti": { parent: "Rajashekhar", phone: "8074781031" }, "Nagavelly Manikanta": { parent: "Ravi kumar", phone: "9492098006" }, "Mirja Ismail": { parent: "Yusuf Baig", phone: "9989367263" }, "Bandi Aryan": { parent: "Anil", phone: "9502098594" }, "Dandugula Mahesh Babu": { parent: "Srinivas", phone: "7075342014" }, "Bandi Tejasri": { parent: "Raghu", phone: "9618791981" }, "Bandi Harshavardhan": { parent: "Rajkumar", phone: "8008707668" }, "Gampala Vyshnavi": { parent: "Kanakaraju", phone: "8074393994" }, "Gampala Laxmi": { parent: "Kanakaraju", phone: "8074393994" }, "Garige Harshith": { parent: "Chiranjeevi", phone: "9959114639" }, "Katkuri Hanish": { parent: "Katkuri Suryaprasad", phone: "9000557009" }, "Katukuri Manideep": { parent: "Chiranjeevi", phone: "8247004380" }, "MD Abdul Quddus": { parent: "Raja.S", phone: "7300303319" }, "Muppa Sathwik Patel": { parent: "Janardhan", phone: "9553800447" }, "Nuthanakanti Sansita": { parent: "Sridhar", phone: "7989663380" }, "Pasarakonda Ritwin": { parent: "Karnakar", phone: "7702007402" }, "Pinninti Rakshith Rao": { parent: "Chander Rao (Late)", phone: "9848523514" }, "Rayi Sriman Adithya": { parent: "Venkataramana", phone: "6305872732" }, "Abdul Saqib Mohammad": { parent: "Abdul Rawoof", phone: "8328695850" }, "Anudeep Chintha": { parent: "Anil", phone: "9848448941" }, "Bhavan Bandi": { parent: "Devendar", phone: "8897141289" }, "Harshavardhan Gonela": { parent: "Raju", phone: "9391704022" }, "Jayadev Chiluveru": { parent: "Madhavarao", phone: "9700409933" }, "Mahaboob Syed": { parent: "Khader", phone: "8333021076" }, "Nandith Reddy Enugala": { parent: "Karthik Reddy", phone: "8686077799" }, "Sai Charan Goud Mandala": { parent: "Arun Kumar", phone: "8885767607" }, "Sai Prasanna Keerthi": { parent: "Venkateshwarlu", phone: "9951567253" }, "Ajmeri Shaik": { parent: "Hidayath Pasha", phone: "9302145468" }, "Akshith Chiluveru": { parent: "Kranthi Kumar", phone: "8179352423" }, "Jayasri Mykala": { parent: "Sravan kumar", phone: "9010506760" }, "Rahul Kanjarla": { parent: "Kumaraswamy", phone: "8897047979" }, "Saketh Devarakonda": { parent: "Ramesh", phone: "9392270984" }, "Adya Reddy Vangala": { parent: "Mahipal Reddy", phone: "9949109221" }, "Kowshik Patel Muppa": { parent: "Janardhan", phone: "9553800447" }, "Siri Singaram": { parent: "Madhu", phone: "9550726263" }, "Srikar Mandala": { parent: "Ramesh", phone: "9550073190" }, "Abdus Salaam MD": { parent: "Raja.S", phone: "7300303319" }, "Akshith Ram Kalvacharla": { parent: "Hareen Chary", phone: "7672058517" }, "Jaffar Anas Shaik": { parent: "Khaja Pasha", phone: "9391854024" }, "Khaja Azeemuddin Mohammed": { parent: "Khaja Faheemuddin", phone: "9959414786" }, "Nihan Mohammed": { parent: "Chand Pasha", phone: "9848465650" }, "Saif Shaik": { parent: "Salmaan", phone: "8179352120" }, "Saketh Renukuntla": { parent: "Rajesh", phone: "7569518371" }, "Sreeja Dasari": { parent: "Kumar", phone: "6301871704" }, "Vidhaatri Sahani": { parent: "Abhishek Sahani", phone: "9704394869" }, "Abdul Razzak Mohammad": { parent: "Abdul Rawoof", phone: "9573226386" }, "Anudeepthi Chintha": { parent: "Anil", phone: "9052927765" }, "Saketh Ranaveni": { parent: "Sampath", phone: "8688129606" }, "Shiva Sri Katukuri": { parent: "Shivaiah", phone: "6300199764" }, "Aklees Shaik": { parent: "Hidayath Pasha", phone: "9302145468" }, "Akshya Kalvacharla": { parent: "Hareen Chary", phone: "7672058517" }, "Prince Katkuri": { parent: "Katkuri Suryaprasad", phone: "9000557009" }, "Manikanta Sannayala": { parent: "Shiva", phone: "9000283858" }, "Sreeyan Reddy Karra": { parent: "Krishna Reddy", phone: "9848774257" }, "Jayadhithya Chiluveru": { parent: "CH.Madhava Rao", phone: "8886826838" }, "Akshaya Gampala": { parent: "Balaiah", phone: "9948184498" }, "Ganesh Oggula": { parent: "Cheralu", phone: "6304381153" }, "Gayathri Renukuntla": { parent: "Rajesh", phone: "7569518371" }, "Khaja Sadeemuddin Mohammed": { parent: "Khaja Faheemuddin", phone: "9959414786" }, "Sathwika Nagavelly": { parent: "Ravi", phone: "9492098006" }, "Vyshnavi Uppala": { parent: "Ramesh", phone: "8179254251" }
     };
 
-    // Day Logic
     const daySelect = document.getElementById('vDay');
     const now = new Date();
     for(let i=1; i<=31; i++) {
@@ -307,43 +127,76 @@
         }
     }
 
-    function fetchAknowledgment() {
+    async function fetchComplianceReport() {
         const d = document.getElementById('vDay').value;
         const m = document.getElementById('vMonth').value;
         const y = document.getElementById('vYear').value;
+        const cls = document.getElementById('vClass').value;
         const selectedSt = document.getElementById('vStudent').value;
         const dateKey = `${y}-${m}-${d}`;
         const wrapper = document.getElementById('tableWrapper');
 
-        if(!selectedSt) return alert("Please select a student first!");
-        wrapper.innerHTML = "<p style='text-align:center; padding:20px;'>Checking parent signatures...</p>";
+        if(!selectedSt) return alert("Please select a student!");
+        wrapper.innerHTML = "<p style='text-align:center; padding:20px;'>Checking database records...</p>";
 
-        db.ref(`homework_status/${dateKey}/${selectedSt}`).once('value', (snap) => {
-            const subjects = snap.val();
-            const contactInfo = contactMap[selectedSt] || { parent: "Parent", phone: "0000000000" };
+        const hwSnap = await db.ref(`homework/${dateKey}/${cls}`).once('value');
+        const postedHW = hwSnap.val() || {};
+        const signSnap = await db.ref(`homework_status/${dateKey}/${selectedSt}`).once('value');
+        const signatures = signSnap.val() || {};
+        const info = contactMap[selectedSt] || { parent: "Unknown", phone: "0000000000" };
 
-            if(!subjects) {
-                wrapper.innerHTML = "<div class='card' style='margin-top:20px; text-align:center; color:var(--danger); font-weight:bold;'>No signatures found for this student on this date.</div>";
-                return;
-            }
-            let html = `<table class="result-table"><thead><tr><th>Homework Subject</th><th>Acknowledgment</th><th>Connect</th></tr></thead><tbody>`;
-            for(let sub in subjects) {
-                const isDone = subjects[sub].verified;
-                
-                // PRE-FILLED WHATSAPP MESSAGE
-                const waMsg = encodeURIComponent(`Hello ${contactInfo.parent}, this is Paramount School. Please check and sign the homework for ${selectedSt} (${sub}) on the portal.`);
-                const waLink = `https://wa.me/91${contactInfo.phone}?text=${waMsg}`;
+        if(Object.keys(postedHW).length === 0) {
+            wrapper.innerHTML = "<div class='card' style='margin-top:20px; text-align:center;'>No homework posted for this date.</div>";
+            return;
+        }
 
-                html += `<tr>
-                    <td><strong>${sub}</strong></td>
-                    <td><span class="status-badge ${isDone ? 'status-signed' : 'status-pending'}">${isDone ? '<i class="fas fa-check-circle"></i> SIGNED' : '<i class="far fa-circle"></i> PENDING'}</span></td>
-                    <td>
-                        ${!isDone ? `<a href="${waLink}" target="_blank" class="wa-btn"><i class="fab fa-whatsapp"></i> Remind</a>` : '<i class="fas fa-check-circle" style="color:var(--forest)"></i>'}
+        let missingSubjects = [];
+        let signedSubjects = [];
+        for(let sub in postedHW) {
+            if(sub === 'lastUpdated') continue;
+            if(signatures[sub] && signatures[sub].verified === true) signedSubjects.push(sub);
+            else missingSubjects.push(sub);
+        }
+
+        const waMsg = encodeURIComponent(`Hello ${info.parent}, homework for ${selectedSt} in subjects (${missingSubjects.join(', ')}) is NOT SIGNED. Please check the portal.`);
+        const waLink = `https://wa.me/91${info.phone}?text=${waMsg}`;
+
+        let html = `
+        <table class="result-table">
+            <thead>
+                <tr>
+                    <th>Student & Parent</th>
+                    <th>Signed Subjects</th>
+                    <th>NOT SIGNED</th>
+                    <th>Contact Parent</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="name-cell">
+                        <b>${selectedSt}</b>
+                        <small>Parent: ${info.parent}</small><br>
+                        <small style="color:#888;">${info.phone}</small>
                     </td>
-                </tr>`;
-            }
-            wrapper.innerHTML = html + "</tbody></table>";
-        });
+                    <td>
+                        ${signedSubjects.length ? signedSubjects.map(s => `<span class="signed-all" style="display:block; margin-bottom:2px;">${s}</span>`).join('') : '<small>None</small>'}
+                    </td>
+                    <td>
+                        <div class="missing-list">
+                            ${missingSubjects.length ? missingSubjects.map(s => `<span class="missing-item"><i class="fas fa-exclamation-triangle"></i> ${s}</span>`).join('') : '<span class="signed-all">COMPLETED</span>'}
+                        </div>
+                    </td>
+                    <td class="action-cell">
+                        ${missingSubjects.length ? `
+                            <a href="${waLink}" target="_blank" class="btn-action btn-wa"><i class="fab fa-whatsapp"></i> Remind</a>
+                            <a href="tel:${info.phone}" class="btn-action btn-call"><i class="fas fa-phone-alt"></i> Call</a>
+                        ` : '<i class="fas fa-check-circle" style="color:var(--forest); font-size:24px;"></i>'}
+                    </td>
+                </tr>
+            </tbody>
+        </table>`;
+
+        wrapper.innerHTML = html;
     }
 </script>
 </body>
