@@ -14,6 +14,10 @@
         
         .overlay-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--light); z-index: 9999; display: flex; justify-content: center; align-items: center; padding: 15px; }
         .auth-box { background: white; padding: 40px 25px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); width: 100%; max-width: 400px; border-bottom: 5px solid var(--forest); position: relative; text-align: center; }
+        
+        /* RESTORED LOGO STYLING */
+        .auth-logo-corner { position: absolute; top: 20px; left: 20px; height: 45px; width: auto; }
+        
         .secure-icon { font-size: 50px; color: var(--forest); margin: 0 auto 15px auto; display: block; }
         .auth-title { color: var(--forest); margin: 0; font-family: 'Montserrat', sans-serif; font-size: 1.5rem; font-weight: 800; }
         .auth-input { width: 100%; max-width: 320px; padding: 12px; border-radius: 10px; border: 2px solid #eee; margin: 20px auto; text-align: center; font-size: 16px; outline: none; display: block; }
@@ -64,6 +68,7 @@
 
 <div id="loginScreen" class="overlay-screen">
     <div class="auth-box">
+        <img src="logo.png" class="auth-logo-corner" onerror="this.style.display='none'">
         <i class="fas fa-user-shield secure-icon"></i>
         <h2 class="auth-title">Admin Access</h2>
         <input type="password" id="adminPass" class="auth-input" placeholder="Admin Password">
@@ -173,7 +178,7 @@
 
         <div class="card" style="border-top-color: var(--danger);">
             <h3><i class="fas fa-tools"></i> Database Management</h3>
-            <p style="font-size: 13px; color: #666; text-align: center; margin-bottom: 20px;">Monthly reset clears history and logs for the current month period.</p>
+            <p style="font-size: 13px; color: #666; text-align: center; margin-bottom: 20px;">Monthly reset clears history for the current month period.</p>
             <div style="display: flex; gap: 10px; flex-direction: column;">
                 <button onclick="resetMonthlyData()" class="btn-attract warning" style="width: 100%;"><i class="fas fa-calendar-minus"></i> Reset Current Month Only</button>
                 <button onclick="resetAttendanceData()" class="btn-attract danger" style="width: 100%;"><i class="fas fa-trash-alt"></i> Backup & Reset All Attendance</button>
@@ -244,7 +249,6 @@
         document.getElementById('dlBtn').style.display = 'none'; 
     }
 
-    // INSTAGRAM STYLE NOTIF LOGIC
     function toggleNotifBox() {
         const box = document.getElementById('notifDropdown');
         box.style.display = (box.style.display === 'none' || box.style.display === '') ? 'block' : 'none';
@@ -255,25 +259,14 @@
         const list = document.getElementById('notifList');
         const badge = document.getElementById('notifBadge');
         let count = 0; list.innerHTML = "";
-
         if(!requests) { badge.style.display = 'none'; list.innerHTML = '<p style="padding:20px; text-align:center; color:#999; font-size:13px;">No new requests</p>'; return; }
-
         Object.keys(requests).forEach(id => {
             const req = requests[id];
             if(req.status === 'pending') {
                 count++;
-                list.innerHTML += `
-                    <div class="notif-item">
-                        <b style="font-size:13px; color:var(--forest);">${req.teacher}</b>
-                        <div style="font-size:11px; color:#666; margin:4px 0;">wants Quiz Access for ${req.class} (${req.subject})</div>
-                        <div style="display:flex; gap:8px; margin-top:8px;">
-                            <button onclick="approveReq('${id}')" style="flex:1; background:var(--forest); color:white; border:none; padding:6px; border-radius:6px; font-size:11px; cursor:pointer; font-weight:bold;">Accept</button>
-                            <button onclick="rejectReq('${id}')" style="flex:0.4; background:#f5f5f5; color:#666; border:none; padding:6px; border-radius:6px; font-size:11px; cursor:pointer;">Decline</button>
-                        </div>
-                    </div>`;
+                list.innerHTML += `<div class="notif-item"><b style="font-size:13px; color:var(--forest);">${req.teacher}</b><div style="font-size:11px; color:#666; margin:4px 0;">wants Quiz Access for ${req.class} (${req.subject})</div><div style="display:flex; gap:8px; margin-top:8px;"><button onclick="approveReq('${id}')" style="flex:1; background:var(--forest); color:white; border:none; padding:6px; border-radius:6px; font-size:11px; cursor:pointer; font-weight:bold;">Accept</button><button onclick="rejectReq('${id}')" style="flex:0.4; background:#f5f5f5; color:#666; border:none; padding:6px; border-radius:6px; font-size:11px; cursor:pointer;">Decline</button></div></div>`;
             }
         });
-
         if(count > 0) { badge.innerText = count; badge.style.display = 'block'; }
         else { badge.style.display = 'none'; list.innerHTML = '<p style="padding:20px; text-align:center; color:#999; font-size:13px;">All caught up! ✨</p>'; }
     });
@@ -287,57 +280,45 @@
         const type = document.getElementById('viewType').value;
         const body = document.getElementById('attBody');
         const head = document.getElementById('tableHead');
-        
         if(!cls) return Swal.fire('Error', 'Choose a class', 'info');
         body.innerHTML = '<tr><td colspan="5" style="text-align:center;">Loading...</td></tr>';
-        
         if(type === 'daily') {
             const selDate = document.getElementById('dateInput').value;
             if(!selDate) return Swal.fire('Error', 'Select a date', 'info');
             head.innerHTML = `<tr><th>Student</th><th colspan="4">Attendance Status</th></tr>`;
             db.ref(`daily_attendance/${selDate}/${cls}`).once('value', (snap) => {
-                const data = snap.val();
-                body.innerHTML = "";
+                const data = snap.val(); body.innerHTML = "";
                 if(!data) { document.getElementById('dlBtn').style.display = 'none'; return body.innerHTML = '<tr><td colspan="5" style="text-align:center;">No records found</td></tr>'; }
                 document.getElementById('dlBtn').style.display = 'inline-flex';
-                for(let name in data) {
-                    const status = data[name] ? '<span class="status-p">PRESENT</span>' : '<span class="status-a">ABSENT</span>';
-                    body.innerHTML += `<tr><td>${name}</td><td colspan="4">${status}</td></tr>`;
-                }
+                for(let name in data) { const status = data[name] ? '<span class="status-p">PRESENT</span>' : '<span class="status-a">ABSENT</span>'; body.innerHTML += `<tr><td>${name}</td><td colspan="4">${status}</td></tr>`; }
             });
         } else {
             head.innerHTML = `<tr><th>Student</th><th>P</th><th>A</th><th>Total</th><th>%</th></tr>`;
             db.ref(`attendance/${cls}/students`).once('value', (snap) => {
-                const data = snap.val(); 
-                body.innerHTML = "";
+                const data = snap.val(); body.innerHTML = "";
                 if(!data) { document.getElementById('dlBtn').style.display = 'none'; return body.innerHTML = '<tr><td colspan="5" style="text-align:center;">No data found</td></tr>'; }
                 document.getElementById('dlBtn').style.display = 'inline-flex';
                 for(let name in data) {
                     let p = 0, t = 0;
                     if(type === 'monthly') {
                         const selMonth = document.getElementById('monthInput').value;
-                        if(!selMonth) return;
                         const mData = (data[name].months && data[name].months[selMonth]) ? data[name].months[selMonth] : null;
-                        p = mData ? (mData.present || 0) : 0;
-                        t = mData ? (mData.total || 0) : 0;
+                        p = mData ? (mData.present || 0) : 0; t = mData ? (mData.total || 0) : 0;
                     } else {
                         if (data[name].months) Object.values(data[name].months).forEach(month => { p += (month.present || 0); t += (month.total || 0); });
                     }
-                    const a = t - p;
-                    const pct = t > 0 ? Math.round((p/t)*100) : 0;
+                    const a = t - p; const pct = t > 0 ? Math.round((p/t)*100) : 0;
                     body.innerHTML += `<tr><td>${name}</td><td>${p}</td><td>${a}</td><td>${t}</td><td>${pct}%</td></tr>`;
                 }
             });
         }
     }
 
-    /* ENHANCED ATTRACTIVE EXCEL EXPORT */
     async function downloadFilteredReport() {
         const cls = document.getElementById('clsPick').value;
         const type = document.getElementById('viewType').value;
         const rows = document.getElementById('attBody').querySelectorAll('tr');
         const period = (type === 'monthly') ? document.getElementById('monthInput').value : (type === 'daily' ? document.getElementById('dateInput').value : "Overall History");
-
         const workbook = new ExcelJS.Workbook();
         const sheet = workbook.addWorksheet('Attendance_Report');
 
@@ -382,20 +363,12 @@
             added.eachCell((cell, col) => {
                 cell.alignment = { horizontal: (col===2)?'left':'center', vertical: 'middle' };
                 cell.border = { top:{style:'thin'}, left:{style:'thin'}, bottom:{style:'thin'}, right:{style:'thin'} };
-                if(col === 6) {
-                    const v = parseInt(cell.value);
-                    if(v >= 85) cell.font = { color: { argb: 'FF2E7D32' }, bold: true };
-                    else if(v < 75) cell.font = { color: { argb: 'FFC62828' }, bold: true };
-                }
+                if(col === 6) { const v = parseInt(cell.value); if(v >= 85) cell.font = { color: { argb: 'FF2E7D32' }, bold: true }; else if(v < 75) cell.font = { color: { argb: 'FFC62828' }, bold: true }; }
             });
         });
-
         const buffer = await workbook.xlsx.writeBuffer();
         const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-        const link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
-        link.download = `Paramount_${cls}_Report.xlsx`;
-        link.click();
+        const link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = `Paramount_${cls}_Report.xlsx`; link.click();
     }
 
     function postAnn() { db.ref('announcement').set(document.getElementById('annMsg').value).then(() => Swal.fire('Published', '', 'success')); }
@@ -413,20 +386,11 @@
                     const updates = {};
                     const statsSnapshot = await db.ref('attendance').once('value');
                     const statsData = statsSnapshot.val();
-                    if (statsData) {
-                        Object.keys(statsData).forEach(cls => {
-                            const students = statsData[cls].students;
-                            if (students) Object.keys(students).forEach(name => { updates[`attendance/${cls}/students/${name}/months/${currentMonth}`] = null; });
-                        });
-                    }
+                    if (statsData) { Object.keys(statsData).forEach(cls => { const students = statsData[cls].students; if (students) Object.keys(students).forEach(name => { updates[`attendance/${cls}/students/${name}/months/${currentMonth}`] = null; }); }); }
                     const dailySnapshot = await db.ref('daily_attendance').once('value');
                     const dailyData = dailySnapshot.val();
-                    if (dailyData) {
-                        Object.keys(dailyData).forEach(dateStr => { if (dateStr.startsWith(currentMonth)) updates[`daily_attendance/${dateStr}`] = null; });
-                    }
-                    await db.ref().update(updates);
-                    Swal.fire('Success', `Data for ${currentMonth} fully erased.`, 'success');
-                    if(document.getElementById('clsPick').value) viewAtt();
+                    if (dailyData) { Object.keys(dailyData).forEach(dateStr => { if (dateStr.startsWith(currentMonth)) updates[`daily_attendance/${dateStr}`] = null; }); }
+                    await db.ref().update(updates); Swal.fire('Success', `Data for ${currentMonth} fully erased.`, 'success'); if(document.getElementById('clsPick').value) viewAtt();
                 } catch (error) { Swal.fire('Error', error.message, 'error'); }
             } else if (password) { Swal.fire('Denied', 'Incorrect Password', 'error'); }
         }
@@ -443,8 +407,7 @@
                     const snapshot = await db.ref('attendance').once('value');
                     const allData = snapshot.val();
                     if (allData) await generateMasterBackup(allData);
-                    await db.ref('attendance').remove();
-                    await db.ref('daily_attendance').remove(); 
+                    await db.ref('attendance').remove(); await db.ref('daily_attendance').remove(); 
                     Swal.fire('Success', 'Database cleared. Backup downloaded.', 'success');
                 } catch (error) { Swal.fire('Error', 'Reset failed: ' + error.message, 'error'); }
             } else if (password) { Swal.fire('Denied', 'Incorrect Password', 'error'); }
@@ -455,16 +418,10 @@
         const workbook = new ExcelJS.Workbook();
         const sheet = workbook.addWorksheet('Full_Archive');
         sheet.columns = [{header:'ROLL',key:'roll',width:15},{header:'CLASS',key:'class',width:15},{header:'NAME',key:'name',width:30},{header:'PRESENT',key:'present',width:15},{header:'TOTAL',key:'total',width:15}];
-        Object.keys(data).forEach(className => {
-            const students = data[className].students;
-            if (students) Object.keys(students).forEach(name => { sheet.addRow({ roll: studentRolls[name] || "N/A", class: className, name: name, present: students[name].presentDays || 0, total: students[name].totalDays || 0 }); });
-        });
+        Object.keys(data).forEach(className => { const students = data[className].students; if (students) Object.keys(students).forEach(name => { sheet.addRow({ roll: studentRolls[name] || "N/A", class: className, name: name, present: students[name].presentDays || 0, total: students[name].totalDays || 0 }); }); });
         const buffer = await workbook.xlsx.writeBuffer();
         const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-        const link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
-        link.download = `Paramount_Master_Archive.xlsx`;
-        link.click();
+        const link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = `Paramount_Master_Archive.xlsx`; link.click();
     }
 
     document.getElementById('monthInput').value = new Date().toISOString().slice(0, 7);
