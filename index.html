@@ -116,7 +116,10 @@
         <div id="quizRequestArea" style="display:none; margin-top:15px;">
             <div class="row-grid">
                 <div><label>Quiz Class</label><select id="reqQuizClass" onchange="updateQuizSubjects()">
-                    <option value="Grade-8">Grade-8</option><option value="Grade-7">Grade-7</option>
+                    <option value="Pre-KG">Pre-KG</option><option value="KG-1">KG-1</option><option value="KG-2">KG-2</option>
+                    <option value="Grade-1">Grade-1</option><option value="Grade-2">Grade-2</option><option value="Grade-3">Grade-3</option>
+                    <option value="Grade-4">Grade-4</option><option value="Grade-5">Grade-5</option><option value="Grade-6">Grade-6</option>
+                    <option value="Grade-7">Grade-7</option><option value="Grade-8">Grade-8</option>
                 </select></div>
                 <div><label>Quiz Subject</label><select id="reqQuizSubject"></select></div>
             </div>
@@ -150,7 +153,7 @@
         "Ms. J.Prathibha": "Prathibha@123", "Ms. P.Shailaja": "Shailaja@123", "Ms. A.Jhansi Rani": "Jhansi@123", "Ms. S. Neelima": "Neelima@123"
     };
 
-    // 1. SECURE VERIFICATION
+    // SECURE ACCESS LOGIC
     async function verifyAccess(section) {
         let selectId = section === 'attendance' ? 'teacherSelect' : 'quizTeacherSelect';
         const name = document.getElementById(selectId).value;
@@ -168,11 +171,24 @@
         }
     }
 
-    // 2. ATTENDANCE FUNCTIONS
-    const studentData = { "Grade-8": ["Sathwika Nagavelly", "Vyshnavi Uppala", "Akshaya Gampala", "Ganesh Oggula", "Gayathri Renukuntla", "Khaja Sadeemuddin Mohammed"] /* Add others back */ };
+    // COMPLETE STUDENT DATA
+    const studentData = {
+        "Pre-KG": ["Hanish Macharla", "Arjun Vihaar Illandula", "Thanu sree Allakunta", "Aadhya Gangaraboina", "Aadhya Sri Oggula", "Aadhyasri Shivagoni", "Afraha Begum", "Aliya Sultana", "Anvika Bandi", "Aradana Devara konda", "Devansh Bandi", "Hanvitha Mulkalapelli", "Harsha Vardhan Seenapelli", "Hiranya Bandi", "Jashritha Boina", "Konreddy Shreyanvi", "Kriyansh Sammeta", "Mohammed Mohiuddin Sayyad", "Nethra Narkurthi", "Reeyansh Bandi", "Rishi Manupati", "Rudransh Bandi", "Sanvika Bandi", "Shanvith Khatha", "Shishira Jalagam", "Shiva Sai Mekala", "Shree Rudhraveer Chevvu", "Shreyansh Gangaraboina", "Sreeja Thalla", "Srikrithini Myakala", "Srivatsav Vanam", "Sriyansh Mekala", "Thanvika Lakka", "Thrilokansh Vudari", "Ujjwal Chekka", "Vaishnavi Lakka", "Vedansh Myakala", "Vishnu Priya Molugu", "Vyshnav Tej Boina", "Yafiah Mohammad"],
+        "KG-1": ["Aadhya Sri Amaravadi", "Aditya Manda", "Aadhya Jella", "Advaita Gauri Bandi", "Aizah Amna Shaik", "Akshara Singaram", "Bhahuveer Raj Somishetti", "Gayathri Erroju", "Hanvika Mulkalapelli", "Manvith Kondoju", "Sayyad Vajeed", "Mekala Manu sri", "Oliva Grace Vallapu", "Rithwik Oggula", "Rithwika Kandagatla", "Srimahi Chevvu", "Thanvesh Thalla", "Trishul Nanduri", "Yoganshika Nanduri", "Yusra Mohammad", "Zainul Abideen Syed"],
+        "KG-2": ["Deekshanth Sammeta", "Hanshith Erroju", "Harika Bandi", "Himarsha Naini", "Karthik Vallepu", "Kruthika Bandi", "Rajavardhan Gampala", "Roshan Kaitha", "Sri Anshu Ayaan Lyadala", "Srihansh Bandi", "Srikshitha Guduri", "Varshith Gonela", "Adyasri Makala", "Anvik Boini", "Anvith Pokanati", "Awais Ur Rehman Mohammad", "Dakshu Pothuganti", "Hansith Reddy Katukuri", "Harshith Pokanati", "Jella Aditya", "Krishank Nallabothula", "Kundana Katkuri", "Munukuntla Revanth Rudhra", "Niraja Nethri Siluveru", "Pranav Mattepelli", "Sreenith Yadav Naini", "Uvan Reddy Dasari", "Zayan Mohammad", "Zoya Mohammed"],
+        "Grade-1": ["Dheeraj Gattu", "Preetham Sannayala", "Shiva nandu Gonela", "Shrayan Nuthanakanti", "Sriyanksha Mandala", "Advitha Garige", "Harika Bandi", "Himansi Kondoju", "Izhaan Rahamath Syed", "Jaisurya Myakala", "Khadeeja Fathima", "Manaswini Dandugula", "Manusri Bandi", "Rithwik krishna Amaravadi", "Rohan Bandi", "Shiva Junnu", "Shivanandh Bandi", "Sridha Thalla", "Srinika Chengelly", "Sriyanshi Oggula", "Vishwak Chekka"],
+        "Grade-2": ["Aliza Manha Shaik", "Dhruvan Reddy Katukuri", "Druthika Enugala", "Manaswini Bandi", "Rakshith Macharla", "Sathwika Katkuri", "Shalini Uppala", "Chandu Devarakonda", "Gnaneshwar Pokanati", "Hasnain Syed", "Koushik Siluveru", "Senen Desabattula", "Shivarajan Pothuganti"],
+        "Grade-3": ["Nagavelly Manikanta", "Mirja Ismail", "Bandi Aryan", "Dandugula Mahesh Babu", "Bandi Tejasri", "Bandi Harshavardhan", "Gampala Vyshnavi", "Gampala Laxmi", "Garige Harshith", "Katkuri Hanish", "Katukuri Manideep", "MD Abdul Quddus", "Muppa Sathwik Patel", "Nuthanakanti Sansita", "Pasarakonda Ritwin", "Pinninti Rakshith Rao", "Rayi Sriman Adithya"],
+        "Grade-4": ["Abdul Saqib Mohammad", "Anudeep Chintha", "Bhavan Bandi", "Harshavardhan Gonela", "Jayadev Chiluveru", "Mahaboob Syed", "Nandith Reddy Enugala", "Sai Charan Goud Mandala", "Sai Prasanna Keerthi", "Ajmeri Shaik", "Akshith Chiluveru", "Jayasri Myakala", "Rahul Kanjarla", "Saketh Devarakonda"],
+        "Grade-5": ["Adya Reddy Vangala", "Kowshik Patel Muppa", "Siri Singaram", "Srikar Mandala", "Abdus Salaam MD", "Akshith Ram Kalvacharla", "Jaffar Anas Shaik", "Khaja Azeemuddin Mohammed", "Nihan Mohammed", "Saif Shaik", "Saketh Renukuntla", "Sreeja Dasari", "Vidhaatri Sahani"],
+        "Grade-6": ["Abdul Razzak Mohammad", "Anudeepthi Chintha", "Saketh Ranaveni", "Shiva Sri Katukuri", "Aklees Shaik", "Akshya Kalvacharla", "Prince Katkuri"],
+        "Grade-7": ["Manikanta Sannayala", "Sreeyan Reddy Karra", "Jayadhithya Chiluveru"],
+        "Grade-8": ["Sathwika Nagavelly", "Vyshnavi Uppala", "Akshaya Gampala", "Ganesh Oggula", "Gayathri Renukuntla", "Khaja Sadeemuddin Mohammed"]
+    };
+
     async function loadStudents() {
         const cls = document.getElementById('attClass').value; const date = document.getElementById('attDate').value; const list = document.getElementById('studentList');
-        if(!cls || !date) return;
+        if(!cls || !date) return; list.innerHTML = "Loading Students...";
         const snap = await db.ref(`daily_attendance/${date}/${cls}`).once('value');
         const existing = snap.val() || {};
         list.innerHTML = (studentData[cls] || []).map(n => {
@@ -181,39 +197,50 @@
         }).join('');
         document.getElementById('submitAtt').style.display = 'block';
     }
+
     function saveAttendance() {
         const cls = document.getElementById('attClass').value; const date = document.getElementById('attDate').value;
-        Swal.fire('Success', 'Attendance Updated!', 'success');
         const updates = {};
         document.querySelectorAll('.att-check').forEach(cb => { updates[`daily_attendance/${date}/${cls}/${cb.getAttribute('data-name')}`] = cb.checked; });
-        db.ref().update(updates);
+        db.ref().update(updates).then(() => Swal.fire('Success', 'Attendance Updated!', 'success'));
     }
 
-    // 3. HOMEWORK FUNCTIONS
-    function updateHWSubjects() { const cls = document.getElementById('hwClass').value; const common = ["TELUGU", "HINDI", "ENGLISH", "MATHS", "SOCIAL STUDIES"]; let subs = (["Grade-6", "Grade-7", "Grade-8"].includes(cls)) ? [...common, "PHYSICS", "CHEMISTRY", "BIOLOGY"] : [...common, "SCIENCE"]; document.getElementById('hwSubSelect').innerHTML = subs.map(s => `<option value="${s}">${s}</option>`).join(''); fetchExistingHW(); }
+    // HOMEWORK TOOL LOGIC
+    function updateHWSubjects() { 
+        const cls = document.getElementById('hwClass').value; 
+        const common = ["TELUGU", "HINDI", "ENGLISH", "MATHS", "SOCIAL STUDIES"]; 
+        let subs = (["Grade-6", "Grade-7", "Grade-8"].includes(cls)) ? [...common, "PHYSICS", "CHEMISTRY", "BIOLOGY"] : [...common, "SCIENCE"]; 
+        document.getElementById('hwSubSelect').innerHTML = subs.map(s => `<option value="${s}">${s}</option>`).join(''); 
+        fetchExistingHW(); 
+    }
     function fetchExistingHW() { const d = document.getElementById('hwDate').value; const c = document.getElementById('hwClass').value; const s = document.getElementById('hwSubSelect').value; if(!d) return; db.ref(`homework/${d}/${c}/${s}`).once('value', (snap) => { document.getElementById('hwTask').value = snap.val() || ""; }); }
-    function postHomework() { const d = document.getElementById('hwDate').value; const c = document.getElementById('hwClass').value; const s = document.getElementById('hwSubSelect').value; const t = document.getElementById('hwTask').value; if(!d || !t) return; db.ref(`homework/${d}/${c}`).update({ [s]: t, lastUpdated: new Date().toLocaleTimeString() }).then(() => Swal.fire('Updated!', 'Visible to parents.', 'success')); }
-    function clearHomework() { document.getElementById('hwTask').value = ''; Swal.fire('Cleared!', 'Homework input reset.', 'info'); }
+    function postHomework() { const d = document.getElementById('hwDate').value; const c = document.getElementById('hwClass').value; const s = document.getElementById('hwSubSelect').value; const t = document.getElementById('hwTask').value; if(!d || !t) return Swal.fire('Error', 'Task empty', 'error'); db.ref(`homework/${d}/${c}`).update({ [s]: t, lastUpdated: new Date().toLocaleTimeString() }).then(() => Swal.fire('Updated!', 'Homework is now live.', 'success')); }
+    function clearHomework() { document.getElementById('hwTask').value = ''; Swal.fire('Cleared!', 'Task reset.', 'info'); }
 
-    // 4. QUIZ FUNCTIONS
-    function updateQuizSubjects() { const cls = document.getElementById('reqQuizClass').value; document.getElementById('reqQuizSubject').innerHTML = '<option value="SCIENCE">SCIENCE</option>'; }
+    // QUIZ LOGIC
+    function updateQuizSubjects() { 
+        const cls = document.getElementById('reqQuizClass').value;
+        const common = ["TELUGU", "HINDI", "ENGLISH", "MATHS", "SOCIAL STUDIES"]; 
+        let subs = (["Grade-6", "Grade-7", "Grade-8"].includes(cls)) ? [...common, "PHYSICS", "CHEMISTRY", "BIOLOGY"] : [...common, "SCIENCE"]; 
+        document.getElementById('reqQuizSubject').innerHTML = subs.map(s => `<option value="${s}">${s}</option>`).join('');
+    }
     function requestQuizAccess() {
         const teacher = document.getElementById('quizTeacherSelect').value;
         const teacherId = teacher.replace(/\s+/g, '_'); 
-        Swal.fire('Request Submitted!', 'Waiting for Admin approval.', 'success');
+        Swal.fire('Submitted', 'Request sent to Admin.', 'success');
         db.ref(`quiz_requests/${teacherId}`).set({ teacher: teacher, class: document.getElementById('reqQuizClass').value, subject: document.getElementById('reqQuizSubject').value, status: 'pending', timestamp: Date.now() });
         db.ref(`quiz_requests/${teacherId}/status`).on('value', (snap) => {
             if(snap.val() === 'approved') {
                 document.getElementById('quizRequestArea').style.display = 'none';
                 document.getElementById('quizCreatorTool').style.display = 'block';
-                Swal.fire('Unlocked!', 'Admin approved request.', 'success');
+                Swal.fire('Unlocked', 'Admin approved request.', 'success');
             }
         });
     }
     function publishSubjectQuiz() {
         const cls = document.getElementById('reqQuizClass').value; const sub = document.getElementById('reqQuizSubject').value;
-        const data = { question: document.getElementById('quizQ').value, options: { A: document.getElementById('optA').value, B: document.getElementById('optB').value }, correct: document.getElementById('correctOpt').value };
-        db.ref(`daily_quiz/${cls}/${sub}`).set(data).then(() => { Swal.fire('Quiz Live!', 'Published successfully.', 'success'); location.reload(); });
+        const data = { question: document.getElementById('quizQ').value, options: { A: document.getElementById('optA').value, B: document.getElementById('optB').value, C: document.getElementById('optC').value, D: document.getElementById('optD').value }, correct: document.getElementById('correctOpt').value };
+        db.ref(`daily_quiz/${cls}/${sub}`).set(data).then(() => { Swal.fire('Quiz Live!', 'Question published.', 'success'); location.reload(); });
     }
 
     document.getElementById('hwDate').valueAsDate = new Date();
