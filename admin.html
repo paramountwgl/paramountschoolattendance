@@ -10,22 +10,20 @@
         :root { --forest: #006633; --gold: #ffd700; --danger: #c62828; }
         body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; margin: 0; padding: 0; }
         .overlay-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(244, 247, 246, 0.95); z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-        .auth-box { background: white; padding: 40px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; width: 90%; max-width: 350px; position: relative; }
+        .auth-box { background: white; padding: 40px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; width: 90%; max-width: 350px; }
         .auth-box input { padding: 12px; width: 100%; margin: 10px 0; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; outline: none; box-sizing: border-box; }
-        .auth-btn { background: var(--forest); color: white; border: none; padding: 12px; width: 100%; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.2s; margin-top: 10px; }
+        .auth-btn { background: var(--forest); color: white; border: none; padding: 12px; width: 100%; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
         header { background: var(--forest); color: white; padding: 20px 5%; display: flex; justify-content: center; align-items: center; gap: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .logo-img { height: 70px; width: auto; display: block; }
-        .container { max-width: 900px; margin: 30px auto; padding: 0 15px; }
-        .card { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 25px; }
-        .controls { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 25px; flex-wrap: wrap; gap: 15px; }
-        .select-group { flex: 1; min-width: 180px; }
-        label { display: block; font-size: 13px; font-weight: bold; color: #666; margin-bottom: 8px; text-transform: uppercase; }
-        select, .hw-input { width: 100%; padding: 12px; border-radius: 8px; border: 2px solid #ddd; font-size: 16px; outline: none; box-sizing: border-box; }
-        .fetch-btn { background: #006633; color: white; border: none; padding: 0 25px; border-radius: 8px; font-weight: bold; cursor: pointer; height: 48px; transition: 0.2s; display: flex; align-items: center; gap: 8px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; }
-        th { background: var(--forest); color: white; font-weight: bold; text-transform: uppercase; font-size: 13px; }
-        #mainApp { display: none; } 
+        .logo-img { height: 70px; width: auto; }
+        .container { max-width: 950px; margin: 30px auto; padding: 0 15px; }
+        .card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 25px; }
+        .hw-input { width: 100%; padding: 12px; border-radius: 8px; border: 2px solid #ddd; font-size: 16px; box-sizing: border-box; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
+        th { background: var(--forest); color: white; font-size: 12px; text-transform: uppercase; }
+        .badge-verified { background: #e8f5e9; color: #2e7d32; padding: 4px 10px; border-radius: 15px; font-size: 11px; font-weight: bold; }
+        .badge-pending { background: #fff3e0; color: #ef6c00; padding: 4px 10px; border-radius: 15px; font-size: 11px; font-weight: bold; }
+        #mainApp { display: none; }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -35,10 +33,9 @@
 
 <div id="loginScreen" class="overlay-screen">
     <div class="auth-box">
-        <h2 style="color: #006633; margin-top: 0;">Admin Access</h2>
+        <h2 style="color: var(--forest);">Admin Login</h2>
         <input type="password" id="adminPassword" placeholder="Enter Password" onkeypress="if(event.key === 'Enter') checkPassword()">
-        <button class="auth-btn" onclick="checkPassword()">Login</button>
-        <p id="loginError" style="color: #c62828; display: none; margin-top: 15px; font-weight: bold;">Incorrect Password</p>
+        <button class="auth-btn" onclick="checkPassword()">Access Dashboard</button>
     </div>
 </div>
 
@@ -46,8 +43,8 @@
     <header>
         <img src="logo.png" alt="Logo" class="logo-img">
         <div class="school-info">
-            <h1 class="school-name">PARAMOUNT ENGLISH MEDIUM SCHOOL</h1>
-            <p style="color: var(--gold); margin: 0; font-weight: bold;"><i class="fas fa-user-shield"></i> Cloud Admin Dashboard</p>
+            <h1 style="margin:0; font-size: 1.6rem;">PARAMOUNT ADMIN</h1>
+            <p style="color: var(--gold); margin:0; font-weight:bold;">Cloud Control Panel</p>
         </div>
     </header>
 
@@ -55,47 +52,26 @@
         <div class="card" style="border-left: 6px solid var(--forest);">
             <h3><i class="fas fa-edit"></i> Post Daily Homework</h3>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                <div><label>Date</label><input type="date" id="hwDate" class="hw-input"></div>
-                <div><label>Subject</label><input type="text" id="hwSubject" class="hw-input" placeholder="e.g. English"></div>
+                <input type="date" id="hwDate" class="hw-input">
+                <input type="text" id="hwSubject" class="hw-input" placeholder="Subject Name">
             </div>
-            <label style="margin-top: 15px;">Homework Task</label>
-            <textarea id="hwTask" style="width: 100%; padding: 12px; border-radius: 8px; border: 2px solid #ddd; min-height: 80px; font-family: inherit;" placeholder="Enter details..."></textarea>
-            <button class="auth-btn" onclick="saveHomework()"><i class="fas fa-paper-plane"></i> Publish to Diary</button>
-        </div>
-
-        <div class="card" style="border-left: 6px solid var(--gold);">
-            <h3><i class="fas fa-bullhorn"></i> Live Cloud Announcement</h3>
-            <textarea id="announcementInput" style="width: 100%; padding: 12px; border-radius: 8px; border: 2px solid #ddd; min-height: 80px; font-family: inherit;" placeholder="E.g. School closed tomorrow..."></textarea>
-            <div style="display: flex; gap: 10px; margin-top: 15px;">
-                <button onclick="publishAnnouncement()" class="auth-btn" style="flex: 1;"><i class="fas fa-cloud-upload-alt"></i> Publish</button>
-                <button onclick="clearAnnouncement()" style="background: #ffebee; color: var(--danger); border: 1px solid #ef9a9a; padding: 12px 20px; border-radius: 8px; font-weight: bold; cursor: pointer;"><i class="fas fa-times"></i> Remove</button>
-            </div>
+            <textarea id="hwTask" class="hw-input" style="margin-top:15px; min-height:80px; font-family:inherit;" placeholder="Homework details..."></textarea>
+            <button class="auth-btn" onclick="saveHomework()" style="width:auto; padding: 12px 30px;"><i class="fas fa-paper-plane"></i> Publish to Portal</button>
         </div>
 
         <div class="card">
-            <h3><i class="fas fa-chart-bar"></i> Attendance Monitoring</h3>
-            <div class="controls">
-                <div class="select-group">
-                    <label>Select Class</label>
-                    <select id="classSelect">
-                        <option value="Pre-KG">Pre-KG (Diamond)</option>
-                        <option value="KG-1">KG-1 (Ruby)</option>
-                        <option value="KG-2">KG-2 (Amber)</option>
-                        <option value="Grade-1">Grade-1 (Opal)</option>
-                        <option value="Grade-2">Grade-2 (Emerald)</option>
-                        <option value="Grade-3">Grade-3 (Crystal)</option>
-                        <option value="Grade-4">Grade-4 (Citrine)</option>
-                        <option value="Grade-5">Grade-5 (Moonstone)</option>
-                        <option value="Grade-6">Grade-6 (Alluri)</option>
-                        <option value="Grade-7">Grade-7 (Kalam)</option>
-                        <option value="Grade-8">Grade-8 (Bhagat)</option>
-                    </select>
-                </div>
-                <button class="fetch-btn" onclick="loadClassData()"><i class="fas fa-search"></i> View Data</button>
+            <h3><i class="fas fa-user-check"></i> Parent Verification Tracker</h3>
+            <div style="display:flex; gap:10px;">
+                <input type="date" id="trackDate" class="hw-input" style="flex:1;">
+                <button class="auth-btn" onclick="loadVerifications()" style="width:auto; margin:0;">Track Status</button>
             </div>
-            <table id="dataTable">
-                <thead><tr><th>Student Name</th><th>Present</th><th>Total</th><th>Percentage</th></tr></thead>
-                <tbody id="tableBody"><tr><td colspan="4" style="text-align:center; padding:20px; color:#888;">Select class and click View Data.</td></tr></tbody>
+            <table id="verifyTable">
+                <thead>
+                    <tr><th>Student Name</th><th>Subject</th><th>Status</th><th>Time</th></tr>
+                </thead>
+                <tbody id="verifyBody">
+                    <tr><td colspan="4" style="text-align:center; padding:20px; color:#999;">Select a date to view parent checks.</td></tr>
+                </tbody>
             </table>
         </div>
     </div>
@@ -110,68 +86,61 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-// --- AUTH LOGIC ---
 function checkPassword() {
-    if (document.getElementById('adminPassword').value === "Ahmad@07") {
+    if(document.getElementById('adminPassword').value === "Ahmad@07") {
         document.getElementById('loginScreen').style.display = "none";
         document.getElementById('mainApp').style.display = "block";
-    } else { document.getElementById('loginError').style.display = "block"; }
+    } else { alert("Wrong Password"); }
 }
 
-// --- HOMEWORK LOGIC ---
+// SAVE HOMEWORK WITH TIMESTAMP
 function saveHomework() {
     const date = document.getElementById('hwDate').value;
     const subject = document.getElementById('hwSubject').value;
     const task = document.getElementById('hwTask').value;
-    
-    if(!date || !subject || !task) return alert("Please fill all homework fields!");
+    if(!date || !subject || !task) return Swal.fire('Error', 'Missing fields', 'error');
 
-    const postTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
+    const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     db.ref(`homework/${date}`).update({
         [subject]: task,
-        lastUpdated: postTime 
+        lastUpdated: now
     }).then(() => {
-        Swal.fire('Posted!', `Homework updated at ${postTime}`, 'success');
+        Swal.fire('Success', 'Homework posted at ' + now, 'success');
         document.getElementById('hwSubject').value = "";
         document.getElementById('hwTask').value = "";
     });
 }
 
-// --- ANNOUNCEMENT LOGIC ---
-function publishAnnouncement() {
-    const text = document.getElementById('announcementInput').value.trim();
-    if(text) db.ref('announcement').set(text).then(() => alert("Broadcast Live!"));
-}
-function clearAnnouncement() {
-    db.ref('announcement').remove().then(() => alert("Announcement Cleared!"));
-}
+// TRACK PARENT CHECKS
+function loadVerifications() {
+    const date = document.getElementById('trackDate').value;
+    const tbody = document.getElementById('verifyBody');
+    if(!date) return alert("Select date");
 
-// --- ATTENDANCE LOGIC ---
-function loadClassData() {
-    const cls = document.getElementById('classSelect').value;
-    const tbody = document.getElementById('tableBody');
-    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Fetching...</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Loading...</td></tr>';
 
-    db.ref('attendance').once('value').then((snap) => {
-        const data = snap.val() || {};
-        if (!data[cls] || !data[cls].students) {
-            tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">No data found.</td></tr>';
+    db.ref(`homework_status/${date}`).once('value', (snap) => {
+        const data = snap.val();
+        tbody.innerHTML = "";
+        if(!data) {
+            tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:red;">No parent verifications found for this date.</td></tr>';
             return;
         }
-        tbody.innerHTML = "";
-        const students = data[cls].students;
-        for (const name in students) {
-            const stats = students[name];
-            const percent = stats.totalDays > 0 ? Math.round((stats.presentDays / stats.totalDays) * 100) : 0;
-            tbody.innerHTML += `<tr><td>${name}</td><td>${stats.presentDays}</td><td>${stats.totalDays}</td><td>${percent}%</td></tr>`;
+
+        for(let student in data) {
+            for(let sub in data[student]) {
+                const info = data[student][sub];
+                const badge = info.verified ? '<span class="badge-verified">VERIFIED</span>' : '<span class="badge-pending">PENDING</span>';
+                tbody.innerHTML += `<tr>
+                    <td style="font-weight:bold;">${student}</td>
+                    <td>${sub}</td>
+                    <td>${badge}</td>
+                    <td style="font-size:11px; color:#666;">${info.verifiedAt || '---'}</td>
+                </tr>`;
+            }
         }
     });
 }
 </script>
 </body>
 </html>
-
-
-
-
