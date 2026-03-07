@@ -20,8 +20,7 @@
         .school-name-sub { font-family: 'Montserrat', sans-serif; font-size: clamp(0.6rem, 2vw, 0.9rem); color: var(--gold); font-weight: 700; text-transform: uppercase; }
         .portal-subtitle { color: white; font-size: clamp(0.7rem, 2.5vw, 1rem); font-weight: 600; opacity: 0.9; margin-top: 4px; display: block; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 4px; }
 
-        #announcementBar { background: var(--danger); color: white; padding: 15px; text-align: center; font-weight: bold; display: none; align-items: center; justify-content: center; gap: 12px; margin: 15px auto; width: 90%; max-width: 800px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); animation: pulse-brightness 2s infinite ease-in-out; }
-        @keyframes pulse-brightness { 0%, 100% { filter: brightness(0.9); } 50% { filter: brightness(1.2); } }
+        #announcementBar { background: var(--danger); color: white; padding: 15px; text-align: center; font-weight: bold; display: none; align-items: center; justify-content: center; gap: 12px; margin: 15px auto; width: 90%; max-width: 800px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
 
         .container { max-width: 850px; margin: 0 auto; padding: 0 15px; }
         .nav-buttons-wrapper { display: flex; justify-content: center; gap: 15px; margin: 20px 0; flex-wrap: wrap; }
@@ -36,26 +35,13 @@
         select, input, textarea { width: 100%; padding: 12px; border-radius: 8px; border: 2px solid #ddd; font-size: 15px; outline: none; box-sizing: border-box; font-family: inherit; }
         
         .homework-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; }
-        .homework-row div { min-width: 0; } 
-        
-        #hwDate, #hwClass, #attDate, #attClass { width: 98%; border-radius: 8px; padding: 10px 4px; }
-        
         .tools-btn-row { display: flex; gap: 10px; margin-top: 15px; }
         .btn { flex: 1; background: linear-gradient(135deg, var(--forest), #004d26); color: white; border: none; padding: 15px; border-radius: 50px; font-weight: bold; cursor: pointer; transition: 0.3s; font-size: 14px; }
         .btn.danger { background: linear-gradient(135deg, #d32f2f, #b71c1c); }
         .btn.warning { background: linear-gradient(135deg, #fb8c00, #ef6c00); }
-        .btn:hover { transform: translateY(-2px); opacity: 0.9; }
 
         .student-item { display: flex; align-items: center; justify-content: space-between; padding: 12px; border-bottom: 1px solid #eee; }
         .student-item input[type="checkbox"] { width: 22px; height: 22px; cursor: pointer; accent-color: var(--forest); }
-        
-        @media (max-width: 600px) { 
-            .header-content { gap: 10px; } 
-            .card { padding: 15px; } 
-            .tools-btn-row { flex-direction: column; } 
-            .homework-row { gap: 8px; } 
-            #hwDate, #attDate { font-size: 13px; }
-        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -75,17 +61,15 @@
     </div>
 </header>
 
-<div id="announcementBar"><i class="fas fa-bell"></i> <span id="announcementText"></span></div>
-
 <div class="container">
     <div class="nav-buttons-wrapper">
-        <a href="admin.html" class="nav-btn"><i class="fas fa-user-shield"></i> Go to Admin Dashboard</a>
-        <a href="Parents Checkbox.html" class="nav-btn gold"><i class="fas fa-user-check"></i> Parents Checkbox</a>
+        <a href="admin.html" class="nav-btn"><i class="fas fa-user-shield"></i> Admin Dashboard</a>
+        <a href="Parents Checkbox.html" class="nav-btn gold"><i class="fas fa-user-check"></i> Parents</a>
     </div>
 
     <div class="card">
-        <h3>Mark / Edit Attendance</h3>
-        <label>Select Teacher</label>
+        <h3>Mark Attendance</h3>
+        <label>Teacher (Attendance)</label>
         <select id="teacherSelect" onchange="verifyTeacher()">
             <option value="">-- Select Teacher --</option>
             <option value="Mr. Shaik Ahmad">Mr. Shaik Ahmad</option>
@@ -105,30 +89,24 @@
 
         <div id="classGroup" style="display:none; margin-top:15px;">
             <div class="homework-row">
-                <div>
-                    <label>Select Class</label>
-                    <select id="attClass" onchange="loadStudents()">
-                        <option value="">-- Choose Class --</option>
-                        <option value="Pre-KG">Pre-KG</option><option value="KG-1">KG-1</option><option value="KG-2">KG-2</option>
-                        <option value="Grade-1">Grade-1</option><option value="Grade-2">Grade-2</option><option value="Grade-3">Grade-3</option>
-                        <option value="Grade-4">Grade-4</option><option value="Grade-5">Grade-5</option><option value="Grade-6">Grade-6</option>
-                        <option value="Grade-7">Grade-7</option><option value="Grade-8">Grade-8</option>
-                    </select>
-                </div>
-                <div>
-                    <label>Attendance Date</label>
-                    <input type="date" id="attDate" onchange="loadStudents()">
-                </div>
+                <div><label>Class</label><select id="attClass" onchange="loadStudents()">
+                    <option value="">-- Choose --</option>
+                    <option value="Pre-KG">Pre-KG</option><option value="KG-1">KG-1</option><option value="KG-2">KG-2</option>
+                    <option value="Grade-1">Grade-1</option><option value="Grade-2">Grade-2</option><option value="Grade-3">Grade-3</option>
+                    <option value="Grade-4">Grade-4</option><option value="Grade-5">Grade-5</option><option value="Grade-6">Grade-6</option>
+                    <option value="Grade-7">Grade-7</option><option value="Grade-8">Grade-8</option>
+                </select></div>
+                <div><label>Date</label><input type="date" id="attDate" onchange="loadStudents()"></div>
             </div>
+            <div id="studentList" style="margin-top:20px;"></div>
+            <button id="submitAtt" class="btn" style="display:none; width:100%; margin-top:15px;" onclick="saveAndDownload()">Update Attendance</button>
         </div>
-        <div id="studentList" style="margin-top:20px;"></div>
-        <button id="submitAtt" class="btn" style="display:none; width:100%;" onclick="saveAndDownload()">Save / Update Attendance</button>
     </div>
 
     <div class="card" style="border-top-color: var(--gold);">
-        <h3>Daily Homework Tool</h3>
+        <h3>Daily Homework</h3>
         <div class="homework-row">
-            <div><label>Class</label><select id="hwClass" onchange="updateHWSubjects(); fetchExistingHW();">
+            <div><label>Class</label><select id="hwClass" onchange="updateHWSubjects();">
                 <option value="Pre-KG">Pre-KG</option><option value="KG-1">KG-1</option><option value="KG-2">KG-2</option>
                 <option value="Grade-1">Grade-1</option><option value="Grade-2">Grade-2</option><option value="Grade-3">Grade-3</option>
                 <option value="Grade-4">Grade-4</option><option value="Grade-5">Grade-5</option><option value="Grade-6">Grade-6</option>
@@ -137,75 +115,67 @@
             <div><label>Date</label><input type="date" id="hwDate" onchange="fetchExistingHW()"></div>
         </div>
         <label>Subject</label><select id="hwSubSelect" onchange="fetchExistingHW()"></select>
-        <label>Task Details</label><textarea id="hwTask" rows="5" placeholder="Enter instructions..."></textarea>
+        <label>Task</label><textarea id="hwTask" rows="3" placeholder="Enter instructions..."></textarea>
         <div class="tools-btn-row">
-            <button class="btn" onclick="postHomework()"><i class="fas fa-paper-plane"></i> Publish / Update</button>
-            <button class="btn danger" onclick="clearSubject()"><i class="fas fa-eraser"></i> Clear Task</button>
+            <button class="btn" onclick="postHomework()">Publish Homework</button>
         </div>
     </div>
 
-    <div class="card" id="quizRequestCard" style="border-top-color: var(--gold);">
-        <h3><i class="fas fa-lock"></i> Quiz Access Request</h3>
-        <p style="font-size: 13px; color: #666; text-align: center;">Permission required from Admin to publish a quiz today.</p>
-        <div class="homework-row" style="margin-bottom: 15px;">
-            <div>
-                <label>Target Class</label>
-                <select id="reqQuizClass" onchange="updateQuizSubjects()">
+    <div class="card" style="border-top-color: #2196f3;">
+        <h3>Quiz Portal Access</h3>
+        
+        <div id="quizRequestCard">
+            <label>Select Teacher (For Quiz)</label>
+            <select id="quizTeacherSelect" autocomplete="off">
+                <option value="">-- Choose Your Name --</option>
+                <option value="Mr. Shaik Ahmad">Mr. Shaik Ahmad</option>
+                <option value="Ms. Roqiya Begum">Ms. Roqiya Begum</option>
+                <option value="Ms. G.Rajitha">Ms. G.Rajitha</option>
+                <option value="Ms. Ameena Tabassum">Ms. Ameena Tabassum</option>
+                <option value="Ms. Shaik Shabana">Ms. Shaik Shabana</option>
+                <option value="Ms. B.Ravali">Ms. B.Ravali</option>
+                <option value="Ms. L.Kalyani">Ms. L.Kalyani</option>
+                <option value="Ms. J.Alaya Sree">Ms. J.Alaya Sree</option>
+                <option value="Ms. S.Sujatha">Ms. S.Sujatha</option>
+                <option value="Ms. J.Prathibha">Ms. J.Prathibha</option>
+                <option value="Ms. P.Shailaja">Ms. P.Shailaja</option>
+                <option value="Ms. A.Jhansi Rani">Ms. A.Jhansi Rani</option>
+                <option value="Ms. S. Neelima">Ms. S. Neelima</option>
+            </select>
+
+            <div class="homework-row">
+                <div><label>Quiz Class</label><select id="reqQuizClass" onchange="updateQuizSubjects()">
                     <option value="Pre-KG">Pre-KG</option><option value="KG-1">KG-1</option><option value="KG-2">KG-2</option>
                     <option value="Grade-1">Grade-1</option><option value="Grade-2">Grade-2</option><option value="Grade-3">Grade-3</option>
                     <option value="Grade-4">Grade-4</option><option value="Grade-5">Grade-5</option><option value="Grade-6">Grade-6</option>
                     <option value="Grade-7">Grade-7</option><option value="Grade-8">Grade-8</option>
-                </select>
+                </select></div>
+                <div><label>Quiz Subject</label><select id="reqQuizSubject"></select></div>
             </div>
-            <div>
-                <label>Target Subject</label>
-                <select id="reqQuizSubject"></select>
-            </div>
-        </div>
-        <button class="btn warning" id="reqBtn" onclick="requestQuizAccess()" style="width:100%;">
-            <i class="fas fa-paper-plane"></i> Send Access Request
-        </button>
-    </div>
-
-    <div id="quizCreatorTool" style="display:none;" class="card">
-        <h3 style="color: #2196f3; border-bottom: 2px solid #2196f3;"><i class="fas fa-brain"></i> Subject Quiz Creator</h3>
-        
-        <div class="homework-row" style="margin-top:10px;">
-            <div>
-                <label>Media Type</label>
-                <select id="mediaType">
-                    <option value="none">Text Only</option>
-                    <option value="image">Image URL</option>
-                    <option value="video">YouTube ID</option>
-                </select>
-            </div>
-            <div>
-                <label>Correct Option</label>
-                <select id="correctOpt">
-                    <option value="A">Option A</option><option value="B">Option B</option>
-                    <option value="C">Option C</option><option value="D">Option D</option>
-                </select>
-            </div>
+            <button class="btn warning" id="reqBtn" onclick="requestQuizAccess()" style="width:100%; margin-top:15px;">
+                <i class="fas fa-paper-plane"></i> Send Request to Admin
+            </button>
         </div>
 
-        <label>Question / Task</label>
-        <textarea id="quizQ" rows="2" placeholder="Type question here..."></textarea>
-        
-        <label>Media Link (Optional)</label>
-        <input type="text" id="mediaUrl" placeholder="Paste link or YouTube ID">
-
-        <div class="homework-row" style="margin-top:10px;">
-            <div><input type="text" id="optA" placeholder="Option A" style="margin-bottom:5px;"></div>
-            <div><input type="text" id="optB" placeholder="Option B" style="margin-bottom:5px;"></div>
+        <div id="quizCreatorTool" style="display:none; border-top: 2px dashed #eee; margin-top: 20px; padding-top: 20px;">
+            <div class="homework-row">
+                <div><label>Media</label><select id="mediaType">
+                    <option value="none">Text Only</option><option value="image">Image</option><option value="video">YouTube</option>
+                </select></div>
+                <div><label>Answer</label><select id="correctOpt">
+                    <option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>
+                </select></div>
+            </div>
+            <label>Question</label><textarea id="quizQ" rows="2" placeholder="Type here..."></textarea>
+            <label>Media Link</label><input type="text" id="mediaUrl" placeholder="Paste link...">
+            <div class="homework-row" style="margin-top:10px;">
+                <input type="text" id="optA" placeholder="Option A">
+                <input type="text" id="optB" placeholder="Option B">
+                <input type="text" id="optC" placeholder="Option C">
+                <input type="text" id="optD" placeholder="Option D">
+            </div>
+            <button class="btn" style="background:#2196f3; width:100%; margin-top:15px;" onclick="publishSubjectQuiz()">Go Live</button>
         </div>
-        <div class="homework-row">
-            <div><input type="text" id="optC" placeholder="Option C"></div>
-            <div><input type="text" id="optD" placeholder="Option D"></div>
-        </div>
-
-        <button class="btn" style="background: linear-gradient(135deg, #2196f3, #1976d2); width:100%; margin-top:20px;" onclick="publishSubjectQuiz()">
-            <i class="fas fa-rocket"></i> Publish Quiz Now
-        </button>
     </div>
 </div>
 
@@ -221,117 +191,39 @@
         "Ms. J.Prathibha": "Prathibha@123", "Ms. P.Shailaja": "Shailaja@123", "Ms. A.Jhansi Rani": "Jhansi@123", "Ms. S. Neelima": "Neelima@123"
     };
 
-    const studentData = {
-        "Pre-KG": ["Hanish Macharla", "Arjun Vihaar Illandula", "Thanu sree Allakunta", "Aadhya Gangaraboina", "Aadhya Sri Oggula", "Aadhyasri Shivagoni", "Afraha Begum", "Aliya Sultana", "Anvika Bandi", "Aradana Devara konda", "Devansh Bandi", "Hanvitha Mulkalapelli", "Harsha Vardhan Seenapelli", "Hiranya Bandi", "Jashritha Boina", "Konreddy Shreyanvi", "Kriyansh Sammeta", "Mohammed Mohiuddin Sayyad", "Nethra Narkurthi", "Reeyansh Bandi", "Rishi Manupati", "Rudransh Bandi", "Sanvika Bandi", "Shanvith Khatha", "Shishira Jalagam", "Shiva Sai Mekala", "Shree Rudhraveer Chevvu", "Shreyansh Gangaraboina", "Sreeja Thalla", "Srikrithini Myakala", "Srivatsav Vanam", "Sriyansh Mekala", "Thanvika Lakka", "Thrilokansh Vudari", "Ujjwal Chekka", "Vaishnavi Lakka", "Vedansh Myakala", "Vishnu Priya Molugu", "Vyshnav Tej Boina", "Yafiah Mohammad"],
-        "KG-1": ["Aadhya Sri Amaravadi", "Aditya Manda", "Aadhya Jella", "Advaita Gauri Bandi", "Aizah Amna Shaik", "Akshara Singaram", "Bhahuveer Raj Somishetti", "Gayathri Erroju", "Hanvika Mulkalapelli", "Manvith Kondoju", "Sayyad Vajeed", "Mekala Manu sri", "Oliva Grace Vallapu", "Rithwik Oggula", "Rithwika Kandagatla", "Srimahi Chevvu", "Thanvesh Thalla", "Trishul Nanduri", "Yoganshika Nanduri", "Yusra Mohammad", "Zainul Abideen Syed"],
-        "KG-2": ["Deekshanth Sammeta", "Hanshith Erroju", "Harika Bandi", "Himarsha Naini", "Karthik Vallepu", "Kruthika Bandi", "Rajavardhan Gampala", "Roshan Kaitha", "Sri Anshu Ayaan Lyadala", "Srihansh Bandi", "Srikshitha Guduri", "Varshith Gonela", "Adyasri Makala", "Anvik Boini", "Anvith Pokanati", "Awais Ur Rehman Mohammad", "Dakshu Pothuganti", "Hansith Reddy Katukuri", "Harshith Pokanati", "Jella Aditya", "Krishank Nallabothula", "Kundana Katkuri", "Munukuntla Revanth Rudhra", "Niraja Nethri Siluveru", "Pranav Mattepelli", "Sreenith Yadav Naini", "Uvan Reddy Dasari", "Zayan Mohammad", "Zoya Mohammed"],
-        "Grade-1": ["Dheeraj Gattu", "Preetham Sannayala", "Shiva nandu Gonela", "Shrayan Nuthanakanti", "Sriyanksha Mandala", "Advitha Garige", "Harika Bandi", "Himansi Kondoju", "Izhaan Rahamath Syed", "Jaisurya Myakala", "Khadeeja Fathima", "Manaswini Dandugula", "Manusri Bandi", "Rithwik krishna Amaravadi", "Rohan Bandi", "Shiva Junnu", "Shivanandh Bandi", "Sridha Thalla", "Srinika Chengelly", "Sriyanshi Oggula", "Vishwak Chekka"],
-        "Grade-2": ["Aliza Manha Shaik", "Dhruvan Reddy Katukuri", "Druthika Enugala", "Manaswini Bandi", "Rakshith Macharla", "Sathwika Katkuri", "Shalini Uppala", "Chandu Devarakonda", "Gnaneshwar Pokanati", "Hasnain Syed", "Koushik Siluveru", "Senen Desabattula", "Shivarajan Pothuganti"],
-        "Grade-3": ["Nagavelly Manikanta", "Mirja Ismail", "Bandi Aryan", "Dandugula Mahesh Babu", "Bandi Tejasri", "Bandi Harshavardhan", "Gampala Vyshnavi", "Gampala Laxmi", "Garige Harshith", "Katkuri Hanish", "Katukuri Manideep", "MD Abdul Quddus", "Muppa Sathwik Patel", "Nuthanakanti Sansita", "Pasarakonda Ritwin", "Pinninti Rakshith Rao", "Rayi Sriman Adithya"],
-        "Grade-4": ["Abdul Saqib Mohammad", "Anudeep Chintha", "Bhavan Bandi", "Harshavardhan Gonela", "Jayadev Chiluveru", "Mahaboob Syed", "Nandith Reddy Enugala", "Sai Charan Goud Mandala", "Sai Prasanna Keerthi", "Ajmeri Shaik", "Akshith Chiluveru", "Jayasri Myakala", "Rahul Kanjarla", "Saketh Devarakonda"],
-        "Grade-5": ["Adya Reddy Vangala", "Kowshik Patel Muppa", "Siri Singaram", "Srikar Mandala", "Abdus Salaam MD", "Akshith Ram Kalvacharla", "Jaffar Anas Shaik", "Khaja Azeemuddin Mohammed", "Nihan Mohammed", "Saif Shaik", "Saketh Renukuntla", "Sreeja Dasari", "Vidhaatri Sahani"],
-        "Grade-6": ["Abdul Razzak Mohammad", "Anudeepthi Chintha", "Saketh Ranaveni", "Shiva Sri Katukuri", "Aklees Shaik", "Akshya Kalvacharla", "Prince Katkuri"],
-        "Grade-7": ["Manikanta Sannayala", "Sreeyan Reddy Karra", "Jayadhithya Chiluveru"],
-        "Grade-8": ["Sathwika Nagavelly", "Vyshnavi Uppala", "Akshaya Gampala", "Ganesh Oggula", "Gayathri Renukuntla", "Khaja Sadeemuddin Mohammed"]
-    };
+    const studentData = { "Pre-KG": ["Hanish Macharla", "Arjun Vihaar Illandula", "Thanu sree Allakunta", "Aadhya Gangaraboina", "Aadhya Sri Oggula", "Aadhyasri Shivagoni", "Afraha Begum", "Aliya Sultana", "Anvika Bandi", "Aradana Devara konda", "Devansh Bandi", "Hanvitha Mulkalapelli", "Harsha Vardhan Seenapelli", "Hiranya Bandi", "Jashritha Boina", "Konreddy Shreyanvi", "Kriyansh Sammeta", "Mohammed Mohiuddin Sayyad", "Nethra Narkurthi", "Reeyansh Bandi", "Rishi Manupati", "Rudransh Bandi", "Sanvika Bandi", "Shanvith Khatha", "Shishira Jalagam", "Shiva Sai Mekala", "Shree Rudhraveer Chevvu", "Shreyansh Gangaraboina", "Sreeja Thalla", "Srikrithini Myakala", "Srivatsav Vanam", "Sriyansh Mekala", "Thanvika Lakka", "Thrilokansh Vudari", "Ujjwal Chekka", "Vaishnavi Lakka", "Vedansh Myakala", "Vishnu Priya Molugu", "Vyshnav Tej Boina", "Yafiah Mohammad"], "KG-1": ["Aadhya Sri Amaravadi", "Aditya Manda", "Aadhya Jella", "Advaita Gauri Bandi", "Aizah Amna Shaik", "Akshara Singaram", "Bhahuveer Raj Somishetti", "Gayathri Erroju", "Hanvika Mulkalapelli", "Manvith Kondoju", "Sayyad Vajeed", "Mekala Manu sri", "Oliva Grace Vallapu", "Rithwik Oggula", "Rithwika Kandagatla", "Srimahi Chevvu", "Thanvesh Thalla", "Trishul Nanduri", "Yoganshika Nanduri", "Yusra Mohammad", "Zainul Abideen Syed"], "KG-2": ["Deekshanth Sammeta", "Hanshith Erroju", "Harika Bandi", "Himarsha Naini", "Karthik Vallepu", "Kruthika Bandi", "Rajavardhan Gampala", "Roshan Kaitha", "Sri Anshu Ayaan Lyadala", "Srihansh Bandi", "Srikshitha Guduri", "Varshith Gonela", "Adyasri Makala", "Anvik Boini", "Anvith Pokanati", "Awais Ur Rehman Mohammad", "Dakshu Pothuganti", "Hansith Reddy Katukuri", "Harshith Pokanati", "Jella Aditya", "Krishank Nallabothula", "Kundana Katkuri", "Munukuntla Revanth Rudhra", "Niraja Nethri Siluveru", "Pranav Mattepelli", "Sreenith Yadav Naini", "Uvan Reddy Dasari", "Zayan Mohammad", "Zoya Mohammed"], "Grade-1": ["Dheeraj Gattu", "Preetham Sannayala", "Shiva nandu Gonela", "Shrayan Nuthanakanti", "Sriyanksha Mandala", "Advitha Garige", "Harika Bandi", "Himansi Kondoju", "Izhaan Rahamath Syed", "Jaisurya Myakala", "Khadeeja Fathima", "Manaswini Dandugula", "Manusri Bandi", "Rithwik krishna Amaravadi", "Rohan Bandi", "Shiva Junnu", "Shivanandh Bandi", "Sridha Thalla", "Srinika Chengelly", "Sriyanshi Oggula", "Vishwak Chekka"], "Grade-2": ["Aliza Manha Shaik", "Dhruvan Reddy Katukuri", "Druthika Enugala", "Manaswini Bandi", "Rakshith Macharla", "Sathwika Katkuri", "Shalini Uppala", "Chandu Devarakonda", "Gnaneshwar Pokanati", "Hasnain Syed", "Koushik Siluveru", "Senen Desabattula", "Shivarajan Pothuganti"], "Grade-3": ["Nagavelly Manikanta", "Mirja Ismail", "Bandi Aryan", "Dandugula Mahesh Babu", "Bandi Tejasri", "Bandi Harshavardhan", "Gampala Vyshnavi", "Gampala Laxmi", "Garige Harshith", "Katkuri Hanish", "Katukuri Manideep", "MD Abdul Quddus", "Muppa Sathwik Patel", "Nuthanakanti Sansita", "Pasarakonda Ritwin", "Pinninti Rakshith Rao", "Rayi Sriman Adithya"], "Grade-4": ["Abdul Saqib Mohammad", "Anudeep Chintha", "Bhavan Bandi", "Harshavardhan Gonela", "Jayadev Chiluveru", "Mahaboob Syed", "Nandith Reddy Enugala", "Sai Charan Goud Mandala", "Sai Prasanna Keerthi", "Ajmeri Shaik", "Akshith Chiluveru", "Jayasri Myakala", "Rahul Kanjarla", "Saketh Devarakonda"], "Grade-5": ["Adya Reddy Vangala", "Kowshik Patel Muppa", "Siri Singaram", "Srikar Mandala", "Abdus Salaam MD", "Akshith Ram Kalvacharla", "Jaffar Anas Shaik", "Khaja Azeemuddin Mohammed", "Nihan Mohammed", "Saif Shaik", "Saketh Renukuntla", "Sreeja Dasari", "Vidhaatri Sahani"], "Grade-6": ["Abdul Razzak Mohammad", "Anudeepthi Chintha", "Saketh Ranaveni", "Shiva Sri Katukuri", "Aklees Shaik", "Akshya Kalvacharla", "Prince Katkuri"], "Grade-7": ["Manikanta Sannayala", "Sreeyan Reddy Karra", "Jayadhithya Chiluveru"], "Grade-8": ["Sathwika Nagavelly", "Vyshnavi Uppala", "Akshaya Gampala", "Ganesh Oggula", "Gayathri Renukuntla", "Khaja Sadeemuddin Mohammed"] };
 
     async function verifyTeacher() {
         const name = document.getElementById('teacherSelect').value; if(!name) return;
-        const { value: pw } = await Swal.fire({ title: `Welcome, ${name}!`, text: 'Please enter your password to proceed.', input: 'password', showCancelButton: true });
-        if(pw === teacherRegistry[name]) { document.getElementById('classGroup').style.display = 'block'; Swal.fire('Verified', 'Access Granted', 'success'); } 
-        else { document.getElementById('teacherSelect').value = ""; document.getElementById('classGroup').style.display = 'none'; if(pw) Swal.fire('Error', 'Incorrect Password', 'error'); }
+        const { value: pw } = await Swal.fire({ title: `Hello!`, text: 'Enter password to unlock Attendance.', input: 'password', showCancelButton: true, inputAttributes: { autocomplete: 'new-password' } });
+        if(pw === teacherRegistry[name]) { document.getElementById('classGroup').style.display = 'block'; }
+        else { document.getElementById('teacherSelect').value = ""; document.getElementById('classGroup').style.display = 'none'; if(pw) Swal.fire('Error', 'Wrong Password', 'error'); }
     }
 
-    async function loadStudents() {
-        const cls = document.getElementById('attClass').value;
-        const date = document.getElementById('attDate').value;
-        const list = document.getElementById('studentList');
-        const students = studentData[cls] || [];
-        if(!cls || !date) return;
-        list.innerHTML = "<p style='text-align:center;'>Loading Records...</p>";
-        const snapshot = await db.ref(`daily_attendance/${date}/${cls}`).once('value');
-        const existingData = snapshot.val() || {};
-        list.innerHTML = students.map(name => {
-            const isChecked = (existingData[name] !== undefined) ? (existingData[name] ? "checked" : "") : "checked";
-            const prevStatus = (existingData[name] !== undefined) ? (existingData[name] ? "P" : "A") : "";
-            return `<div class="student-item"><span>${name}</span><input type="checkbox" class="att-check" data-name="${name}" ${isChecked} data-prev="${prevStatus}"></div>`;
-        }).join('');
-        document.getElementById('submitAtt').style.display = students.length ? 'block' : 'none';
-    }
-
-    async function saveAndDownload() {
-        const cls = document.getElementById('attClass').value; 
-        const date = document.getElementById('attDate').value;
-        const teacher = document.getElementById('teacherSelect').value;
-        const checks = document.querySelectorAll('.att-check'); 
-        const displayDate = new Date(date).toLocaleDateString('en-GB');
-        const monthKey = date.slice(0, 7);
-        Swal.fire({ title: 'Updating Database...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
-        const dailyUpdates = {};
-        for (let cb of checks) {
-            const name = cb.getAttribute('data-name');
-            const isP = cb.checked;
-            const prev = cb.getAttribute('data-prev');
-            dailyUpdates[`daily_attendance/${date}/${cls}/${name}`] = isP;
-            await db.ref(`attendance/${cls}/students/${name}`).transaction(c => {
-                if(!c) return { presentDays: isP?1:0, totalDays: 1, months: {[monthKey]: {present: isP?1:0, total: 1}} };
-                if (prev === 'P' && !isP) { c.presentDays -= 1; if(c.months && c.months[monthKey]) c.months[monthKey].present -= 1; } 
-                else if (prev === 'A' && isP) { c.presentDays += 1; if(c.months && c.months[monthKey]) c.months[monthKey].present += 1; } 
-                else if (prev === '') { c.totalDays += 1; c.presentDays += isP ? 1 : 0; if(!c.months) c.months = {}; if(!c.months[monthKey]) c.months[monthKey] = {present: 0, total: 0}; c.months[monthKey].total += 1; c.months[monthKey].present += isP ? 1 : 0; }
-                return c;
-            });
-        }
-        await db.ref().update(dailyUpdates);
-
-        const workbook = new ExcelJS.Workbook();
-        const sheet = workbook.addWorksheet('Attendance');
-        sheet.columns = [ { key: 'spacerA', width: 8 }, { key: 'spacerB', width: 8 }, { key: 'spacerC', width: 8 }, { key: 'sno', width: 12 }, { key: 'name', width: 40 }, { key: 'status', width: 18 }, { key: 'remarks', width: 25 } ];
-        sheet.getRow(6).height = 35; sheet.mergeCells('D6:G6');
-        const sHeader = sheet.getCell('D6'); sHeader.value = 'PARAMOUNT ENGLISH MEDIUM SCHOOL';
-        sHeader.fill = { type: 'pattern', pattern:'solid', fgColor:{argb:'FF006633'} };
-        sHeader.font = { color: { argb: 'FFFFFFFF' }, bold: true, size: 16 };
-        sHeader.alignment = { vertical: 'middle', horizontal: 'center' };
-        sheet.getRow(7).height = 25; sheet.mergeCells('D7:G7');
-        const pLabel = sheet.getCell('D7'); pLabel.value = 'TEACHERS OFFICIAL ATTENDANCE PORTAL';
-        pLabel.fill = { type: 'pattern', pattern:'solid', fgColor:{argb:'FFFFD700'} };
-        pLabel.font = { color: { argb: 'FF000000' }, bold: true, size: 12 };
-        pLabel.alignment = { vertical: 'middle', horizontal: 'center' };
-        sheet.getCell('D8').value = `Date: ${displayDate}`; sheet.getCell('F8').value = `Teacher: ${teacher}`;
-        sheet.getCell('D9').value = `Class: ${cls}`; sheet.getCell('F9').value = `Status: FINALIZED`;
-        sheet.getRow(10).values = ['', '', '', 'S.No', 'STUDENT NAME', 'STATUS', 'REMARKS'];
-        checks.forEach((cb, index) => {
-            const name = cb.getAttribute('data-name'); 
-            const isP = cb.checked;
-            sheet.addRow(['', '', '', index + 1, name, isP ? 'PRESENT' : 'ABSENT', '']);
-        });
-
-        const buffer = await workbook.xlsx.writeBuffer();
-        const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-        const link = document.createElement("a"); link.href = URL.createObjectURL(blob);
-        link.download = `Attendance_${cls}_${date.replace(/-/g, '_')}.xlsx`; link.click();
-        Swal.fire('Success', `Record for ${displayDate} updated.`, 'success');
-        loadStudents();
-    }
-
-    // QUIZ SYSTEM LOGIC
+    // QUIZ SYSTEM
     async function requestQuizAccess() {
-        const teacher = document.getElementById('teacherSelect').value;
+        const teacher = document.getElementById('quizTeacherSelect').value;
         const cls = document.getElementById('reqQuizClass').value;
         const sub = document.getElementById('reqQuizSubject').value;
-        if(!teacher) return Swal.fire('Error', 'Select your name first', 'error');
 
+        if(!teacher) return Swal.fire('Error', 'Please select your name for the quiz section.', 'error');
+
+        // FORCE NOTIFICATION PUSH
         await db.ref(`quiz_requests/${teacher}`).set({
-            teacher: teacher, class: cls, subject: sub, status: 'pending', timestamp: new Date().getTime()
+            teacher: teacher, class: cls, subject: sub, status: 'pending', timestamp: Date.now()
         });
         
         document.getElementById('reqBtn').disabled = true;
-        document.getElementById('reqBtn').innerText = "Pending Admin Approval...";
+        document.getElementById('reqBtn').innerText = "Waiting for Admin Approval...";
+
+        // SUCCESS CONFIRMATION
+        Swal.fire({ title: 'Request Submitted!', text: 'Your request has successfully submitted. Please wait for the Admin to accept.', icon: 'success' });
         
         db.ref(`quiz_requests/${teacher}/status`).on('value', (snap) => {
             if(snap.val() === 'approved') {
                 document.getElementById('quizRequestCard').style.display = 'none';
                 document.getElementById('quizCreatorTool').style.display = 'block';
-                Swal.fire('Access Granted', 'You can now create your quiz!', 'success');
+                Swal.fire('Access Granted', 'Admin has accepted your request!', 'success');
             }
         });
     }
@@ -339,73 +231,49 @@
     function publishSubjectQuiz() {
         const cls = document.getElementById('reqQuizClass').value;
         const sub = document.getElementById('reqQuizSubject').value;
-        const quizData = {
-            question: document.getElementById('quizQ').value,
-            mediaUrl: document.getElementById('mediaUrl').value,
-            mediaType: document.getElementById('mediaType').value,
-            options: { A: document.getElementById('optA').value, B: document.getElementById('optB').value, C: document.getElementById('optC').value, D: document.getElementById('optD').value },
-            correct: document.getElementById('correctOpt').value
-        };
-        if(!quizData.question || !quizData.options.A) return Swal.fire('Error', 'Question & Option A are required', 'error');
-        db.ref(`daily_quiz/${cls}/${sub}`).set(quizData).then(() => {
-            Swal.fire('Quiz Live!', 'Students can now take this quiz.', 'success');
-        });
+        const data = { question: document.getElementById('quizQ').value, mediaUrl: document.getElementById('mediaUrl').value, mediaType: document.getElementById('mediaType').value, options: { A: document.getElementById('optA').value, B: document.getElementById('optB').value, C: document.getElementById('optC').value, D: document.getElementById('optD').value }, correct: document.getElementById('correctOpt').value };
+        if(!data.question || !data.options.A) return Swal.fire('Error', 'Question and Options required', 'error');
+        db.ref(`daily_quiz/${cls}/${sub}`).set(data).then(() => Swal.fire('Quiz Live!', '', 'success'));
     }
 
-    function updateHWSubjects() {
-        const cls = document.getElementById('hwClass').value;
-        const common = ["TELUGU", "HINDI", "ENGLISH", "MATHS", "SOCIAL STUDIES"];
-        let subjects = (["Grade-6", "Grade-7", "Grade-8"].includes(cls)) ? [...common, "PHYSICS", "CHEMISTRY", "BIOLOGY"] : [...common, "SCIENCE"];
-        document.getElementById('hwSubSelect').innerHTML = subjects.map(s => `<option value="${s}">${s}</option>`).join('');
+    async function loadStudents() {
+        const cls = document.getElementById('attClass').value; const date = document.getElementById('attDate').value; const list = document.getElementById('studentList'); const students = studentData[cls] || [];
+        if(!cls || !date) return; list.innerHTML = "<p>Loading...</p>";
+        const snap = await db.ref(`daily_attendance/${date}/${cls}`).once('value');
+        const existing = snap.val() || {};
+        list.innerHTML = students.map(n => {
+            const isP = (existing[n] !== undefined) ? (existing[n] ? "checked" : "") : "checked";
+            const prev = (existing[n] !== undefined) ? (existing[n] ? "P" : "A") : "";
+            return `<div class="student-item"><span>${n}</span><input type="checkbox" class="att-check" data-name="${n}" ${isP} data-prev="${prev}"></div>`;
+        }).join('');
+        document.getElementById('submitAtt').style.display = students.length ? 'block' : 'none';
     }
 
-    // Helper for Quiz Subjects
-    function updateQuizSubjects() {
-        const cls = document.getElementById('reqQuizClass').value;
-        const common = ["TELUGU", "HINDI", "ENGLISH", "MATHS", "SOCIAL STUDIES"];
-        let subjects = (["Grade-6", "Grade-7", "Grade-8"].includes(cls)) ? [...common, "PHYSICS", "CHEMISTRY", "BIOLOGY"] : [...common, "SCIENCE"];
-        document.getElementById('reqQuizSubject').innerHTML = subjects.map(s => `<option value="${s}">${s}</option>`).join('');
+    async function saveAndDownload() {
+        const cls = document.getElementById('attClass').value; const date = document.getElementById('attDate').value; const checks = document.querySelectorAll('.att-check'); const monthKey = date.slice(0, 7);
+        Swal.fire({ title: 'Saving...', didOpen: () => Swal.showLoading() });
+        const updates = {};
+        for (let cb of checks) {
+            const n = cb.getAttribute('data-name'); const isP = cb.checked; const prev = cb.getAttribute('data-prev');
+            updates[`daily_attendance/${date}/${cls}/${n}`] = isP;
+            await db.ref(`attendance/${cls}/students/${n}`).transaction(c => {
+                if(!c) return { presentDays: isP?1:0, totalDays: 1, months: {[monthKey]: {present: isP?1:0, total: 1}} };
+                if (prev === 'P' && !isP) { c.presentDays -= 1; if(c.months && c.months[monthKey]) c.months[monthKey].present -= 1; } 
+                else if (prev === 'A' && isP) { c.presentDays += 1; if(c.months && c.months[monthKey]) c.months[monthKey].present += 1; } 
+                else if (prev === '') { c.totalDays += 1; c.presentDays += isP ? 1 : 0; if(!c.months) c.months = {}; if(!c.months[monthKey]) c.months[monthKey] = {present: 0, total: 0}; c.months[monthKey].total += 1; c.months[monthKey].present += isP ? 1 : 0; }
+                return c;
+            });
+        }
+        await db.ref().update(updates); Swal.fire('Success', 'Attendance Updated', 'success'); loadStudents();
     }
 
-    function fetchExistingHW() {
-        const date = document.getElementById('hwDate').value;
-        const cls = document.getElementById('hwClass').value;
-        const sub = document.getElementById('hwSubSelect').value;
-        if(!date) return;
-        db.ref(`homework/${date}/${cls}/${sub}`).once('value', (snap) => { document.getElementById('hwTask').value = snap.val() || ""; });
-    }
-
-    function postHomework() {
-        const date = document.getElementById('hwDate').value; 
-        const cls = document.getElementById('hwClass').value;
-        const sub = document.getElementById('hwSubSelect').value; 
-        const task = document.getElementById('hwTask').value;
-        if(!date || !task) return Swal.fire('Error', 'Fill details', 'error');
-        db.ref(`homework/${date}/${cls}`).update({ [sub]: task, lastUpdated: new Date().toLocaleTimeString() }).then(() => Swal.fire('Updated!', 'Homework is live.', 'success'));
-    }
-
-    function clearSubject() {
-        const date = document.getElementById('hwDate').value;
-        const cls = document.getElementById('hwClass').value;
-        const sub = document.getElementById('hwSubSelect').value;
-        if(!date) return;
-        Swal.fire({ title: 'Clear Task?', text: `Delete ${sub} for ${cls}?`, icon: 'warning', showCancelButton: true }).then((res) => {
-            if(res.isConfirmed) {
-                db.ref(`homework/${date}/${cls}/${sub}`).remove().then(() => { document.getElementById('hwTask').value = ""; Swal.fire('Cleared', 'Task removed.', 'success'); });
-            }
-        });
-    }
-
-    db.ref('announcement').on('value', (snap) => {
-        const msg = snap.val(); const bar = document.getElementById('announcementBar');
-        if(msg) { document.getElementById('announcementText').innerText = msg; bar.style.display = 'flex'; } 
-        else { bar.style.display = 'none'; }
-    });
+    function updateHWSubjects() { const cls = document.getElementById('hwClass').value; const common = ["TELUGU", "HINDI", "ENGLISH", "MATHS", "SOCIAL STUDIES"]; let subs = (["Grade-6", "Grade-7", "Grade-8"].includes(cls)) ? [...common, "PHYSICS", "CHEMISTRY", "BIOLOGY"] : [...common, "SCIENCE"]; document.getElementById('hwSubSelect').innerHTML = subs.map(s => `<option value="${s}">${s}</option>`).join(''); }
+    function updateQuizSubjects() { const cls = document.getElementById('reqQuizClass').value; const common = ["TELUGU", "HINDI", "ENGLISH", "MATHS", "SOCIAL STUDIES"]; let subs = (["Grade-6", "Grade-7", "Grade-8"].includes(cls)) ? [...common, "PHYSICS", "CHEMISTRY", "BIOLOGY"] : [...common, "SCIENCE"]; document.getElementById('reqQuizSubject').innerHTML = subs.map(s => `<option value="${s}">${s}</option>`).join(''); }
+    function postHomework() { const d = document.getElementById('hwDate').value; const c = document.getElementById('hwClass').value; const s = document.getElementById('hwSubSelect').value; const t = document.getElementById('hwTask').value; if(!d || !t) return; db.ref(`homework/${d}/${c}`).update({ [s]: t, lastUpdated: new Date().toLocaleTimeString() }).then(() => Swal.fire('Updated!', '', 'success')); }
 
     document.getElementById('hwDate').valueAsDate = new Date();
     document.getElementById('attDate').valueAsDate = new Date();
-    updateHWSubjects();
-    updateQuizSubjects();
+    updateHWSubjects(); updateQuizSubjects();
 </script>
 </body>
 </html>
