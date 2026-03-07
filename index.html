@@ -190,35 +190,33 @@
         }
     }
 
-    // QUIZ REQUEST SYSTEM
+    // UPDATED QUIZ REQUEST SYSTEM WITH SUCCESS POPUP
     async function requestQuizAccess() {
         const teacher = document.getElementById('quizTeacherSelect').value;
         const cls = document.getElementById('reqQuizClass').value;
         const sub = document.getElementById('reqQuizSubject').value;
 
         if (!teacher) return Swal.fire('Error', 'Please select your name.', 'error');
-
         const teacherId = teacher.replace(/\s+/g, '_'); 
 
         // SEND TO FIREBASE
         db.ref(`quiz_requests/${teacherId}`).set({
             teacher: teacher, class: cls, subject: sub, status: 'pending', timestamp: Date.now()
         }).then(() => {
-            // FORCE SUCCESS POPUP
+            // SUCCESS CONFIRMATION POPUP
             Swal.fire({
                 title: 'Request Submitted!',
                 text: 'Your request has successfully submitted. Please wait for the Admin to accept.',
                 icon: 'success',
                 confirmButtonColor: '#006633'
             });
-
             document.getElementById('reqBtn').disabled = true;
             document.getElementById('reqBtn').innerText = "Waiting for Admin Approval...";
         }).catch((err) => {
-            Swal.fire('Database Error', 'Could not connect: ' + err.message, 'error');
+            Swal.fire('Database Error', err.message, 'error');
         });
         
-        // LISTEN FOR ADMIN
+        // LISTEN FOR ADMIN APPROVAL
         db.ref(`quiz_requests/${teacherId}/status`).on('value', (snap) => {
             if(snap.val() === 'approved') {
                 document.getElementById('quizRequestArea').style.display = 'none';
@@ -232,7 +230,7 @@
 
     async function loadStudents() {
         const cls = document.getElementById('attClass').value; const date = document.getElementById('attDate').value; const list = document.getElementById('studentList'); const students = studentData[cls] || [];
-        if(!cls || !date) return; list.innerHTML = "<p>Loading Records...</p>";
+        if(!cls || !date) return; list.innerHTML = "<p>Loading...</p>";
         const snap = await db.ref(`daily_attendance/${date}/${cls}`).once('value');
         const existing = snap.val() || {};
         list.innerHTML = students.map(n => {
@@ -243,8 +241,10 @@
         document.getElementById('submitAtt').style.display = students.length ? 'block' : 'none';
     }
 
+    // UPDATED SAVE ATTENDANCE WITH SUCCESS POPUP
     async function saveAttendance() {
         const cls = document.getElementById('attClass').value; const date = document.getElementById('attDate').value; const checks = document.querySelectorAll('.att-check'); const monthKey = date.slice(0, 7);
+        
         Swal.fire({ title: 'Saving...', didOpen: () => Swal.showLoading() });
         const updates = {};
         for (let cb of checks) {
@@ -258,13 +258,15 @@
                 return c;
             });
         }
-        await db.ref().update(updates); Swal.fire('Success', 'Attendance Updated', 'success'); loadStudents();
+        await db.ref().update(updates); 
+        Swal.fire('Success', 'Attendance Updated Successfully!', 'success'); 
+        loadStudents();
     }
 
     function updateHWSubjects() { const cls = document.getElementById('hwClass').value; const common = ["TELUGU", "HINDI", "ENGLISH", "MATHS", "SOCIAL STUDIES"]; let subs = (["Grade-6", "Grade-7", "Grade-8"].includes(cls)) ? [...common, "PHYSICS", "CHEMISTRY", "BIOLOGY"] : [...common, "SCIENCE"]; document.getElementById('hwSubSelect').innerHTML = subs.map(s => `<option value="${s}">${s}</option>`).join(''); }
     function updateQuizSubjects() { const cls = document.getElementById('reqQuizClass').value; const common = ["TELUGU", "HINDI", "ENGLISH", "MATHS", "SOCIAL STUDIES"]; let subs = (["Grade-6", "Grade-7", "Grade-8"].includes(cls)) ? [...common, "PHYSICS", "CHEMISTRY", "BIOLOGY"] : [...common, "SCIENCE"]; document.getElementById('reqQuizSubject').innerHTML = subs.map(s => `<option value="${s}">${s}</option>`).join(''); }
     function fetchExistingHW() { const d = document.getElementById('hwDate').value; const c = document.getElementById('hwClass').value; const s = document.getElementById('hwSubSelect').value; if(!d) return; db.ref(`homework/${d}/${c}/${s}`).once('value', (snap) => { document.getElementById('hwTask').value = snap.val() || ""; }); }
-    function postHomework() { const d = document.getElementById('hwDate').value; const c = document.getElementById('hwClass').value; const s = document.getElementById('hwSubSelect').value; const t = document.getElementById('hwTask').value; if(!d || !t) return Swal.fire('Error', 'Fill all fields', 'error'); db.ref(`homework/${d}/${c}`).update({ [s]: t, lastUpdated: new Date().toLocaleTimeString() }).then(() => Swal.fire('Published!', '', 'success')); }
+    function postHomework() { const d = document.getElementById('hwDate').value; const c = document.getElementById('hwClass').value; const s = document.getElementById('hwSubSelect').value; const t = document.getElementById('hwTask').value; if(!d || !t) return Swal.fire('Error', 'Fill details', 'error'); db.ref(`homework/${d}/${c}`).update({ [s]: t, lastUpdated: new Date().toLocaleTimeString() }).then(() => Swal.fire('Published!', '', 'success')); }
 
     function publishSubjectQuiz() {
         const cls = document.getElementById('reqQuizClass').value; const sub = document.getElementById('reqQuizSubject').value;
