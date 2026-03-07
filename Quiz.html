@@ -1,1 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Paramount Quiz Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Segoe+UI:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="logo.png">
+    <style>
+        :root { --forest: #006633; --gold: #ffd700; --light: #f4f7f6; --danger: #e53935; }
+        * { box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; padding: 20px; display: flex; justify-content: center; }
 
+        .quiz-card { width: 100%; max-width: 500px; background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-top: 8px solid var(--forest); text-align: center; }
+        
+        .school-logo { height: 60px; margin-bottom: 10px; }
+        h1 { font-family: 'Montserrat', sans-serif; color: var(--forest); margin: 0 0 5px; font-size: 1.5rem; }
+        p { color: #666; font-size: 14px; margin-bottom: 25px; }
+
+        label { display: block; text-align: left; font-size: 11px; font-weight: bold; color: #888; text-transform: uppercase; margin-bottom: 5px; }
+        input, select { width: 100%; padding: 12px; border-radius: 10px; border: 2px solid #eee; font-size: 15px; outline: none; margin-bottom: 15px; font-family: inherit; }
+
+        .btn-start { background: var(--forest); color: white; border: none; padding: 15px; width: 100%; border-radius: 50px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .btn-start:hover { transform: translateY(-2px); opacity: 0.9; }
+
+        #quizArea { display: none; margin-top: 20px; border-top: 2px dashed #eee; padding-top: 25px; }
+        .q-text { font-size: 1.2rem; font-weight: 700; color: #333; margin-bottom: 20px; line-height: 1.4; }
+        
+        .media-container { width: 100%; margin-bottom: 20px; border-radius: 10px; overflow: hidden; background: #000; }
+        .media-container img { width: 100%; display: block; }
+        .video-container { position: relative; padding-bottom: 56.25%; height: 0; }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+
+        .options-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+        .opt-btn { width: 100%; padding: 16px; border: 2px solid #eee; border-radius: 50px; background: white; cursor: pointer; font-weight: bold; font-size: 15px; transition: 0.2s; color: #444; }
+        .opt-btn:hover { border-color: var(--forest); background: #f0fdf4; transform: translateY(-2px); }
+    </style>
+</head>
+<body>
+
+<div class="quiz-card">
+    <img src="logo.png" class="school-logo" onerror="this.style.display='none'">
+    <h1>Daily Subject Quiz</h1>
+    <p>Enter your details to begin!</p>
+
+    <div id="loginArea">
+        <label>Full Name</label>
+        <input type="text" id="studentName" placeholder="Enter your name">
+        
+        <label>Select Your Class</label>
+        <select id="studentClass" onchange="fetchAvailableQuizzes()">
+            <option value="">-- Choose Class --</option>
+            <option value="Pre-KG">Pre-KG</option><option value="KG-1">KG-1</option><option value="KG-2">KG-2</option>
+            <option value="Grade-1">Grade-1</option><option value="Grade-2">Grade-2</option><option value="Grade-3">Grade-3</option>
+            <option value="Grade-4">Grade-4</option><option value="Grade-5">Grade-5</option><option value="Grade-6">Grade-6</option>
+            <option value="Grade-7">Grade-7</option><option value="Grade-8">Grade-8</option>
+        </select>
+
+        <div id="subContainer" style="display:none;">
+            <label>Select Subject</label>
+            <select id="subjectSelect"></select>
+            <button class="btn-start" onclick="startQuiz()">Start Quiz</button>
+        </div>
+    </div>
+
+    <div id="quizArea">
+        <div id="mediaBox" class="media-container" style="display:none;"></div>
+        <div id="questionText" class="q-text"></div>
+        <div id="optionsArea" class="options-grid"></div>
+    </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    const firebaseConfig = { apiKey: "AIzaSyDRYk9KOK-ga0c88dnYMsAoifW2NJTd_Y8", databaseURL: "https://paramount-school-d55bc-default-rtdb.firebaseio.com", projectId: "paramount-school-d55bc" };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    function fetchAvailableQuizzes() {
+        const cls = document.getElementById('studentClass').value;
+        const subDropdown = document.getElementById('subjectSelect');
+        const subContainer = document.getElementById('subContainer');
+        if(!cls) return;
+
+        db.ref(`daily_quiz/${cls}`).on('value', (snap) => {
+            const subjects = snap.val();
+            subDropdown.innerHTML = '<option value="">-- Choose Subject --</option>';
+            if(!subjects) {
+                subContainer.style.display = 'none';
+                return Swal.fire('No Quiz', 'No quizzes found for your class today.', 'info');
+            }
+            subContainer.style.display = 'block';
+            Object.keys(subjects).forEach(sub => { subDropdown.innerHTML += `<option value="${sub}">${sub}</option>`; });
+        });
+    }
+
+    function startQuiz() {
+        const name = document.getElementById('studentName').value;
+        const sub = document.getElementById('subjectSelect').value;
+        const cls = document.getElementById('studentClass').value;
+
+        if(!name || !sub) return Swal.fire('Error', 'Please enter your name and select a subject', 'error');
+
+        db.ref(`daily_quiz/${cls}/${sub}`).once('value', (snap) => {
+            const data = snap.val();
+            document.getElementById('loginArea').style.display = 'none';
+            document.getElementById('quizArea').style.display = 'block';
+            document.getElementById('questionText').innerText = data.question;
+            
+            const mediaBox = document.getElementById('mediaBox');
+            mediaBox.innerHTML = ""; mediaBox.style.display = 'none';
+
+            if(data.mediaType === 'image' && data.mediaUrl) {
+                mediaBox.innerHTML = `<img src="${data.mediaUrl}">`; mediaBox.style.display = 'block';
+            } else if(data.mediaType === 'video' && data.mediaUrl) {
+                mediaBox.innerHTML = `<div class="video-container"><iframe src="https://www.youtube.com/embed/${data.mediaUrl}" frameborder="0" allowfullscreen></iframe></div>`; mediaBox.style.display = 'block';
+            }
+
+            const optsArea = document.getElementById('optionsArea');
+            optsArea.innerHTML = "";
+            ['A', 'B', 'C', 'D'].forEach(key => {
+                if(data.options[key]) {
+                    optsArea.innerHTML += `<button class="opt-btn" onclick="submitResult('${key}', '${data.correct}', '${name}', '${cls}', '${sub}')">${data.options[key]}</button>`;
+                }
+            });
+        });
+    }
+
+    /* SAVE SCORE LOGIC */
+    function submitResult(selected, correct, name, cls, sub) {
+        const isCorrect = (selected === correct);
+        const date = new Date().toLocaleDateString('en-GB');
+
+        // Save to quiz_scores node for teacher tracking
+        db.ref(`quiz_scores/${date}/${cls}/${sub}/${name}`).set({
+            status: isCorrect ? 'CORRECT' : 'WRONG',
+            time: new Date().toLocaleTimeString()
+        }).then(() => {
+            if(isCorrect) {
+                Swal.fire('Excellent!', 'Correct answer! Your score is recorded. 🌟', 'success').then(() => location.reload());
+            } else {
+                Swal.fire('Not Quite!', `The correct answer was ${correct}. Better luck tomorrow!`, 'error').then(() => location.reload());
+            }
+        });
+    }
+</script>
+</body>
+</html>
