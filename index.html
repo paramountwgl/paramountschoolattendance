@@ -27,6 +27,7 @@
         .btn.warning { background: linear-gradient(135deg, #fb8c00, #ef6c00); }
         .btn.blue { background: linear-gradient(135deg, #2196f3, #1976d2); }
         .student-item { display: flex; align-items: center; justify-content: space-between; padding: 12px; border-bottom: 1px solid #eee; }
+        .student-item input[type="checkbox"] { width: 22px; height: 22px; accent-color: var(--forest); }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -63,6 +64,7 @@
             <option value="Ms. P.Shailaja">Ms. P.Shailaja</option><option value="Ms. A.Jhansi Rani">Ms. A.Jhansi Rani</option>
             <option value="Ms. S. Neelima">Ms. S. Neelima</option>
         </select>
+
         <div id="attContent" style="display:none; margin-top:15px;">
             <div class="row-grid">
                 <div><label>Class</label><select id="attClass" onchange="loadStudents()">
@@ -73,7 +75,7 @@
                 </select></div>
                 <div><label>Date</label><input type="date" id="attDate" onchange="loadStudents()"></div>
             </div>
-            <div id="studentList"></div>
+            <div id="studentList" style="margin-top:15px;"></div>
             <button id="submitAtt" class="btn" style="display:none;" onclick="saveAttendance()">Update Attendance</button>
         </div>
     </div>
@@ -96,7 +98,7 @@
 
     <div class="card" style="border-top-color: #2196f3;">
         <h3>Quiz Portal Access</h3>
-        <label>Select Teacher (For Quiz)</label>
+        <label>Select Teacher (Quiz)</label>
         <select id="quizTeacherSelect" onchange="verifyAccess('quiz')" autocomplete="off">
             <option value="">-- Choose Your Name --</option>
             <option value="Mr. Shaik Ahmad">Mr. Shaik Ahmad</option><option value="Ms. Roqiya Begum">Ms. Roqiya Begum</option>
@@ -130,7 +132,7 @@
                     <option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>
                 </select></div>
             </div>
-            <label>Question Details</label><textarea id="quizQ" rows="2" placeholder="Type question here..."></textarea>
+            <label>Question</label><textarea id="quizQ" rows="2" placeholder="Type here..."></textarea>
             <label>Media Link</label><input type="text" id="mediaUrl" placeholder="Paste link...">
             <div class="row-grid" style="margin-top:10px;">
                 <input type="text" id="optA" placeholder="Option A"><input type="text" id="optB" placeholder="Option B">
@@ -153,28 +155,36 @@
         "Ms. J.Prathibha": "Prathibha@123", "Ms. P.Shailaja": "Shailaja@123", "Ms. A.Jhansi Rani": "Jhansi@123", "Ms. S. Neelima": "Neelima@123"
     };
 
+    // ANTI AUTO-FILL VERIFICATION ENGINE
     async function verifyAccess(section) {
         let selectId = section === 'attendance' ? 'teacherSelect' : 'quizTeacherSelect';
         const name = document.getElementById(selectId).value;
         if(!name) return;
 
-        const { value: pw } = await Swal.fire({
+        const { value: pwEntered } = await Swal.fire({
             title: `Welcome ${name}!`,
             text: 'Enter password to proceed.',
             input: 'password',
-            showCancelButton: true
+            showCancelButton: true,
+            // Unique ID and name prevent browser auto-fill
+            inputAttributes: {
+                id: 'unique_secure_field_' + Math.random(),
+                name: 'nopassfill_' + Date.now(),
+                autocomplete: 'off'
+            },
+            confirmButtonColor: '#006633'
         });
 
-        if(pw === registry[name]) {
+        if(pwEntered === registry[name]) {
             document.getElementById(section === 'attendance' ? 'attContent' : 'quizRequestArea').style.display = 'block';
-            Swal.fire({ title: 'Unlocked', icon: 'success', timer: 800, showConfirmButton: false });
+            Swal.fire({ title: 'Success', text: 'Section Unlocked', icon: 'success', timer: 1000, showConfirmButton: false });
         } else {
             document.getElementById(selectId).value = "";
-            if(pw) Swal.fire('Error', 'Incorrect Password', 'error');
+            if(pwEntered) Swal.fire('Error', 'Incorrect Password', 'error');
         }
     }
 
-    // INSTANT SUBMIT LOGIC
+    // INSTANT SUBMIT QUIZ REQUEST
     function requestQuizAccess() {
         const teacher = document.getElementById('quizTeacherSelect').value;
         const cls = document.getElementById('reqQuizClass').value;
@@ -183,7 +193,7 @@
         if (!teacher) return;
         const teacherId = teacher.replace(/\s+/g, '_'); 
 
-        // 1. Show popup immediately
+        // 1. Show popup immediately (Removes lag feeling)
         Swal.fire({
             title: 'Request Submitted!',
             text: 'Your request has successfully submitted. Please wait for the Admin to accept.',
@@ -191,7 +201,7 @@
             confirmButtonColor: '#006633'
         });
 
-        // 2. Perform background save (don't wait for it)
+        // 2. Perform background save
         db.ref(`quiz_requests/${teacherId}`).set({
             teacher: teacher, class: cls, subject: sub, status: 'pending', timestamp: Date.now()
         });
@@ -205,7 +215,7 @@
             if(snap.val() === 'approved') {
                 document.getElementById('quizRequestArea').style.display = 'none';
                 document.getElementById('quizCreatorTool').style.display = 'block';
-                Swal.fire('Access Granted', 'Admin approved your request!', 'success');
+                Swal.fire('Unlocked!', 'Admin approved your request!', 'success');
             }
         });
     }
@@ -227,7 +237,7 @@
 
     function saveAttendance() {
         const cls = document.getElementById('attClass').value; const date = document.getElementById('attDate').value; const checks = document.querySelectorAll('.att-check');
-        // Show success immediately
+        // Show success popup immediately
         Swal.fire('Success', 'Attendance Updated Successfully!', 'success');
         
         const updates = {};
@@ -238,7 +248,7 @@
     function updateHWSubjects() { const cls = document.getElementById('hwClass').value; const common = ["TELUGU", "HINDI", "ENGLISH", "MATHS", "SOCIAL STUDIES"]; let subs = (["Grade-6", "Grade-7", "Grade-8"].includes(cls)) ? [...common, "PHYSICS", "CHEMISTRY", "BIOLOGY"] : [...common, "SCIENCE"]; document.getElementById('hwSubSelect').innerHTML = subs.map(s => `<option value="${s}">${s}</option>`).join(''); }
     function updateQuizSubjects() { const cls = document.getElementById('reqQuizClass').value; const common = ["TELUGU", "HINDI", "ENGLISH", "MATHS", "SOCIAL STUDIES"]; let subs = (["Grade-6", "Grade-7", "Grade-8"].includes(cls)) ? [...common, "PHYSICS", "CHEMISTRY", "BIOLOGY"] : [...common, "SCIENCE"]; document.getElementById('reqQuizSubject').innerHTML = subs.map(s => `<option value="${s}">${s}</option>`).join(''); }
     function fetchExistingHW() { const d = document.getElementById('hwDate').value; const c = document.getElementById('hwClass').value; const s = document.getElementById('hwSubSelect').value; if(!d) return; db.ref(`homework/${d}/${c}/${s}`).once('value', (snap) => { document.getElementById('hwTask').value = snap.val() || ""; }); }
-    function postHomework() { const d = document.getElementById('hwDate').value; const c = document.getElementById('hwClass').value; const s = document.getElementById('hwSubSelect').value; const t = document.getElementById('hwTask').value; if(!d || !t) return; db.ref(`homework/${d}/${c}`).update({ [s]: t, lastUpdated: new Date().toLocaleTimeString() }).then(() => Swal.fire('Published!', 'Homework is now visible.', 'success')); }
+    function postHomework() { const d = document.getElementById('hwDate').value; const c = document.getElementById('hwClass').value; const s = document.getElementById('hwSubSelect').value; const t = document.getElementById('hwTask').value; if(!d || !t) return; db.ref(`homework/${d}/${c}`).update({ [s]: t, lastUpdated: new Date().toLocaleTimeString() }).then(() => Swal.fire('Published!', 'Homework is now live.', 'success')); }
 
     function publishSubjectQuiz() {
         const cls = document.getElementById('reqQuizClass').value; const sub = document.getElementById('reqQuizSubject').value;
