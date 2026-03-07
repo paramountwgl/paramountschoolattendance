@@ -46,7 +46,11 @@
             display: inline-flex; align-items: center; justify-content: center; gap: 10px;
         }
         .btn-attract:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0, 102, 51, 0.5); border-color: var(--gold); }
-        .btn-clear { background: #eee; color: #666; border: none; padding: 12px 25px; border-radius: 50px; font-weight: bold; cursor: pointer; }
+        .btn-clear { background: #eee; color: #666; border: none; padding: 14px 30px; border-radius: 50px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .btn-clear:hover { background: #e0e0e0; }
+
+        /* IN-LINE BUTTON ROW: Publish & Clear Side-by-Side */
+        .btn-group-inline { display: flex; align-items: center; justify-content: center; gap: 15px; width: 100%; flex-wrap: wrap; }
 
         /* IN-LINE MONITORING LAYOUT */
         .inline-action { display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%; margin-bottom: 25px; flex-wrap: wrap; }
@@ -112,8 +116,8 @@
         <div class="card" style="border-top-color: var(--gold);">
             <h3><i class="fas fa-bullhorn"></i> Announcement Control</h3>
             <textarea id="annMsg" placeholder="Type school announcement here..."></textarea>
-            <div style="display: flex; flex-direction: column; align-items: center; gap: 15px;">
-                <button onclick="postAnn()" class="btn-attract" style="width: 100%; max-width: 280px;">Publish Now</button>
+            <div class="btn-group-inline">
+                <button onclick="postAnn()" class="btn-attract">Publish Now</button>
                 <button onclick="clearAnn()" class="btn-clear">Clear Message</button>
             </div>
         </div>
