@@ -35,9 +35,14 @@
         label { display: block; font-size: 11px; font-weight: bold; color: #666; margin: 15px 0 5px; text-transform: uppercase; }
         select, input, textarea { width: 100%; padding: 12px; border-radius: 8px; border: 2px solid #ddd; font-size: 15px; outline: none; box-sizing: border-box; font-family: inherit; }
         
-        /* UPDATED HOMEWORK TOOL BOX CSS */
-        .homework-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; }
-        .homework-row div { min-width: 0; } /* Prevents date box from pushing outside card */
+        /* FIX FOR HOMEWORK TOOL BOX OVERFLOW */
+        .homework-row { 
+            display: grid; 
+            grid-template-columns: 1.1fr 0.9fr; /* Proportions to keep side-by-side */
+            gap: 8px; 
+            width: 100%; 
+        }
+        .homework-row div { min-width: 0; overflow: hidden; } /* Prevents overflow */
         
         .tools-btn-row { display: flex; gap: 10px; margin-top: 15px; }
         .btn { flex: 1; background: linear-gradient(135deg, var(--forest), #004d26); color: white; border: none; padding: 15px; border-radius: 50px; font-weight: bold; cursor: pointer; transition: 0.3s; font-size: 14px; }
@@ -51,8 +56,8 @@
             .header-content { gap: 10px; } 
             .card { padding: 15px; } 
             .tools-btn-row { flex-direction: column; } 
-            /* Kept side-by-side but refined for mobile */
-            .homework-row { gap: 8px; } 
+            /* Kept side-by-side but refined for small screens */
+            .homework-row { gap: 5px; } 
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
