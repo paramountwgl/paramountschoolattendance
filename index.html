@@ -11,26 +11,21 @@
         :root { --forest: #006633; --gold: #ffd700; --danger: #e53935; --light: #f4f7f6; }
         * { box-sizing: border-box; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; padding-bottom: 50px; overflow-x: hidden; }
-        
         header { background: var(--forest); color: white; padding: 20px 3%; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .header-content { display: flex; align-items: center; justify-content: center; gap: 12px; max-width: 1400px; margin: 0 auto; width: 100%; }
         .header-logo { height: clamp(55px, 8vw, 75px); width: auto; flex-shrink: 0; }
         .school-text { display: flex; flex-direction: column; line-height: 1.1; white-space: nowrap; text-align: left; }
         .school-name-main { font-family: 'Montserrat', sans-serif; font-size: clamp(1.2rem, 3.5vw, 2.2rem); font-weight: 800; }
         .school-name-sub { font-family: 'Montserrat', sans-serif; font-size: clamp(0.6rem, 2vw, 0.9rem); color: var(--gold); font-weight: 700; text-transform: uppercase; }
-
         .container { max-width: 850px; margin: 20px auto; padding: 0 15px; }
         .card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); margin-bottom: 25px; border-top: 6px solid var(--forest); }
         h3 { color: var(--forest); margin: 0 0 20px; font-size: 1.4rem; display: flex; align-items: center; gap: 10px; border-bottom: 2px solid #eee; padding-bottom: 10px; justify-content: center; text-transform: uppercase; }
         label { display: block; font-size: 11px; font-weight: bold; color: #666; margin: 15px 0 5px; text-transform: uppercase; }
         select, input, textarea { width: 100%; padding: 12px; border-radius: 8px; border: 2px solid #ddd; font-size: 15px; outline: none; }
-        
         .row-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; }
         .btn { flex: 1; background: linear-gradient(135deg, var(--forest), #004d26); color: white; border: none; padding: 15px; border-radius: 50px; font-weight: bold; cursor: pointer; transition: 0.3s; font-size: 14px; margin-top: 15px; width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; }
-        .btn:hover { opacity: 0.9; transform: translateY(-1px); }
         .btn.warning { background: linear-gradient(135deg, #fb8c00, #ef6c00); }
         .btn.blue { background: linear-gradient(135deg, #2196f3, #1976d2); }
-
         .student-item { display: flex; align-items: center; justify-content: space-between; padding: 12px; border-bottom: 1px solid #eee; }
         .student-item input[type="checkbox"] { width: 22px; height: 22px; accent-color: var(--forest); }
     </style>
@@ -58,6 +53,34 @@
         <a href="Parents Checkbox.html" style="text-decoration:none; color:var(--gold); font-weight:bold; border:1px solid; padding:8px 15px; border-radius:20px;">Parents Portal</a>
     </div>
 
+    <div class="card">
+        <h3>Mark Attendance</h3>
+        <label>Select Teacher</label>
+        <select id="teacherSelect" onchange="verifyAccess('attendance')" autocomplete="new-password">
+            <option value="">-- Choose Name --</option>
+            <option value="Mr. Shaik Ahmad">Mr. Shaik Ahmad</option><option value="Ms. Roqiya Begum">Ms. Roqiya Begum</option>
+            <option value="Ms. G.Rajitha">Ms. G.Rajitha</option><option value="Ms. Ameena Tabassum">Ms. Ameena Tabassum</option>
+            <option value="Ms. Shaik Shabana">Ms. Shaik Shabana</option><option value="Ms. B.Ravali">Ms. B.Ravali</option>
+            <option value="Ms. L.Kalyani">Ms. L.Kalyani</option><option value="Ms. J.Alaya Sree">Ms. J.Alaya Sree</option>
+            <option value="Ms. S.Sujatha">Ms. S.Sujatha</option><option value="Ms. J.Prathibha">Ms. J.Prathibha</option>
+            <option value="Ms. P.Shailaja">Ms. P.Shailaja</option><option value="Ms. A.Jhansi Rani">Ms. A.Jhansi Rani</option>
+            <option value="Ms. S. Neelima">Ms. S. Neelima</option>
+        </select>
+        <div id="attContent" style="display:none; margin-top:15px;">
+            <div class="row-grid">
+                <div><label>Class</label><select id="attClass" onchange="loadStudents()">
+                    <option value="">-- Select --</option><option value="Pre-KG">Pre-KG</option><option value="KG-1">KG-1</option>
+                    <option value="KG-2">KG-2</option><option value="Grade-1">Grade-1</option><option value="Grade-2">Grade-2</option>
+                    <option value="Grade-3">Grade-3</option><option value="Grade-4">Grade-4</option><option value="Grade-5">Grade-5</option>
+                    <option value="Grade-6">Grade-6</option><option value="Grade-7">Grade-7</option><option value="Grade-8">Grade-8</option>
+                </select></div>
+                <div><label>Date</label><input type="date" id="attDate" onchange="loadStudents()"></div>
+            </div>
+            <div id="studentList" style="margin-top:10px;"></div>
+            <button id="submitAtt" class="btn" style="display:none;" onclick="saveAttendance()">Update Attendance <i class="fas fa-check-double"></i></button>
+        </div>
+    </div>
+
     <div class="card" style="border-top-color: var(--gold);">
         <h3>Daily Homework Tool</h3>
         <div class="row-grid">
@@ -71,67 +94,131 @@
         </div>
         <label>Subject</label><select id="hwSubSelect" onchange="fetchExistingHW()"></select>
         <label>Task Details</label><textarea id="hwTask" rows="3" placeholder="Type instructions..."></textarea>
-        
         <div style="display:flex; gap:12px;">
-            <button class="btn" onclick="postHomework()">
-                <i class="fas fa-cloud-upload-alt"></i> Publish / Update
-            </button>
-            <button class="btn warning" style="flex:0.5;" onclick="clearHomeworkField()">
-                <i class="fas fa-eraser"></i> Clear Task
-            </button>
+            <button class="btn" onclick="postHomework()"><i class="fas fa-upload"></i> Publish / Update</button>
+            <button class="btn warning" style="flex:0.5;" onclick="clearHomework()"><i class="fas fa-eraser"></i> Clear Task</button>
         </div>
     </div>
 
+    <div class="card" style="border-top-color: #2196f3;">
+        <h3>Quiz Portal Access</h3>
+        <label>Select Teacher (Quiz)</label>
+        <select id="quizTeacherSelect" onchange="verifyAccess('quiz')" autocomplete="new-password">
+            <option value="">-- Choose Your Name --</option>
+            <option value="Mr. Shaik Ahmad">Mr. Shaik Ahmad</option><option value="Ms. Roqiya Begum">Ms. Roqiya Begum</option>
+            <option value="Ms. G.Rajitha">Ms. G.Rajitha</option><option value="Ms. Ameena Tabassum">Ms. Ameena Tabassum</option>
+            <option value="Ms. Shaik Shabana">Ms. Shaik Shabana</option><option value="Ms. B.Ravali">Ms. B.Ravali</option>
+            <option value="Ms. L.Kalyani">Ms. L.Kalyani</option><option value="Ms. J.Alaya Sree">Ms. J.Alaya Sree</option>
+            <option value="Ms. S.Sujatha">Ms. S.Sujatha</option><option value="Ms. J.Prathibha">Ms. J.Prathibha</option>
+            <option value="Ms. P.Shailaja">Ms. P.Shailaja</option><option value="Ms. A.Jhansi Rani">Ms. A.Jhansi Rani</option>
+            <option value="Ms. S. Neelima">Ms. S. Neelima</option>
+        </select>
+        <div id="quizRequestArea" style="display:none; margin-top:15px;">
+            <div class="row-grid">
+                <div><label>Quiz Class</label><select id="reqQuizClass" onchange="updateQuizSubjects()">
+                    <option value="Grade-8">Grade-8</option><option value="Grade-7">Grade-7</option>
+                </select></div>
+                <div><label>Quiz Subject</label><select id="reqQuizSubject"></select></div>
+            </div>
+            <button class="btn warning" id="reqBtn" onclick="requestQuizAccess()"><i class="fas fa-paper-plane"></i> Send Request to Admin</button>
+        </div>
+        <div id="quizCreatorTool" style="display:none; border-top: 2px dashed #eee; margin-top: 20px; padding-top: 20px;">
+            <div class="row-grid">
+                <div><label>Media</label><select id="mediaType"><option value="none">Text Only</option><option value="image">Image</option><option value="video">YouTube</option></select></div>
+                <div><label>Correct Ans</label><select id="correctOpt"><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option></select></div>
+            </div>
+            <label>Question</label><textarea id="quizQ" rows="2" placeholder="Type question details..."></textarea>
+            <label>Media Link</label><input type="text" id="mediaUrl" placeholder="Paste link...">
+            <div class="row-grid" style="margin-top:10px;">
+                <input type="text" id="optA" placeholder="Option A"><input type="text" id="optB" placeholder="Option B">
+                <input type="text" id="optC" placeholder="Option C"><input type="text" id="optD" placeholder="Option D">
+            </div>
+            <button class="btn blue" onclick="publishSubjectQuiz()"><i class="fas fa-rocket"></i> Go Live</button>
+        </div>
     </div>
+</div>
 
 <script>
     const firebaseConfig = { apiKey: "AIzaSyDRYk9KOK-ga0c88dnYMsAoifW2NJTd_Y8", databaseURL: "https://paramount-school-d55bc-default-rtdb.firebaseio.com", projectId: "paramount-school-d55bc" };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // RESTORED HOMEWORK FUNCTIONS
-    function updateHWSubjects() { 
-        const cls = document.getElementById('hwClass').value; 
-        const common = ["TELUGU", "HINDI", "ENGLISH", "MATHS", "SOCIAL STUDIES"]; 
-        let subs = (["Grade-6", "Grade-7", "Grade-8"].includes(cls)) ? [...common, "PHYSICS", "CHEMISTRY", "BIOLOGY"] : [...common, "SCIENCE"]; 
-        document.getElementById('hwSubSelect').innerHTML = subs.map(s => `<option value="${s}">${s}</option>`).join(''); 
-        fetchExistingHW(); 
+    const registry = {
+        "Mr. Shaik Ahmad": "Ahmad@123", "Ms. Roqiya Begum": "Roqiya@123", "Ms. G.Rajitha": "Rajitha@123",
+        "Ms. Ameena Tabassum": "Ameena@123", "Ms. Shaik Shabana": "Shabana@123", "Ms. B.Ravali": "Ravali@123",
+        "Ms. L.Kalyani": "Kalyani@123", "Ms. J.Alaya Sree": "Alaya@123", "Ms. S.Sujatha": "Sujatha@123",
+        "Ms. J.Prathibha": "Prathibha@123", "Ms. P.Shailaja": "Shailaja@123", "Ms. A.Jhansi Rani": "Jhansi@123", "Ms. S. Neelima": "Neelima@123"
+    };
+
+    // 1. SECURE VERIFICATION
+    async function verifyAccess(section) {
+        let selectId = section === 'attendance' ? 'teacherSelect' : 'quizTeacherSelect';
+        const name = document.getElementById(selectId).value;
+        if(!name) return;
+        const { value: pw } = await Swal.fire({
+            title: `Welcome ${name}!`, text: 'Enter password to proceed.', input: 'password', showCancelButton: true,
+            inputAttributes: { autocomplete: 'new-password' }, didOpen: () => { Swal.getInput().value = ''; }
+        });
+        if(pw === registry[name]) {
+            document.getElementById(section === 'attendance' ? 'attContent' : 'quizRequestArea').style.display = 'block';
+            Swal.fire({ title: 'Unlocked', icon: 'success', timer: 1000, showConfirmButton: false });
+        } else {
+            document.getElementById(selectId).value = "";
+            if(pw) Swal.fire('Error', 'Wrong Password', 'error');
+        }
     }
 
-    function fetchExistingHW() { 
-        const d = document.getElementById('hwDate').value; 
-        const c = document.getElementById('hwClass').value; 
-        const s = document.getElementById('hwSubSelect').value; 
-        if(!d) return; 
-        db.ref(`homework/${d}/${c}/${s}`).once('value', (snap) => { 
-            document.getElementById('hwTask').value = snap.val() || ""; 
-        }); 
+    // 2. ATTENDANCE FUNCTIONS
+    const studentData = { "Grade-8": ["Sathwika Nagavelly", "Vyshnavi Uppala", "Akshaya Gampala", "Ganesh Oggula", "Gayathri Renukuntla", "Khaja Sadeemuddin Mohammed"] /* Add others back */ };
+    async function loadStudents() {
+        const cls = document.getElementById('attClass').value; const date = document.getElementById('attDate').value; const list = document.getElementById('studentList');
+        if(!cls || !date) return;
+        const snap = await db.ref(`daily_attendance/${date}/${cls}`).once('value');
+        const existing = snap.val() || {};
+        list.innerHTML = (studentData[cls] || []).map(n => {
+            const isP = (existing[n] !== undefined) ? (existing[n] ? "checked" : "") : "checked";
+            return `<div class="student-item"><span>${n}</span><input type="checkbox" class="att-check" data-name="${n}" ${isP}></div>`;
+        }).join('');
+        document.getElementById('submitAtt').style.display = 'block';
+    }
+    function saveAttendance() {
+        const cls = document.getElementById('attClass').value; const date = document.getElementById('attDate').value;
+        Swal.fire('Success', 'Attendance Updated!', 'success');
+        const updates = {};
+        document.querySelectorAll('.att-check').forEach(cb => { updates[`daily_attendance/${date}/${cls}/${cb.getAttribute('data-name')}`] = cb.checked; });
+        db.ref().update(updates);
     }
 
-    function postHomework() { 
-        const d = document.getElementById('hwDate').value; 
-        const c = document.getElementById('hwClass').value; 
-        const s = document.getElementById('hwSubSelect').value; 
-        const t = document.getElementById('hwTask').value; 
-        if(!d || !t) return Swal.fire('Error', 'Details required!', 'error'); 
-        db.ref(`homework/${d}/${c}`).update({ [s]: t, lastUpdated: new Date().toLocaleTimeString() })
-          .then(() => Swal.fire('Updated!', 'Homework is now visible to parents.', 'success')); 
-    }
+    // 3. HOMEWORK FUNCTIONS
+    function updateHWSubjects() { const cls = document.getElementById('hwClass').value; const common = ["TELUGU", "HINDI", "ENGLISH", "MATHS", "SOCIAL STUDIES"]; let subs = (["Grade-6", "Grade-7", "Grade-8"].includes(cls)) ? [...common, "PHYSICS", "CHEMISTRY", "BIOLOGY"] : [...common, "SCIENCE"]; document.getElementById('hwSubSelect').innerHTML = subs.map(s => `<option value="${s}">${s}</option>`).join(''); fetchExistingHW(); }
+    function fetchExistingHW() { const d = document.getElementById('hwDate').value; const c = document.getElementById('hwClass').value; const s = document.getElementById('hwSubSelect').value; if(!d) return; db.ref(`homework/${d}/${c}/${s}`).once('value', (snap) => { document.getElementById('hwTask').value = snap.val() || ""; }); }
+    function postHomework() { const d = document.getElementById('hwDate').value; const c = document.getElementById('hwClass').value; const s = document.getElementById('hwSubSelect').value; const t = document.getElementById('hwTask').value; if(!d || !t) return; db.ref(`homework/${d}/${c}`).update({ [s]: t, lastUpdated: new Date().toLocaleTimeString() }).then(() => Swal.fire('Updated!', 'Visible to parents.', 'success')); }
+    function clearHomework() { document.getElementById('hwTask').value = ''; Swal.fire('Cleared!', 'Homework input reset.', 'info'); }
 
-    function clearHomeworkField() {
-        document.getElementById('hwTask').value = "";
-        Swal.fire({
-            title: 'Cleared!',
-            text: 'The homework input has been reset.',
-            icon: 'info',
-            timer: 1500,
-            showConfirmButton: false
+    // 4. QUIZ FUNCTIONS
+    function updateQuizSubjects() { const cls = document.getElementById('reqQuizClass').value; document.getElementById('reqQuizSubject').innerHTML = '<option value="SCIENCE">SCIENCE</option>'; }
+    function requestQuizAccess() {
+        const teacher = document.getElementById('quizTeacherSelect').value;
+        const teacherId = teacher.replace(/\s+/g, '_'); 
+        Swal.fire('Request Submitted!', 'Waiting for Admin approval.', 'success');
+        db.ref(`quiz_requests/${teacherId}`).set({ teacher: teacher, class: document.getElementById('reqQuizClass').value, subject: document.getElementById('reqQuizSubject').value, status: 'pending', timestamp: Date.now() });
+        db.ref(`quiz_requests/${teacherId}/status`).on('value', (snap) => {
+            if(snap.val() === 'approved') {
+                document.getElementById('quizRequestArea').style.display = 'none';
+                document.getElementById('quizCreatorTool').style.display = 'block';
+                Swal.fire('Unlocked!', 'Admin approved request.', 'success');
+            }
         });
     }
+    function publishSubjectQuiz() {
+        const cls = document.getElementById('reqQuizClass').value; const sub = document.getElementById('reqQuizSubject').value;
+        const data = { question: document.getElementById('quizQ').value, options: { A: document.getElementById('optA').value, B: document.getElementById('optB').value }, correct: document.getElementById('correctOpt').value };
+        db.ref(`daily_quiz/${cls}/${sub}`).set(data).then(() => { Swal.fire('Quiz Live!', 'Published successfully.', 'success'); location.reload(); });
+    }
 
-    // Initialize dates
     document.getElementById('hwDate').valueAsDate = new Date();
-    updateHWSubjects();
+    document.getElementById('attDate').valueAsDate = new Date();
+    updateHWSubjects(); updateQuizSubjects();
 </script>
 </body>
 </html>
