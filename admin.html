@@ -4,68 +4,81 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard | Paramount School</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800&family=Segoe+UI:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="logo.png">
     <style>
         :root { --forest: #006633; --gold: #ffd700; --danger: #c62828; --light: #f4f7f6; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; padding-bottom: 120px; }
         
+        /* LOGIN SCREEN WITH TOP-LEFT LOGO */
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--light); z-index: 9999; display: flex; justify-content: center; align-items: center; }
+        .admin-corner-logo { position: absolute; top: 25px; left: 25px; height: 85px; width: auto; }
+        .auth-box { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); text-align: center; width: 350px; border-bottom: 5px solid var(--forest); }
+
         /* BRANDED HEADER */
         header { background: var(--forest); color: white; padding: 25px 5%; display: flex; align-items: center; gap: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .school-name { font-size: 1.8rem; font-weight: 800; text-transform: uppercase; margin: 0; letter-spacing: 1px; }
+        .school-name { 
+            font-family: 'Montserrat', sans-serif; 
+            font-size: 2.2rem; 
+            font-weight: 800; 
+            text-transform: uppercase; 
+            margin: 0; 
+            letter-spacing: 2px; 
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2); 
+        }
 
         .container { max-width: 1000px; margin: 30px auto; padding: 0 15px; }
         .card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 25px; border-top: 6px solid var(--forest); }
-        
         h3 { color: var(--forest); margin: 0 0 20px; font-size: 1.4rem; border-bottom: 2px solid #eee; padding-bottom: 10px; }
-        label { display: block; font-size: 11px; font-weight: bold; color: #666; margin-bottom: 8px; text-transform: uppercase; }
-        select, textarea { width: 100%; padding: 12px; border-radius: 10px; border: 2px solid #eee; outline: none; font-family: inherit; }
+        
+        /* ATTRACTIVE BUTTONS */
+        .attractive-btn { background: linear-gradient(135deg, var(--forest), #004d26); color: white; text-decoration: none; padding: 15px 40px; border-radius: 50px; font-weight: bold; display: flex; align-items: center; gap: 15px; box-shadow: 0 8px 20px rgba(0, 102, 51, 0.4); transition: 0.3s; border: 2px solid rgba(255, 215, 0, 0.4); cursor: pointer; justify-content: center; }
+        .attractive-btn:hover { transform: translateY(-3.5px); box-shadow: 0 12px 25px rgba(0, 102, 51, 0.6); border-color: var(--gold); }
 
-        /* ATTRACTIVE BOTTOM BUTTON */
+        /* STYLISH BOTTOM NAV */
         .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; padding: 25px 0; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); display: flex; justify-content: center; z-index: 1000; box-shadow: 0 -5px 20px rgba(0,0,0,0.1); }
-        .attractive-btn { background: linear-gradient(135deg, var(--forest), #004d26); color: white; text-decoration: none; padding: 16px 45px; border-radius: 50px; font-weight: bold; display: flex; align-items: center; gap: 15px; box-shadow: 0 8px 20px rgba(0, 102, 51, 0.4); transition: 0.3s; border: 2px solid rgba(255, 215, 0, 0.4); }
-        .attractive-btn:hover { transform: translateY(-5px); box-shadow: 0 12px 25px rgba(0, 102, 51, 0.5); border-color: var(--gold); }
 
-        /* AUTH & TABLE */
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--light); z-index: 9999; display: flex; justify-content: center; align-items: center; }
-        .auth-box { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); text-align: center; width: 350px; border-bottom: 5px solid var(--forest); }
-        #mainApp { display: none; }
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
         th, td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; }
-        th { background: var(--forest); color: white; font-size: 12px; text-transform: uppercase; }
+        th { background: var(--forest); color: white; text-transform: uppercase; font-size: 12px; }
+        #mainApp { display: none; }
     </style>
 </head>
 <body>
 
 <div id="loginScreen" class="overlay">
+    <img src="logo.png" alt="School Logo" class="admin-corner-logo" onerror="this.style.display='none'">
+    
     <div class="auth-box">
         <i class="fas fa-user-shield" style="font-size: 50px; color: var(--forest); margin-bottom: 20px;"></i>
-        <h2 style="color: var(--forest); margin-bottom: 20px;">Admin Secure Login</h2>
-        <input type="password" id="adminPass" placeholder="Enter Admin Password" style="width:100%; padding:12px; border-radius:10px; border:2px solid #eee; margin-bottom:20px; text-align:center;" onkeypress="if(event.key==='Enter') login()">
-        <button onclick="login()" class="attractive-btn" style="width:100%; justify-content:center;">Unlock Dashboard</button>
+        <h2 style="color: var(--forest); margin-bottom: 20px; font-family: 'Montserrat';">Admin Access</h2>
+        <input type="password" id="adminPass" placeholder="Enter Password" style="width:100%; padding:14px; border-radius:10px; border:2px solid #eee; margin-bottom:20px; text-align:center; font-size:16px; outline:none;" onkeypress="if(event.key==='Enter') login()">
+        <button onclick="login()" class="attractive-btn">Unlock Dashboard</button>
     </div>
 </div>
 
 <div id="mainApp">
     <header>
-        <img src="logo.png" style="height:60px;" onerror="this.style.display='none'">
+        <img src="logo.png" style="height:70px;" onerror="this.style.display='none'">
         <h1 class="school-name">Paramount Admin Portal</h1>
     </header>
 
     <div class="container">
         <div class="card" style="border-top-color: var(--gold);">
             <h3><i class="fas fa-bullhorn"></i> Announcement Control</h3>
-            <textarea id="annMsg" placeholder="Type the school announcement here..."></textarea>
-            <div style="display:flex; gap:10px; margin-top:15px;">
-                <button onclick="postAnn()" class="attractive-btn" style="padding:10px 25px; font-size:14px; box-shadow:none;">Publish Announcement</button>
-                <button onclick="clearAnn()" style="background:#eee; border:none; padding:10px 20px; border-radius:50px; cursor:pointer; font-weight:bold; color:#666;">Clear Message</button>
+            <textarea id="annMsg" placeholder="Type school announcement here..." style="width:100%; height:100px; padding:15px; border-radius:10px; border:2px solid #eee; outline:none; font-family:inherit;"></textarea>
+            <div style="display:flex; gap:15px; margin-top:15px;">
+                <button onclick="postAnn()" class="attractive-btn" style="padding:10px 30px; font-size:14px;">Publish Now</button>
+                <button onclick="clearAnn()" style="background:#eee; border:none; padding:10px 25px; border-radius:50px; cursor:pointer; font-weight:bold; color:#666;">Clear Message</button>
             </div>
         </div>
 
         <div class="card">
-            <h3><i class="fas fa-calendar-check"></i> Attendance Monitoring</h3>
-            <label>Select Class to View Records</label>
-            <div style="display:flex; gap:10px;">
-                <select id="clsPick" style="flex:1;">
+            <h3><i class="fas fa-calendar-check"></i> Attendance Oversight</h3>
+            <div style="display:flex; gap:15px; align-items: center;">
+                <select id="clsPick" style="flex:1; padding:12px; border-radius:10px; border:2px solid #eee; outline:none;">
+                    <option value="">-- Select Class --</option>
                     <option value="Pre-KG">Pre-KG (Diamond)</option>
                     <option value="KG-1">KG-1 (Ruby)</option>
                     <option value="KG-2">KG-2 (Amber)</option>
@@ -78,10 +91,10 @@
                     <option value="Grade-7">Grade-7 (Kalam)</option>
                     <option value="Grade-8">Grade-8 (Bhagat)</option>
                 </select>
-                <button onclick="viewAtt()" class="attractive-btn" style="padding:10px 25px; font-size:14px; box-shadow:none;">View Report</button>
+                <button onclick="viewAtt()" class="attractive-btn" style="padding:10px 30px; font-size:14px;">View Report</button>
             </div>
             <table id="attTable">
-                <thead><tr><th>Student</th><th>Present</th><th>Absent</th><th>Total</th><th>Percentage</th></tr></thead>
+                <thead><tr><th>Student Name</th><th>Present</th><th>Absent</th><th>Total</th><th>Percentage</th></tr></thead>
                 <tbody id="attBody"></tbody>
             </table>
         </div>
@@ -119,15 +132,17 @@
         db.ref('announcement').set(msg).then(() => Swal.fire('Live', 'Announcement Published', 'success'));
     }
 
-    function clearAnn() { db.ref('announcement').remove(); }
+    function clearAnn() { db.ref('announcement').remove().then(() => Swal.fire('Cleared', 'Announcement Removed', 'info')); }
 
     function viewAtt() {
         const cls = document.getElementById('clsPick').value;
         const body = document.getElementById('attBody');
+        if(!cls) return Swal.fire('Wait', 'Please select a class first', 'info');
+        
         body.innerHTML = '<tr><td colspan="5" style="text-align:center;">Loading Records...</td></tr>';
         db.ref(`attendance/${cls}/students`).once('value', (snap) => {
             const data = snap.val(); body.innerHTML = "";
-            if(!data) { body.innerHTML = '<tr><td colspan="5" style="text-align:center;">No records found.</td></tr>'; return; }
+            if(!data) return body.innerHTML = '<tr><td colspan="5" style="text-align:center;">No records found for this class.</td></tr>';
             for(let name in data) {
                 const p = data[name].presentDays || 0; const t = data[name].totalDays || 0;
                 const a = t - p; const pct = t > 0 ? Math.round((p/t)*100) : 0;
