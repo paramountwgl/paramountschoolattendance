@@ -11,7 +11,6 @@
         :root { --forest: #006633; --gold: #ffd700; --danger: #c62828; --light: #f4f7f6; }
         * { box-sizing: border-box; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; padding-bottom: 50px; }
-
         header { background: var(--forest); color: white; padding: 20px 3%; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .header-content { display: flex; align-items: center; justify-content: center; gap: 12px; max-width: 1400px; margin: 0 auto; width: 100%; }
         .header-logo { height: 60px; width: auto; }
@@ -19,30 +18,18 @@
         .school-name-main { font-family: 'Montserrat'; font-size: clamp(1rem, 3vw, 2rem); font-weight: 800; }
         .school-name-sub { font-family: 'Montserrat'; font-size: clamp(0.5rem, 2vw, 0.8rem); color: var(--gold); font-weight: 700; }
         .admin-portal-title { font-family: 'Montserrat'; font-size: clamp(1rem, 3vw, 2.2rem); font-weight: 800; border-left: 3px solid var(--gold); padding-left: 15px; margin-left: 15px; text-transform: uppercase; }
-
         .container { max-width: 950px; margin: 30px auto; padding: 0 15px; }
         .card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); border-top: 6px solid var(--forest); }
-        
-        /* SEARCH GRID */
         .search-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 20px; }
         label { display: block; font-size: 11px; font-weight: bold; color: #666; margin-bottom: 5px; text-transform: uppercase; }
         select { width: 100%; padding: 12px; border-radius: 8px; border: 2px solid #eee; outline: none; font-size: 14px; background: white; }
-
         .btn-submit { background: linear-gradient(135deg, var(--forest), #004d26); color: white; border: none; padding: 15px; border-radius: 50px; font-weight: bold; cursor: pointer; width: 100%; font-size: 16px; margin-top: 10px; transition: 0.3s; }
-        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,102,51,0.3); }
-
-        /* DATA TABLE */
-        .result-table { width: 100%; border-collapse: collapse; margin-top: 30px; border-radius: 12px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .result-table { width: 100%; border-collapse: collapse; margin-top: 30px; border-radius: 12px; overflow: hidden; }
         .result-table th { background: var(--forest); color: white; padding: 15px; font-size: 11px; text-transform: uppercase; }
         .result-table td { padding: 18px 15px; background: white; border-bottom: 1px solid #eee; text-align: center; font-size: 14px; }
-        .parent-info { text-align: left !important; }
-        .parent-name { font-weight: 800; display: block; color: var(--forest); font-size: 15px; }
-        .parent-phone { font-size: 13px; color: #666; display: block; margin-top: 3px; }
-        
         .status-badge { padding: 6px 15px; border-radius: 20px; font-weight: 800; font-size: 12px; display: inline-flex; align-items: center; gap: 6px; }
         .status-signed { background: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9; }
         .status-pending { background: #fafafa; color: #9e9e9e; border: 1px solid #eee; }
-
         .back-nav { display: flex; justify-content: center; margin-top: 30px; }
         .btn-back { text-decoration: none; color: #666; font-weight: bold; font-size: 14px; display: flex; align-items: center; gap: 8px; }
     </style>
@@ -56,7 +43,7 @@
             <span class="school-name-main">PARAMOUNT</span>
             <span class="school-name-sub">ENGLISH MEDIUM SCHOOL</span>
         </div>
-        <h1 class="admin-portal-title">Parents Tracker</h1>
+        <h1 class="admin-portal-title">Verification</h1>
     </div>
 </header>
 
@@ -72,7 +59,6 @@
                 <option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option>
             </select></div>
             <div><label>Year</label><select id="vYear"><option value="2026">2026</option><option value="2025">2025</option></select></div>
-            
             <div><label>Class</label><select id="vClass" onchange="updateStudentList()">
                 <option value="">-- Class --</option>
                 <option value="Pre-KG">Pre-KG</option><option value="KG-1">KG-1</option><option value="KG-2">KG-2</option>
@@ -84,12 +70,8 @@
         </div>
         <button class="btn-submit" onclick="fetchAknowledgment()">View Acknowledgment</button>
     </div>
-
     <div id="tableWrapper"></div>
-
-    <div class="back-nav">
-        <a href="index.html" class="btn-back"><i class="fas fa-arrow-left"></i> Return to Teacher Portal</a>
-    </div>
+    <div class="back-nav"><a href="index.html" class="btn-back"><i class="fas fa-arrow-left"></i> Return to Teacher Portal</a></div>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -99,43 +81,39 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // Student Database Reference
-    const studentInfo = {
+    // FULL STUDENT DATABASE
+    const studentData = {
         "Pre-KG": ["Hanish Macharla", "Arjun Vihaar Illandula", "Thanu sree Allakunta", "Aadhya Gangaraboina", "Aadhya Sri Oggula", "Aadhyasri Shivagoni", "Afraha Begum", "Aliya Sultana", "Anvika Bandi", "Aradana Devara konda", "Devansh Bandi", "Hanvitha Mulkalapelli", "Harsha Vardhan Seenapelli", "Hiranya Bandi", "Jashritha Boina", "Konreddy Shreyanvi", "Kriyansh Sammeta", "Mohammed Mohiuddin Sayyad", "Nethra Narkurthi", "Reeyansh Bandi", "Rishi Manupati", "Rudransh Bandi", "Sanvika Bandi", "Shanvith Khatha", "Shishira Jalagam", "Shiva Sai Mekala", "Shree Rudhraveer Chevvu", "Shreyansh Gangaraboina", "Sreeja Thalla", "Srikrithini Myakala", "Srivatsav Vanam", "Sriyansh Mekala", "Thanvika Lakka", "Thrilokansh Vudari", "Ujjwal Chekka", "Vaishnavi Lakka", "Vedansh Myakala", "Vishnu Priya Molugu", "Vyshnav Tej Boina", "Yafiah Mohammad"],
         "KG-1": ["Aadhya Sri Amaravadi", "Aditya Manda", "Aadhya Jella", "Advaita Gauri Bandi", "Aizah Amna Shaik", "Akshara Singaram", "Bhahuveer Raj Somishetti", "Gayathri Erroju", "Hanvika Mulkalapelli", "Manvith Kondoju", "Sayyad Vajeed", "Mekala Manu sri", "Oliva Grace Vallapu", "Rithwik Oggula", "Rithwika Kandagatla", "Srimahi Chevvu", "Thanvesh Thalla", "Trishul Nanduri", "Yoganshika Nanduri", "Yusra Mohammad", "Zainul Abideen Syed"],
-        // ... (remaining grade lists are integrated in search logic)
+        "KG-2": ["Deekshanth Sammeta", "Hanshith Erroju", "Harika Bandi", "Himarsha Naini", "Karthik Vallepu", "Kruthika Bandi", "Rajavardhan Gampala", "Roshan Kaitha", "Sri Anshu Ayaan Lyadala", "Srihansh Bandi", "Srikshitha Guduri", "Varshith Gonela", "Adyasri Makala", "Anvik Boini", "Anvith Pokanati", "Awais Ur Rehman Mohammad", "Dakshu Pothuganti", "Hansith Reddy Katukuri", "Harshith Pokanati", "Jella Aditya", "Krishank Nallabothula", "Kundana Katkuri", "Munukuntla Revanth Rudhra", "Niraja Nethri Siluveru", "Pranav Mattepelli", "Sreenith Yadav Naini", "Uvan Reddy Dasari", "Zayan Mohammad", "Zoya Mohammed"],
+        "Grade-1": ["Dheeraj Gattu", "Preetham Sannayala", "Shiva nandu Gonela", "Shrayan Nuthanakanti", "Sriyanksha Mandala", "Advitha Garige", "Harika Bandi", "Himansi Kondoju", "Izhaan Rahamath Syed", "Jaisurya Myakala", "Khadeeja Fathima", "Manaswini Dandugula", "Manusri Bandi", "Rithwik krishna Amaravadi", "Rohan Bandi", "Shiva Junnu", "Shivanandh Bandi", "Sridha Thalla", "Srinika Chengelly", "Sriyanshi Oggula", "Vishwak Chekka"],
+        "Grade-2": ["Aliza Manha Shaik", "Dhruvan Reddy Katukuri", "Druthika Enugala", "Manaswini Bandi", "Rakshith Macharla", "Sathwika Katkuri", "Shalini Uppala", "Chandu Devarakonda", "Gnaneshwar Pokanati", "Hasnain Syed", "Koushik Siluveru", "Senen Desabattula", "Shivarajan Pothuganti"],
+        "Grade-3": ["Nagavelly Manikanta", "Mirja Ismail", "Bandi Aryan", "Dandugula Mahesh Babu", "Bandi Tejasri", "Bandi Harshavardhan", "Gampala Vyshnavi", "Gampala Laxmi", "Garige Harshith", "Katkuri Hanish", "Katukuri Manideep", "MD Abdul Quddus", "Muppa Sathwik Patel", "Nuthanakanti Sansita", "Pasarakonda Ritwin", "Pinninti Rakshith Rao", "Rayi Sriman Adithya"],
+        "Grade-4": ["Abdul Saqib Mohammad", "Anudeep Chintha", "Bhavan Bandi", "Harshavardhan Gonela", "Jayadev Chiluveru", "Mahaboob Syed", "Nandith Reddy Enugala", "Sai Charan Goud Mandala", "Sai Prasanna Keerthi", "Ajmeri Shaik", "Akshith Chiluveru", "Jayasri Mykala", "Rahul Kanjarla", "Saketh Devarakonda"],
+        "Grade-5": ["Adya Reddy Vangala", "Kowshik Patel Muppa", "Siri Singaram", "Srikar Mandala", "Abdus Salaam MD", "Akshith Ram Kalvacharla", "Jaffar Anas Shaik", "Khaja Azeemuddin Mohammed", "Nihan Mohammed", "Saif Shaik", "Saketh Renukuntla", "Sreeja Dasari", "Vidhaatri Sahani"],
+        "Grade-6": ["Abdul Razzak Mohammad", "Anudeepthi Chintha", "Saketh Ranaveni", "Shiva Sri Katukuri", "Aklees Shaik", "Akshya Kalvacharla", "Prince Katkuri"],
+        "Grade-7": ["Manikanta Sannayala", "Sreeyan Reddy Karra", "Jayadhithya Chiluveru"],
+        "Grade-8": ["Sathwika Nagavelly", "Vyshnavi Uppala", "Akshaya Gampala", "Ganesh Oggula", "Gayathri Renukuntla", "Khaja Sadeemuddin Mohammed"]
     };
 
-    // Mapping for Parent Details
-    const parentMap = {
-        "Hanish Macharla": { parent: "M.Vinay", phone: "9182861346" },
-        "Arjun Vihaar Illandula": { parent: "Illandula Ravi", phone: "9848742172" },
-        "Dheeraj Gattu": { parent: "Raju", phone: "9346457748" }
-        // ... (all other students from studentData map here)
-    };
-
-    // Init Date dropdowns
+    // Date Logic
     const daySelect = document.getElementById('vDay');
-    const now = new Date();
     for(let i=1; i<=31; i++) {
         let val = i < 10 ? '0' + i : i;
-        daySelect.innerHTML += `<option value="${val}" ${now.getDate() == i ? 'selected' : ''}>${val}</option>`;
+        daySelect.innerHTML += `<option value="${val}">${val}</option>`;
     }
-    document.getElementById('vMonth').value = (now.getMonth() + 1).toString().padStart(2, '0');
 
-    /* UPDATE STUDENT DROPDOWN BASED ON CLASS */
     function updateStudentList() {
         const cls = document.getElementById('vClass').value;
         const stSelect = document.getElementById('vStudent');
         stSelect.innerHTML = '<option value="">-- Select Student --</option>';
-        if(studentInfo[cls]) {
-            studentInfo[cls].forEach(name => {
+        if(studentData[cls]) {
+            studentData[cls].forEach(name => {
                 stSelect.innerHTML += `<option value="${name}">${name}</option>`;
             });
         }
     }
 
-    /* FETCH DATA FROM FIREBASE */
     function fetchAknowledgment() {
         const d = document.getElementById('vDay').value;
         const m = document.getElementById('vMonth').value;
@@ -145,37 +123,20 @@
         const wrapper = document.getElementById('tableWrapper');
 
         if(!selectedSt) return alert("Please select a student first!");
-        wrapper.innerHTML = "<p style='text-align:center; padding:20px;'>Checking signatures...</p>";
+        wrapper.innerHTML = "<p style='text-align:center; padding:20px;'>Fetching parent signatures...</p>";
 
         db.ref(`homework_status/${dateKey}/${selectedSt}`).once('value', (snap) => {
             const subjects = snap.val();
-            const info = parentMap[selectedSt] || { parent: "Parent", phone: "---" };
-            
             if(!subjects) {
                 wrapper.innerHTML = "<div class='card' style='margin-top:20px; text-align:center; color:var(--danger); font-weight:bold;'>No signatures found for this student on this date.</div>";
                 return;
             }
-
-            let html = `<table class="result-table"><thead><tr><th>Parent Details</th><th>Homework Subject</th><th>Acknowledgment</th></tr></thead><tbody>`;
-            
+            let html = `<table class="result-table"><thead><tr><th>Homework Subject</th><th>Acknowledgment</th></tr></thead><tbody>`;
             for(let sub in subjects) {
                 const isDone = subjects[sub].verified;
-                html += `<tr>
-                    <td class="parent-info">
-                        <span class="parent-name">${info.parent}</span>
-                        <span class="parent-phone"><i class="fas fa-phone-alt"></i> ${info.phone}</span>
-                        <small style="color:var(--forest); font-weight:700;">Student: ${selectedSt}</small>
-                    </td>
-                    <td><strong>${sub}</strong></td>
-                    <td>
-                        <span class="status-badge ${isDone ? 'status-signed' : 'status-pending'}">
-                            ${isDone ? '<i class="fas fa-check-circle"></i> SIGNED' : '<i class="far fa-circle"></i> PENDING'}
-                        </span>
-                    </td>
-                </tr>`;
+                html += `<tr><td><strong>${sub}</strong></td><td><span class="status-badge ${isDone ? 'status-signed' : 'status-pending'}">${isDone ? '<i class="fas fa-check-circle"></i> SIGNED' : '<i class="far fa-circle"></i> PENDING'}</span></td></tr>`;
             }
-            html += "</tbody></table>";
-            wrapper.innerHTML = html;
+            wrapper.innerHTML = html + "</tbody></table>";
         });
     }
 </script>
