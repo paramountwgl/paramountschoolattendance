@@ -115,14 +115,26 @@
 
         <div class="card">
             <h3><i class="fas fa-calendar-check"></i> Attendance Monitoring</h3>
-            <div style="display:flex; align-items:center; justify-content:center; gap:10px; width:100%; margin-bottom:25px; flex-wrap:wrap;">
-                <select id="clsPick" class="class-select">
-                    <option value="">-- Choose Class --</option>
-                    <option value="Pre-KG">Pre-KG (Diamond)</option><option value="KG-1">KG-1 (Ruby)</option><option value="KG-2">KG-2 (Amber)</option>
-                    <option value="Grade-1">Grade-1 (Opal)</option><option value="Grade-2">Grade-2 (Emerald)</option><option value="Grade-3">Grade-3 (Crystal)</option>
-                    <option value="Grade-4">Grade-4 (Citrine)</option><option value="Grade-5">Grade-5 (Moonstone)</option><option value="Grade-6">Grade-6 (Alluri)</option>
-                    <option value="Grade-7">Grade-7 (Kalam)</option><option value="Grade-8">Grade-8 (Bhagat)</option>
-                </select>
+            <div style="display:flex; flex-direction:column; gap:15px; margin-bottom:25px;">
+                <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                    <select id="clsPick" class="class-select">
+                        <option value="">-- Choose Class --</option>
+                        <option value="Pre-KG">Pre-KG (Diamond)</option><option value="KG-1">KG-1 (Ruby)</option><option value="KG-2">KG-2 (Amber)</option>
+                        <option value="Grade-1">Grade-1 (Opal)</option><option value="Grade-2">Grade-2 (Emerald)</option><option value="Grade-3">Grade-3 (Crystal)</option>
+                        <option value="Grade-4">Grade-4 (Citrine)</option><option value="Grade-5">Grade-5 (Moonstone)</option><option value="Grade-6">Grade-6 (Alluri)</option>
+                        <option value="Grade-7">Grade-7 (Kalam)</option><option value="Grade-8">Grade-8 (Bhagat)</option>
+                    </select>
+                    <select id="viewType" class="class-select" onchange="toggleFilterInputs()">
+                        <option value="total">Overall Totals</option>
+                        <option value="monthly">By Specific Month</option>
+                    </select>
+                </div>
+                
+                <div id="monthlyFilter" style="display:none;">
+                    <label style="font-size: 11px; font-weight: bold; color: #666;">SELECT MONTH</label>
+                    <input type="month" id="monthInput" class="auth-input" style="margin: 5px 0 0 0; width:100%;">
+                </div>
+
                 <button onclick="viewAtt()" class="btn-attract">View Report</button>
             </div>
             <div class="table-container">
@@ -172,7 +184,7 @@
     // --- SHARED DYNAMIC PASSWORD HELPER ---
     async function getAdminPassword() {
         const snap = await db.ref('admin/password').once('value');
-        return snap.val() || "Ahmad@07"; // Default fallback
+        return snap.val() || "Ahmad@07";
     }
 
     async function login() {
@@ -192,16 +204,43 @@
         } else { Swal.fire('Error', 'Invalid Master Key', 'error'); }
     }
 
-    function viewAtt() {
+    // Toggle filter visibility
+    function toggleFilterInputs() {
+        const type = document.getElementById('viewType').value;
+        document.getElementById('monthlyFilter').style.display = (type === 'monthly') ? 'block' : 'none';
+    }
+
+    // Updated View Function with Filtering
+    async function viewAtt() {
         const cls = document.getElementById('clsPick').value;
+        const type = document.getElementById('viewType').value;
         const body = document.getElementById('attBody');
-        if(!cls) return;
+        
+        if(!cls) return Swal.fire('Error', 'Choose a class', 'info');
+
         body.innerHTML = '<tr><td colspan="5" style="text-align:center;">Loading...</td></tr>';
+        
         db.ref(`attendance/${cls}/students`).once('value', (snap) => {
-            const data = snap.val(); body.innerHTML = "";
+            const data = snap.val(); 
+            body.innerHTML = "";
+            if(!data) return body.innerHTML = '<tr><td colspan="5" style="text-align:center;">No data</td></tr>';
+            
             for(let name in data) {
-                const p = data[name].presentDays || 0; const t = data[name].totalDays || 0;
-                body.innerHTML += `<tr><td>${name}</td><td>${p}</td><td>${t-p}</td><td>${t}</td><td>${t>0?Math.round((p/t)*100):0}%</td></tr>`;
+                let p, t;
+                if(type === 'monthly') {
+                    const selMonth = document.getElementById('monthInput').value;
+                    if(!selMonth) return Swal.fire('Error', 'Select month', 'info');
+                    const mData = (data[name].months && data[name].months[selMonth]) ? data[name].months[selMonth] : null;
+                    p = mData ? mData.present : 0;
+                    t = mData ? mData.total : 0;
+                } else {
+                    p = data[name].presentDays || 0;
+                    t = data[name].totalDays || 0;
+                }
+                
+                const a = t - p;
+                const pct = t > 0 ? Math.round((p/t)*100) : 0;
+                body.innerHTML += `<tr><td>${name}</td><td>${p}</td><td>${a}</td><td>${t}</td><td>${pct}%</td></tr>`;
             }
         });
     }
@@ -209,29 +248,27 @@
     function postAnn() { db.ref('announcement').set(document.getElementById('annMsg').value).then(() => Swal.fire('Published', '', 'success')); }
     function clearAnn() { db.ref('announcement').remove().then(() => { document.getElementById('annMsg').value = ""; Swal.fire('Cleared', '', 'info'); }); }
 
-    /* SYNCHRONIZED MONTHLY RESET */
+    /* FIXED MONTHLY RESET */
     async function resetMonthlyData() {
         const currentMonth = new Date().toISOString().slice(0, 7);
         const confirmResult = await Swal.fire({
             title: 'Confirm Monthly Reset',
-            text: `Clear stats for ${currentMonth}? Yearly totals remain safe.`,
-            icon: 'info',
-            showCancelButton: true,
-            confirmButtonText: 'Clear Month'
+            text: `This will reset visual table counters to 0 for all students. Monthly log for ${currentMonth} will be deleted.`,
+            icon: 'warning',
+            showCancelButton: true
         });
 
         if (confirmResult.isConfirmed) {
+            const correctPass = await getAdminPassword();
             const { value: password } = await Swal.fire({
                 title: 'Enter Admin Password',
                 input: 'password',
                 showCancelButton: true
             });
 
-            const correctPass = await getAdminPassword(); // Pull dynamic password
-
             if (password === correctPass) {
                 try {
-                    Swal.fire({ title: 'Cleaning...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+                    Swal.fire({ title: 'Erasing...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
                     const snapshot = await db.ref('attendance').once('value');
                     const data = snapshot.val();
                     if (data) {
@@ -239,18 +276,20 @@
                         Object.keys(data).forEach(cls => {
                             const students = data[cls].students;
                             if (students) Object.keys(students).forEach(name => {
+                                updates[`attendance/${cls}/students/${name}/presentDays`] = 0;
+                                updates[`attendance/${cls}/students/${name}/totalDays`] = 0;
                                 updates[`attendance/${cls}/students/${name}/months/${currentMonth}`] = null;
                             });
                         });
                         await db.ref().update(updates);
-                        Swal.fire('Success', `Logs for ${currentMonth} cleared.`, 'success');
+                        Swal.fire('Success', `Logs for ${currentMonth} reset.`, 'success');
+                        if(document.getElementById('clsPick').value) viewAtt();
                     }
                 } catch (error) { Swal.fire('Error', error.message, 'error'); }
             } else if (password) { Swal.fire('Denied', 'Incorrect Password', 'error'); }
         }
     }
 
-    /* SYNCHRONIZED MASTER RESET & BACKUP */
     async function resetAttendanceData() {
         const confirmResult = await Swal.fire({
             title: 'WARNING: PERMANENT RESET',
@@ -262,14 +301,13 @@
         });
 
         if (confirmResult.isConfirmed) {
+            const correctPass = await getAdminPassword();
             const { value: password } = await Swal.fire({
                 title: 'Authorization Required',
                 text: 'Enter Admin Password to proceed:',
                 input: 'password',
                 showCancelButton: true
             });
-
-            const correctPass = await getAdminPassword(); // Pull dynamic password
 
             if (password === correctPass) {
                 try {
@@ -279,12 +317,8 @@
                     if (allData) await generateMasterBackup(allData);
                     await db.ref('attendance').remove();
                     Swal.fire('Success', 'Database cleared. Backup downloaded.', 'success');
-                } catch (error) {
-                    Swal.fire('Error', 'Reset failed: ' + error.message, 'error');
-                }
-            } else if (password) {
-                Swal.fire('Denied', 'Incorrect Password', 'error');
-            }
+                } catch (error) { Swal.fire('Error', 'Reset failed: ' + error.message, 'error'); }
+            } else if (password) { Swal.fire('Denied', 'Incorrect Password', 'error'); }
         }
     }
 
@@ -319,6 +353,9 @@
         link.download = `Paramount_Archive_${new Date().toISOString().split('T')[0]}.xlsx`;
         link.click();
     }
+
+    // Set default month
+    document.getElementById('monthInput').value = new Date().toISOString().slice(0, 7);
 </script>
 </body>
 </html>
