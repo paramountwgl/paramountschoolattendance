@@ -8,49 +8,56 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="icon" type="image/png" href="logo.png">
     <style>
-        :root { --forest: #006633; --gold: #ffd700; --danger: #c62828; --light: #f4f7f6; }
+        :root { --forest: #006633; --gold: #ffd700; --danger: #c62828; --light: #f4f7f6; --sky: #2196f3; }
         * { box-sizing: border-box; } 
         body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; padding-bottom: 150px; overflow-x: hidden; }
         
-        /* LOGIN & RECOVERY SCREENS */
+        /* LOGIN BOX */
         .overlay-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--light); z-index: 9999; display: flex; justify-content: center; align-items: center; padding: 15px; }
-        .auth-box { background: white; padding: 40px 25px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); width: 100%; max-width: 450px; border-bottom: 5px solid var(--forest); text-align: center; }
-        
-        /* LOGO AT LEFT CORNER BESIDE ICON */
-        .auth-header-row { display: flex; align-items: center; justify-content: flex-start; gap: 12px; margin-bottom: 25px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
-        .auth-logo { height: 50px; width: auto; }
-        .secure-icon { font-size: 30px; color: var(--forest); border-left: 2px solid #ddd; padding-left: 12px; }
-        .auth-branding-text { text-align: left; line-height: 1.1; }
-        .auth-branding-text h2 { margin: 0; font-family: 'Montserrat', sans-serif; font-size: 1.1rem; font-weight: 800; color: var(--forest); }
-        .auth-branding-text p { margin: 0; font-size: 0.65rem; font-weight: 700; color: var(--gold); text-transform: uppercase; }
-
+        .auth-box { background: white; padding: 40px 25px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); width: 100%; max-width: 420px; border-bottom: 5px solid var(--forest); text-align: center; }
+        .auth-header-row { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; margin-bottom: 25px; }
+        .auth-logo { height: 75px; width: auto; }
+        .auth-branding-text h2 { margin: 5px 0 0; font-family: 'Montserrat', sans-serif; font-size: 1.6rem; font-weight: 800; color: var(--forest); }
+        .auth-branding-text p { margin: 0; font-size: 0.75rem; font-weight: 700; color: var(--gold); text-transform: uppercase; }
         .auth-input { width: 100%; padding: 12px; border-radius: 10px; border: 2px solid #eee; margin-bottom: 15px; text-align: center; font-size: 16px; outline: none; }
         .auth-links { margin-top: 15px; display: flex; flex-direction: column; gap: 10px; }
         .auth-links span { color: #666; font-size: 13px; text-decoration: underline; cursor: pointer; font-weight: 600; }
 
-        /* DASHBOARD HEADER */
+        /* HEADER BRANDING */
         header { background: var(--forest); color: white; padding: 25px 3%; box-shadow: 0 4px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000; }
-        .header-content { display: flex; align-items: center; justify-content: flex-start; max-width: 1400px; margin: 0 auto; width: 100%; gap: 20px; }
-        .divider { width: 2px; height: 55px; background-color: rgba(255, 255, 255, 0.3); flex-shrink: 0; }
+        .header-content { display: flex; align-items: center; justify-content: center; max-width: 1400px; margin: 0 auto; width: 100%; gap: 20px; }
+        .header-logo { height: 65px; width: auto; }
+        .divider { width: 2px; height: 50px; background-color: rgba(255, 255, 255, 0.3); }
         .school-branding { display: flex; flex-direction: column; line-height: 1; text-align: left; }
-        .school-name-main { font-family: 'Montserrat', sans-serif; font-size: clamp(1.4rem, 4vw, 2.4rem); font-weight: 800; letter-spacing: 1px; }
-        .school-name-sub { font-family: 'Montserrat', sans-serif; font-size: clamp(0.7rem, 2vw, 1rem); color: var(--gold); font-weight: 700; text-transform: uppercase; margin-top: 5px; }
-        .admin-portal-text { font-family: 'Montserrat', sans-serif; font-size: clamp(1.2rem, 3.5vw, 2.2rem); font-weight: 800; text-transform: uppercase; white-space: nowrap; }
+        .school-name-main { font-family: 'Montserrat', sans-serif; font-size: clamp(1.2rem, 3.5vw, 2rem); font-weight: 800; }
+        .school-name-sub { font-family: 'Montserrat', sans-serif; font-size: clamp(0.6rem, 1.8vw, 0.9rem); color: var(--gold); font-weight: 700; text-transform: uppercase; }
+        .admin-portal-text { font-family: 'Montserrat', sans-serif; font-size: clamp(1rem, 3vw, 1.8rem); font-weight: 800; text-transform: uppercase; }
 
-        /* CONTENT CARDS */
+        /* DASHBOARD ELEMENTS */
         .container { max-width: 850px; margin: 30px auto; padding: 0 15px; }
         .card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); margin-bottom: 25px; border-top: 6px solid var(--forest); }
         h3 { color: var(--forest); margin: 0 0 20px; font-size: 1.2rem; border-bottom: 1px solid #eee; padding-bottom: 10px; display: flex; align-items: center; gap: 10px; }
         
-        .btn-attract { background: linear-gradient(135deg, var(--forest), #004d26); color: white; padding: 14px 35px; border-radius: 50px; font-weight: bold; border: 2px solid rgba(255, 215, 0, 0.3); cursor: pointer; font-size: 14px; transition: 0.3s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin-top: 10px; }
-        .btn-attract:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0, 102, 51, 0.5); }
+        /* PREMIUM BUTTONS */
+        .btn-attract { background: linear-gradient(135deg, var(--forest), #004d26); color: white; padding: 14px 25px; border-radius: 50px; font-weight: bold; border: 2px solid var(--gold); cursor: pointer; font-size: 14px; transition: 0.3s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin-top: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .btn-attract:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0, 102, 51, 0.3); }
         
+        /* PREMIUM BLUE VIEW REPORT BUTTON */
+        .btn-view-report { background: linear-gradient(135deg, var(--sky), #1565c0); border-color: white; width: auto; flex: 0.8; margin-top: 0; }
+        .btn-view-report:hover { box-shadow: 0 8px 20px rgba(33, 150, 243, 0.4); }
+
+        .btn-attract.warning { background: linear-gradient(135deg, #fb8c00, #ef6c00); border-color: white; }
+        .btn-attract.danger { background: linear-gradient(135deg, #d32f2f, #b71c1c); border-color: white; }
+
+        /* SIDE-BY-SIDE FILTER ROW */
+        .filter-row { display: flex; gap: 10px; align-items: center; margin-top: 10px; width: 100%; }
+        .filter-row input { flex: 1.2; margin-bottom: 0 !important; }
+
         .table-container { width: 100%; overflow-x: auto; border-radius: 10px; margin-top: 20px; }
         table { width: 100%; border-collapse: collapse; min-width: 600px; }
         th { background: var(--forest); color: white; padding: 12px; font-size: 11px; text-transform: uppercase; }
-        td { padding: 12px; border-bottom: 1px solid #eee; text-align: center; }
+        td { padding: 12px; border-bottom: 1px solid #eee; text-align: center; font-size: 13px; }
 
-        /* PREMIUM BOTTOM NAV */
         .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; padding: 25px 0; background: white; display: flex; justify-content: center; z-index: 1000; box-shadow: 0 -5px 15px rgba(0,0,0,0.05); }
         .btn-premium { background: linear-gradient(135deg, #004d26, var(--forest)); color: white; padding: 16px 50px; border-radius: 60px; font-weight: 800; text-decoration: none; font-size: 15px; border: 2px solid var(--gold); transition: 0.3s; display: inline-flex; align-items: center; gap: 12px; box-shadow: 0 8px 20px rgba(0, 102, 51, 0.3); }
     </style>
@@ -61,11 +68,7 @@
     <div class="auth-box">
         <div class="auth-header-row">
             <img src="logo.png" class="auth-logo" alt="Logo">
-            <i class="fas fa-user-shield secure-icon"></i>
-            <div class="auth-branding-text">
-                <h2>PARAMOUNT</h2>
-                <p>Admin Access Box</p>
-            </div>
+            <div class="auth-branding-text"><h2>PARAMOUNT</h2><p>Admin Access Box</p></div>
         </div>
         <input type="password" id="adminPass" class="auth-input" placeholder="Admin Password">
         <button onclick="login()" class="btn-attract">Unlock Dashboard <i class="fas fa-unlock"></i></button>
@@ -77,25 +80,15 @@
 </div>
 
 <div id="recoveryScreen" class="overlay-screen" style="display:none;">
-    <div class="auth-box">
-        <i class="fas fa-key secure-icon" style="color:var(--gold); border:none;"></i>
-        <h2>Reset Admin Key</h2>
-        <input type="password" id="masterKey" class="auth-input" placeholder="Enter Master Key">
-        <input type="password" id="newPass" class="auth-input" placeholder="New Password">
-        <button onclick="recoverPass()" class="btn-attract">Update Access</button>
-        <div class="auth-links"><span onclick="closeRecovery()">Back to Login</span></div>
-    </div>
+    <div class="auth-box"><h2>Reset Access</h2><input type="password" id="masterKey" class="auth-input" placeholder="Master Key"><input type="password" id="newPass" class="auth-input" placeholder="New Password"><button onclick="recoverPass()" class="btn-attract">Update Password</button><div class="auth-links"><span onclick="closeRecovery()">Back to Login</span></div></div>
 </div>
 
 <div id="mainApp" style="display:none;">
     <header>
         <div class="header-content">
-            <img src="logo.png" style="height:70px; width:auto;" alt="Logo">
+            <img src="logo.png" class="header-logo" alt="Logo">
             <div class="divider"></div>
-            <div class="school-branding">
-                <span class="school-name-main">PARAMOUNT</span>
-                <span class="school-name-sub">ENGLISH MEDIUM SCHOOL</span>
-            </div>
+            <div class="school-branding"><span class="school-name-main">PARAMOUNT</span><span class="school-name-sub">ENGLISH MEDIUM SCHOOL</span></div>
             <div class="divider"></div>
             <div class="admin-portal-text">ADMIN PORTAL</div>
         </div>
@@ -104,36 +97,54 @@
     <div class="container">
         <div class="card" style="border-top-color: var(--gold);">
             <h3><i class="fas fa-bullhorn"></i> School Broadcast</h3>
-            <textarea id="annMsg" style="width:100%; height:100px; padding:15px; border-radius:10px; border:2px solid #eee; outline:none; margin-bottom:20px; resize:none;" placeholder="Broadcast message for teachers..."></textarea>
-            <button onclick="postAnn()" class="btn-attract">Publish Now <i class="fas fa-check-circle"></i></button>
+            <textarea id="annMsg" style="width:100%; height:100px; padding:15px; border-radius:10px; border:2px solid #eee; outline:none; margin-bottom:20px; resize:none;" placeholder="Type broadcast message..."></textarea>
+            <div style="display:flex; gap:10px;"><button onclick="postAnn()" class="btn-attract">Publish Now</button><button onclick="db.ref('announcement').remove()" style="background:#eee; color:#666; border:none; padding:14px 25px; border-radius:50px; font-weight:bold; cursor:pointer;">Clear</button></div>
         </div>
 
         <div class="card">
             <h3><i class="fas fa-calendar-check"></i> Attendance Monitoring</h3>
-            <div style="display:flex; flex-direction:column; gap:15px;">
+            <div style="display:flex; flex-direction:column; gap:15px; margin-bottom:25px;">
                 <div style="display:flex; gap:10px; flex-wrap:wrap;">
                     <select id="clsPick" class="auth-input" style="flex:1; margin:0;">
                         <option value="">-- Choose Class --</option>
-                        <option value="Grade-1">Grade-1</option>
-                        </select>
+                        <option value="Pre-KG">Pre-KG</option><option value="KG-1">KG-1</option><option value="KG-2">KG-2</option>
+                        <option value="Grade-1">Grade-1</option><option value="Grade-2">Grade-2</option><option value="Grade-3">Grade-3</option>
+                        <option value="Grade-4">Grade-4</option><option value="Grade-5">Grade-5</option><option value="Grade-6">Grade-6</option>
+                        <option value="Grade-7">Grade-7</option><option value="Grade-8">Grade-8</option>
+                    </select>
                     <select id="viewType" class="auth-input" style="flex:1; margin:0;" onchange="toggleFilterInputs()">
                         <option value="total">Overall Totals</option>
                         <option value="monthly">Monthly Breakdown</option>
                         <option value="daily">Specific Date</option>
                     </select>
                 </div>
-                <div id="monthlyFilter" style="display:none;"><input type="month" id="monthInput" class="auth-input" style="margin:0; width:100%;"></div>
-                <div id="dailyFilter" style="display:none;"><input type="date" id="dateInput" class="auth-input" style="margin:0; width:100%;"></div>
-                <button onclick="viewAtt()" class="btn-attract" style="background:#2196f3;">View Report</button>
+
+                <div id="monthlyFilter" class="filter-row" style="display:none;">
+                    <input type="month" id="monthInput" class="auth-input">
+                    <button onclick="viewAtt()" class="btn-attract btn-view-report">View Monthly <i class="fas fa-search"></i></button>
+                </div>
+
+                <div id="dailyFilter" class="filter-row" style="display:none;">
+                    <input type="date" id="dateInput" class="auth-input">
+                    <button onclick="viewAtt()" class="btn-attract btn-view-report">View Daily <i class="fas fa-search"></i></button>
+                </div>
+
+                <button id="overallBtn" onclick="viewAtt()" class="btn-attract btn-view-report" style="width:100%; background:var(--sky);">View Overall Report <i class="fas fa-chart-line"></i></button>
             </div>
             <div class="table-container"><table id="resultsTable"><thead><tr><th>Student</th><th>P</th><th>A</th><th>Total</th><th>%</th></tr></thead><tbody id="attBody"></tbody></table></div>
+        </div>
+
+        <div class="card" style="border-top-color: var(--danger);">
+            <h3><i class="fas fa-tools"></i> System Maintenance</h3>
+            <div style="display: grid; gap: 10px;">
+                <button onclick="secureReset('monthly')" class="btn-attract warning">Reset Monthly Stats (Requires Pass)</button>
+                <button onclick="secureReset('master')" class="btn-attract danger">Master Database Reset (Requires Pass)</button>
+            </div>
         </div>
     </div>
 
     <div class="bottom-nav">
-        <a href="index.html" class="btn-premium">
-            <i class="fas fa-chalkboard-teacher"></i> Open Teacher Portal
-        </a>
+        <a href="index.html" class="btn-premium"><i class="fas fa-chalkboard-teacher"></i> Open Teacher Portal</a>
     </div>
 </div>
 
@@ -160,20 +171,18 @@
 
     function recoverPass() {
         if(document.getElementById('masterKey').value === "paramount") {
-            db.ref('admin/password').set(document.getElementById('newPass').value).then(() => {
-                Swal.fire('Success', 'Password Updated!', 'success');
-                closeRecovery();
-            });
+            db.ref('admin/password').set(document.getElementById('newPass').value).then(() => { Swal.fire('Success', 'Updated!', 'success'); closeRecovery(); });
         } else { Swal.fire('Error', 'Invalid Master Key', 'error'); }
     }
 
     function toggleFilterInputs() {
         const type = document.getElementById('viewType').value;
-        document.getElementById('monthlyFilter').style.display = (type === 'monthly') ? 'block' : 'none';
-        document.getElementById('dailyFilter').style.display = (type === 'daily') ? 'block' : 'none';
+        document.getElementById('monthlyFilter').style.display = (type === 'monthly') ? 'flex' : 'none';
+        document.getElementById('dailyFilter').style.display = (type === 'daily') ? 'flex' : 'none';
+        document.getElementById('overallBtn').style.display = (type === 'total') ? 'block' : 'none';
     }
 
-    function postAnn() { db.ref('announcement').set(document.getElementById('annMsg').value).then(() => Swal.fire('Published', 'Teacher Portal updated.', 'success')); }
+    function postAnn() { db.ref('announcement').set(document.getElementById('annMsg').value).then(() => Swal.fire('Published', '', 'success')); }
 
     async function viewAtt() {
         const cls = document.getElementById('clsPick').value;
@@ -192,9 +201,30 @@
                     p = mD.present; t = mD.total;
                 } else { if (data[n].months) Object.values(data[n].months).forEach(v => { p += v.present; t += v.total; }); }
                 return `<tr><td>${n}</td><td>${p}</td><td>${t-p}</td><td>${t}</td><td>${t>0?Math.round(p/t*100):0}%</td></tr>`;
-            }).join('') || 'No data';
+            }).join('') || 'No records found.';
         });
     }
+
+    async function secureReset(mode) {
+        const { value: pass } = await Swal.fire({ title: 'Authentication Required', text: 'Enter Admin Password to confirm reset.', input: 'password', showCancelButton: true });
+        const snap = await db.ref('admin/password').once('value');
+        const correct = snap.val() || "Ahmad@07";
+
+        if(pass === correct) {
+            if(mode === 'master') {
+                db.ref('attendance').remove(); db.ref('daily_attendance').remove(); Swal.fire('Wiped!', 'Database cleared.', 'success');
+            } else {
+                const m = document.getElementById('monthInput').value;
+                if(!m) return Swal.fire('Error', 'Select month in the dropdown first', 'error');
+                const updates = {};
+                const attSnap = await db.ref('attendance').once('value');
+                if(attSnap.val()) Object.keys(attSnap.val()).forEach(c => { const st = attSnap.val()[c].students; if(st) Object.keys(st).forEach(n => updates[`attendance/${c}/students/${n}/months/${m}`] = null); });
+                await db.ref().update(updates); Swal.fire('Cleared!', `Data for ${m} removed.`, 'success');
+            }
+        } else if(pass) { Swal.fire('Error', 'Incorrect Password', 'error'); }
+    }
+
+    document.getElementById('monthInput').value = new Date().toISOString().slice(0, 7);
 </script>
 </body>
 </html>
