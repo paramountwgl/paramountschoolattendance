@@ -12,7 +12,7 @@
         * { box-sizing: border-box; } 
         body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; padding-bottom: 120px; overflow-x: hidden; }
         
-        /* LOGIN SCREEN */
+        /* LOGIN BOX */
         .overlay-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--light); z-index: 9999; display: flex; justify-content: center; align-items: center; padding: 15px; }
         .auth-box { background: white; padding: 40px 25px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); width: 100%; max-width: 420px; border-bottom: 5px solid var(--forest); text-align: center; }
         .auth-header-row { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; margin-bottom: 25px; }
@@ -38,13 +38,14 @@
         .card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); margin-bottom: 20px; border-top: 6px solid var(--forest); }
         h3 { color: var(--forest); margin: 0 0 15px; font-size: 1.1rem; border-bottom: 1px solid #eee; padding-bottom: 10px; display: flex; align-items: center; gap: 8px; }
         
-        .btn-attract { background: linear-gradient(135deg, var(--forest), #004d26); color: white; padding: 12px 20px; border-radius: 50px; font-weight: bold; border: 2px solid var(--gold); cursor: pointer; font-size: 14px; transition: 0.3s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin-top: 10px; }
+        .btn-attract { background: linear-gradient(135deg, var(--forest), #004d26); color: white; padding: 12px 20px; border-radius: 50px; font-weight: bold; border: 2px solid var(--gold); cursor: pointer; font-size: 14px; transition: 0.3s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin-top: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
         .btn-view-report { background: linear-gradient(135deg, var(--sky), #1565c0); border-color: white; }
+        .btn-attract.warning { background: linear-gradient(135deg, #fb8c00, #ef6c00); border-color: white; }
         .btn-attract.danger { background: linear-gradient(135deg, #d32f2f, #b71c1c); border-color: white; }
 
-        /* MOBILE OPTIMIZED TABLE */
-        .table-container { width: 100%; margin-top: 20px; }
-        table { width: 100%; border-collapse: collapse; display: table; }
+        /* MOBILE VIEW OPTIMIZATION */
+        .table-container { width: 100%; margin-top: 20px; overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; }
         th { background: var(--forest); color: white; padding: 10px; text-transform: uppercase; font-size: 10px; text-align: center; }
         td { padding: 10px; border-bottom: 1px solid #eee; text-align: center; font-size: 12px; }
 
@@ -62,10 +63,8 @@
         }
 
         .filter-row { display: flex; gap: 10px; align-items: center; margin-top: 10px; width: 100%; flex-wrap: wrap; }
-        
-        /* RESTORED TEACHER PORTAL BUTTON WITH ICON */
         .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; padding: 15px; background: white; display: flex; justify-content: center; z-index: 1000; box-shadow: 0 -5px 15px rgba(0,0,0,0.05); }
-        .btn-premium { background: linear-gradient(135deg, #004d26, var(--forest)); color: white; padding: 14px 40px; border-radius: 60px; font-weight: 800; text-decoration: none; font-size: 14px; border: 2px solid var(--gold); transition: 0.3s; display: inline-flex; align-items: center; gap: 12px; box-shadow: 0 8px 20px rgba(0, 102, 51, 0.3); text-align: center; }
+        .btn-premium { background: linear-gradient(135deg, #004d26, var(--forest)); color: white; padding: 14px 40px; border-radius: 60px; font-weight: 800; text-decoration: none; font-size: 14px; border: 2px solid var(--gold); transition: 0.3s; display: inline-flex; align-items: center; gap: 12px; box-shadow: 0 8px 20px rgba(0, 102, 51, 0.3); }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -133,14 +132,15 @@
 
         <div class="card" style="border-top-color: var(--danger);">
             <h3><i class="fas fa-tools"></i> System Maintenance</h3>
-            <button onclick="secureReset('master')" class="btn-attract danger">Master Database Reset (Requires Pass)</button>
+            <div style="display: grid; gap: 10px;">
+                <button onclick="secureReset('monthly')" class="btn-attract warning">Reset Monthly Stats (Auto-Backup)</button>
+                <button onclick="secureReset('master')" class="btn-attract danger">Master Database Reset (Auto-Backup)</button>
+            </div>
         </div>
     </div>
 
     <div class="bottom-nav">
-        <a href="index.html" class="btn-premium">
-            <i class="fas fa-chalkboard-teacher"></i> Open Teacher Portal
-        </a>
+        <a href="index.html" class="btn-premium"><i class="fas fa-chalkboard-teacher"></i> Open Teacher Portal</a>
     </div>
 </div>
 
@@ -163,72 +163,90 @@
         "Grade-8": ["Sathwika Nagavelly", "Vyshnavi Uppala", "Akshaya Gampala", "Ganesh Oggula", "Gayathri Renukuntla", "Khaja Sadeemuddin Mohammed"]
     };
 
-    async function login() { if(document.getElementById('adminPass').value === "Ahmad@07") { document.getElementById('loginScreen').style.display='none'; document.getElementById('mainApp').style.display='block'; } else { alert('Incorrect Password'); } }
+    async function login() { const snap = await db.ref('admin/password').once('value'); const correct = snap.val() || "Ahmad@07"; if(document.getElementById('adminPass').value === correct) { document.getElementById('loginScreen').style.display='none'; document.getElementById('mainApp').style.display='block'; } else { Swal.fire('Error', 'Wrong Password', 'error'); } }
     function toggleFilterInputs() { const t = document.getElementById('viewType').value; document.getElementById('monthlyFilter').style.display = (t === 'monthly') ? 'flex' : 'none'; document.getElementById('dailyFilter').style.display = (t === 'daily') ? 'flex' : 'none'; document.getElementById('overallBtn').style.display = (t === 'total') ? 'block' : 'none'; }
     
-    async function exportToExcel() {
-        const cls = document.getElementById('clsPick').value;
-        const month = document.getElementById('monthInput').value;
-        if(!cls || !month) return Swal.fire('Error', 'Pick Class and Month', 'info');
-
+    // PREMIUM EXCEL BACKUP ENGINE
+    async function performBackup(backupTitle) {
         const workbook = new ExcelJS.Workbook();
-        const sheet = workbook.addWorksheet('Monthly Report');
+        const sheet = workbook.addWorksheet('System Backup');
         const greenFill = { type: 'pattern', pattern: 'solid', fgColor: { argb: '006633' } };
         const goldFill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFD700' } };
 
         sheet.mergeCells('A1:F3');
-        const header = sheet.getCell('A1');
-        header.value = 'PARAMOUNT ENGLISH MEDIUM SCHOOL';
-        header.fill = greenFill; header.font = { color: { argb: 'FFFFFF' }, bold: true, size: 16 };
-        header.alignment = { vertical: 'middle', horizontal: 'center' };
+        sheet.getCell('A1').value = 'PARAMOUNT ENGLISH MEDIUM SCHOOL';
+        sheet.getCell('A1').fill = greenFill; sheet.getCell('A1').font = { color: { argb: 'FFFFFF' }, bold: true, size: 16 };
+        sheet.getCell('A1').alignment = { vertical: 'middle', horizontal: 'center' };
 
         sheet.mergeCells('A4:F5');
-        const subHeader = sheet.getCell('A4');
-        subHeader.value = `MONTHLY ATTENDANCE SUMMARY - ${month} (${cls})`;
-        subHeader.fill = goldFill; subHeader.font = { color: { argb: '000000' }, bold: true };
-        subHeader.alignment = { vertical: 'middle', horizontal: 'center' };
+        sheet.getCell('A4').value = backupTitle;
+        sheet.getCell('A4').fill = goldFill; sheet.getCell('A4').font = { color: { argb: '000000' }, bold: true };
+        sheet.getCell('A4').alignment = { vertical: 'middle', horizontal: 'center' };
 
         const headRow = sheet.getRow(7);
-        headRow.values = ['S.No', 'Student Name', 'Present Days', 'Absent Days', 'Total Days', 'Percentage (%)'];
-        headRow.eachCell(c => { c.font = {bold:true}; c.border = { top: {style:'thin'}, left: {style:'thin'}, bottom: {style:'thin'}, right: {style:'thin'} }; });
+        headRow.values = ['Class', 'Student Name', 'Present', 'Absent', 'Total', 'Percentage'];
+        headRow.eachCell(c => { c.font = {bold:true}; c.border = { top:{style:'thin'}, left:{style:'thin'}, bottom:{style:'thin'}, right:{style:'thin'} }; });
 
-        const snap = await db.ref(`attendance/${cls}/students`).once('value');
-        const data = snap.val() || {};
-        const students = studentDataMaster[cls] || [];
+        const snap = await db.ref('attendance').once('value');
+        const fullData = snap.val() || {};
         
-        students.forEach((n, i) => {
-            const mD = (data[n] && data[n].months && data[n].months[month]) ? data[n].months[month] : {present:0, total:0};
-            const row = sheet.addRow([i+1, n, mD.present, mD.total - mD.present, mD.total, mD.total > 0 ? Math.round(mD.present/mD.total*100) + '%' : '0%']);
-            row.eachCell(c => { c.border = { top: {style:'thin'}, left: {style:'thin'}, bottom: {style:'thin'}, right: {style:'thin'} }; });
+        Object.keys(studentDataMaster).forEach(cls => {
+            const classRef = fullData[cls] ? fullData[cls].students : {};
+            studentDataMaster[cls].forEach(n => {
+                let p=0, t=0;
+                const studentMonths = classRef[n] ? classRef[n].months : {};
+                Object.values(studentMonths).forEach(v => { p += v.present; t += v.total; });
+                const row = sheet.addRow([cls, n, p, t-p, t, t > 0 ? Math.round(p/t*100) + '%' : '0%']);
+                row.eachCell(c => { c.border = { top:{style:'thin'}, left:{style:'thin'}, bottom:{style:'thin'}, right:{style:'thin'} }; });
+            });
         });
 
         sheet.getColumn(2).width = 30;
         const buffer = await workbook.xlsx.writeBuffer();
-        saveAs(new Blob([buffer]), `Paramount_${cls}_${month}.xlsx`);
+        saveAs(new Blob([buffer]), `Backup_${new Date().toLocaleDateString()}.xlsx`);
+    }
+
+    async function secureReset(mode) {
+        const { value: pass } = await Swal.fire({ title: 'Confirm Reset', text: 'Enter Admin Pass to Backup & Clear.', input: 'password', showCancelButton: true });
+        if(pass === "Ahmad@07") {
+            Swal.fire('Generating Backup...', 'Please wait while we secure your data.', 'info');
+            await performBackup(mode === 'master' ? 'FULL DATABASE BACKUP' : 'MONTHLY DATABASE BACKUP');
+            
+            if(mode === 'master') {
+                db.ref('attendance').remove(); db.ref('daily_attendance').remove(); 
+                Swal.fire('Wiped!', 'Database backed up and cleared.', 'success');
+            } else {
+                const m = document.getElementById('monthInput').value;
+                if(!m) return Swal.fire('Error', 'Pick month first', 'error');
+                const snap = await db.ref('attendance').once('value');
+                const updates = {};
+                if(snap.val()) Object.keys(snap.val()).forEach(c => { const st = snap.val()[c].students; if(st) Object.keys(st).forEach(n => updates[`attendance/${c}/students/${n}/months/${m}`] = null); });
+                await db.ref().update(updates); 
+                Swal.fire('Cleared!', `Data for ${m} backed up and removed.`, 'success');
+            }
+        } else if(pass) { Swal.fire('Error', 'Incorrect Password', 'error'); }
     }
 
     async function viewAtt() {
         const cls = document.getElementById('clsPick').value;
         const type = document.getElementById('viewType').value;
         const body = document.getElementById('attBody');
-        const head = document.getElementById('tableHead');
         if(!cls) return Swal.fire('Error', 'Pick a class', 'info');
         body.innerHTML = '<tr><td colspan="5">Loading...</td></tr>';
-
+        
+        const head = document.getElementById('tableHead');
         if(type === 'daily') {
             const date = document.getElementById('dateInput').value;
             head.innerHTML = `<tr><th>Student</th><th colspan="4">Status</th></tr>`;
             db.ref(`daily_attendance/${date}/${cls}`).once('value', (snap) => {
                 const data = snap.val() || {};
-                const students = studentDataMaster[cls] || [];
-                body.innerHTML = students.map(n => `<tr><td>${n}</td><td colspan="4" style="color:${data[n] ? 'green':'red'}; font-weight:800">${data[n] === true ? 'PRESENT' : (data[n] === false ? 'ABSENT' : 'Not Marked')}</td></tr>`).join('');
+                body.innerHTML = studentDataMaster[cls].map(n => `<tr><td>${n}</td><td colspan="4" style="color:${data[n] ? 'green':'red'}; font-weight:800">${data[n] === true ? 'PRESENT' : (data[n] === false ? 'ABSENT' : 'Not Marked')}</td></tr>`).join('');
             });
         } else {
             head.innerHTML = `<tr><th>Student</th><th>P</th><th>A</th><th>Total</th><th>%</th></tr>`;
             db.ref(`attendance/${cls}/students`).once('value', (snap) => {
                 const data = snap.val() || {};
-                const students = studentDataMaster[cls] || [];
-                body.innerHTML = students.map(n => {
+                body.innerHTML = studentDataMaster[cls].map(n => {
                     let p=0, t=0;
                     if(type === 'monthly') {
                         const m = document.getElementById('monthInput').value;
@@ -239,12 +257,6 @@
                 }).join('');
             });
         }
-    }
-
-    async function secureReset(mode) {
-        const { value: pass } = await Swal.fire({ title: 'Master Reset', text: 'Enter password to confirm.', input: 'password', showCancelButton: true });
-        if(pass === "Ahmad@07") { db.ref().remove().then(() => location.reload()); }
-        else if(pass) { Swal.fire('Error', 'Wrong Pass', 'error'); }
     }
 </script>
 </body>
