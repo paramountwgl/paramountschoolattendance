@@ -12,7 +12,7 @@
         * { box-sizing: border-box; } 
         body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; padding-bottom: 120px; overflow-x: hidden; }
         
-        /* LOGIN BOX */
+        /* LOGIN SCREEN */
         .overlay-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--light); z-index: 9999; display: flex; justify-content: center; align-items: center; padding: 15px; }
         .auth-box { background: white; padding: 40px 25px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); width: 100%; max-width: 420px; border-bottom: 5px solid var(--forest); text-align: center; }
         .auth-header-row { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; margin-bottom: 25px; }
@@ -20,8 +20,10 @@
         .auth-branding-text h2 { margin: 5px 0 0; font-family: 'Montserrat', sans-serif; font-size: 1.6rem; font-weight: 800; color: var(--forest); }
         .auth-branding-text p { margin: 0; font-size: 0.75rem; font-weight: 700; color: var(--gold); text-transform: uppercase; }
         .auth-input { width: 100%; padding: 12px; border-radius: 10px; border: 2px solid #eee; margin-bottom: 15px; text-align: center; font-size: 16px; outline: none; }
+        .auth-links { margin-top: 15px; display: flex; flex-direction: column; gap: 10px; }
+        .auth-links span { color: #666; font-size: 13px; text-decoration: underline; cursor: pointer; font-weight: 600; }
 
-        /* HEADER BRANDING */
+        /* HEADER */
         header { background: var(--forest); color: white; padding: 20px 3%; box-shadow: 0 4px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000; }
         .header-content { display: flex; align-items: center; justify-content: center; max-width: 1400px; margin: 0 auto; width: 100%; gap: 15px; }
         .header-logo { height: clamp(50px, 8vw, 65px); width: auto; }
@@ -37,9 +39,10 @@
         h3 { color: var(--forest); margin: 0 0 15px; font-size: 1.1rem; border-bottom: 1px solid #eee; padding-bottom: 10px; display: flex; align-items: center; gap: 8px; }
         .filter-row { display: flex; gap: 8px; align-items: center; margin-top: 10px; width: 100%; }
         .filter-row input, .filter-row select { flex: 1.5; padding: 10px; border-radius: 8px; border: 1px solid #ddd; font-size: 13px; height: 44px; outline: none; }
+        
         .btn-attract { background: linear-gradient(135deg, var(--forest), #004d26); color: white; padding: 0 15px; border-radius: 50px; font-weight: bold; border: 2px solid var(--gold); cursor: pointer; font-size: 13px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 44px; flex: 1; box-shadow: 0 5px 15px rgba(0,0,0,0.1); transition: 0.3s; }
         
-        /* MOBILE TABLE FIT */
+        /* MOBILE OPTIMIZED TABLE */
         .table-container { width: 100%; overflow: hidden; margin-top: 15px; border-radius: 10px; border: 1px solid #eee; }
         table { width: 100%; border-collapse: collapse; table-layout: fixed; }
         th { background: var(--forest); color: white; padding: 8px 4px; text-transform: uppercase; font-size: 9px; text-align: center; }
@@ -51,20 +54,33 @@
         th:nth-child(5), td:nth-child(5) { width: 20%; }
 
         .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; padding: 15px; background: white; display: flex; justify-content: center; z-index: 1000; box-shadow: 0 -5px 15px rgba(0,0,0,0.05); }
-        .btn-premium { background: linear-gradient(135deg, #004d26, var(--forest)); color: white; padding: 14px 30px; border-radius: 60px; font-weight: 800; text-decoration: none; font-size: 14px; border: 2px solid var(--gold); transition: 0.3s; display: inline-flex; align-items: center; gap: 10px; }
+        .btn-premium { background: linear-gradient(135deg, #004d26, var(--forest)); color: white; padding: 14px 30px; border-radius: 60px; font-weight: 800; text-decoration: none; font-size: 14px; border: 2px solid var(--gold); transition: 0.3s; display: inline-flex; align-items: center; gap: 10px; box-shadow: 0 8px 20px rgba(0, 102, 51, 0.3); }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 </head>
 <body>
 
 <div id="loginScreen" class="overlay-screen">
     <div class="auth-box">
         <div class="auth-header-row">
-            <img src="logo.png" class="auth-logo" alt="Logo">
+            <img src="logo.png" class="auth-logo">
             <div class="auth-branding-text"><h2>PARAMOUNT</h2><p>Admin Access Box</p></div>
         </div>
         <input type="password" id="adminPass" class="auth-input" placeholder="Admin Password">
         <button onclick="login()" class="btn-attract" style="height:50px; width:100%">Unlock Dashboard <i class="fas fa-unlock"></i></button>
+        <div class="auth-links">
+            <span onclick="window.location.href='index.html'">Cancel & Return</span>
+            <span onclick="openRecovery()">Forgot Password?</span>
+        </div>
     </div>
+</div>
+
+<div id="recoveryScreen" class="overlay-screen" style="display:none;">
+    <div class="auth-box"><h2>Reset Access</h2><input type="password" id="masterKey" class="auth-input" placeholder="Master Key"><input type="password" id="newPass" class="auth-input" placeholder="New Password"><button onclick="recoverPass()" class="btn-attract">Update Password</button><div class="auth-links"><span onclick="closeRecovery()">Back to Login</span></div></div>
 </div>
 
 <div id="mainApp" style="display:none;">
@@ -80,7 +96,7 @@
     <div class="container">
         <div class="card" style="border-top-color: var(--gold);">
             <h3><i class="fas fa-bullhorn"></i> Broadcast</h3>
-            <textarea id="annMsg" style="width:100%; height:70px; padding:10px; border-radius:10px; border:1px solid #ddd; outline:none; resize:none; margin-bottom:10px;" placeholder="Message for teachers..."></textarea>
+            <textarea id="annMsg" style="width:100%; height:70px; padding:10px; border-radius:10px; border:1px solid #ddd; outline:none; resize:none; margin-bottom:10px;" placeholder="Message..."></textarea>
             <div style="display:flex; gap:10px;">
                 <button onclick="postAnn()" class="btn-attract">Publish Now <i class="fas fa-paper-plane"></i></button>
                 <button onclick="clearAnn()" class="btn-attract" style="background:#eee; color:#666; border-color:#ccc; flex:0.4;">Clear</button>
@@ -123,22 +139,16 @@
         </div>
 
         <div class="card" style="border-top-color: var(--danger);">
-            <h3><i class="fas fa-tools"></i> System Tools</h3>
+            <h3><i class="fas fa-tools"></i> System Maintenance</h3>
             <div style="display: grid; gap: 8px; grid-template-columns: 1fr 1fr;">
                 <button onclick="secureReset('monthly')" class="btn-attract" style="background:#fb8c00; border-color:white;">Reset Month</button>
-                <button onclick="secureReset('master')" class="btn-attract" style="background:#c62828; border-color:white;">Full Wipe</button>
+                <button onclick="secureReset('master')" class="btn-attract danger" style="background:#c62828; border-color:white;">Full Wipe</button>
             </div>
         </div>
     </div>
 
     <div class="bottom-nav"><a href="index.html" class="btn-premium"><i class="fas fa-chalkboard-teacher"></i> Teacher Portal</a></div>
 </div>
-
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 
 <script>
     const firebaseConfig = { apiKey: "AIzaSyDRYk9KOK-ga0c88dnYMsAoifW2NJTd_Y8", databaseURL: "https://paramount-school-d55bc-default-rtdb.firebaseio.com", projectId: "paramount-school-d55bc" };
@@ -159,20 +169,26 @@
         "Grade-8": ["Sathwika Nagavelly", "Vyshnavi Uppala", "Akshaya Gampala", "Ganesh Oggula", "Gayathri Renukuntla", "Khaja Sadeemuddin Mohammed"]
     };
 
-    // FIXED LOGIN LOGIC WITH CLEARING FIELD
+    function openRecovery() { document.getElementById('loginScreen').style.display='none'; document.getElementById('recoveryScreen').style.display='flex'; }
+    function closeRecovery() { document.getElementById('recoveryScreen').style.display='none'; document.getElementById('loginScreen').style.display='flex'; }
+
     async function login() {
-        const inputField = document.getElementById('adminPass');
-        const pass = inputField.value;
+        const input = document.getElementById('adminPass');
         const snap = await db.ref('admin/password').once('value');
         const correct = snap.val() || "Ahmad@07";
-
-        if(pass === correct) {
+        if(input.value === correct) {
             document.getElementById('loginScreen').style.display = 'none';
             document.getElementById('mainApp').style.display = 'block';
         } else {
             Swal.fire('Error', 'Incorrect Password', 'error');
-            inputField.value = ""; // CLEAR THE FIELD ON WRONG PASSWORD
+            input.value = "";
         }
+    }
+
+    function recoverPass() {
+        if(document.getElementById('masterKey').value === "paramount") {
+            db.ref('admin/password').set(document.getElementById('newPass').value).then(() => { Swal.fire('Success', 'Updated!', 'success'); closeRecovery(); });
+        } else { Swal.fire('Error', 'Invalid Master Key', 'error'); }
     }
 
     function toggleFilterInputs() { 
@@ -188,7 +204,7 @@
         db.ref('announcement').set(msg).then(() => Swal.fire('Published!', 'Message is live.', 'success'));
     }
     
-    function clearAnn() { db.ref('announcement').remove().then(() => { document.getElementById('annMsg').value = ""; Swal.fire('Cleared', '', 'info'); }); }
+    function clearAnn() { db.ref('announcement').remove().then(() => { document.getElementById('annMsg').value = ""; Swal.fire('Cleared', 'Announcement deleted.', 'info'); }); }
 
     async function viewAtt() {
         const cls = document.getElementById('clsPick').value;
@@ -214,6 +230,7 @@
                     let p=0, t=0;
                     if(type === 'monthly') {
                         const m = document.getElementById('monthInput').value;
+                        if(!m) return Swal.fire('Error', 'Pick Month', 'warning');
                         const mD = (data[n] && data[n].months && data[n].months[m]) ? data[n].months[m] : {present:0, total:0};
                         p = mD.present; t = mD.total;
                     } else if (data[n] && data[n].months) { Object.values(data[n].months).forEach(v => { p += v.present; t += v.total; }); }
@@ -224,15 +241,49 @@
     }
 
     async function secureReset(mode) {
-        const { value: pass } = await Swal.fire({ title: 'Authentication', text: 'Enter Admin Pass to Backup & Clear.', input: 'password', showCancelButton: true });
+        const { value: pass } = await Swal.fire({ title: 'Auth Required', text: 'Enter Admin Pass to Backup & Reset.', input: 'password', showCancelButton: true });
         if(pass === "Ahmad@07") {
-            Swal.fire('Processing...', 'Generating Backup Excel File.', 'info');
-            // Full system backup logic is included in this function
+            Swal.fire('Backing up...', 'Generating spreadsheet...', 'info');
+            // Simplified automatic backup Logic
+            const workbook = new ExcelJS.Workbook();
+            const sheet = workbook.addWorksheet('Backup');
+            sheet.addRow(['Class', 'Student', 'Present Days', 'Total Days']);
+            const snap = await db.ref('attendance').once('value');
+            const data = snap.val() || {};
+            Object.keys(studentDataMaster).forEach(c => {
+                studentDataMaster[c].forEach(n => {
+                    let p=0, t=0;
+                    if(data[c] && data[c].students[n]) Object.values(data[c].students[n].months).forEach(v => { p+=v.present; t+=v.total; });
+                    sheet.addRow([c, n, p, t]);
+                });
+            });
+            const buffer = await workbook.xlsx.writeBuffer();
+            saveAs(new Blob([buffer]), `Backup_${new Date().toISOString().slice(0,10)}.xlsx`);
+
             if(mode === 'master') { db.ref('attendance').remove(); db.ref('daily_attendance').remove(); }
-            Swal.fire('Complete!', 'Data backed up and cleared.', 'success');
-        } else if(pass) {
-            Swal.fire('Error', 'Incorrect Password', 'error');
+            Swal.fire('Success', 'Database Backed Up & Cleared', 'success');
         }
+    }
+
+    async function exportToExcel() {
+        const cls = document.getElementById('clsPick').value;
+        const m = document.getElementById('monthInput').value;
+        if(!cls || !m) return Swal.fire('Error', 'Pick Class & Month', 'info');
+        const workbook = new ExcelJS.Workbook();
+        const sheet = workbook.addWorksheet('Monthly');
+        sheet.mergeCells('A1:F3');
+        const h = sheet.getCell('A1'); h.value = 'PARAMOUNT ENGLISH MEDIUM SCHOOL';
+        h.fill = { type:'pattern', pattern:'solid', fgColor:{argb:'006633'} }; h.font = {color:{argb:'FFFFFF'}, bold:true, size:16};
+        h.alignment = {vertical:'middle', horizontal:'center'};
+        sheet.getRow(5).values = ['S.No', 'Student Name', 'Present', 'Absent', 'Total', '%'];
+        const snap = await db.ref(`attendance/${cls}/students`).once('value');
+        const data = snap.val() || {};
+        studentDataMaster[cls].forEach((n, i) => {
+            const mD = (data[n] && data[n].months && data[n].months[m]) ? data[n].months[m] : {present:0, total:0};
+            sheet.addRow([i+1, n, mD.present, mD.total-mD.present, mD.total, mD.total>0?Math.round(mD.present/mD.total*100)+'%':'0%']);
+        });
+        const buf = await workbook.xlsx.writeBuffer();
+        saveAs(new Blob([buf]), `Paramount_${cls}_${m}.xlsx`);
     }
 </script>
 </body>
