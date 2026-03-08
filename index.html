@@ -169,7 +169,7 @@
         const name = document.getElementById('teacherSelect').value;
         if(!name) return;
         const { value: pw } = await Swal.fire({ 
-            title: `Teacher Verify`, text: `Enter password for ${name}`, 
+            title: `Welcome `, text: `Enter password for ${name}`, 
             input: 'password', showCancelButton: true,
             inputAttributes: { autocomplete: 'new-password' },
             didOpen: () => { Swal.getInput().value = ''; }
@@ -214,3 +214,4 @@
 </script>
 </body>
 </html>
+
