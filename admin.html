@@ -12,7 +12,7 @@
         * { box-sizing: border-box; } 
         body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; padding-bottom: 120px; overflow-x: hidden; }
         
-        /* LOGIN SCREEN - Z-INDEX 100 FOR POPUPS */
+        /* LOGIN SCREEN */
         .overlay-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--light); z-index: 100; display: flex; justify-content: center; align-items: center; padding: 15px; }
         .auth-box { background: white; padding: 40px 25px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); width: 100%; max-width: 420px; border-bottom: 5px solid var(--forest); text-align: center; }
         .auth-header-row { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; margin-bottom: 25px; }
@@ -175,24 +175,20 @@
         "Grade-8": ["Sathwika Nagavelly", "Vyshnavi Uppala", "Akshaya Gampala", "Ganesh Oggula", "Gayathri Renukuntla", "Khaja Sadeemuddin Mohammed"]
     };
 
-    // INSTANT LOGIN LOGIC 
-    let currentAdminPass = "Ahmad@07"; // Background cache
+    let currentAdminPass = "Ahmad@07"; 
     db.ref('admin/password').on('value', snap => { if(snap.exists()) currentAdminPass = snap.val(); });
 
     function login() {
         const input = document.getElementById('adminPass');
         if(input.value === currentAdminPass) {
-            if (typeof Swal !== 'undefined') Swal.close(); // Destroy left-over popup
+            if (typeof Swal !== 'undefined') Swal.close(); 
             document.getElementById('loginScreen').style.display = 'none';
             document.getElementById('mainApp').style.display = 'block';
             input.value = "";
         } else {
-            // Guaranteed Popup and Clear
             if (typeof Swal !== 'undefined') {
                 Swal.fire({ title: 'Access Denied', text: 'Incorrect Admin Password', icon: 'error', confirmButtonColor: '#c62828' });
-            } else {
-                alert('Incorrect Admin Password');
-            }
+            } else { alert('Incorrect Admin Password'); }
             input.value = "";
             input.focus();
         }
@@ -222,11 +218,13 @@
     
     function clearAnn() { db.ref('announcement').remove().then(() => { document.getElementById('annMsg').value = ""; Swal.fire('Cleared', 'Announcement removed.', 'info'); }); }
 
+    // THE FIX: DYNAMIC CALCULATION ENGINE
     async function viewAtt() {
         const cls = document.getElementById('clsPick').value;
         const type = document.getElementById('viewType').value;
         const body = document.getElementById('attBody');
         const head = document.getElementById('tableHead');
+        
         if(!cls) return Swal.fire('Error', 'Pick a class', 'info');
         body.innerHTML = '<tr><td colspan="5">Loading...</td></tr>';
 
@@ -234,29 +232,106 @@
             const date = document.getElementById('dateInput').value;
             if(!date) return Swal.fire('Error', 'Pick Date', 'warning');
             head.innerHTML = `<tr><th>Student Name</th><th colspan="4">Status</th></tr>`;
+            
             db.ref(`daily_attendance/${date}/${cls}`).once('value', (snap) => {
                 const data = snap.val() || {};
-                body.innerHTML = studentDataMaster[cls].map(n => `<tr><td>${n}</td><td colspan="4" style="color:${data[n] ? 'green':'red'}; font-weight:bold">${data[n] === true ? 'PRESENT' : (data[n] === false ? 'ABSENT' : '-')}</td></tr>`).join('');
-            });
-        } else {
-            head.innerHTML = `<tr><th>Student Name</th><th>P</th><th>A</th><th>Tot</th><th>%</th></tr>`;
-            db.ref(`attendance/${cls}/students`).once('value', (snap) => {
-                const data = snap.val() || {};
                 body.innerHTML = studentDataMaster[cls].map(n => {
-                    let p=0, t=0;
-                    if(type === 'monthly') {
-                        const m = document.getElementById('monthInput').value;
-                        if(!m) return Swal.fire('Error', 'Pick Month', 'warning');
-                        const mD = (data[n] && data[n].months && data[n].months[m]) ? data[n].months[m] : {present:0, total:0};
-                        p = mD.present; t = mD.total;
-                    } else if (data[n] && data[n].months) { Object.values(data[n].months).forEach(v => { p += v.present; t += v.total; }); }
-                    return `<tr><td>${n}</td><td>${p}</td><td>${t-p}</td><td>${t}</td><td>${t>0?Math.round(p/t*100):0}%</td></tr>`;
+                    let text = '-', color = '#888';
+                    if(data[n] === true) { text = 'PRESENT'; color = 'green'; }
+                    else if(data[n] === false) { text = 'ABSENT'; color = 'red'; }
+                    return `<tr><td>${n}</td><td colspan="4" style="color:${color}; font-weight:bold">${text}</td></tr>`;
+                }).join('');
+            });
+            
+        } else {
+            // MONTHLY AND OVERALL - PULLS FROM TEACHER SUBMISSIONS DIRECTLY
+            head.innerHTML = `<tr><th>Student Name</th><th>P</th><th>A</th><th>Tot</th><th>%</th></tr>`;
+            const m = document.getElementById('monthInput').value;
+            if(type === 'monthly' && !m) return Swal.fire('Error', 'Pick Month', 'warning');
+
+            db.ref(`daily_attendance`).once('value', (snap) => {
+                const allData = snap.val() || {};
+                const stats = {};
+                studentDataMaster[cls].forEach(n => stats[n] = { p: 0, t: 0 });
+
+                Object.keys(allData).forEach(date => {
+                    if(type === 'monthly' && !date.startsWith(m)) return; // Filter by month if needed
+                    const classData = allData[date][cls];
+                    if(classData) {
+                        Object.keys(classData).forEach(student => {
+                            if(stats[student] !== undefined) {
+                                stats[student].t++;
+                                if(classData[student] === true) stats[student].p++;
+                            }
+                        });
+                    }
+                });
+
+                body.innerHTML = studentDataMaster[cls].map(n => {
+                    const p = stats[n].p; const t = stats[n].t; const a = t - p;
+                    const pct = t > 0 ? Math.round((p/t)*100) : 0;
+                    return `<tr><td>${n}</td><td>${p}</td><td>${a}</td><td>${t}</td><td>${pct}%</td></tr>`;
                 }).join('');
             });
         }
     }
 
-    // RESTORED: FULL EXCEL BACKUP BEFORE RESET 
+    async function exportToExcel() {
+        const cls = document.getElementById('clsPick').value;
+        const m = document.getElementById('monthInput').value;
+        if(!cls || !m) return Swal.fire('Error', 'Pick Class & Month', 'info');
+        
+        Swal.fire({title: 'Processing...', text: 'Generating Excel Report.', icon: 'info', showConfirmButton: false});
+
+        const workbook = new ExcelJS.Workbook();
+        const sheet = workbook.addWorksheet('Monthly Report');
+        
+        sheet.mergeCells('A1:F3');
+        const h = sheet.getCell('A1'); h.value = 'PARAMOUNT ENGLISH MEDIUM SCHOOL';
+        h.fill = { type:'pattern', pattern:'solid', fgColor:{argb:'006633'} }; h.font = {color:{argb:'FFFFFF'}, bold:true, size:16};
+        h.alignment = {vertical:'middle', horizontal:'center'};
+
+        sheet.mergeCells('A4:F5');
+        const subH = sheet.getCell('A4');
+        subH.value = `MONTHLY ATTENDANCE SUMMARY - ${m} (${cls})`;
+        subH.fill = { type:'pattern', pattern:'solid', fgColor:{argb:'FFD700'} }; subH.font = {color:{argb:'000000'}, bold:true};
+        subH.alignment = {vertical:'middle', horizontal:'center'};
+
+        sheet.getRow(7).values = ['S.No', 'Student Name', 'Present', 'Absent', 'Total', '%'];
+        sheet.getRow(7).font = {bold:true};
+        
+        // DYNAMIC EXCEL CALCULATION
+        const snap = await db.ref(`daily_attendance`).once('value');
+        const allData = snap.val() || {};
+        const stats = {};
+        studentDataMaster[cls].forEach(n => stats[n] = { p: 0, t: 0 });
+
+        Object.keys(allData).forEach(date => {
+            if(date.startsWith(m)) {
+                const classData = allData[date][cls];
+                if(classData) {
+                    Object.keys(classData).forEach(student => {
+                        if(stats[student] !== undefined) {
+                            stats[student].t++;
+                            if(classData[student] === true) stats[student].p++;
+                        }
+                    });
+                }
+            }
+        });
+
+        studentDataMaster[cls].forEach((n, i) => {
+            const p = stats[n].p; const t = stats[n].t; const a = t - p;
+            const pct = t > 0 ? Math.round((p/t)*100) + '%' : '0%';
+            sheet.addRow([i+1, n, p, a, t, pct]);
+        });
+        
+        sheet.getColumn(2).width = 30;
+        const buf = await workbook.xlsx.writeBuffer();
+        saveAs(new Blob([buf]), `Paramount_${cls}_${m}.xlsx`);
+        Swal.close();
+    }
+
     async function secureReset(mode) {
         const { value: pass } = await Swal.fire({ title: 'Authentication', text: 'Enter Admin Password to Backup & Clear.', input: 'password', showCancelButton: true });
         if(pass === "Ahmad@07") {
@@ -279,16 +354,21 @@
             sheet.getRow(7).values = ['Class', 'Student Name', 'Present', 'Absent', 'Total', '%'];
             sheet.getRow(7).font = {bold:true};
 
-            const snap = await db.ref('attendance').once('value');
-            const data = snap.val() || {};
-            
+            const snap = await db.ref('daily_attendance').once('value');
+            const allData = snap.val() || {};
+            const monthFilter = document.getElementById('monthInput').value;
+
             Object.keys(studentDataMaster).forEach(c => {
                 studentDataMaster[c].forEach(n => {
                     let p=0, t=0;
-                    if(data[c] && data[c].students && data[c].students[n]) {
-                        Object.values(data[c].students[n].months).forEach(v => { p+=v.present; t+=v.total; });
-                    }
-                    sheet.addRow([c, n, p, t-p, t, t>0?Math.round(p/t*100)+'%':'0%']);
+                    Object.keys(allData).forEach(date => {
+                        if(mode === 'monthly' && !date.startsWith(monthFilter)) return;
+                        if(allData[date][c] && allData[date][c][n] !== undefined) {
+                            t++;
+                            if(allData[date][c][n] === true) p++;
+                        }
+                    });
+                    sheet.addRow([c, n, p, t-p, t, t>0?Math.round((p/t)*100)+'%':'0%']);
                 });
             });
 
@@ -298,14 +378,12 @@
 
             // WIPE DATABASE AFTER DOWNLOAD
             if(mode === 'master') { 
-                await db.ref('attendance').remove(); 
                 await db.ref('daily_attendance').remove(); 
             } else {
-                const m = document.getElementById('monthInput').value;
-                if(!m) { Swal.fire('Error', 'Pick Month to reset first', 'error'); return; }
+                if(!monthFilter) { Swal.fire('Error', 'Pick Month to reset first', 'error'); return; }
                 const updates = {};
-                if(data) Object.keys(data).forEach(c => { 
-                    if(data[c].students) Object.keys(data[c].students).forEach(n => updates[`attendance/${c}/students/${n}/months/${m}`] = null); 
+                Object.keys(allData).forEach(date => {
+                    if(date.startsWith(monthFilter)) updates[`daily_attendance/${date}`] = null;
                 });
                 await db.ref().update(updates);
             }
@@ -314,39 +392,6 @@
         } else if (pass) {
             Swal.fire('Error', 'Incorrect Password', 'error');
         }
-    }
-
-    async function exportToExcel() {
-        const cls = document.getElementById('clsPick').value;
-        const m = document.getElementById('monthInput').value;
-        if(!cls || !m) return Swal.fire('Error', 'Pick Class & Month', 'info');
-        const workbook = new ExcelJS.Workbook();
-        const sheet = workbook.addWorksheet('Monthly Report');
-        
-        sheet.mergeCells('A1:F3');
-        const h = sheet.getCell('A1'); h.value = 'PARAMOUNT ENGLISH MEDIUM SCHOOL';
-        h.fill = { type:'pattern', pattern:'solid', fgColor:{argb:'006633'} }; h.font = {color:{argb:'FFFFFF'}, bold:true, size:16};
-        h.alignment = {vertical:'middle', horizontal:'center'};
-
-        sheet.mergeCells('A4:F5');
-        const subH = sheet.getCell('A4');
-        subH.value = `MONTHLY ATTENDANCE SUMMARY - ${m} (${cls})`;
-        subH.fill = { type:'pattern', pattern:'solid', fgColor:{argb:'FFD700'} }; subH.font = {color:{argb:'000000'}, bold:true};
-        subH.alignment = {vertical:'middle', horizontal:'center'};
-
-        sheet.getRow(7).values = ['S.No', 'Student Name', 'Present', 'Absent', 'Total', '%'];
-        sheet.getRow(7).font = {bold:true};
-        
-        const snap = await db.ref(`attendance/${cls}/students`).once('value');
-        const data = snap.val() || {};
-        studentDataMaster[cls].forEach((n, i) => {
-            const mD = (data[n] && data[n].months && data[n].months[m]) ? data[n].months[m] : {present:0, total:0};
-            sheet.addRow([i+1, n, mD.present, mD.total-mD.present, mD.total, mD.total>0?Math.round(mD.present/mD.total*100)+'%':'0%']);
-        });
-        
-        sheet.getColumn(2).width = 30;
-        const buf = await workbook.xlsx.writeBuffer();
-        saveAs(new Blob([buf]), `Paramount_${cls}_${m}.xlsx`);
     }
 </script>
 </body>
