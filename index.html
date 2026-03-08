@@ -99,46 +99,6 @@
             <button class="btn warning" style="flex:0.5;" onclick="clearHomework()"><i class="fas fa-eraser"></i> Clear Task</button>
         </div>
     </div>
-
-    <div class="card" style="border-top-color: #2196f3;">
-        <h3>Quiz Portal Access</h3>
-        <label>Select Teacher (Quiz)</label>
-        <select id="quizTeacherSelect" onchange="verifyAccess('quiz')" autocomplete="new-password">
-            <option value="">-- Choose Your Name --</option>
-            <option value="Mr. Shaik Ahmad">Mr. Shaik Ahmad</option><option value="Ms. Roqiya Begum">Ms. Roqiya Begum</option>
-            <option value="Ms. G.Rajitha">Ms. G.Rajitha</option><option value="Ms. Ameena Tabassum">Ms. Ameena Tabassum</option>
-            <option value="Ms. Shaik Shabana">Ms. Shaik Shabana</option><option value="Ms. B.Ravali">Ms. B.Ravali</option>
-            <option value="Ms. L.Kalyani">Ms. L.Kalyani</option><option value="Ms. J.Alaya Sree">Ms. J.Alaya Sree</option>
-            <option value="Ms. S.Sujatha">Ms. S.Sujatha</option><option value="Ms. J.Prathibha">Ms. J.Prathibha</option>
-            <option value="Ms. P.Shailaja">Ms. P.Shailaja</option><option value="Ms. A.Jhansi Rani">Ms. A.Jhansi Rani</option>
-            <option value="Ms. S. Neelima">Ms. S. Neelima</option>
-        </select>
-        <div id="quizRequestArea" style="display:none; margin-top:15px;">
-            <div class="row-grid">
-                <div><label>Quiz Class</label><select id="reqQuizClass" onchange="updateQuizSubjects()">
-                    <option value="Pre-KG">Pre-KG</option><option value="KG-1">KG-1</option><option value="KG-2">KG-2</option>
-                    <option value="Grade-1">Grade-1</option><option value="Grade-2">Grade-2</option><option value="Grade-3">Grade-3</option>
-                    <option value="Grade-4">Grade-4</option><option value="Grade-5">Grade-5</option><option value="Grade-6">Grade-6</option>
-                    <option value="Grade-7">Grade-7</option><option value="Grade-8">Grade-8</option>
-                </select></div>
-                <div><label>Quiz Subject</label><select id="reqQuizSubject"></select></div>
-            </div>
-            <button class="btn warning" id="reqBtn" onclick="requestQuizAccess()"><i class="fas fa-paper-plane"></i> Send Request to Admin</button>
-        </div>
-        <div id="quizCreatorTool" style="display:none; border-top: 2px dashed #eee; margin-top: 20px; padding-top: 20px;">
-            <div class="row-grid">
-                <div><label>Media</label><select id="mediaType"><option value="none">Text Only</option><option value="image">Image</option><option value="video">YouTube</option></select></div>
-                <div><label>Correct Ans</label><select id="correctOpt"><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option></select></div>
-            </div>
-            <label>Question</label><textarea id="quizQ" rows="2" placeholder="Type question details..."></textarea>
-            <label>Media Link</label><input type="text" id="mediaUrl" placeholder="Paste link...">
-            <div class="row-grid" style="margin-top:10px;">
-                <input type="text" id="optA" placeholder="Option A"><input type="text" id="optB" placeholder="Option B">
-                <input type="text" id="optC" placeholder="Option C"><input type="text" id="optD" placeholder="Option D">
-            </div>
-            <button class="btn blue" onclick="publishSubjectQuiz()"><i class="fas fa-rocket"></i> Go Live</button>
-        </div>
-    </div>
 </div>
 
 <script>
@@ -155,18 +115,17 @@
 
     // SECURE ACCESS LOGIC
     async function verifyAccess(section) {
-        let selectId = section === 'attendance' ? 'teacherSelect' : 'quizTeacherSelect';
-        const name = document.getElementById(selectId).value;
+        const name = document.getElementById('teacherSelect').value;
         if(!name) return;
         const { value: pw } = await Swal.fire({
             title: `Welcome ${name}!`, text: 'Enter password to proceed.', input: 'password', showCancelButton: true,
             inputAttributes: { autocomplete: 'new-password' }, didOpen: () => { Swal.getInput().value = ''; }
         });
         if(pw === registry[name]) {
-            document.getElementById(section === 'attendance' ? 'attContent' : 'quizRequestArea').style.display = 'block';
+            document.getElementById('attContent').style.display = 'block';
             Swal.fire({ title: 'Unlocked', icon: 'success', timer: 1000, showConfirmButton: false });
         } else {
-            document.getElementById(selectId).value = "";
+            document.getElementById('teacherSelect').value = "";
             if(pw) Swal.fire('Error', 'Wrong Password', 'error');
         }
     }
@@ -217,35 +176,9 @@
     function postHomework() { const d = document.getElementById('hwDate').value; const c = document.getElementById('hwClass').value; const s = document.getElementById('hwSubSelect').value; const t = document.getElementById('hwTask').value; if(!d || !t) return Swal.fire('Error', 'Task empty', 'error'); db.ref(`homework/${d}/${c}`).update({ [s]: t, lastUpdated: new Date().toLocaleTimeString() }).then(() => Swal.fire('Updated!', 'Homework is now live.', 'success')); }
     function clearHomework() { document.getElementById('hwTask').value = ''; Swal.fire('Cleared!', 'Task reset.', 'info'); }
 
-    // QUIZ LOGIC
-    function updateQuizSubjects() { 
-        const cls = document.getElementById('reqQuizClass').value;
-        const common = ["TELUGU", "HINDI", "ENGLISH", "MATHS", "SOCIAL STUDIES"]; 
-        let subs = (["Grade-6", "Grade-7", "Grade-8"].includes(cls)) ? [...common, "PHYSICS", "CHEMISTRY", "BIOLOGY"] : [...common, "SCIENCE"]; 
-        document.getElementById('reqQuizSubject').innerHTML = subs.map(s => `<option value="${s}">${s}</option>`).join('');
-    }
-    function requestQuizAccess() {
-        const teacher = document.getElementById('quizTeacherSelect').value;
-        const teacherId = teacher.replace(/\s+/g, '_'); 
-        Swal.fire('Submitted', 'Request sent to Admin.', 'success');
-        db.ref(`quiz_requests/${teacherId}`).set({ teacher: teacher, class: document.getElementById('reqQuizClass').value, subject: document.getElementById('reqQuizSubject').value, status: 'pending', timestamp: Date.now() });
-        db.ref(`quiz_requests/${teacherId}/status`).on('value', (snap) => {
-            if(snap.val() === 'approved') {
-                document.getElementById('quizRequestArea').style.display = 'none';
-                document.getElementById('quizCreatorTool').style.display = 'block';
-                Swal.fire('Unlocked', 'Admin approved request.', 'success');
-            }
-        });
-    }
-    function publishSubjectQuiz() {
-        const cls = document.getElementById('reqQuizClass').value; const sub = document.getElementById('reqQuizSubject').value;
-        const data = { question: document.getElementById('quizQ').value, options: { A: document.getElementById('optA').value, B: document.getElementById('optB').value, C: document.getElementById('optC').value, D: document.getElementById('optD').value }, correct: document.getElementById('correctOpt').value };
-        db.ref(`daily_quiz/${cls}/${sub}`).set(data).then(() => { Swal.fire('Quiz Live!', 'Question published.', 'success'); location.reload(); });
-    }
-
     document.getElementById('hwDate').valueAsDate = new Date();
     document.getElementById('attDate').valueAsDate = new Date();
-    updateHWSubjects(); updateQuizSubjects();
+    updateHWSubjects();
 </script>
 </body>
 </html>
