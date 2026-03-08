@@ -23,20 +23,9 @@
         /* ANIMATED RED ANNOUNCEMENT TAB */
         .announcement-container { display: flex; justify-content: center; margin: 20px auto 0 auto; padding: 0 15px; width: 100%; max-width: 850px; }
         #liveAnnouncementBanner { 
-            background-color: #d32f2f; 
-            color: white; 
-            padding: 15px 25px; 
-            border-radius: 12px; 
-            text-align: center; 
-            font-weight: 700; 
-            display: none; 
-            width: 100%;
-            box-shadow: 0 4px 15px rgba(211, 47, 47, 0.3);
-            animation: breathe 2.5s infinite ease-in-out;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            font-size: 15px;
+            background-color: #d32f2f; color: white; padding: 15px 25px; border-radius: 12px; text-align: center; 
+            font-weight: 700; display: none; width: 100%; box-shadow: 0 4px 15px rgba(211, 47, 47, 0.3);
+            animation: breathe 2.5s infinite ease-in-out; align-items: center; justify-content: center; gap: 12px; font-size: 15px;
         }
         @keyframes breathe {
             0% { background-color: #d32f2f; box-shadow: 0 4px 15px rgba(211, 47, 47, 0.3); }
@@ -58,13 +47,13 @@
         /* PORTAL UI */
         .container { max-width: 850px; margin: 0 auto; padding: 0 15px; }
         .card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 25px; border-top: 8px solid var(--forest); }
-        h3 { color: var(--forest); margin: 0 0 25px; font-size: 1.5rem; text-align: center; border-bottom: 2px solid #f0f0f0; padding-bottom: 15px; text-transform: uppercase; font-weight: 800; }
+        h3 { color: var(--forest); margin: 0 0 25px; font-size: 1.4rem; text-align: center; border-bottom: 2px solid #f0f0f0; padding-bottom: 15px; text-transform: uppercase; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 10px; }
         label { display: block; font-size: 11px; font-weight: 900; color: #777; margin: 15px 0 8px; text-transform: uppercase; letter-spacing: 1px; }
         select, input, textarea { width: 100%; padding: 14px; border-radius: 10px; border: 2px solid #ddd; font-size: 15px; outline: none; }
         .row-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; }
         .btn { flex: 1; background: linear-gradient(135deg, var(--forest), #004d26); color: white; border: 2px solid var(--gold); padding: 15px; border-radius: 50px; font-weight: bold; cursor: pointer; transition: 0.3s; font-size: 14px; margin-top: 15px; width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; }
         .btn.warning { background: linear-gradient(135deg, #fb8c00, #ef6c00); border-color: white; }
-        .student-item { display: flex; align-items: center; justify-content: space-between; padding: 14px; border-bottom: 1px solid #eee; }
+        .student-item { display: flex; align-items: center; justify-content: space-between; padding: 12px; border-bottom: 1px solid #eee; }
         input[type="checkbox"] { width: 22px; height: 22px; accent-color: var(--forest); cursor: pointer; }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -73,7 +62,14 @@
 </head>
 <body>
 
-<input type="text" style="display:none"><input type="password" style="display:none">
+<div style="opacity: 0; position: absolute; top: 0; left: 0; height: 0; width: 0; overflow: hidden;">
+    <input type="text" name="prevent_autofill_user" tabindex="-1">
+    <input type="password" name="prevent_autofill_pass" tabindex="-1">
+</div>
+
+<div id="liveAnnouncementBanner">
+    <i class="fas fa-bell"></i> <span id="announcementMessageText"></span>
+</div>
 
 <header>
     <div class="header-content">
@@ -85,11 +81,7 @@
     </div>
 </header>
 
-<div class="announcement-container">
-    <div id="liveAnnouncementBanner">
-        <i class="fas fa-bell"></i> <span id="announcementMessageText"></span>
-    </div>
-</div>
+<div class="announcement-container"></div>
 
 <div class="portal-nav-container">
     <a href="admin.html" class="btn-premium-nav"><i class="fas fa-user-shield"></i> Admin Dashboard</a>
@@ -98,9 +90,9 @@
 
 <div class="container">
     <div class="card">
-        <h3>Mark Attendance</h3>
+        <h3><i class="fas fa-calendar-check"></i> Mark Attendance</h3>
         <label>Select Teacher</label>
-        <select id="teacherSelect" onchange="verifyAccess()" autocomplete="new-password">
+        <select id="teacherSelect" onchange="verifyAccess()" autocomplete="off">
             <option value="">-- Choose Name --</option>
             <option value="Mr. Shaik Ahmad">Mr. Shaik Ahmad</option><option value="Ms. Roqiya Begum">Ms. Roqiya Begum</option>
             <option value="Ms. G.Rajitha">Ms. G.Rajitha</option><option value="Ms. Ameena Tabassum">Ms. Ameena Tabassum</option>
@@ -126,9 +118,14 @@
     </div>
 
     <div class="card" style="border-top-color: var(--gold);">
-        <h3>Daily Homework Tool</h3>
+        <h3><i class="fas fa-book-open"></i> Daily Homework Tool</h3>
         <div class="row-grid">
-            <div><label>Class</label><select id="hwClass" onchange="updateHWSubjects()"><option value="Pre-KG">Pre-KG</option></select></div>
+            <div><label>Class</label><select id="hwClass" onchange="updateHWSubjects()">
+                <option value="Pre-KG">Pre-KG</option><option value="KG-1">KG-1</option><option value="KG-2">KG-2</option>
+                <option value="Grade-1">Grade-1</option><option value="Grade-2">Grade-2</option><option value="Grade-3">Grade-3</option>
+                <option value="Grade-4">Grade-4</option><option value="Grade-5">Grade-5</option><option value="Grade-6">Grade-6</option>
+                <option value="Grade-7">Grade-7</option><option value="Grade-8">Grade-8</option>
+            </select></div>
             <div><label>Date</label><input type="date" id="hwDate" onchange="fetchExistingHW()"></div>
         </div>
         <label>Subject</label><select id="hwSubSelect" onchange="fetchExistingHW()"></select>
@@ -145,6 +142,7 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
+    // LIVE ANNOUNCEMENT BANNER SYNC
     db.ref('announcement').on('value', (snap) => {
         const msg = snap.val();
         const banner = document.getElementById('liveAnnouncementBanner');
@@ -160,6 +158,7 @@
         "Ms. J.Prathibha": "Prathibha@123", "Ms. P.Shailaja": "Shailaja@123", "Ms. A.Jhansi Rani": "Jhansi@123", "Ms. S. Neelima": "Neelima@123"
     };
 
+    // 185 COMPLETE STUDENT DATABASE
     const studentData = {
         "Pre-KG": ["Hanish Macharla", "Arjun Vihaar Illandula", "Thanu sree Allakunta", "Aadhya Gangaraboina", "Aadhya Sri Oggula", "Aadhyasri Shivagoni", "Afraha Begum", "Aliya Sultana", "Anvika Bandi", "Aradana Devara konda", "Devansh Bandi", "Hanvitha Mulkalapelli", "Harsha Vardhan Seenapelli", "Hiranya Bandi", "Jashritha Boina", "Konreddy Shreyanvi", "Kriyansh Sammeta", "Mohammed Mohiuddin Sayyad", "Nethra Narkurthi", "Reeyansh Bandi", "Rishi Manupati", "Rudransh Bandi", "Sanvika Bandi", "Shanvith Khatha", "Shishira Jalagam", "Shiva Sai Mekala", "Shree Rudhraveer Chevvu", "Shreyansh Gangaraboina", "Sreeja Thalla", "Srikrithini Myakala", "Srivatsav Vanam", "Sriyansh Mekala", "Thanvika Lakka", "Thrilokansh Vudari", "Ujjwal Chekka", "Vaishnavi Lakka", "Vedansh Myakala", "Vishnu Priya Molugu", "Vyshnav Tej Boina", "Yafiah Mohammad"],
         "KG-1": ["Aadhya Sri Amaravadi", "Aditya Manda", "Aadhya Jella", "Advaita Gauri Bandi", "Aizah Amna Shaik", "Akshara Singaram", "Bhahuveer Raj Somishetti", "Gayathri Erroju", "Hanvika Mulkalapelli", "Manvith Kondoju", "Sayyad Vajeed", "Mekala Manu sri", "Oliva Grace Vallapu", "Rithwik Oggula", "Rithwika Kandagatla", "Srimahi Chevvu", "Thanvesh Thalla", "Trishul Nanduri", "Yoganshika Nanduri", "Yusra Mohammad", "Zainul Abideen Syed"],
@@ -177,7 +176,12 @@
     async function verifyAccess() {
         const name = document.getElementById('teacherSelect').value;
         if(!name) return;
-        const { value: pw } = await Swal.fire({ title: `Teacher Verify`, text: `Enter password for ${name}`, input: 'password', showCancelButton: true });
+        const { value: pw } = await Swal.fire({ 
+            title: `Teacher Verify`, text: `Enter password for ${name}`, 
+            input: 'password', showCancelButton: true,
+            inputAttributes: { autocomplete: 'new-password' },
+            didOpen: () => { Swal.getInput().value = ''; }
+        });
         if(pw === registry[name]) { document.getElementById('attContent').style.display = 'block'; }
         else if(pw) { Swal.fire('Error', 'Incorrect Password', 'error'); document.getElementById('teacherSelect').value = ""; }
     }
