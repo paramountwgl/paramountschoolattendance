@@ -12,49 +12,52 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: 'Segoe UI', sans-serif; background: #eef2f1; margin: 0; padding-bottom: 100px; overflow-x: hidden; }
         
-        /* HEADER - FIXED WITH PROGRESS PORTAL */
+        /* HEADER - PC & MOBILE ADAPTIVE */
         header { background: var(--forest); color: white; padding: 20px 15px; border-bottom: 4px solid var(--gold); }
         .header-content { display: flex; flex-direction: column; align-items: center; gap: 10px; max-width: 1200px; margin: 0 auto; text-align: center; }
         .header-logo { height: 60px; width: auto; }
         .school-text { display: flex; flex-direction: column; line-height: 1.1; }
         .school-name-main { font-family: 'Montserrat', sans-serif; font-size: 1.4rem; font-weight: 800; letter-spacing: 1px; }
         .school-name-sub { font-family: 'Montserrat', sans-serif; font-size: 0.7rem; color: var(--gold); font-weight: 700; text-transform: uppercase; }
-        .divider-v { width: 2px; height: 30px; background: rgba(255,255,255,0.3); display: none; }
+        .divider-v { width: 2px; height: 35px; background: rgba(255,255,255,0.3); display: none; }
         .page-brand { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 1.2rem; color: white; text-transform: uppercase; margin-top: 5px; }
 
         .container { width: 100%; max-width: 900px; margin: 15px auto; padding: 0 10px; }
         .card { background: white; padding: 20px; border-radius: 25px; box-shadow: 0 10px 40px rgba(0,0,0,0.06); margin-bottom: 20px; border-top: 5px solid var(--gold); }
-        
-        h3 { color: var(--forest); text-align: center; font-size: 1.1rem; text-transform: uppercase; margin-bottom: 20px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        h3 { color: var(--forest); text-align: center; font-size: 1.1rem; text-transform: uppercase; margin-bottom: 20px; font-weight: 800; }
 
         .setup-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
         label { display: block; font-size: 10px; font-weight: 900; color: #777; margin-bottom: 5px; text-transform: uppercase; }
         select { width: 100%; padding: 14px; border-radius: 12px; border: 2px solid #eee; background: #fafafa; font-weight: 700; outline: none; }
 
-        /* STUDENT ENTRY CARDS */
+        /* STUDENT CARDS */
         .student-mark-card { background: white; border: 1px solid #eee; border-radius: 20px; padding: 15px; margin-bottom: 15px; }
         .student-name { font-weight: 800; color: var(--forest); font-size: 1rem; display: block; margin-bottom: 15px; border-bottom: 1px solid #f1f1f1; padding-bottom: 8px; }
         
+        /* MARKS GRID - MOBILE FIRST */
         .marks-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
         .subject-box { background: #f9fcf9; padding: 8px; border-radius: 12px; border: 1px solid #f0f0f0; text-align: center; }
         .subject-box label { font-size: 9px; margin-bottom: 5px; color: #555; }
         .subject-box input { width: 100%; text-align: center; padding: 10px 5px; font-weight: 800; border-radius: 8px; border: 1px solid #ddd; font-size: 16px; outline: none; }
 
         .stats-bar { display: flex; justify-content: space-between; margin-top: 15px; padding: 12px; background: #f1f8f4; border-radius: 12px; font-size: 10px; font-weight: 800; color: var(--forest); }
+        
+        /* AUDIT SYSTEM STYLE */
+        .audit-footer { font-size: 9px; color: #999; font-style: italic; margin-top: 10px; text-align: left; padding-top: 8px; border-top: 1px dashed #eee; }
+        .audit-footer b { color: #555; }
 
-        /* BUTTONS */
         .btn-fetch { background: var(--forest); color: white; border: none; border-radius: 12px; padding: 15px; font-weight: 800; width: 100%; margin-top: 15px; cursor: pointer; text-transform: uppercase; font-size: 11px; }
         .action-row { display: none; gap: 10px; margin-top: 20px; }
-        .btn-save { flex: 2; background: var(--premium-gradient); color: white; border: none; padding: 18px; border-radius: 50px; font-weight: 800; cursor: pointer; text-transform: uppercase; font-size: 12px; }
+        .btn-save { flex: 2; background: var(--premium-gradient); color: white; border: none; padding: 18px; border-radius: 50px; font-weight: 800; cursor: pointer; text-transform: uppercase; font-size: 12px; box-shadow: 0 5px 15px rgba(0,102,51,0.2); }
         .btn-delete { flex: 1; background: white; color: var(--danger); border: 2px solid var(--danger); padding: 18px; border-radius: 50px; font-weight: 800; cursor: pointer; text-transform: uppercase; font-size: 12px; }
 
-        /* DESKTOP VIEW */
+        /* DESKTOP VIEW ADJUSTMENTS */
         @media (min-width: 768px) {
             .header-content { flex-direction: row; justify-content: center; gap: 20px; text-align: left; }
             .divider-v { display: block; }
             .setup-grid { grid-template-columns: 1fr 1fr; }
             .marks-grid { grid-template-columns: repeat(6, 1fr); }
-            .action-row { flex-direction: row; max-width: 500px; margin: 20px auto; }
+            .action-row { flex-direction: row; max-width: 500px; margin: 25px auto; }
             .page-brand { margin-top: 0; font-size: 1.5rem; }
         }
     </style>
@@ -121,8 +124,8 @@
     <div id="marksList"></div>
     
     <div class="action-row" id="actionRow">
-        <button id="saveAllBtn" class="btn-save" onclick="saveAllMarks()">Save Records <i class="fas fa-cloud-upload-alt"></i></button>
-        <button class="btn-delete" onclick="deleteAllMarks()"><i class="fas fa-trash-alt"></i> Wipe</button>
+        <button id="saveAllBtn" class="btn-save" onclick="saveAllMarks()">Save All Records <i class="fas fa-cloud-upload-alt"></i></button>
+        <button class="btn-delete" onclick="deleteAllMarks()"><i class="fas fa-trash-alt"></i> Delete records</button>
     </div>
 
     <div style="text-align:center; margin-top:20px;">
@@ -172,7 +175,7 @@
         const cls = document.getElementById('examClass').value;
         const list = document.getElementById('marksList');
         if(!cls || !authenticatedTeacher) return;
-        list.innerHTML = `<p style="text-align:center; padding:20px; color: #666;">Loading student list...</p>`;
+        list.innerHTML = `<p style="text-align:center; padding:20px; color: #666;">Ready for entry...</p>`;
 
         let subjects = ["TEL", "HIN", "ENG", "MAT", "SOC"];
         if (["Grade-6", "Grade-7", "Grade-8"].includes(cls)) subjects.push("PHY", "CHE", "BIO", "IIT");
@@ -181,6 +184,7 @@
 
         let html = "";
         studentData[cls].forEach((name, index) => {
+            const studentId = name.replace(/\s+/g, '');
             html += `<div class="student-mark-card" data-student="${name}">
                 <span class="student-name">${index + 1}. ${name}</span>
                 <div class="marks-grid">
@@ -188,26 +192,19 @@
                         <div class="subject-box">
                             <label>${sub}</label>
                             <input type="number" class="sub-input" data-sub="${sub}" placeholder="0" 
-                            min="0" max="100" oninput="validateMarks(this); calculateStats(this)">
+                            min="0" max="100" oninput="if(this.value > 100) { this.value = 100; Swal.fire('Limit', 'Maximum marks allowed is 100', 'warning'); } calculateStats(this)">
                         </div>`).join('')}
                 </div>
                 <div class="stats-bar">
-                    <span>TOL: <span class="res-total">0</span></span>
+                    <span>TOTAL: <span class="res-total">0</span></span>
                     <span>%: <span class="res-perc">0%</span></span>
                     <span>GRADE: <span class="res-grade">-</span></span>
                 </div>
+                <div class="audit-footer" id="audit-${studentId}">No update logs found.</div>
             </div>`;
         });
         list.innerHTML = html;
         document.getElementById('actionRow').style.display = 'flex';
-    }
-
-    function validateMarks(input) {
-        if(input.value > 100) {
-            input.value = 100;
-            const Toast = Swal.mixin({ toast: true, position: 'top-end', showConfirmButton: false, timer: 2000 });
-            Toast.fire({ icon: 'warning', title: 'Max limit is 100 marks' });
-        }
     }
 
     async function fetchExistingData() {
@@ -220,19 +217,26 @@
         db.ref(`progress_cards/${cls}/${exam}`).once('value', (snap) => {
             const data = snap.val();
             Swal.close();
-            if(!data) return Swal.fire('Notice', 'No marks found for this exam.', 'info');
+            if(!data) return Swal.fire('Notice', 'No previous records found for this selection.', 'info');
 
             document.querySelectorAll('.student-mark-card').forEach(card => {
                 const name = card.getAttribute('data-student');
+                const studentId = name.replace(/\s+/g, '');
+                const auditDiv = document.getElementById(`audit-${studentId}`);
+                
                 if(data[name]) {
                     for(let sub in data[name].marks) {
                         const inp = card.querySelector(`input[data-sub="${sub}"]`);
                         if(inp) inp.value = data[name].marks[sub];
                     }
                     calculateStats(card.querySelector('input'));
+                    
+                    if(data[name].updatedBy && data[name].updatedAt) {
+                        auditDiv.innerHTML = `Last updated by: <b>${data[name].updatedBy}</b> on <b>${data[name].updatedAt}</b>`;
+                    }
                 }
             });
-            Swal.fire('Data Loaded', 'Existing marks are now editable.', 'success');
+            Swal.fire('Data Loaded', 'Existing marks can now be modified.', 'success');
         });
     }
 
@@ -260,20 +264,29 @@
         const exam = document.getElementById('examType').value;
         const cards = document.querySelectorAll('.student-mark-card');
         const updates = {};
-        const timeStamp = new Date().toLocaleString();
+        
+        const now = new Date();
+        const timeStamp = now.toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' }) + " at " + now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
         cards.forEach(card => {
             const name = card.getAttribute('data-student');
             const studentMarks = {};
             card.querySelectorAll('.sub-input').forEach(input => { studentMarks[input.getAttribute('data-sub')] = input.value || 0; });
+            
             updates[`progress_cards/${cls}/${exam}/${name}`] = {
-                marks: studentMarks, total: card.querySelector('.res-total').innerText,
-                percentage: card.querySelector('.res-perc').innerText, grade: card.querySelector('.res-grade').innerText,
-                updatedBy: authenticatedTeacher, updatedAt: timeStamp
+                marks: studentMarks, 
+                total: card.querySelector('.res-total').innerText,
+                percentage: card.querySelector('.res-perc').innerText, 
+                grade: card.querySelector('.res-grade').innerText,
+                updatedBy: authenticatedTeacher, 
+                updatedAt: timeStamp
             };
+            
+            const studentId = name.replace(/\s+/g, '');
+            document.getElementById(`audit-${studentId}`).innerHTML = `Last updated by: <b>${authenticatedTeacher}</b> on <b>${timeStamp}</b>`;
         });
 
-        Swal.fire({ title: 'Saving to Database...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+        Swal.fire({ title: 'Saving Marks...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
         db.ref().update(updates).then(() => Swal.fire('Success!', 'Progress Cards Updated.', 'success'));
     }
 
@@ -283,19 +296,20 @@
         if(!cls) return;
 
         const result = await Swal.fire({
-            title: 'Wipe All Data?',
-            text: `This will permanently delete all records for ${cls} - ${exam}.`,
+            title: 'Delete Class Marks?',
+            text: `Remove ALL marks for ${cls} - ${exam}?`,
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#d33',
-            confirmButtonText: 'Yes, Wipe Everything'
+            confirmButtonText: 'Yes, Wipe Data'
         });
 
         if (result.isConfirmed) {
             db.ref(`progress_cards/${cls}/${exam}`).remove().then(() => {
                 document.querySelectorAll('.sub-input').forEach(i => i.value = '');
                 document.querySelectorAll('.res-total, .res-perc, .res-grade').forEach(s => s.innerText = '-');
-                Swal.fire('Wiped', 'Data deleted successfully.', 'success');
+                document.querySelectorAll('.audit-footer').forEach(f => f.innerText = 'No records found.');
+                Swal.fire('Deleted', 'Database records wiped.', 'success');
             });
         }
     }
