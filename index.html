@@ -11,14 +11,12 @@
         :root { --forest: #006633; --gold: #ffd700; --danger: #e53935; --light: #f4f7f6; }
         * { box-sizing: border-box; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; padding-bottom: 50px; overflow-x: hidden; }
-        
         header { background: var(--forest); color: white; padding: 25px 3%; box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
         .header-content { display: flex; align-items: center; justify-content: center; gap: 15px; max-width: 1400px; margin: 0 auto; width: 100%; }
         .header-logo { height: clamp(60px, 8vw, 85px); width: auto; flex-shrink: 0; }
         .school-text { display: flex; flex-direction: column; line-height: 1.1; text-align: left; }
         .school-name-main { font-family: 'Montserrat', sans-serif; font-size: clamp(1.4rem, 4vw, 2.2rem); font-weight: 800; letter-spacing: 1px; }
         .school-name-sub { font-family: 'Montserrat', sans-serif; font-size: clamp(0.7rem, 2vw, 1rem); color: var(--gold); font-weight: 700; text-transform: uppercase; }
-
         .container { max-width: 850px; margin: 0 auto; padding: 0 15px; }
         .card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 25px; border-top: 8px solid var(--forest); }
         h3 { color: var(--forest); margin: 0 0 25px; font-size: 1.5rem; text-align: center; border-bottom: 2px solid #f0f0f0; padding-bottom: 15px; text-transform: uppercase; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 10px; }
@@ -29,7 +27,6 @@
         .btn.warning { background: linear-gradient(135deg, #fb8c00, #ef6c00); border-color: white; }
         .student-item { display: flex; align-items: center; justify-content: space-between; padding: 14px; border-bottom: 1px solid #eee; }
         input[type="checkbox"] { width: 22px; height: 22px; accent-color: var(--forest); cursor: pointer; }
-        
         .hw-info-bar { font-size: 12px; color: #555; margin-top: 8px; font-style: italic; padding: 8px; background: #f0f4f2; border-radius: 8px; border-left: 4px solid var(--gold); display: none; }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -106,7 +103,8 @@
             </div>
             <div><label>Date</label><input type="date" id="hwDate" onchange="fetchExistingHW()"></div>
         </div>
-        <label>Subject</label><select id="hwSubSelect" onchange="fetchExistingHW()"></select>
+        <label>Subject</label>
+        <select id="hwSubSelect" onchange="fetchExistingHW()"></select>
         <label>Task Details</label><textarea id="hwTask" rows="3" placeholder="Type instructions..."></textarea>
         
         <div id="hwAuditTrail" class="hw-info-bar">
@@ -135,6 +133,9 @@
         "Ms. S. Neelima": "Neelima@123", "Ms. Riha": "Riha@123", "Ms. Raniya Zainab": "Raniya@123"
     };
 
+    // [Student Data provided for logic reference]
+    const studentData = { "Pre-KG": [], "KG-1": [], "KG-2": [], "Grade-1": [], "Grade-2": [], "Grade-3": [], "Grade-4": [], "Grade-5": [], "Grade-6": [], "Grade-7": [], "Grade-8": [] };
+
     async function verifyAccess() {
         const name = document.getElementById('teacherSelect').value;
         if(!name) return;
@@ -145,27 +146,84 @@
 
         if(pw === registry[name]) { 
             authenticatedTeacher = name;
-            
-            // LOGIC: Check if part-time
             const isPartTime = (name === "Ms. Riha" || name === "Ms. Raniya Zainab");
             
             if(isPartTime) {
                 document.getElementById('attCard').style.display = 'none';
                 document.getElementById('hwCard').style.display = 'block';
-                Swal.fire('Welcome', `Hello ${name}. Access granted to Homework Tool.`, 'success');
             } else {
                 document.getElementById('attCard').style.display = 'block';
                 document.getElementById('hwCard').style.display = 'block';
-                Swal.fire('Welcome', `Hello ${name}. Full portal access granted.`, 'success');
             }
+            updateHWSubjects(); 
         } else if(pw) { 
             Swal.fire('Error', 'Incorrect Password', 'error'); 
             document.getElementById('teacherSelect').value = ""; 
         }
     }
 
-    // [Attendance Logic: loadStudents & saveAttendance stay exactly as they were]
-    // [Homework Logic: updateHWSubjects & fetchExistingHW stay exactly as they were]
+    // Restored Attendance Logic
+    async function loadStudents() {
+        const cls = document.getElementById('attClass').value; const date = document.getElementById('attDate').value; const list = document.getElementById('studentList');
+        if(!cls || !date) return; list.innerHTML = "Loading...";
+        const snap = await db.ref(`daily_attendance/${date}/${cls}`).once('value');
+        const existing = snap.val() || {};
+        // Note: Replace studentData[cls] content with your full list here
+        list.innerHTML = (studentData[cls] || []).map(n => {
+            const isP = (existing[n] !== undefined) ? (existing[n] ? "checked" : "") : "checked";
+            return `<div class="student-item"><span>${n}</span><input type="checkbox" class="att-check" data-name="${n}" ${isP}></div>`;
+        }).join('');
+        document.getElementById('submitAtt').style.display = 'block';
+    }
+
+    function saveAttendance() {
+        const cls = document.getElementById('attClass').value; const date = document.getElementById('attDate').value;
+        const updates = {};
+        document.querySelectorAll('.att-check').forEach(cb => { updates[`daily_attendance/${date}/${cls}/${cb.getAttribute('data-name')}`] = cb.checked; });
+        db.ref().update(updates).then(() => Swal.fire('Success', 'Attendance Updated!', 'success'));
+    }
+
+    // UPDATED SUBJECT DROPDOWN LOGIC
+    function updateHWSubjects() { 
+        const cls = document.getElementById('hwClass').value; 
+        const common = ["TELUGU", "HINDI", "ENGLISH", "MATHS", "SOCIAL STUDIES"]; 
+        let subs = [];
+
+        if (["Grade-6", "Grade-7", "Grade-8"].includes(cls)) {
+            // Grades 6-8: Separated Science + IIT
+            subs = [...common, "PHYSICS", "CHEMISTRY", "BIOLOGY", "IIT"];
+        } else if (cls === "Grade-5") {
+            // Grade 5: Science + IIT
+            subs = [...common, "SCIENCE", "IIT"];
+        } else {
+            // Pre-KG to Grade 4: Standard Science
+            subs = [...common, "SCIENCE"];
+        }
+            
+        document.getElementById('hwSubSelect').innerHTML = subs.map(s => `<option value="${s}">${s}</option>`).join(''); 
+        fetchExistingHW(); 
+    }
+    
+    function fetchExistingHW() { 
+        const d = document.getElementById('hwDate').value; 
+        const c = document.getElementById('hwClass').value; 
+        const s = document.getElementById('hwSubSelect').value; 
+        if(!d || !s) return; 
+
+        db.ref(`homework/${d}/${c}/${s}`).once('value', (snap) => { 
+            const data = snap.val();
+            const auditDiv = document.getElementById('hwAuditTrail');
+            if(data && typeof data === 'object') {
+                document.getElementById('hwTask').value = data.task || "";
+                auditDiv.style.display = "block";
+                document.getElementById('auditText').innerText = `Last update: ${data.updatedBy} at ${data.updatedAt}`;
+            } else {
+                document.getElementById('hwTask').value = data || ""; 
+                auditDiv.style.display = data ? "block" : "none";
+                document.getElementById('auditText').innerText = data ? "Historical entry." : "";
+            }
+        }); 
+    }
 
     function postHomework() { 
         const d = document.getElementById('hwDate').value; 
@@ -182,6 +240,8 @@
             fetchExistingHW();
         }); 
     }
+
+    function clearHomework() { document.getElementById('hwTask').value = ''; }
 
     // Initialization
     document.getElementById('hwDate').valueAsDate = new Date();
