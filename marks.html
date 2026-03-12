@@ -12,7 +12,6 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: 'Segoe UI', sans-serif; background: #eef2f1; margin: 0; padding-bottom: 100px; overflow-x: hidden; }
         
-        /* HEADER */
         header { background: var(--forest); color: white; padding: 20px 15px; border-bottom: 4px solid var(--gold); }
         .header-content { display: flex; flex-direction: column; align-items: center; gap: 10px; max-width: 1200px; margin: 0 auto; text-align: center; }
         .header-logo { height: 60px; width: auto; }
@@ -30,18 +29,17 @@
         label { display: block; font-size: 10px; font-weight: 900; color: #777; margin-bottom: 5px; text-transform: uppercase; }
         select { width: 100%; padding: 14px; border-radius: 12px; border: 2px solid #eee; background: #fafafa; font-weight: 700; outline: none; }
 
-        /* STUDENT CARDS */
         .student-mark-card { background: white; border: 1px solid #eee; border-radius: 20px; padding: 15px; margin-bottom: 15px; }
         .student-name { font-weight: 800; color: var(--forest); font-size: 1rem; display: block; margin-bottom: 15px; border-bottom: 1px solid #f1f1f1; padding-bottom: 8px; }
         
         .marks-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
         .subject-box { background: #f9fcf9; padding: 8px; border-radius: 12px; border: 1px solid #f0f0f0; text-align: center; }
         .subject-box label { font-size: 9px; margin-bottom: 5px; color: #555; }
-        .subject-box input { width: 100%; text-align: center; padding: 10px 5px; font-weight: 800; border-radius: 8px; border: 1px solid #ddd; font-size: 16px; outline: none; }
+        .subject-box input { width: 100%; text-align: center; padding: 10px 5px; font-weight: 800; border-radius: 8px; border: 2px solid #ddd; font-size: 16px; outline: none; }
 
         .stats-bar { display: flex; justify-content: space-between; margin-top: 15px; padding: 12px; background: #f1f8f4; border-radius: 12px; font-size: 10px; font-weight: 800; color: var(--forest); }
         
-        /* AUDIT FOOTER - HIDDEN UNTIL DATA EXISTS */
+        /* AUDIT FOOTER - COMPLETELY GONE WHEN NOT NEEDED */
         .audit-footer { font-size: 9px; color: #999; font-style: italic; margin-top: 10px; text-align: left; padding-top: 8px; border-top: 1px dashed #eee; display: none; }
         .audit-footer b { color: #555; }
 
@@ -55,7 +53,7 @@
             .divider-v { display: block; }
             .setup-grid { grid-template-columns: 1fr 1fr; }
             .marks-grid { grid-template-columns: repeat(6, 1fr); }
-            .action-row { flex-direction: row; max-width: 500px; margin: 20px auto; }
+            .action-row { flex-direction: row; max-width: 500px; margin: 25px auto; }
             .page-brand { margin-top: 0; font-size: 1.5rem; }
         }
     </style>
@@ -111,7 +109,7 @@
             </select></div>
             <div><label>Exam Type</label><select id="examType" onchange="loadStudentMarksheet()">
                 <option value="FA-1">FA-1</option><option value="FA-2">FA-2</option><option value="FA-3">FA-3</option>
-                <option value="SA-1">SA-1 (Pre-Annual)</option><option value="SA-2">SA-2 (Annual)</option>
+                <option value="SA-1">SA-1</option><option value="SA-2">SA-2</option>
             </select></div>
         </div>
         <button class="btn-fetch" onclick="fetchExistingData()">
@@ -173,7 +171,7 @@
         const cls = document.getElementById('examClass').value;
         const list = document.getElementById('marksList');
         if(!cls || !authenticatedTeacher) return;
-        list.innerHTML = `<p style="text-align:center; padding:20px; color: #666;">Ready for entry...</p>`;
+        list.innerHTML = `<p style="text-align:center; padding:20px; color: #666;">Preparing...</p>`;
 
         let subjects = ["TEL", "HIN", "ENG", "MAT", "SOC"];
         if (["Grade-6", "Grade-7", "Grade-8"].includes(cls)) subjects.push("PHY", "CHE", "BIO", "IIT");
@@ -189,8 +187,8 @@
                     ${subjects.map(sub => `
                         <div class="subject-box">
                             <label>${sub}</label>
-                            <input type="number" class="sub-input" data-sub="${sub}" placeholder="0" 
-                            min="0" max="100" oninput="if(this.value > 100) { this.value = 100; Swal.fire('Limit', 'Maximum marks is 100', 'warning'); } calculateStats(this)">
+                            <input type="number" class="sub-input" data-sub="${sub}" value="0"
+                            min="0" max="100" oninput="if(this.value > 100) this.value = 100; calculateStats(this)">
                         </div>`).join('')}
                 </div>
                 <div class="stats-bar">
@@ -198,7 +196,7 @@
                     <span>%: <span class="res-perc">0%</span></span>
                     <span>GRADE: <span class="res-grade">-</span></span>
                 </div>
-                <div class="audit-footer" id="audit-${studentId}"></div>
+                <div class="audit-footer" id="audit-${studentId}" style="display:none;"></div>
             </div>`;
         });
         list.innerHTML = html;
@@ -208,36 +206,41 @@
     async function fetchExistingData() {
         const cls = document.getElementById('examClass').value;
         const exam = document.getElementById('examType').value;
-        if(!cls || !exam) return Swal.fire('Wait', 'Select Class and Exam first.', 'info');
+        if(!cls || !exam) return;
 
-        Swal.fire({ title: 'Searching Database...', didOpen: () => Swal.showLoading() });
+        Swal.fire({ title: 'Fetching Data...', didOpen: () => Swal.showLoading() });
 
         db.ref(`progress_cards/${cls}/${exam}`).once('value', (snap) => {
-            const data = snap.val();
+            const data = snap.val() || {};
             Swal.close();
-            if(!data) return Swal.fire('Notice', 'No previous records found.', 'info');
 
+            // RESET ALL STUDENT CARDS FIRST
             document.querySelectorAll('.student-mark-card').forEach(card => {
                 const name = card.getAttribute('data-student');
                 const studentId = name.replace(/\s+/g, '');
                 const auditDiv = document.getElementById(`audit-${studentId}`);
                 
+                // Reset inputs to 0 and hide audit footer initially
+                card.querySelectorAll('.sub-input').forEach(inp => inp.value = 0);
+                auditDiv.style.display = "none";
+                auditDiv.innerHTML = "";
+
                 if(data[name]) {
+                    // Populate marks
                     for(let sub in data[name].marks) {
                         const inp = card.querySelector(`input[data-sub="${sub}"]`);
                         if(inp) inp.value = data[name].marks[sub];
                     }
                     calculateStats(card.querySelector('input'));
                     
-                    if(data[name].updatedBy && data[name].updatedAt) {
+                    // CRITICAL FIX: Only show audit if this specific student has data
+                    if(data[name].updatedBy) {
                         auditDiv.innerHTML = `Last updated by: <b>${data[name].updatedBy}</b> on <b>${data[name].updatedAt}</b>`;
                         auditDiv.style.display = "block";
                     }
-                } else {
-                    auditDiv.style.display = "none";
                 }
             });
-            Swal.fire('Data Loaded', 'Existing marks loaded.', 'success');
+            Swal.fire('Ready', 'Database marks loaded.', 'success');
         });
     }
 
@@ -272,25 +275,36 @@
         cards.forEach(card => {
             const name = card.getAttribute('data-student');
             const studentMarks = {};
-            card.querySelectorAll('.sub-input').forEach(input => { studentMarks[input.getAttribute('data-sub')] = input.value || 0; });
+            let hasInput = false;
             
-            updates[`progress_cards/${cls}/${exam}/${name}`] = {
-                marks: studentMarks, 
-                total: card.querySelector('.res-total').innerText,
-                percentage: card.querySelector('.res-perc').innerText, 
-                grade: card.querySelector('.res-grade').innerText,
-                updatedBy: authenticatedTeacher, 
-                updatedAt: timeStamp
-            };
+            card.querySelectorAll('.sub-input').forEach(input => { 
+                if(input.value != 0 && input.value !== "") {
+                    studentMarks[input.getAttribute('data-sub')] = input.value;
+                    hasInput = true;
+                }
+            });
             
-            const studentId = name.replace(/\s+/g, '');
-            const auditDiv = document.getElementById(`audit-${studentId}`);
-            auditDiv.innerHTML = `Last updated by: <b>${authenticatedTeacher}</b> on <b>${timeStamp}</b>`;
-            auditDiv.style.display = "block";
+            if(hasInput) {
+                updates[`progress_cards/${cls}/${exam}/${name}`] = {
+                    marks: studentMarks, 
+                    total: card.querySelector('.res-total').innerText,
+                    percentage: card.querySelector('.res-perc').innerText, 
+                    grade: card.querySelector('.res-grade').innerText,
+                    updatedBy: authenticatedTeacher, 
+                    updatedAt: timeStamp
+                };
+                
+                const studentId = name.replace(/\s+/g, '');
+                const auditDiv = document.getElementById(`audit-${studentId}`);
+                auditDiv.innerHTML = `Last updated by: <b>${authenticatedTeacher}</b> on <b>${timeStamp}</b>`;
+                auditDiv.style.display = "block";
+            }
         });
 
-        Swal.fire({ title: 'Saving...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
-        db.ref().update(updates).then(() => Swal.fire('Saved!', 'Marks records updated.', 'success'));
+        if(Object.keys(updates).length === 0) return Swal.fire('Error', 'No marks entered to save.', 'warning');
+
+        Swal.fire({ title: 'Syncing...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+        db.ref().update(updates).then(() => Swal.fire('Saved!', 'Database updated.', 'success'));
     }
 
     async function deleteAllMarks() {
@@ -304,12 +318,12 @@
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#d33',
-            confirmButtonText: 'Yes, Delete'
+            confirmButtonText: 'Yes, Wipe'
         });
 
         if (result.isConfirmed) {
             db.ref(`progress_cards/${cls}/${exam}`).remove().then(() => {
-                document.querySelectorAll('.sub-input').forEach(i => i.value = '');
+                document.querySelectorAll('.sub-input').forEach(i => i.value = '0');
                 document.querySelectorAll('.res-total, .res-perc, .res-grade').forEach(s => s.innerText = '0');
                 document.querySelectorAll('.audit-footer').forEach(f => { f.innerHTML = ''; f.style.display = 'none'; });
                 Swal.fire('Deleted', 'Data wiped.', 'success');
