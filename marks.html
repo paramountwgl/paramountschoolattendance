@@ -22,28 +22,28 @@
         label { font-size: 10px; font-weight: 900; color: #777; text-transform: uppercase; display: block; margin-bottom: 5px; }
         select, input { width: 100%; padding: 12px; border-radius: 10px; border: 2px solid #eee; font-size: 14px; outline: none; background: #fafafa; }
 
-        /* Marks Table Styling */
-        .student-mark-card { background: #fff; border: 1px solid #eee; border-radius: 15px; padding: 15px; margin-bottom: 15px; }
-        .student-name { font-weight: 800; color: var(--forest); margin-bottom: 10px; display: block; border-bottom: 1px solid #f0f0f0; padding-bottom: 5px; }
+        /* Student Mark Card */
+        .student-mark-card { background: #fff; border: 1px solid #eee; border-radius: 15px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
+        .student-name { font-weight: 800; color: var(--forest); margin-bottom: 15px; display: block; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px; font-size: 16px; }
         
-        .marks-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-        .subject-box { text-align: center; }
-        .subject-box label { font-size: 9px; margin-bottom: 3px; }
-        .subject-box input { text-align: center; padding: 8px; font-weight: bold; }
+        /* Subject Grid - Dynamic */
+        .marks-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 10px; }
+        .subject-box { text-align: center; background: #fdfdfd; padding: 8px; border-radius: 8px; border: 1px solid #f0f0f0; }
+        .subject-box label { font-size: 9px; margin-bottom: 4px; color: #555; }
+        .subject-box input { text-align: center; padding: 8px; font-weight: bold; border-color: #ddd; }
 
-        .stats-bar { display: flex; justify-content: space-between; margin-top: 15px; padding-top: 10px; border-top: 1px dashed #ccc; font-size: 12px; font-weight: bold; }
-        .btn-save { background: var(--forest); color: white; border: 2px solid var(--gold); padding: 15px; width: 100%; border-radius: 50px; font-weight: 800; cursor: pointer; margin-top: 20px; }
-        
-        @media (max-width: 600px) {
-            .marks-grid { grid-template-columns: 1fr 1fr; }
-        }
+        /* Results Bar */
+        .stats-bar { display: flex; justify-content: space-around; margin-top: 15px; padding: 12px; background: #f1f8f4; border-radius: 10px; font-size: 13px; font-weight: 800; color: var(--forest); }
+        .res-total, .res-perc, .res-grade { color: #333; }
+
+        .btn-save { background: linear-gradient(135deg, var(--forest), #004d26); color: white; border: 2px solid var(--gold); padding: 18px; width: 100%; border-radius: 50px; font-weight: 800; cursor: pointer; margin-top: 20px; box-shadow: 0 8px 20px rgba(0,102,51,0.2); }
     </style>
 </head>
 <body>
 
 <header>
-    <img src="logo.png" class="header-logo">
-    <span class="title">PARAMOUNT PROGRESS PORTAL</span>
+    <img src="logo.png" class="header-logo" onerror="this.src='https://via.placeholder.com/50'">
+    <span class="title">PROGRESS CARD PORTAL</span>
 </header>
 
 <div class="container">
@@ -52,16 +52,19 @@
             <div>
                 <label>Select Class</label>
                 <select id="examClass" onchange="loadStudentMarksheet()">
-                    <option value="">-- Class --</option>
+                    <option value="">-- Choose --</option>
                     <option value="Grade-1">Grade-1</option>
                     <option value="Grade-2">Grade-2</option>
                     <option value="Grade-3">Grade-3</option>
                     <option value="Grade-4">Grade-4</option>
                     <option value="Grade-5">Grade-5</option>
+                    <option value="Grade-6">Grade-6</option>
+                    <option value="Grade-7">Grade-7</option>
+                    <option value="Grade-8">Grade-8</option>
                 </select>
             </div>
             <div>
-                <label>Exam Type</label>
+                <label>Exam Category</label>
                 <select id="examType" onchange="loadStudentMarksheet()">
                     <option value="FA-1">FA-1</option>
                     <option value="FA-2">FA-2</option>
@@ -73,32 +76,39 @@
     </div>
 
     <div id="marksList"></div>
-    <button id="saveAllBtn" class="btn-save" style="display:none;" onclick="saveAllMarks()">UPLOAD PROGRESS CARDS <i class="fas fa-cloud-upload-alt"></i></button>
+    <button id="saveAllBtn" class="btn-save" style="display:none;" onclick="saveAllMarks()">UPLOAD TO DATABASE <i class="fas fa-cloud-upload-alt"></i></button>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 <script>
-    // USE YOUR EXISTING CONFIG
     const firebaseConfig = { apiKey: "AIzaSyDRYk9KOK-ga0c88dnYMsAoifW2NJTd_Y8", databaseURL: "https://paramount-school-d55bc-default-rtdb.firebaseio.com", projectId: "paramount-school-d55bc" };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // Reusing your student list
     const studentData = {
         "Grade-1": ["Dheeraj Gattu", "Preetham Sannayala", "Shiva nandu Gonela", "Shrayan Nuthanakanti"],
-        "Grade-5": ["Adya Reddy Vangala", "Kowshik Patel Muppa", "Siri Singaram"]
-        // ... (Add all your other classes here)
+        "Grade-5": ["Adya Reddy Vangala", "Kowshik Patel Muppa", "Siri Singaram", "Srikar Mandala"],
+        "Grade-8": ["Sathwika Nagavelly", "Vyshnavi Uppala", "Akshaya Gampala", "Ganesh Oggula"]
+        // [Add all your other student names here as per Teacher Portal]
     };
 
     function loadStudentMarksheet() {
         const cls = document.getElementById('examClass').value;
-        const exam = document.getElementById('examType').value;
         const list = document.getElementById('marksList');
-        
         if(!cls) return;
 
-        list.innerHTML = `<p style="text-align:center;">Generating sheet for ${cls}...</p>`;
+        list.innerHTML = `<p style="text-align:center; padding:20px;">Building marksheet for ${cls}...</p>`;
+
+        // Define subjects based on Class
+        let subjects = ["TEL", "HIN", "ENG", "MAT", "SOC"];
+        if (["Grade-6", "Grade-7", "Grade-8"].includes(cls)) {
+            subjects.push("PHY", "CHE", "BIO", "IIT");
+        } else if (cls === "Grade-5") {
+            subjects.push("SCI", "IIT");
+        } else {
+            subjects.push("SCI");
+        }
 
         let html = "";
         studentData[cls].forEach((name, index) => {
@@ -106,17 +116,17 @@
             <div class="student-mark-card" data-student="${name}">
                 <span class="student-name">${index + 1}. ${name}</span>
                 <div class="marks-grid">
-                    <div class="subject-box"><label>Telugu</label><input type="number" class="m-tel" oninput="calculateStats(this)"></div>
-                    <div class="subject-box"><label>Hindi</label><input type="number" class="m-hin" oninput="calculateStats(this)"></div>
-                    <div class="subject-box"><label>English</label><input type="number" class="m-eng" oninput="calculateStats(this)"></div>
-                    <div class="subject-box"><label>Maths</label><input type="number" class="m-mat" oninput="calculateStats(this)"></div>
-                    <div class="subject-box"><label>Science</label><input type="number" class="m-sci" oninput="calculateStats(this)"></div>
-                    <div class="subject-box"><label>Social</label><input type="number" class="m-soc" oninput="calculateStats(this)"></div>
+                    ${subjects.map(sub => `
+                        <div class="subject-box">
+                            <label>${sub}</label>
+                            <input type="number" class="sub-input" data-sub="${sub}" placeholder="0" oninput="calculateStats(this)">
+                        </div>
+                    `).join('')}
                 </div>
                 <div class="stats-bar">
-                    <span>Total: <span class="res-total">0</span></span>
-                    <span>%: <span class="res-perc">0</span>%</span>
-                    <span>Grade: <span class="res-grade">-</span></span>
+                    <span>TOTAL: <span class="res-total">0</span></span>
+                    <span>%: <span class="res-perc">0</span></span>
+                    <span>GRADE: <span class="res-grade">-</span></span>
                 </div>
             </div>`;
         });
@@ -127,9 +137,12 @@
 
     function calculateStats(input) {
         const card = input.closest('.student-mark-card');
-        const marks = Array.from(card.querySelectorAll('input')).map(i => parseInt(i.value) || 0);
+        const inputs = Array.from(card.querySelectorAll('.sub-input'));
+        const marks = inputs.map(i => parseInt(i.value) || 0);
+        
         const total = marks.reduce((a, b) => a + b, 0);
-        const perc = ((total / 600) * 100).toFixed(1); // Assuming 100 per subject
+        const maxMarks = inputs.length * 100; // Assuming 100 per subject
+        const perc = ((total / maxMarks) * 100).toFixed(1);
 
         let grade = "F";
         if(perc >= 91) grade = "A1";
@@ -140,7 +153,7 @@
         else if(perc >= 35) grade = "D";
 
         card.querySelector('.res-total').innerText = total;
-        card.querySelector('.res-perc').innerText = perc;
+        card.querySelector('.res-perc').innerText = perc + "%";
         card.querySelector('.res-grade').innerText = grade;
     }
 
@@ -152,21 +165,22 @@
 
         cards.forEach(card => {
             const name = card.getAttribute('data-student');
-            updates[`marks/${cls}/${exam}/${name}`] = {
-                telugu: card.querySelector('.m-tel').value,
-                hindi: card.querySelector('.m-hin').value,
-                english: card.querySelector('.m-eng').value,
-                maths: card.querySelector('.m-mat').value,
-                science: card.querySelector('.m-sci').value,
-                social: card.querySelector('.m-soc').value,
+            const studentMarks = {};
+            card.querySelectorAll('.sub-input').forEach(input => {
+                studentMarks[input.getAttribute('data-sub')] = input.value || 0;
+            });
+
+            updates[`progress_cards/${cls}/${exam}/${name}`] = {
+                marks: studentMarks,
                 total: card.querySelector('.res-total').innerText,
                 percentage: card.querySelector('.res-perc').innerText,
-                grade: card.querySelector('.res-grade').innerText
+                grade: card.querySelector('.res-grade').innerText,
+                lastUpdated: new Date().toLocaleString()
             };
         });
 
         db.ref().update(updates).then(() => {
-            alert("Success! All Progress Cards have been uploaded.");
+            alert("Success! All marks uploaded to Paramount Database.");
         });
     }
 </script>
