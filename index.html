@@ -48,7 +48,6 @@
 <div class="container" style="margin-top: 30px;">
     <div class="card">
         <h3><i class="fas fa-id-badge"></i> Staff Selection</h3>
-        <label>Select Your Name</label>
         <select id="teacherSelect" onchange="verifyAccess()">
             <option value="">-- Choose Name --</option>
             <option value="Mr. Shaik Ahmad">Mr. Shaik Ahmad</option>
@@ -90,27 +89,19 @@
     <div class="card" id="hwCard" style="border-top-color: var(--gold); display:none;">
         <h3>Daily Homework Tool</h3>
         <div class="row-grid">
-            <div>
-                <label>Class</label>
-                <select id="hwClass" onchange="updateHWSubjects()">
-                    <option value="Pre-KG">Pre-KG</option><option value="KG-1">KG-1</option>
-                    <option value="KG-2">KG-2</option><option value="Grade-1">Grade-1</option>
-                    <option value="Grade-2">Grade-2</option><option value="Grade-3">Grade-3</option>
-                    <option value="Grade-4">Grade-4</option><option value="Grade-5">Grade-5</option>
-                    <option value="Grade-6">Grade-6</option><option value="Grade-7">Grade-7</option>
-                    <option value="Grade-8">Grade-8</option>
-                </select>
-            </div>
+            <div><label>Class</label><select id="hwClass" onchange="updateHWSubjects()">
+                <option value="Pre-KG">Pre-KG</option><option value="KG-1">KG-1</option>
+                <option value="KG-2">KG-2</option><option value="Grade-1">Grade-1</option>
+                <option value="Grade-2">Grade-2</option><option value="Grade-3">Grade-3</option>
+                <option value="Grade-4">Grade-4</option><option value="Grade-5">Grade-5</option>
+                <option value="Grade-6">Grade-6</option><option value="Grade-7">Grade-7</option>
+                <option value="Grade-8">Grade-8</option>
+            </select></div>
             <div><label>Date</label><input type="date" id="hwDate" onchange="fetchExistingHW()"></div>
         </div>
-        <label>Subject</label>
-        <select id="hwSubSelect" onchange="fetchExistingHW()"></select>
+        <label>Subject</label><select id="hwSubSelect" onchange="fetchExistingHW()"></select>
         <label>Task Details</label><textarea id="hwTask" rows="3" placeholder="Type instructions..."></textarea>
-        
-        <div id="hwAuditTrail" class="hw-info-bar">
-            <i class="fas fa-history"></i> <span id="auditText"></span>
-        </div>
-
+        <div id="hwAuditTrail" class="hw-info-bar"><i class="fas fa-history"></i> <span id="auditText"></span></div>
         <div style="display:flex; gap:12px; margin-top:15px;">
             <button class="btn" onclick="postHomework()"><i class="fas fa-upload"></i> Publish / Update</button>
             <button class="btn warning" style="flex:0.5;" onclick="clearHomework()"><i class="fas fa-eraser"></i> Clear & Remove</button>
@@ -133,7 +124,19 @@
         "Ms. S. Neelima": "Neelima@123", "Ms. Riha": "Riha@123", "Ms. Raniya Zainab": "Raniya@123"
     };
 
-    const studentData = { "Pre-KG": [], "KG-1": [], "KG-2": [], "Grade-1": [], "Grade-2": [], "Grade-3": [], "Grade-4": [], "Grade-5": [], "Grade-6": [], "Grade-7": [], "Grade-8": [] };
+    const studentData = {
+        "Pre-KG": ["Hanish Macharla", "Arjun Vihaar Illandula", "Thanu sree Allakunta", "Aadhya Gangaraboina", "Aadhya Sri Oggula", "Aadhyasri Shivagoni", "Afraha Begum", "Aliya Sultana", "Anvika Bandi", "Aradana Devara konda", "Devansh Bandi", "Hanvitha Mulkalapelli", "Harsha Vardhan Seenapelli", "Hiranya Bandi", "Jashritha Boina", "Konreddy Shreyanvi", "Kriyansh Sammeta", "Mohammed Mohiuddin Sayyad", "Nethra Narkurthi", "Reeyansh Bandi", "Rishi Manupati", "Rudransh Bandi", "Sanvika Bandi", "Shanvith Khatha", "Shishira Jalagam", "Shiva Sai Mekala", "Shree Rudhraveer Chevvu", "Shreyansh Gangaraboina", "Sreeja Thalla", "Srikrithini Myakala", "Srivatsav Vanam", "Sriyansh Mekala", "Thanvika Lakka", "Thrilokansh Vudari", "Ujjwal Chekka", "Vaishnavi Lakka", "Vedansh Myakala", "Vishnu Priya Molugu", "Vyshnav Tej Boina", "Yafiah Mohammad"],
+        "KG-1": ["Aadhya Sri Amaravadi", "Aditya Manda", "Aadhya Jella", "Advaita Gauri Bandi", "Aizah Amna Shaik", "Akshara Singaram", "Bhahuveer Raj Somishetti", "Gayathri Erroju", "Hanvika Mulkalapelli", "Manvith Kondoju", "Sayyad Vajeed", "Mekala Manu sri", "Oliva Grace Vallapu", "Rithwik Oggula", "Rithwika Kandagatla", "Srimahi Chevvu", "Thanvesh Thalla", "Trishul Nanduri", "Yoganshika Nanduri", "Yusra Mohammad", "Zainul Abideen Syed"],
+        "KG-2": ["Deekshanth Sammeta", "Hanshith Erroju", "Harika Bandi", "Himarsha Naini", "Karthik Vallepu", "Kruthika Bandi", "Rajavardhan Gampala", "Roshan Kaitha", "Sri Anshu Ayaan Lyadala", "Srihansh Bandi", "Srikshitha Guduri", "Varshith Gonela", "Adyasri Makala", "Anvik Boini", "Anvith Pokanati", "Awais Ur Rehman Mohammad", "Dakshu Pothuganti", "Hansith Reddy Katukuri", "Harshith Pokanati", "Jella Aditya", "Krishank Nallabothula", "Kundana Katkuri", "Munukuntla Revanth Rudhra", "Niraja Nethri Siluveru", "Pranav Mattepelli", "Sreenith Yadav Naini", "Uvan Reddy Dasari", "Zayan Mohammad", "Zoya Mohammed"],
+        "Grade-1": ["Dheeraj Gattu", "Preetham Sannayala", "Shiva nandu Gonela", "Shrayan Nuthanakanti", "Sriyanksha Mandala", "Advitha Garige", "Harika Bandi", "Himansi Kondoju", "Izhaan Rahamath Syed", "Jaisurya Myakala", "Khadeeja Fathima", "Manaswini Dandugula", "Manusri Bandi", "Rithwik krishna Amaravadi", "Rohan Bandi", "Shiva Junnu", "Shivanandh Bandi", "Sridha Thalla", "Srinika Chengelly", "Sriyanshi Oggula", "Vishwak Chekka"],
+        "Grade-2": ["Aliza Manha Shaik", "Dhruvan Reddy Katukuri", "Druthika Enugala", "Manaswini Bandi", "Rakshith Macharla", "Sathwika Katkuri", "Shalini Uppala", "Chandu Devarakonda", "Gnaneshwar Pokanati", "Hasnain Syed", "Koushik Siluveru", "Senen Desabattula", "Shivarajan Pothuganti"],
+        "Grade-3": ["Nagavelly Manikanta", "Mirja Ismail", "Bandi Aryan", "Dandugula Mahesh Babu", "Bandi Tejasri", "Bandi Harshavardhan", "Gampala Vyshnavi", "Gampala Laxmi", "Garige Harshith", "Katkuri Hanish", "Katukuri Manideep", "MD Abdul Quddus", "Muppa Sathwik Patel", "Nuthanakanti Sansita", "Pasarakonda Ritwin", "Pinninti Rakshith Rao", "Rayi Sriman Adithya"],
+        "Grade-4": ["Abdul Saqib Mohammad", "Anudeep Chintha", "Bhavan Bandi", "Harshavardhan Gonela", "Jayadev Chiluveru", "Mahaboob Syed", "Nandith Reddy Enugala", "Sai Charan Goud Mandala", "Sai Prasanna Keerthi", "Ajmeri Shaik", "Akshith Chiluveru", "Jayasri Myakala", "Rahul Kanjarla", "Saketh Devarakonda"],
+        "Grade-5": ["Adya Reddy Vangala", "Kowshik Patel Muppa", "Siri Singaram", "Srikar Mandala", "Abdus Salaam MD", "Akshith Ram Kalvacharla", "Jaffar Anas Shaik", "Khaja Azeemuddin Mohammed", "Nihan Mohammed", "Saif Shaik", "Saketh Renukuntla", "Sreeja Dasari", "Vidhaatri Sahani"],
+        "Grade-6": ["Abdul Razzak Mohammad", "Anudeepthi Chintha", "Saketh Ranaveni", "Shiva Sri Katukuri", "Aklees Shaik", "Akshya Kalvacharla", "Prince Katkuri"],
+        "Grade-7": ["Manikanta Sannayala", "Sreeyan Reddy Karra", "Jayadhithya Chiluveru"],
+        "Grade-8": ["Sathwika Nagavelly", "Vyshnavi Uppala", "Akshaya Gampala", "Ganesh Oggula", "Gayathri Renukuntla", "Khaja Sadeemuddin Mohammed"]
+    };
 
     async function verifyAccess() {
         const name = document.getElementById('teacherSelect').value;
@@ -146,13 +149,14 @@
         if(pw === registry[name]) { 
             authenticatedTeacher = name;
             const isPartTime = (name === "Ms. Riha" || name === "Ms. Raniya Zainab");
-            
             if(isPartTime) {
                 document.getElementById('attCard').style.display = 'none';
                 document.getElementById('hwCard').style.display = 'block';
+                Swal.fire('Welcome', `Hello ${authenticatedTeacher}. Access granted to Homework Tool.`, 'success');
             } else {
                 document.getElementById('attCard').style.display = 'block';
                 document.getElementById('hwCard').style.display = 'block';
+                Swal.fire('Welcome', `Hello ${authenticatedTeacher}. Full portal access granted.`, 'success');
             }
             updateHWSubjects(); 
         } else if(pw) { 
@@ -163,7 +167,7 @@
 
     async function loadStudents() {
         const cls = document.getElementById('attClass').value; const date = document.getElementById('attDate').value; const list = document.getElementById('studentList');
-        if(!cls || !date) return; list.innerHTML = "Loading...";
+        if(!cls || !date) return; list.innerHTML = "Loading Students...";
         const snap = await db.ref(`daily_attendance/${date}/${cls}`).once('value');
         const existing = snap.val() || {};
         list.innerHTML = (studentData[cls] || []).map(n => {
@@ -192,7 +196,6 @@
         } else {
             subs = [...common, "SCIENCE"];
         }
-            
         document.getElementById('hwSubSelect').innerHTML = subs.map(s => `<option value="${s}">${s}</option>`).join(''); 
         fetchExistingHW(); 
     }
@@ -224,10 +227,8 @@
         const s = document.getElementById('hwSubSelect').value; 
         const t = document.getElementById('hwTask').value; 
         if(!d || !t) return;
-        
         const now = new Date();
         const timeStamp = now.toLocaleDateString() + " " + now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-        
         db.ref(`homework/${d}/${c}/${s}`).set({
             task: t, updatedBy: authenticatedTeacher, updatedAt: timeStamp
         }).then(() => {
@@ -236,14 +237,11 @@
         }); 
     }
 
-    // UPDATED: Now removes the data from the database entirely
     async function clearHomework() {
         const d = document.getElementById('hwDate').value;
         const c = document.getElementById('hwClass').value;
         const s = document.getElementById('hwSubSelect').value;
-
         if (!d || !s) return;
-
         const result = await Swal.fire({
             title: 'Delete Homework?',
             text: `This will remove ${s} homework for ${c} from the portal.`,
@@ -253,7 +251,6 @@
             cancelButtonColor: '#d33',
             confirmButtonText: 'Yes, remove it!'
         });
-
         if (result.isConfirmed) {
             db.ref(`homework/${d}/${c}/${s}`).remove().then(() => {
                 document.getElementById('hwTask').value = '';
