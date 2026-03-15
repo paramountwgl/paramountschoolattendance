@@ -3,167 +3,144 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Fee Management | Paramount</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Fee Portal | Paramount School</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Segoe+UI:wght@400;700&display=swap" rel="stylesheet">
-     <link rel="icon" type="image/png" href="logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="logo.png">
     <style>
-        :root { --forest: #004d26; --gold: #ffd700; --danger: #e53935; --light: #f4f7f6; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; padding: 20px 10px; }
+        :root { --forest: #006633; --gold: #ffd700; --danger: #c62828; --light: #f4f7f6; }
+        * { box-sizing: border-box; } 
+        body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; padding-bottom: 50px; overflow-x: hidden; }
+
+        /* --- LOGIN SCREEN (MATCHING ADMIN STYLE) --- */
+        .overlay-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--light); z-index: 1000; display: flex; justify-content: center; align-items: center; padding: 15px; }
+        .auth-box { background: white; padding: 40px 25px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); width: 100%; max-width: 420px; border-bottom: 5px solid var(--forest); text-align: center; }
+        .auth-header-row { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; margin-bottom: 25px; }
+        .auth-logo { height: 75px; width: auto; }
+        .auth-branding-text h2 { margin: 5px 0 0; font-family: 'Montserrat', sans-serif; font-size: 1.6rem; font-weight: 800; color: var(--forest); }
+        .auth-branding-text p { margin: 0; font-size: 0.75rem; font-weight: 700; color: var(--gold); text-transform: uppercase; }
+        .auth-input { width: 100%; padding: 12px; border-radius: 10px; border: 2px solid #eee; margin-bottom: 15px; text-align: center; font-size: 16px; outline: none; }
+        .btn-unlock { background: linear-gradient(135deg, var(--forest), #004d26); color: white; padding: 15px; border-radius: 50px; font-weight: bold; border: 2px solid var(--gold); cursor: pointer; font-size: 14px; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+
+        /* --- MAIN APP LAYOUT --- */
+        header { background: var(--forest); color: white; padding: 20px 3%; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .header-content { display: flex; align-items: center; justify-content: center; max-width: 1400px; margin: 0 auto; gap: 15px; }
+        .header-logo { height: 60px; }
+        .school-name-main { font-family: 'Montserrat', sans-serif; font-size: 1.8rem; font-weight: 800; }
         
-        /* INTERNAL SECURITY OVERLAY */
-        #lockScreen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 5000; display: flex; justify-content: center; align-items: center; text-align: center; }
-        .auth-box { background: white; padding: 40px 30px; border-radius: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); width: 90%; max-width: 400px; border-bottom: 5px solid var(--forest); }
-        
-        /* MAIN APP STYLES */
-        .container { max-width: 600px; margin: 0 auto; display: none; } /* Hidden until PW entered */
-        .card { background: white; padding: 25px; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border-top: 8px solid var(--forest); margin-bottom: 20px; }
-        h3 { color: var(--forest); text-align: center; text-transform: uppercase; font-weight: 800; margin-bottom: 20px; font-family: 'Montserrat'; }
-        .staff-badge { text-align: center; font-size: 12px; color: var(--forest); font-weight: 700; background: #e8f5e9; padding: 10px; border-radius: 12px; margin-bottom: 15px; }
+        .container { max-width: 600px; margin: 20px auto; padding: 0 15px; }
+        .card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); border-top: 8px solid var(--forest); }
         
         label { display: block; font-size: 10px; font-weight: 900; color: #777; margin: 15px 0 5px; text-transform: uppercase; letter-spacing: 1px; }
-        select, input { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #e0e0e0; font-size: 15px; outline: none; background: #fafafa; box-sizing: border-box; }
+        select, input { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #eee; font-size: 15px; outline: none; background: #fafafa; }
         
         .calc-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px; }
         .due-box { background: #fff5f5; border: 1px solid #ffcdd2; padding: 15px; border-radius: 15px; text-align: center; margin-top: 20px; }
-        .due-box strong { font-size: 24px; color: #d32f2f; }
+        .due-box strong { font-size: 24px; color: var(--danger); }
 
         .chart-container { margin-top: 25px; padding: 15px; background: #f9f9f9; border-radius: 15px; border: 1px solid #eee; }
         .bar-bg { width: 100%; height: 30px; background: #eee; border-radius: 50px; overflow: hidden; display: flex; }
         .bar-paid { height: 100%; background: linear-gradient(to right, var(--forest), #00b359); transition: width 0.8s ease; width: 0%; }
         
-        .btn-submit { width: 100%; background: var(--forest); color: white; border: none; padding: 16px; border-radius: 50px; font-weight: 700; cursor: pointer; margin-top: 25px; font-size: 15px; box-shadow: 0 4px 15px rgba(0,77,38,0.2); }
-        .btn-back { display: block; text-align: center; margin-top: 20px; color: #666; text-decoration: none; font-weight: 700; font-size: 13px; padding-top: 15px; border-top: 1px solid #eee; }
+        .btn-save { width: 100%; background: var(--forest); color: white; border: 2px solid var(--gold); padding: 16px; border-radius: 50px; font-weight: 700; cursor: pointer; margin-top: 25px; }
     </style>
 </head>
 <body>
-
-<div id="lockScreen">
-    <div class="auth-box">
-        <img src="logo.png" style="height:80px; margin-bottom: 15px;">
-        <h2 style="font-family: 'Montserrat'; color: var(--forest); margin-bottom: 5px;">PARAMOUNT</h2>
-        <p style="color: var(--gold); font-weight: 800; font-size: 11px; text-transform: uppercase; margin-bottom: 25px;">Fee Portal Access</p>
-        <button onclick="unlockPortal()" style="background: var(--forest); color: white; border: none; padding: 15px 30px; border-radius: 50px; font-weight: 800; cursor: pointer; width: 100%;">
-            UNLOCK PORTAL <i class="fas fa-lock"></i>
-        </button>
-        <br><br>
-        <a href="index.html" style="text-decoration:none; color:#999; font-size:12px;">Cancel & Return</a>
-    </div>
-</div>
-
-<div class="container" id="mainContainer">
-    <div class="card">
-        <div id="staffNameDisplay" class="staff-badge"></div>
-        <h3><i class="fas fa-file-invoice-dollar"></i> Student Fee Entry</h3>
-        
-        <label>Class</label>
-        <select id="feeClass" onchange="populateStudents()">
-            <option value="">-- Choose Class --</option>
-            <option value="Pre-KG">Pre-KG</option><option value="KG-1">KG-1</option>
-            <option value="KG-2">KG-2</option><option value="Grade-1">Grade-1</option>
-            <option value="Grade-2">Grade-2</option><option value="Grade-3">Grade-3</option>
-            <option value="Grade-4">Grade-4</option><option value="Grade-5">Grade-5</option>
-            <option value="Grade-6">Grade-6</option><option value="Grade-7">Grade-7</option>
-            <option value="Grade-8">Grade-8</option>
-        </select>
-
-        <label>Student Name</label>
-        <select id="feeStudent" onchange="fetchExistingFeeData()">
-            <option value="">-- Select Student --</option>
-        </select>
-
-        <div class="calc-row">
-            <div>
-                <label>Total Fee (₹)</label>
-                <input type="number" id="totalFee" placeholder="0" oninput="calculateRealTime()">
-            </div>
-            <div>
-                <label>Paid Now (₹)</label>
-                <input type="number" id="payingAmount" placeholder="0" oninput="calculateRealTime()">
-            </div>
-        </div>
-
-        <div class="due-box">
-            <span>REMAINING BALANCE DUE</span>
-            <strong id="dueDisplay">₹ 0</strong>
-        </div>
-
-        <div class="chart-container">
-            <div class="bar-bg">
-                <div id="barPaid" class="bar-paid"></div>
-            </div>
-            <p id="percentText" style="text-align: center; font-size: 11px; font-weight: bold; margin-top: 10px; color: #666;">0% Paid</p>
-        </div>
-
-        <label>Payment Date</label>
-        <input type="date" id="paymentDate">
-
-        <button class="btn-submit" onclick="saveFeeRecord()">
-            Update Records <i class="fas fa-save"></i>
-        </button>
-
-        <a href="index.html" class="btn-back">
-            <i class="fas fa-arrow-left"></i> Return to Teacher Portal
-        </a>
-    </div>
-</div>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
-<script>
-    // 1. INTERNAL LOGIN SCRIPT
-    async function unlockPortal() {
-        const { value: name } = await Swal.fire({
-            title: 'Staff Identity',
-            input: 'select',
-            inputOptions: { 'Mr. Ahmad': 'Mr. Ahmad', 'Ms. Roqiya': 'Ms. Roqiya', 'Ms. Jyothi': 'Ms. Jyothi' },
-            inputPlaceholder: 'Select Your Name',
-            confirmButtonColor: '#004d26'
-        });
+<div id="feeLoginScreen" class="overlay-screen">
+    <div class="auth-box">
+        <div class="auth-header-row">
+            <img src="logo.png" class="auth-logo">
+            <div class="auth-branding-text"><h2>PARAMOUNT</h2><p>Fee Access Box</p></div>
+        </div>
+        <select id="staffName" class="auth-input">
+            <option value="">-- Select Staff --</option>
+            <option value="Mr. Ahmad">Mr. Ahmad</option>
+            <option value="Ms. Roqiya">Ms. Roqiya</option>
+            <option value="Ms. Jyothi">Ms. Jyothi</option>
+        </select>
+        <input type="password" id="staffPass" class="auth-input" placeholder="Enter Password" onkeypress="if(event.key === 'Enter') unlockFees()">
+        <button onclick="unlockFees()" class="btn-unlock">Unlock Fee Portal <i class="fas fa-unlock"></i></button>
+        <div class="auth-links"><span onclick="window.location.href='index.html'">Cancel & Return</span></div>
+    </div>
+</div>
 
-        if (name) {
-            const { value: pw } = await Swal.fire({ title: 'Enter Password', input: 'password', confirmButtonColor: '#004d26' });
-            const registry = { 'Mr. Ahmad': 'Ahmad@123', 'Ms. Roqiya': 'Roqiya@123', 'Ms. Jyothi': 'Jyothi@123' };
+<div id="feeApp" style="display:none;">
+    <header>
+        <div class="header-content">
+            <img src="logo.png" class="header-logo">
+            <div class="school-branding"><span class="school-name-main">PARAMOUNT</span></div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <p id="staffDisplay" style="text-align:center; font-weight:bold; color:var(--forest);"></p>
+            <h3><i class="fas fa-file-invoice-dollar"></i> Fee Entry</h3>
             
-            if (pw === registry[name]) {
-                sessionStorage.setItem("feeStaffName", name);
-                document.getElementById('lockScreen').style.display = 'none';
-                document.getElementById('mainContainer').style.display = 'block';
-                document.getElementById('staffNameDisplay').innerText = "In-Charge: " + name;
-                Swal.fire({ title: 'Access Granted', icon: 'success', timer: 1000, showConfirmButton: false });
-            } else {
-                Swal.fire('Error', 'Incorrect Password', 'error');
-            }
-        }
-    }
+            <label>Class</label>
+            <select id="feeClass" onchange="populateStudents()">
+                <option value="">-- Choose Class --</option>
+                <option value="Pre-KG">Pre-KG</option><option value="KG-1">KG-1</option><option value="KG-2">KG-2</option>
+                <option value="Grade-1">Grade-1</option><option value="Grade-2">Grade-2</option><option value="Grade-3">Grade-3</option>
+                <option value="Grade-4">Grade-4</option><option value="Grade-5">Grade-5</option><option value="Grade-6">Grade-6</option>
+                <option value="Grade-7">Grade-7</option><option value="Grade-8">Grade-8</option>
+            </select>
 
+            <label>Student Name</label>
+            <select id="feeStudent" onchange="fetchExistingFeeData()"><option value="">-- Select Student --</option></select>
+
+            <div class="calc-row">
+                <div><label>Total Fee (₹)</label><input type="number" id="totalFee" oninput="calculateRealTime()"></div>
+                <div><label>Paid Now (₹)</label><input type="number" id="payingAmount" oninput="calculateRealTime()"></div>
+            </div>
+
+            <div class="due-box"><span>BALANCE DUE</span><br><strong id="dueDisplay">₹ 0</strong></div>
+
+            <div class="chart-container">
+                <div class="bar-bg"><div id="barPaid" class="bar-paid"></div></div>
+                <p id="percentText" style="text-align:center; font-weight:bold; margin-top:10px; font-size:12px;">0% Paid</p>
+            </div>
+
+            <label>Date</label><input type="date" id="payDate">
+            <button class="btn-save" onclick="saveFee()">Update Records <i class="fas fa-save"></i></button>
+            <a href="index.html" style="display:block; text-align:center; margin-top:20px; text-decoration:none; color:#666; font-weight:bold;">Return to Portal</a>
+        </div>
+    </div>
+</div>
+
+<script>
     const firebaseConfig = { apiKey: "AIzaSyDRYk9KOK-ga0c88dnYMsAoifW2NJTd_Y8", databaseURL: "https://paramount-school-d55bc-default-rtdb.firebaseio.com", projectId: "paramount-school-d55bc" };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    const studentData = {
-        "Pre-KG": ["Hanish Macharla", "Arjun Vihaar Illandula", "Thanu sree Allakunta", "Aadhya Gangaraboina", "Aadhya Sri Oggula", "Aadhyasri Shivagoni", "Afraha Begum", "Aliya Sultana", "Anvika Bandi", "Aradana Devara konda", "Devansh Bandi", "Hanvitha Mulkalapelli", "Harsha Vardhan Seenapelli", "Hiranya Bandi", "Jashritha Boina", "Konreddy Shreyanvi", "Kriyansh Sammeta", "Mohammed Mohiuddin Sayyad", "Nethra Narkurthi", "Reeyansh Bandi", "Rishi Manupati", "Rudransh Bandi", "Sanvika Bandi", "Shanvith Khatha", "Shishira Jalagam", "Shiva Sai Mekala", "Shree Rudhraveer Chevvu", "Shreyansh Gangaraboina", "Sreeja Thalla", "Srikrithini Myakala", "Srivatsav Vanam", "Sriyansh Mekala", "Thanvika Lakka", "Thrilokansh Vudari", "Ujjwal Chekka", "Vaishnavi Lakka", "Vedansh Myakala", "Vishnu Priya Molugu", "Vyshnav Tej Boina", "Yafiah Mohammad"],
-        "KG-1": ["Aadhya Sri Amaravadi", "Aditya Manda", "Aadhya Jella", "Advaita Gauri Bandi", "Aizah Amna Shaik", "Akshara Singaram", "Bhahuveer Raj Somishetti", "Gayathri Erroju", "Hanvika Mulkalapelli", "Manvith Kondoju", "Sayyad Vajeed", "Mekala Manu sri", "Oliva Grace Vallapu", "Rithwik Oggula", "Rithwika Kandagatla", "Srimahi Chevvu", "Thanvesh Thalla", "Trishul Nanduri", "Yoganshika Nanduri", "Yusra Mohammad", "Zainul Abideen Syed"],
-        "KG-2": ["Deekshanth Sammeta", "Hanshith Erroju", "Harika Bandi", "Himarsha Naini", "Karthik Vallepu", "Kruthika Bandi", "Rajavardhan Gampala", "Roshan Kaitha", "Sri Anshu Ayaan Lyadala", "Srihansh Bandi", "Srikshitha Guduri", "Varshith Gonela", "Adyasri Makala", "Anvik Boini", "Anvith Pokanati", "Awais Ur Rehman Mohammad", "Dakshu Pothuganti", "Hansith Reddy Katukuri", "Harshith Pokanati", "Jella Aditya", "Krishank Nallabothula", "Kundana Katkuri", "Munukuntla Revanth Rudhra", "Niraja Nethri Siluveru", "Pranav Mattepelli", "Sreenith Yadav Naini", "Uvan Reddy Dasari", "Zayan Mohammad", "Zoya Mohammed"],
-        "Grade-1": ["Dheeraj Gattu", "Preetham Sannayala", "Shiva nandu Gonela", "Shrayan Nuthanakanti", "Sriyanksha Mandala", "Advitha Garige", "Harika Bandi", "Himansi Kondoju", "Izhaan Rahamath Syed", "Jaisurya Myakala", "Khadeeja Fathima", "Manaswini Dandugula", "Manusri Bandi", "Rithwik krishna Amaravadi", "Rohan Bandi", "Shiva Junnu", "Shivanandh Bandi", "Sridha Thalla", "Srinika Chengelly", "Sriyanshi Oggula", "Vishwak Chekka"],
-        "Grade-2": ["Aliza Manha Shaik", "Dhruvan Reddy Katukuri", "Druthika Enugala", "Manaswini Bandi", "Rakshith Macharla", "Sathwika Katkuri", "Shalini Uppala", "Chandu Devarakonda", "Gnaneshwar Pokanati", "Hasnain Syed", "Koushik Siluveru", "Senen Desabattula", "Shivarajan Pothuganti"],
-        "Grade-3": ["Nagavelly Manikanta", "Mirja Ismail", "Bandi Aryan", "Dandugula Mahesh Babu", "Bandi Tejasri", "Bandi Harshavardhan", "Gampala Vyshnavi", "Gampala Laxmi", "Garige Harshith", "Katkuri Hanish", "Katukuri Manideep", "MD Abdul Quddus", "Muppa Sathwik Patel", "Nuthanakanti Sansita", "Pasarakonda Ritwin", "Pinninti Rakshith Rao", "Rayi Sriman Adithya"],
-        "Grade-4": ["Abdul Saqib Mohammad", "Anudeep Chintha", "Bhavan Bandi", "Harshavardhan Gonela", "Jayadev Chiluveru", "Mahaboob Syed", "Nandith Reddy Enugala", "Sai Charan Goud Mandala", "Sai Prasanna Keerthi", "Ajmeri Shaik", "Akshith Chiluveru", "Jayasri Myakala", "Rahul Kanjarla", "Saketh Devarakonda"],
-        "Grade-5": ["Adya Reddy Vangala", "Kowshik Patel Muppa", "Siri Singaram", "Prince Katkuri", "Srikar Mandala", "Abdus Salaam MD", "Akshith Ram Kalvacharla", "Jaffar Anas Shaik", "Khaja Azeemuddin Mohammed", "Nihan Mohammed", "Saif Shaik", "Saketh Renukuntla", "Sreeja Dasari", "Vidhaatri Sahani"],
-        "Grade-6": ["Abdul Razzak Mohammad", "Anudeepthi Chintha", "Saketh Ranaveni", "Shiva Sri Katukuri", "Aklees Shaik", "Akshya Kalvacharla"],
-        "Grade-7": ["Manikanta Sannayala", "Sreeyan Reddy Karra", "Jayadhithya Chiluveru"],
-        "Grade-8": ["Sathwika Nagavelly", "Vyshnavi Uppala", "Akshaya Gampala", "Ganesh Oggula", "Gayathri Renukuntla", "Khaja Sadeemuddin Mohammed"]
-    };
+    const authorized = { "Mr. Ahmad": "Ahmad@123", "Ms. Roqiya": "Roqiya@123", "Ms. Jyothi": "Jyothi@123" };
+    let activeTeacher = "";
+
+    function unlockFees() {
+        const name = document.getElementById('staffName').value;
+        const pass = document.getElementById('staffPass').value;
+        if(pass === authorized[name]) {
+            activeTeacher = name;
+            document.getElementById('feeLoginScreen').style.display = 'none';
+            document.getElementById('feeApp').style.display = 'block';
+            document.getElementById('staffDisplay').innerText = "Logged in: " + name;
+        } else {
+            Swal.fire('Error', 'Invalid Credentials', 'error');
+        }
+    }
+
+    const studentData = { "Pre-KG": ["Hanish Macharla", "Arjun Vihaar Illandula", "Thanu sree Allakunta", "Aadhya Gangaraboina", "Aadhya Sri Oggula", "Aadhyasri Shivagoni", "Afraha Begum", "Aliya Sultana", "Anvika Bandi", "Aradana Devara konda", "Devansh Bandi", "Hanvitha Mulkalapelli", "Harsha Vardhan Seenapelli", "Hiranya Bandi", "Jashritha Boina", "Konreddy Shreyanvi", "Kriyansh Sammeta", "Mohammed Mohiuddin Sayyad", "Nethra Narkurthi", "Reeyansh Bandi", "Rishi Manupati", "Rudransh Bandi", "Sanvika Bandi", "Shanvith Khatha", "Shishira Jalagam", "Shiva Sai Mekala", "Shree Rudhraveer Chevvu", "Shreyansh Gangaraboina", "Sreeja Thalla", "Srikrithini Myakala", "Srivatsav Vanam", "Sriyansh Mekala", "Thanvika Lakka", "Thrilokansh Vudari", "Ujjwal Chekka", "Vaishnavi Lakka", "Vedansh Myakala", "Vishnu Priya Molugu", "Vyshnav Tej Boina", "Yafiah Mohammad"], "KG-1": ["Aadhya Sri Amaravadi", "Aditya Manda", "Aadhya Jella", "Advaita Gauri Bandi", "Aizah Amna Shaik", "Akshara Singaram", "Bhahuveer Raj Somishetti", "Gayathri Erroju", "Hanvika Mulkalapelli", "Manvith Kondoju", "Sayyad Vajeed", "Mekala Manu sri", "Oliva Grace Vallapu", "Rithwik Oggula", "Rithwika Kandagatla", "Srimahi Chevvu", "Thanvesh Thalla", "Trishul Nanduri", "Yoganshika Nanduri", "Yusra Mohammad", "Zainul Abideen Syed"], "KG-2": ["Deekshanth Sammeta", "Hanshith Erroju", "Harika Bandi", "Himarsha Naini", "Karthik Vallepu", "Kruthika Bandi", "Rajavardhan Gampala", "Roshan Kaitha", "Sri Anshu Ayaan Lyadala", "Srihansh Bandi", "Srikshitha Guduri", "Varshith Gonela", "Adyasri Makala", "Anvik Boini", "Anvith Pokanati", "Awais Ur Rehman Mohammad", "Dakshu Pothuganti", "Hansith Reddy Katukuri", "Harshith Pokanati", "Jella Aditya", "Krishank Nallabothula", "Kundana Katkuri", "Munukuntla Revanth Rudhra", "Niraja Nethri Siluveru", "Pranav Mattepelli", "Sreenith Yadav Naini", "Uvan Reddy Dasari", "Zayan Mohammad", "Zoya Mohammed"], "Grade-1": ["Dheeraj Gattu", "Preetham Sannayala", "Shiva nandu Gonela", "Shrayan Nuthanakanti", "Sriyanksha Mandala", "Advitha Garige", "Harika Bandi", "Himansi Kondoju", "Izhaan Rahamath Syed", "Jaisurya Myakala", "Khadeeja Fathima", "Manaswini Dandugula", "Manusri Bandi", "Rithwik krishna Amaravadi", "Rohan Bandi", "Shiva Junnu", "Shivanandh Bandi", "Sridha Thalla", "Srinika Chengelly", "Sriyanshi Oggula", "Vishwak Chekka"], "Grade-2": ["Aliza Manha Shaik", "Dhruvan Reddy Katukuri", "Druthika Enugala", "Manaswini Bandi", "Rakshith Macharla", "Sathwika Katkuri", "Shalini Uppala", "Chandu Devarakonda", "Gnaneshwar Pokanati", "Hasnain Syed", "Koushik Siluveru", "Senen Desabattula", "Shivarajan Pothuganti"], "Grade-3": ["Nagavelly Manikanta", "Mirja Ismail", "Bandi Aryan", "Dandugula Mahesh Babu", "Bandi Tejasri", "Bandi Harshavardhan", "Gampala Vyshnavi", "Gampala Laxmi", "Garige Harshith", "Katkuri Hanish", "Katukuri Manideep", "MD Abdul Quddus", "Muppa Sathwik Patel", "Nuthanakanti Sansita", "Pasarakonda Ritwin", "Pinninti Rakshith Rao", "Rayi Sriman Adithya"], "Grade-4": ["Abdul Saqib Mohammad", "Anudeep Chintha", "Bhavan Bandi", "Harshavardhan Gonela", "Jayadev Chiluveru", "Mahaboob Syed", "Nandith Reddy Enugala", "Sai Charan Goud Mandala", "Sai Prasanna Keerthi", "Ajmeri Shaik", "Akshith Chiluveru", "Jayasri Myakala", "Rahul Kanjarla", "Saketh Devarakonda"], "Grade-5": ["Adya Reddy Vangala", "Kowshik Patel Muppa", "Siri Singaram", "Srikar Mandala", "Abdus Salaam MD", "Akshith Ram Kalvacharla", "Jaffar Anas Shaik", "Khaja Azeemuddin Mohammed", "Nihan Mohammed", "Saif Shaik", "Saketh Renukuntla", "Sreeja Dasari", "Vidhaatri Sahani"], "Grade-6": ["Abdul Razzak Mohammad", "Anudeepthi Chintha", "Saketh Ranaveni", "Shiva Sri Katukuri", "Aklees Shaik", "Akshya Kalvacharla", "Prince Katkuri"], "Grade-7": ["Manikanta Sannayala", "Sreeyan Reddy Karra", "Jayadhithya Chiluveru"], "Grade-8": ["Sathwika Nagavelly", "Vyshnavi Uppala", "Akshaya Gampala", "Ganesh Oggula", "Gayathri Renukuntla", "Khaja Sadeemuddin Mohammed"] };
 
     function populateStudents() {
         const cls = document.getElementById('feeClass').value;
         const select = document.getElementById('feeStudent');
         select.innerHTML = '<option value="">-- Select Student --</option>';
-        if(studentData[cls]) {
-            studentData[cls].forEach(s => select.innerHTML += `<option value="${s}">${s}</option>`);
-        }
+        if(studentData[cls]) studentData[cls].forEach(s => select.innerHTML += `<option value="${s}">${s}</option>`);
     }
 
     async function fetchExistingFeeData() {
@@ -173,40 +150,37 @@
         const snap = await db.ref(`fee_records/${cls}/${name}`).limitToLast(1).once('value');
         const data = snap.val();
         if(data) {
-            const lastEntry = Object.values(data)[0];
-            document.getElementById('totalFee').value = lastEntry.total || "";
+            const last = Object.values(data)[0];
+            document.getElementById('totalFee').value = last.total || "";
             calculateRealTime();
         }
     }
 
     function calculateRealTime() {
         const total = parseFloat(document.getElementById('totalFee').value) || 0;
-        const paying = parseFloat(document.getElementById('payingAmount').value) || 0;
-        const due = total - paying;
+        const paid = parseFloat(document.getElementById('payingAmount').value) || 0;
+        const due = total - paid;
         document.getElementById('dueDisplay').innerText = "₹ " + (due < 0 ? 0 : due);
-        let paidPercent = (total > 0) ? (paying / total) * 100 : 0;
-        if(paidPercent > 100) paidPercent = 100;
-        document.getElementById('barPaid').style.width = paidPercent + "%";
-        document.getElementById('percentText').innerText = Math.round(paidPercent) + "% Paid";
+        let pct = (total > 0) ? (paid / total) * 100 : 0;
+        document.getElementById('barPaid').style.width = Math.min(pct, 100) + "%";
+        document.getElementById('percentText').innerText = Math.round(pct) + "% Paid";
     }
 
-    function saveFeeRecord() {
+    function saveFee() {
         const cls = document.getElementById('feeClass').value;
         const name = document.getElementById('feeStudent').value;
         const total = document.getElementById('totalFee').value;
         const paid = document.getElementById('payingAmount').value;
-        const date = document.getElementById('paymentDate').value;
-        const staff = sessionStorage.getItem("feeStaffName");
-        if(!cls || !name || !paid || !total) return Swal.fire('Error', 'Missing Data', 'warning');
-        
-        const record = { total: total, paid: paid, due: total - paid, recordedBy: staff, date: date, timestamp: new Date().toLocaleString() };
+        const date = document.getElementById('payDate').value;
+        if(!cls || !name || !paid) return Swal.fire('Error', 'Missing Data', 'warning');
+        const record = { total, paid, due: total - paid, recordedBy: activeTeacher, date, timestamp: new Date().toLocaleString() };
         db.ref(`fee_records/${cls}/${name}`).push(record).then(() => {
             Swal.fire('Saved!', 'Record updated.', 'success');
             document.getElementById('payingAmount').value = '';
             calculateRealTime();
         });
     }
-    document.getElementById('paymentDate').valueAsDate = new Date();
+    document.getElementById('payDate').valueAsDate = new Date();
 </script>
 </body>
 </html>
