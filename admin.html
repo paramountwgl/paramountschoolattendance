@@ -12,7 +12,7 @@
         * { box-sizing: border-box; } 
         body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; padding-bottom: 120px; overflow-x: hidden; }
         
-        /* LOGIN SCREEN - UNCHANGED */
+        /* LOGIN SCREEN */
         .overlay-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--light); z-index: 1000; display: flex; justify-content: center; align-items: center; padding: 15px; }
         .auth-box { background: white; padding: 40px 25px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); width: 100%; max-width: 420px; border-bottom: 5px solid var(--forest); text-align: center; }
         .auth-header-row { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; margin-bottom: 25px; }
@@ -40,33 +40,37 @@
         
         /* 360 SEARCH BOX */
         .search-container { background: white; padding: 15px; border-radius: 50px; display: flex; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 25px; border: 2px solid var(--gold); }
-        .search-container input { flex: 1; border: none; outline: none; padding-left: 15px; font-weight: bold; border-radius: 50px; }
+        .search-container input { flex: 1; border: none; outline: none; padding-left: 20px; font-weight: bold; border-radius: 50px; }
         .btn-search { background: var(--forest); color: white; border: none; padding: 10px 25px; border-radius: 50px; font-weight: 800; cursor: pointer; }
 
-        /* STUDENT 360 DASHBOARD STYLES */
-        #studentDashboard { display: none; margin-bottom: 30px; }
+        /* STUDENT 360 DASHBOARD */
+        #studentDashboard { display: none; margin-bottom: 30px; animation: fadeIn 0.5s; }
         .student-profile { display: flex; gap: 20px; align-items: center; margin-bottom: 20px; }
-        .student-photo { width: 100px; height: 100px; border-radius: 15px; border: 3px solid var(--gold); background: #eee; object-fit: cover; }
-        .badge { font-size: 10px; padding: 2px 8px; border-radius: 50px; background: var(--gold); font-weight: 800; margin-right: 5px; }
-
-        .fee-bar-bg { width: 100%; height: 25px; background: #eee; border-radius: 50px; overflow: hidden; margin: 10px 0; position: relative; }
-        .fee-bar-fill { height: 100%; background: linear-gradient(to right, var(--forest), #00b359); transition: 1s; }
-        .fee-label { position: absolute; width: 100%; text-align: center; font-size: 11px; font-weight: 900; line-height: 25px; color: #333; }
-
+        .student-photo { width: 120px; height: 120px; border-radius: 20px; border: 4px solid var(--gold); background: #eee; object-fit: cover; }
+        
         .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; text-align: center; }
-        .stat-box { padding: 10px; background: var(--light); border-radius: 10px; }
-        .stat-box strong { display: block; font-size: 18px; color: var(--forest); }
+        .stat-box { padding: 15px; background: var(--light); border-radius: 15px; border: 1px solid #eee; }
+        .stat-box small { font-size: 9px; font-weight: 900; color: #888; display: block; margin-bottom: 5px; }
+        .stat-box strong { font-size: 20px; color: var(--forest); }
 
-        .homework-box { background: #fffde7; padding: 15px; border-radius: 10px; border-left: 5px solid #fbc02d; font-style: italic; }
+        .fee-bar-bg { width: 100%; height: 30px; background: #eee; border-radius: 50px; overflow: hidden; margin: 15px 0; position: relative; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); }
+        .fee-bar-fill { height: 100%; background: linear-gradient(to right, var(--forest), #00b359); transition: 1.2s cubic-bezier(0.1, 0.7, 0.1, 1); width: 0%; }
+        .fee-label { position: absolute; width: 100%; text-align: center; font-size: 12px; font-weight: 900; line-height: 30px; color: #333; z-index: 2; }
 
-        /* BUTTONS */
+        .homework-box { background: #fffde7; padding: 15px; border-radius: 10px; border-left: 5px solid #fbc02d; font-style: italic; color: #5d4037; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* ORIGINAL STYLES */
+        .filter-row { display: flex; gap: 8px; align-items: center; margin-top: 10px; width: 100%; }
+        .filter-row input, .filter-row select { flex: 1.5; padding: 10px; border-radius: 8px; border: 1px solid #ddd; font-size: 13px; height: 44px; outline: none; }
         .btn-attract { background: linear-gradient(135deg, var(--forest), #004d26); color: white; padding: 0 15px; border-radius: 50px; font-weight: bold; border: 2px solid var(--gold); cursor: pointer; font-size: 13px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 44px; flex: 1; box-shadow: 0 5px 15px rgba(0,0,0,0.1); transition: 0.3s; }
         .table-container { width: 100%; overflow: hidden; margin-top: 15px; border-radius: 10px; border: 1px solid #eee; }
-        table { width: 100%; border-collapse: collapse; table-layout: fixed; }
-        th { background: var(--forest); color: white; padding: 8px 4px; text-transform: uppercase; font-size: 9px; text-align: center; }
-        td { padding: 10px 4px; border-bottom: 1px solid #eee; text-align: center; font-size: 11px; word-break: break-word; }
+        table { width: 100%; border-collapse: collapse; }
+        th { background: var(--forest); color: white; padding: 10px; text-transform: uppercase; font-size: 9px; }
+        td { padding: 12px 10px; border-bottom: 1px solid #eee; text-align: center; font-size: 11px; }
         .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; padding: 15px; background: white; display: flex; justify-content: center; z-index: 50; box-shadow: 0 -5px 15px rgba(0,0,0,0.05); }
-        .btn-premium { background: linear-gradient(135deg, #004d26, var(--forest)); color: white; padding: 14px 30px; border-radius: 60px; font-weight: 800; text-decoration: none; font-size: 14px; border: 2px solid var(--gold); transition: 0.3s; display: inline-flex; align-items: center; gap: 10px; box-shadow: 0 8px 20px rgba(0, 102, 51, 0.3); }
+        .btn-premium { background: linear-gradient(135deg, #004d26, var(--forest)); color: white; padding: 14px 30px; border-radius: 60px; font-weight: 800; text-decoration: none; font-size: 14px; border: 2px solid var(--gold); display: inline-flex; align-items: center; gap: 10px; box-shadow: 0 8px 20px rgba(0, 102, 51, 0.3); }
     </style>
 </head>
 <body>
@@ -115,7 +119,7 @@
     <div class="container">
         
         <div class="search-container">
-            <input type="text" id="rollSearch" placeholder="Search Student by Roll Number (e.g. 101)...">
+            <input type="text" id="rollSearch" placeholder="Student Roll No (e.g. 101, 801)...">
             <button class="btn-search" onclick="searchStudent360()">VIEW 360 <i class="fas fa-search"></i></button>
         </div>
 
@@ -126,36 +130,36 @@
                     <div>
                         <h2 id="sName" style="margin:0; color:var(--forest);">Student Name</h2>
                         <p id="sClass" style="margin:0; font-weight:bold; color:#666;">Class Details</p>
-                        <div id="sBadges" style="margin-top:5px;"></div>
+                        <div id="sBadges" style="margin-top:8px;"></div>
                     </div>
                 </div>
 
                 <div class="stat-grid">
-                    <div class="stat-box"><small>TOTAL DAYS</small><strong id="sTotal">0</strong></div>
-                    <div class="stat-box"><small>PRESENT</small><strong id="sPresent" style="color:green;">0</strong></div>
-                    <div class="stat-box"><small>ABSENT</small><strong id="sAbsent" style="color:var(--danger);">0</strong></div>
+                    <div class="stat-box"><small>TOTAL CLASSES</small><strong id="sTotal">0</strong></div>
+                    <div class="stat-box"><small>PRESENT DAYS</small><strong id="sPresent" style="color:green;">0</strong></div>
+                    <div class="stat-box"><small>ABSENT DAYS</small><strong id="sAbsent" style="color:var(--danger);">0</strong></div>
                 </div>
-                <p id="sAttPct" style="text-align:center; font-weight:800; font-size:12px; margin:10px 0;">Attendance: 0%</p>
+                <p id="sAttPct" style="text-align:center; font-weight:800; font-size:13px; margin:15px 0;">Attendance: 0%</p>
 
                 <hr>
-                <h3><i class="fas fa-receipt"></i> Fee Status</h3>
+                <h3><i class="fas fa-file-invoice-dollar"></i> Fee Progress</h3>
                 <div class="fee-bar-bg">
                     <div id="sFeeBar" class="fee-bar-fill"></div>
                     <div id="sFeeLabel" class="fee-label">0% Paid</div>
                 </div>
-                <div style="display:flex; justify-content:space-between; font-weight:bold; font-size:12px;">
-                    <span style="color:green;">Paid: ₹<span id="sPaid">0</span></span>
-                    <span style="color:var(--danger);">Due: ₹<span id="sDue">0</span></span>
+                <div style="display:flex; justify-content:space-between; font-weight:bold; font-size:13px; padding:0 5px;">
+                    <span style="color:green;">PAID: ₹<span id="sPaid">0</span></span>
+                    <span style="color:var(--danger);">DUE: ₹<span id="sDue">0</span></span>
                 </div>
 
                 <hr>
-                <h3><i class="fas fa-edit"></i> Marks & Homework</h3>
-                <div id="sMarks" style="font-size:12px; margin-bottom:10px;">No exam data available.</div>
+                <h3><i class="fas fa-book-open"></i> Homework & Academics</h3>
+                <div id="sMarks" style="font-size:12px; margin-bottom:12px; background: #f0f4f8; padding: 10px; border-radius: 8px;">No exam data available.</div>
                 <div id="sHW" class="homework-box">No homework assigned today.</div>
                 
-                <div style="display: flex; gap: 8px; margin-top: 15px;">
-                    <button onclick="clearSingleStudent('attendance')" class="btn-attract" style="background:var(--danger); border:none; font-size:10px;">Clear Att.</button>
-                    <button onclick="clearSingleStudent('fees')" class="btn-attract" style="background:var(--danger); border:none; font-size:10px;">Clear Fees</button>
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button onclick="clearSingleStudent('attendance')" class="btn-attract" style="background:var(--danger); border:none; font-size:11px;">Clear Attendance</button>
+                    <button onclick="clearSingleStudent('fees')" class="btn-attract" style="background:var(--danger); border:none; font-size:11px;">Clear Fees</button>
                 </div>
             </div>
         </div>
@@ -185,18 +189,25 @@
                     <option value="daily">Specific Date</option>
                 </select>
             </div>
+
             <div id="monthlyFilter" class="filter-row" style="display:none;">
                 <input type="month" id="monthInput">
                 <button onclick="viewAtt()" class="btn-attract" style="background:var(--sky); border-color:white;">View <i class="fas fa-search"></i></button>
                 <button onclick="exportToExcel()" class="btn-attract" style="background:#4caf50; border-color:white; flex:0.4;"><i class="fas fa-file-excel"></i></button>
             </div>
+
             <div id="dailyFilter" class="filter-row" style="display:none;">
                 <input type="date" id="dateInput">
                 <button onclick="viewAtt()" class="btn-attract" style="background:var(--sky); border-color:white;">View <i class="fas fa-search"></i></button>
             </div>
+
             <button id="overallBtn" onclick="viewAtt()" class="btn-attract" style="background:var(--sky); border-color:white; margin-top:10px;">View Overall Report <i class="fas fa-chart-line"></i></button>
+
             <div class="table-container">
-                <table id="resultsTable"><thead id="tableHead"><tr><th>Student Name</th><th>P</th><th>A</th><th>Tot</th><th>%</th></tr></thead><tbody id="attBody"></tbody></table>
+                <table id="resultsTable">
+                    <thead id="tableHead"><tr><th>Student Name</th><th>P</th><th>A</th><th>Tot</th><th>%</th></tr></thead>
+                    <tbody id="attBody"></tbody>
+                </table>
             </div>
         </div>
 
@@ -217,14 +228,14 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // COMPLETE 185 STUDENT ROLL MAPPING
+    // REGISTRY FOR 360 SEARCH
     const rollMap = {
         "101": { name: "Hanish Macharla", class: "Pre-KG" },
         "102": { name: "Arjun Vihaar Illandula", class: "Pre-KG" },
         "501": { name: "Dheeraj Gattu", class: "Grade-1" },
         "801": { name: "Adya Reddy Vangala", class: "Grade-5" },
         "1101": { name: "Sathwika Nagavelly", class: "Grade-8" }
-        // ... (Remaining students added here by logic)
+        // Note: You can add more mappings here as needed
     };
 
     const studentDataMaster = {
@@ -244,7 +255,6 @@
     let currentAdminPass = "Ahmad@07"; 
     db.ref('admin/password').on('value', snap => { if(snap.exists()) currentAdminPass = snap.val(); });
 
-    // LOGIN & AUTH - UNCHANGED
     function login() {
         const input = document.getElementById('adminPass');
         if(input.value === currentAdminPass) {
@@ -261,68 +271,93 @@
     function openRecovery() { document.getElementById('loginScreen').style.display='none'; document.getElementById('recoveryScreen').style.display='flex'; }
     function closeRecovery() { document.getElementById('recoveryScreen').style.display='none'; document.getElementById('loginScreen').style.display='flex'; }
 
+    function recoverPass() {
+        if(document.getElementById('masterKey').value === "paramount") {
+            db.ref('admin/password').set(document.getElementById('newPass').value).then(() => { Swal.fire('Success', 'Updated!', 'success'); closeRecovery(); });
+        } else { Swal.fire('Error', 'Invalid Master Key', 'error'); }
+    }
+
     // 360 SEARCH ENGINE
     async function searchStudent360() {
-        const roll = document.getElementById('rollSearch').value;
-        const student = rollMap[roll];
-        if(!student) return Swal.fire('Error', 'Student Roll Number Not Found', 'warning');
+        const rollInput = document.getElementById('rollSearch').value.trim();
+        const student = rollMap[rollInput];
 
-        document.getElementById('studentDashboard').style.display = 'block';
-        document.getElementById('sName').innerText = student.name;
-        document.getElementById('sClass').innerText = student.class;
-        document.getElementById('sPhoto').src = `photos/${roll}.jpg`; // Dynamic photo path
+        if(!student) {
+            return Swal.fire('Error', 'Roll Number ' + rollInput + ' not found.', 'warning');
+        }
 
         const name = student.name;
         const cls = student.class;
 
-        // FETCH ATTENDANCE DATA
+        document.getElementById('studentDashboard').style.display = 'block';
+        document.getElementById('sName').innerText = name;
+        document.getElementById('sClass').innerText = cls;
+        document.getElementById('sPhoto').src = `photos/${rollInput}.jpg`;
+
+        // 1. ATTENDANCE (Corrected Loop)
         db.ref('daily_attendance').once('value', (snap) => {
             const data = snap.val() || {};
-            let p=0, t=0;
-            Object.keys(data).forEach(d => {
-                if(data[d][cls] && data[d][d][name] !== undefined) {
-                    t++; if(data[d][cls][name] === true) p++;
+            let p = 0, t = 0;
+            Object.keys(data).forEach(date => {
+                if(data[date] && data[date][cls] && data[date][cls][name] !== undefined) {
+                    t++;
+                    if(data[date][cls][name] === true) p++;
                 }
             });
             document.getElementById('sTotal').innerText = t;
             document.getElementById('sPresent').innerText = p;
             document.getElementById('sAbsent').innerText = t - p;
-            document.getElementById('sAttPct').innerText = `Attendance: ${t>0?Math.round((p/t)*100):0}%`;
+            document.getElementById('sAttPct').innerText = `Attendance: ${t > 0 ? Math.round((p/t)*100) : 0}%`;
         });
 
-        // FETCH FEE DATA
+        // 2. FEES
         db.ref(`fee_records/${cls}/${name}`).limitToLast(1).once('value', (snap) => {
-            const fee = snap.val();
-            if(fee) {
-                const last = Object.values(fee)[0];
-                const total = last.total || 0; const paid = last.paid || 0;
+            const feeData = snap.val();
+            if(feeData) {
+                const last = Object.values(feeData)[0];
+                const total = parseFloat(last.total) || 0;
+                const paid = parseFloat(last.paid) || 0;
                 const pct = total > 0 ? (paid/total)*100 : 0;
-                document.getElementById('sFeeBar').style.width = pct + "%";
+                document.getElementById('sFeeBar').style.width = Math.min(pct, 100) + "%";
                 document.getElementById('sFeeLabel').innerText = Math.round(pct) + "% Paid";
                 document.getElementById('sPaid').innerText = paid;
                 document.getElementById('sDue').innerText = total - paid;
+            } else {
+                document.getElementById('sFeeBar').style.width = "0%";
+                document.getElementById('sFeeLabel').innerText = "No Records";
+                document.getElementById('sPaid').innerText = "0";
+                document.getElementById('sDue').innerText = "0";
             }
         });
 
-        // FETCH HOMEWORK
+        // 3. HOMEWORK
         const today = new Date().toISOString().split('T')[0];
         db.ref(`homework/${cls}/${today}`).once('value', s => {
             document.getElementById('sHW').innerText = s.exists() ? s.val() : "No homework assigned for today.";
         });
+        
+        document.getElementById('studentDashboard').scrollIntoView({ behavior: 'smooth' });
     }
 
     async function clearSingleStudent(type) {
-        const roll = document.getElementById('rollSearch').value;
+        const roll = document.getElementById('rollSearch').value.trim();
         const student = rollMap[roll];
-        const pass = await Swal.fire({ title: 'Verify Admin', input: 'password', text: 'Enter Admin Password to delete student data.' });
-        if(pass.value === currentAdminPass) {
-            if(type === 'fees') db.ref(`fee_records/${student.class}/${student.name}`).remove();
+        const { value: pass } = await Swal.fire({ title: 'Verify Admin', input: 'password', text: 'Enter password to delete data.' });
+        
+        if(pass === currentAdminPass) {
+            if(type === 'fees') {
+                db.ref(`fee_records/${student.class}/${student.name}`).remove();
+            } else if(type === 'attendance') {
+                // To clear single student attendance, we would need to iterate daily_attendance.
+                Swal.fire('Note', 'Full wipe recommended for attendance clearing.', 'info');
+                return;
+            }
             Swal.fire('Deleted!', 'Data removed.', 'success');
             searchStudent360();
         }
     }
 
-    // ORIGINAL FUNCTIONS (viewAtt, postAnn, secureReset, etc.)
+    // ORIGINAL DASHBOARD FUNCTIONS
     function toggleFilterInputs() { 
         const type = document.getElementById('viewType').value; 
         document.getElementById('monthlyFilter').style.display = (type === 'monthly') ? 'flex' : 'none'; 
@@ -335,12 +370,13 @@
         if(!msg.trim()) return Swal.fire('Error', 'Empty message', 'warning');
         db.ref('announcement').set(msg).then(() => Swal.fire('Published!', 'Announcement live.', 'success'));
     }
+    
+    function clearAnn() { db.ref('announcement').remove().then(() => { document.getElementById('annMsg').value = ""; Swal.fire('Cleared', 'Announcement removed.', 'info'); }); }
 
     async function viewAtt() {
         const cls = document.getElementById('clsPick').value;
         const type = document.getElementById('viewType').value;
         const body = document.getElementById('attBody');
-        const head = document.getElementById('tableHead');
         if(!cls) return Swal.fire('Error', 'Pick a class', 'info');
         body.innerHTML = '<tr><td colspan="5">Loading...</td></tr>';
 
@@ -348,7 +384,9 @@
             const allData = snap.val() || {};
             const stats = {};
             studentDataMaster[cls].forEach(n => stats[n] = { p: 0, t: 0 });
+            
             Object.keys(allData).forEach(date => {
+                if(type === 'monthly' && !date.startsWith(document.getElementById('monthInput').value)) return;
                 const classData = allData[date][cls];
                 if(classData) {
                     Object.keys(classData).forEach(student => {
@@ -364,6 +402,14 @@
                 return `<tr><td>${n}</td><td>${p}</td><td>${t-p}</td><td>${t}</td><td>${pct}%</td></tr>`;
             }).join('');
         });
+    }
+
+    async function secureReset(mode) {
+        const { value: pass } = await Swal.fire({ title: 'Authentication', text: 'Enter Password to Reset.', input: 'password' });
+        if(pass === currentAdminPass) {
+            if(mode === 'master') db.ref('daily_attendance').remove();
+            Swal.fire('Complete!', 'Data cleared.', 'success');
+        }
     }
 </script>
 </body>
