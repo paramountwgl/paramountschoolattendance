@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Fee Entry | Paramount School</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Segoe+UI:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --forest: #006633; --gold: #ffd700; --light: #f4f7f6; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; padding: 20px 15px; }
+        .card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); max-width: 500px; margin: 0 auto; border-top: 8px solid var(--forest); display: none; }
+        h3 { color: var(--forest); text-align: center; text-transform: uppercase; font-weight: 800; margin-bottom: 25px; }
+        
+        label { display: block; font-size: 11px; font-weight: 900; color: #777; margin: 15px 0 5px; text-transform: uppercase; }
+        select, input { width: 100%; padding: 12px; border-radius: 10px; border: 2px solid #eee; font-size: 15px; outline: none; background: #fafafa; box-sizing: border-box; }
+        
+        .btn-submit { width: 100%; background: linear-gradient(135deg, var(--forest), #004d26); color: white; border: 2px solid var(--gold); padding: 15px; border-radius: 50px; font-weight: bold; cursor: pointer; margin-top: 25px; font-size: 16px; }
+        .back-link { display: block; text-align: center; margin-top: 20px; color: var(--forest); text-decoration: none; font-weight: bold; font-size: 14px; }
+        .logged-in-as { text-align: center; background: #e8f5e9; color: var(--forest); padding: 8px; border-radius: 8px; font-weight: bold; font-size: 13px; margin-bottom: 15px; border: 1px solid #c8e6c9; }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+</head>
+<body onload="checkSecurity()">
+
+<div id="feeContent" class="card">
+    <h3><i class="fas fa-money-check-alt"></i> Fee Entry</h3>
+    
+    <div id="staffBadge" class="logged-in-as"></div>
+
+    <label>Select Class</label>
+    <select id="feeClass" onchange="populateStudents()">
+        <option value="">-- Choose Class --</option>
+        <option value="Pre-KG">Pre-KG</option><option value="KG-1">KG-1</option>
+        <option value="KG-2">KG-2</option><option value="Grade-1">Grade-1</option>
+        <option value="Grade-2">Grade-2</option><option value="Grade-3">Grade-3</option>
+        <option value="Grade-4">Grade-4</option><option value="Grade-5">Grade-5</option>
+        <option value="Grade-6">Grade-6</option><option value="Grade-7">Grade-7</option>
+        <option value="Grade-8">Grade-8</option>
+    </select>
+
+    <label>Student Name</label>
+    <select id="feeStudent">
+        <option value="">-- Select Student --</option>
+    </select>
+
+    <label>Fee Category</label>
+    <select id="feeType">
+        <option value="Tuition Fee">Tuition Fee</option>
+        <option value="Transport Fee">Transport Fee</option>
+        <option value="Examination Fee">Examination Fee</option>
+        <option value="Books & Uniform">Books & Uniform</option>
+        <option value="Admission Fee">Admission Fee</option>
+    </select>
+
+    <label>Amount Paid (₹)</label>
+    <input type="number" id="feeAmount" placeholder="Enter Amount">
+
+    <label>Date of Payment</label>
+    <input type="date" id="feeDate">
+
+    <button class="btn-submit" onclick="submitFee()">Submit Record <i class="fas fa-paper-plane"></i></button>
+    
+    <a href="teacher_portal.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to Portal</a>
+</div>
+
+<script>
+    const firebaseConfig = { apiKey: "AIzaSyDRYk9KOK-ga0c88dnYMsAoifW2NJTd_Y8", databaseURL: "https://paramount-school-d55bc-default-rtdb.firebaseio.com", projectId: "paramount-school-d55bc" };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    let verifiedTeacher = "";
+
+    // Strictly restricted to these 3 names only
+    const authorizedFeeStaff = {
+        "Mr. Ahmad": "Ahmad@123",
+        "Ms. Roqiya": "Roqiya@123",
+        "Ms. Jyothi": "Jyothi@123"
+    };
+
+    async function checkSecurity() {
+        const { value: name } = await Swal.fire({
+            title: 'Fee Access Login',
+            text: 'Authorized Personnel Only',
+            input: 'select',
+            inputOptions: {
+                'Mr. Ahmad': 'Mr. Ahmad',
+                'Ms. Roqiya': 'Ms. Roqiya',
+                'Ms. Jyothi': 'Ms. Jyothi'
+            },
+            inputPlaceholder: '-- Select Your Name --',
+            allowOutsideClick: false,
+            showCancelButton: true,
+            cancelButtonText: 'Exit'
+        });
+
+        if (!name) {
+            window.location.href = "index.html";
+            return;
+        }
+
+        const { value: password } = await Swal.fire({
+            title: `Enter Password`,
+            text: `Confirming identity for ${name}`,
+            input: 'password',
+            inputPlaceholder: 'name@123',
+            allowOutsideClick: false
+        });
+
+        if (password === authorizedFeeStaff[name]) {
+            verifiedTeacher = name;
+            document.getElementById('feeContent').style.display = 'block';
+            document.getElementById('staffBadge').innerHTML = `<i class="fas fa-user-check"></i> Logged in as: ${verifiedTeacher}`;
+            Swal.fire('Success', 'Access Granted', 'success');
+        } else {
+            await Swal.fire('Denied', 'Incorrect Credentials', 'error');
+            window.location.href = "index.html"; 
+        }
+    }
+
+    const studentData = {
+        "Pre-KG": ["Hanish Macharla", "Arjun Vihaar Illandula", "Thanu sree Allakunta", "Aadhya Gangaraboina", "Aadhya Sri Oggula", "Aadhyasri Shivagoni", "Afraha Begum", "Aliya Sultana", "Anvika Bandi", "Aradana Devara konda", "Devansh Bandi", "Hanvitha Mulkalapelli", "Harsha Vardhan Seenapelli", "Hiranya Bandi", "Jashritha Boina", "Konreddy Shreyanvi", "Kriyansh Sammeta", "Mohammed Mohiuddin Sayyad", "Nethra Narkurthi", "Reeyansh Bandi", "Rishi Manupati", "Rudransh Bandi", "Sanvika Bandi", "Shanvith Khatha", "Shishira Jalagam", "Shiva Sai Mekala", "Shree Rudhraveer Chevvu", "Shreyansh Gangaraboina", "Sreeja Thalla", "Srikrithini Myakala", "Srivatsav Vanam", "Sriyansh Mekala", "Thanvika Lakka", "Thrilokansh Vudari", "Ujjwal Chekka", "Vaishnavi Lakka", "Vedansh Myakala", "Vishnu Priya Molugu", "Vyshnav Tej Boina", "Yafiah Mohammad"],
+        "KG-1": ["Aadhya Sri Amaravadi", "Aditya Manda", "Aadhya Jella", "Advaita Gauri Bandi", "Aizah Amna Shaik", "Akshara Singaram", "Bhahuveer Raj Somishetti", "Gayathri Erroju", "Hanvika Mulkalapelli", "Manvith Kondoju", "Sayyad Vajeed", "Mekala Manu sri", "Oliva Grace Vallapu", "Rithwik Oggula", "Rithwika Kandagatla", "Srimahi Chevvu", "Thanvesh Thalla", "Trishul Nanduri", "Yoganshika Nanduri", "Yusra Mohammad", "Zainul Abideen Syed"],
+        "KG-2": ["Deekshanth Sammeta", "Hanshith Erroju", "Harika Bandi", "Himarsha Naini", "Karthik Vallepu", "Kruthika Bandi", "Rajavardhan Gampala", "Roshan Kaitha", "Sri Anshu Ayaan Lyadala", "Srihansh Bandi", "Srikshitha Guduri", "Varshith Gonela", "Adyasri Makala", "Anvik Boini", "Anvith Pokanati", "Awais Ur Rehman Mohammad", "Dakshu Pothuganti", "Hansith Reddy Katukuri", "Harshith Pokanati", "Jella Aditya", "Krishank Nallabothula", "Kundana Katkuri", "Munukuntla Revanth Rudhra", "Niraja Nethri Siluveru", "Pranav Mattepelli", "Sreenith Yadav Naini", "Uvan Reddy Dasari", "Zayan Mohammad", "Zoya Mohammed"],
+        "Grade-1": ["Dheeraj Gattu", "Preetham Sannayala", "Shiva nandu Gonela", "Shrayan Nuthanakanti", "Sriyanksha Mandala", "Advitha Garige", "Harika Bandi", "Himansi Kondoju", "Izhaan Rahamath Syed", "Jaisurya Myakala", "Khadeeja Fathima", "Manaswini Dandugula", "Manusri Bandi", "Rithwik krishna Amaravadi", "Rohan Bandi", "Shiva Junnu", "Shivanandh Bandi", "Sridha Thalla", "Srinika Chengelly", "Sriyanshi Oggula", "Vishwak Chekka"],
+        "Grade-2": ["Aliza Manha Shaik", "Dhruvan Reddy Katukuri", "Druthika Enugala", "Manaswini Bandi", "Rakshith Macharla", "Sathwika Katkuri", "Shalini Uppala", "Chandu Devarakonda", "Gnaneshwar Pokanati", "Hasnain Syed", "Koushik Siluveru", "Senen Desabattula", "Shivarajan Pothuganti"],
+        "Grade-3": ["Nagavelly Manikanta", "Mirja Ismail", "Bandi Aryan", "Dandugula Mahesh Babu", "Bandi Tejasri", "Bandi Harshavardhan", "Gampala Vyshnavi", "Gampala Laxmi", "Garige Harshith", "Katkuri Hanish", "Katukuri Manideep", "MD Abdul Quddus", "Muppa Sathwik Patel", "Nuthanakanti Sansita", "Pasarakonda Ritwin", "Pinninti Rakshith Rao", "Rayi Sriman Adithya"],
+        "Grade-4": ["Abdul Saqib Mohammad", "Anudeep Chintha", "Bhavan Bandi", "Harshavardhan Gonela", "Jayadev Chiluveru", "Mahaboob Syed", "Nandith Reddy Enugala", "Sai Charan Goud Mandala", "Sai Prasanna Keerthi", "Ajmeri Shaik", "Akshith Chiluveru", "Jayasri Myakala", "Rahul Kanjarla", "Saketh Devarakonda"],
+        "Grade-5": ["Adya Reddy Vangala", "Kowshik Patel Muppa", "Siri Singaram", "Srikar Mandala", "Abdus Salaam MD", "Akshith Ram Kalvacharla", "Jaffar Anas Shaik", "Khaja Azeemuddin Mohammed", "Nihan Mohammed", "Saif Shaik", "Saketh Renukuntla", "Sreeja Dasari", "Vidhaatri Sahani"],
+        "Grade-6": ["Abdul Razzak Mohammad", "Anudeepthi Chintha", "Saketh Ranaveni", "Shiva Sri Katukuri", "Aklees Shaik", "Akshya Kalvacharla", "Prince Katkuri"],
+        "Grade-7": ["Manikanta Sannayala", "Sreeyan Reddy Karra", "Jayadhithya Chiluveru"],
+        "Grade-8": ["Sathwika Nagavelly", "Vyshnavi Uppala", "Akshaya Gampala", "Ganesh Oggula", "Gayathri Renukuntla", "Khaja Sadeemuddin Mohammed"]
+    };
+
+    function populateStudents() {
+        const cls = document.getElementById('feeClass').value;
+        const studentSelect = document.getElementById('feeStudent');
+        studentSelect.innerHTML = '<option value="">-- Select Student --</option>';
+        if(cls && studentData[cls]) {
+            studentData[cls].forEach(name => {
+                let opt = document.createElement('option');
+                opt.value = name;
+                opt.innerHTML = name;
+                studentSelect.appendChild(opt);
+            });
+        }
+    }
+
+    function submitFee() {
+        const cls = document.getElementById('feeClass').value;
+        const name = document.getElementById('feeStudent').value;
+        const type = document.getElementById('feeType').value;
+        const amt = document.getElementById('feeAmount').value;
+        const date = document.getElementById('feeDate').value;
+
+        if(!cls || !name || !amt || !date) {
+            Swal.fire('Error', 'Please fill all fields', 'error');
+            return;
+        }
+
+        const feeRecord = {
+            amount: amt,
+            category: type,
+            date: date,
+            recordedBy: verifiedTeacher,
+            timestamp: new Date().toLocaleString()
+        };
+
+        db.ref(`student_fees/${cls}/${name}`).push(feeRecord).then(() => {
+            Swal.fire({
+                title: 'Recorded!',
+                text: `Successfully saved payment for ${name}`,
+                icon: 'success',
+                timer: 2000
+            });
+            document.getElementById('feeAmount').value = '';
+        });
+    }
+
+    document.getElementById('feeDate').valueAsDate = new Date();
+</script>
+
+</body>
+</html>
