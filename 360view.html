@@ -12,7 +12,7 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; padding-bottom: 50px; }
 
-        /* HEADER STYLING */
+        /* HEADER STYLING - PREMIUM RESTORED */
         header { background: var(--forest); color: white; padding: 15px 5%; box-shadow: 0 4px 12px rgba(0,0,0,0.15); position: sticky; top: 0; z-index: 100; border-bottom: 4px solid var(--gold); }
         .header-content { display: flex; align-items: center; max-width: 1400px; margin: 0 auto; width: 100%; }
         .header-left { display: flex; align-items: center; gap: 15px; padding-right: 20px; border-right: 2px solid rgba(255,255,255,0.3); }
@@ -22,13 +22,13 @@
         .school-name-sub { font-family: 'Montserrat', sans-serif; font-size: 0.7rem; color: var(--gold); font-weight: 700; text-transform: uppercase; }
         .portal-title { padding-left: 20px; font-family: 'Montserrat', sans-serif; font-size: 1.2rem; font-weight: 800; text-transform: uppercase; flex-grow: 1; }
 
-        /* HEADER RIGHT - CLOCK ABOVE BUTTON */
-        .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; }
-        .live-clock { font-family: 'Montserrat', sans-serif; font-size: 0.7rem; font-weight: 800; color: var(--gold); letter-spacing: 1px; }
+        /* HEADER RIGHT - PREMIUM TIMESTAMP ABOVE BUTTON */
+        .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+        .live-clock { font-family: 'Montserrat', sans-serif; font-size: 0.65rem; font-weight: 800; color: var(--gold); letter-spacing: 1.5px; text-shadow: 0 0 5px rgba(255,215,0,0.3); }
         .btn-premium-exit { 
             background: linear-gradient(135deg, var(--gold), #ffcc00); 
-            border: 2px solid white; color: var(--forest); padding: 6px 20px; border-radius: 50px; 
-            font-size: 0.65rem; font-weight: 800; cursor: pointer; text-transform: uppercase; 
+            border: 2px solid white; color: var(--forest); padding: 7px 18px; border-radius: 50px; 
+            font-size: 0.65rem; font-weight: 900; cursor: pointer; text-transform: uppercase; 
             box-shadow: 0 4px 15px rgba(0,0,0,0.3); display: flex; align-items: center; gap: 8px; transition: 0.3s;
         }
         .btn-premium-exit:hover { transform: translateY(-2px); background: white; box-shadow: 0 6px 20px rgba(255,215,0,0.5); }
@@ -39,39 +39,57 @@
         .search-box input { flex: 1; border: none; padding: 0 20px; font-size: 1.1rem; outline: none; border-radius: 50px; font-weight: 600; }
         .btn-search { background: var(--forest); color: white; border: none; padding: 12px 30px; border-radius: 50px; font-weight: 800; cursor: pointer; transition: 0.3s; }
 
-        /* DASHBOARD */
-        .dashboard { max-width: 1250px; margin: 0 auto; padding: 10px 20px; display: none; }
-        .profile-hero { background: white; border-radius: 20px; padding: 30px; display: flex; align-items: center; gap: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom: 25px; border-left: 10px solid var(--forest); position: relative; }
+        /* DASHBOARD LAYOUT */
+        .dashboard { max-width: 1300px; margin: 0 auto; padding: 10px 20px; display: none; }
+        .profile-hero { background: white; border-radius: 25px; padding: 30px; display: flex; align-items: center; gap: 30px; box-shadow: 0 8px 25px rgba(0,0,0,0.05); margin-bottom: 30px; border-left: 10px solid var(--forest); position: relative; }
         .student-img-container { width: 140px; height: 160px; flex-shrink: 0; border-radius: 15px; overflow: hidden; border: 4px solid var(--forest); background: #f0f0f0; }
         .student-img-container img { width: 100%; height: 100%; object-fit: cover; }
-        .timestamp-badge { position: absolute; top: 15px; right: 25px; font-size: 10px; font-weight: 800; color: #aaa; text-transform: uppercase; }
+        .timestamp-badge { position: absolute; top: 15px; right: 25px; font-size: 9px; font-weight: 800; color: #999; text-transform: uppercase; background: #f9f9f9; padding: 4px 10px; border-radius: 50px; }
         .hero-text h1 { margin: 0; color: var(--forest); font-family: 'Montserrat', sans-serif; font-size: 2.2rem; }
         .hero-text p { font-weight: 700; color: #666; margin: 5px 0; }
 
-        /* DATA GRID */
+        /* DATA GRID SETUP */
         .data-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
-        .card { background: white; border-radius: 24px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.04); border: 1px solid #f1f5f9; position: relative; }
-        .card-header { display: flex; align-items: center; gap: 10px; border-bottom: 2px solid #f0f0f0; padding-bottom: 12px; margin-bottom: 15px; color: var(--forest); font-weight: 800; text-transform: uppercase; font-size: 0.9rem; }
+        .card { background: white; border-radius: 25px; padding: 25px; box-shadow: 0 5px 20px rgba(0,0,0,0.03); border: 1px solid #f1f5f9; position: relative; }
+        .card-header { display: flex; align-items: center; gap: 10px; border-bottom: 2px solid #f0f0f0; padding-bottom: 12px; margin-bottom: 15px; color: var(--forest); font-weight: 800; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1px; }
+        
         .row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #f9f9f9; }
-        .label { color: #888; font-weight: 600; font-size: 0.85rem; }
+        .label { color: #888; font-weight: 600; font-size: 0.85rem; text-transform: uppercase; }
         .val { font-weight: 700; color: var(--dark); }
 
-        /* MARKS TABLE */
+        /* PREMIUM PROGRESS TABLE */
         .marks-card { grid-column: 1 / -1; }
         .table-wrapper { width: 100%; overflow-x: auto; border-radius: 12px; border: 1px solid #eee; margin-top: 10px; }
         .marks-table { width: 100%; border-collapse: collapse; min-width: 600px; }
         .marks-table th { background: var(--forest); color: white; padding: 15px; font-size: 11px; text-transform: uppercase; border: 1px solid #004d26; }
         .marks-table td { padding: 12px; text-align: center; border: 1px solid #eee; font-weight: 700; font-size: 14px; color: #333; }
-        .marks-table td:first-child { text-align: left; background: #f9f9f9; color: var(--forest); font-weight: 800; padding-left: 20px; }
-        .avg-percent-box { margin-top: 20px; padding: 20px; background: white; border-radius: 15px; text-align: center; border: 2px solid #eef2f1; font-family: 'Montserrat'; font-weight: 800; color: #555; }
+        .marks-table td:first-child { text-align: left; background: #f9f9f9; color: var(--forest); font-weight: 800; padding-left: 20px; width: 180px; }
+        .avg-percent-box { margin-top: 20px; padding: 20px; background: white; border-radius: 15px; text-align: center; border: 3px solid #f1f5f9; font-family: 'Montserrat'; font-weight: 800; color: #555; }
         .avg-percent-box span { color: var(--forest); font-size: 2rem; margin-left: 15px; }
 
-        /* FEE CIRCLE FIX */
-        .fee-circle-box { display: flex; flex-direction: column; align-items: center; padding: 20px; position: relative; }
+        /* PREMIUM FEE GAUGE - NO CLIPPING */
+        .fee-circle-box { display: flex; flex-direction: column; align-items: center; padding: 15px; position: relative; }
         .circle-svg { width: 130px; height: 130px; transform: rotate(-90deg); }
-        .circle-bg { fill: none; stroke: #f0f0f0; stroke-width: 10; }
-        .circle-bar { fill: none; stroke: var(--forest); stroke-width: 10; stroke-dasharray: 283; stroke-dashoffset: 283; transition: 1.5s ease-out; stroke-linecap: round; }
-        #vFeePercent { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-weight: 800; font-size: 1.3rem; color: var(--forest); margin-top: -10px; }
+        .circle-bg { fill: none; stroke: #f0f0f0; stroke-width: 12; }
+        .circle-bar { 
+            fill: none; 
+            stroke: url(#feeGradient); 
+            stroke-width: 12; 
+            stroke-dasharray: 283; 
+            stroke-dashoffset: 283; 
+            transition: 1.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            stroke-linecap: round; 
+        }
+        #vFeePercent { 
+            position: absolute; 
+            top: 50%; left: 50%; 
+            transform: translate(-50%, -50%); 
+            font-family: 'Montserrat'; 
+            font-weight: 800; 
+            font-size: 1.4rem; 
+            color: var(--forest); 
+            margin-top: -10px;
+        }
 
         @media (max-width: 850px) {
             .data-grid { grid-template-columns: 1fr; }
@@ -85,13 +103,13 @@
 <header>
     <div class="header-content">
         <div class="header-left">
-            <img src="logo.png" class="header-logo">
+            <img src="logo.png" class="header-logo" onerror="this.src='https://via.placeholder.com/50'">
             <div class="school-branding">
                 <span class="school-name-main">PARAMOUNT</span>
                 <span class="school-name-sub">ENGLISH MEDIUM SCHOOL</span>
             </div>
         </div>
-        <div class="portal-title">Student 360° view</div>
+        <div class="portal-title">Student 360° view </div>
         <div class="header-right">
             <div id="liveClock" class="live-clock">--:--:--</div>
             <button onclick="window.location.href='admin.html'" class="btn-premium-exit">Exit Portal <i class="fas fa-power-off"></i></button>
@@ -108,23 +126,29 @@
 
 <div id="dashboard" class="dashboard">
     <div class="profile-hero">
-        <div id="vTimestamp" class="timestamp-badge">Fetched: --</div>
+        <div id="vTimestamp" class="timestamp-badge">FETCHED: --</div>
         <div class="student-img-container">
             <img id="vImg" src="logo.png" alt="Student">
         </div>
         <div class="hero-text">
             <h1 id="vName">STUDENT NAME</h1>
             <p id="vSub">CLASS / SECTION</p>
-            <span style="background:var(--forest); color:white; padding:5px 15px; border-radius:20px; font-size:0.7rem; font-weight:800;">VERIFIED OFFICIAL PROFILE</span>
+            <span style="background:var(--forest); color:white; padding:5px 15px; border-radius:20px; font-size:0.7rem; font-weight:800; box-shadow: 0 4px 10px rgba(0,102,51,0.2);">VERIFIED OFFICIAL PROFILE</span>
         </div>
     </div>
 
     <div class="data-grid">
         <div class="col-left">
-            <div class="card" style="margin-bottom:30px;">
-                <div class="card-header"><i class="fas fa-money-check-alt"></i> Fee Status</div>
+            <div class="card" style="margin-bottom:25px;">
+                <div class="card-header"><i class="fas fa-money-check-alt"></i> Fee Management</div>
                 <div class="fee-circle-box">
                     <svg class="circle-svg">
+                        <defs>
+                            <linearGradient id="feeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" style="stop-color:#006633; stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#2ecc71; stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
                         <circle class="circle-bg" cx="65" cy="65" r="45"></circle>
                         <circle id="vFeeCircle" class="circle-bar" cx="65" cy="65" r="45"></circle>
                     </svg>
@@ -136,33 +160,35 @@
             </div>
 
             <div class="card">
-                <div class="card-header"><i class="fas fa-user-check"></i> Attendance Record</div>
-                <div class="row"><span class="label">Total Working Days</span><span class="val" id="vTotalDays">0</span></div>
+                <div class="card-header"><i class="fas fa-user-check"></i> Attendance Summary</div>
+                <div class="row"><span class="label">Total School Days</span><span class="val" id="vTotalDays">0</span></div>
                 <div class="row"><span class="label">Days Present</span><span class="val" id="vPresent" style="color:green;">0</span></div>
                 <div class="row"><span class="label">Days Absent</span><span class="val" id="vAbsent" style="color:red;">0</span></div>
-                <div class="row" style="border:none;"><span class="label">Rate</span><span class="val" id="vAttPercent" style="color:var(--forest);">0%</span></div>
+                <div class="row" style="border:none;"><span class="label">Attendance %</span><span class="val" id="vAttPercent" style="color:var(--forest);">0%</span></div>
             </div>
         </div>
 
         <div class="col-right">
-            <div class="card" style="margin-bottom:30px; border-top-color: var(--sky);">
-                <div class="card-header"><i class="fas fa-book-reader"></i> Homework Status</div>
+            <div class="card" style="margin-bottom:25px; border-top-color: var(--sky);">
+                <div class="card-header"><i class="fas fa-book-reader"></i> Homework Tracking</div>
                 <div id="hwBox">
                     <h2 id="vHW" style="color:var(--sky); margin:0; font-size: 1.1rem; text-align:center;">-</h2>
-                    <div id="hwList" style="margin-top:12px; font-size: 0.85rem; color:#444; max-height: 150px; overflow-y: auto;"></div>
+                    <div id="hwList" style="margin-top:12px; font-size: 0.8rem; color:#444; max-height: 180px; overflow-y: auto;">
+                        <p style="text-align:center; color:#999;">Loading homework...</p>
+                    </div>
                 </div>
             </div>
 
             <div class="card" style="border-top: 5px solid var(--gold);">
-                <div class="card-header"><i class="fas fa-users"></i> Parent Details</div>
-                <div class="row"><span class="label">Father Name</span><span class="val" id="vFather">--</span></div>
+                <div class="card-header"><i class="fas fa-users"></i> Contact Information</div>
+                <div class="row"><span class="label">Guardian Name</span><span class="val" id="vFather">--</span></div>
                 <div class="row"><span class="label">Primary Phone</span><span class="val" id="vPhone">--</span></div>
                 <div class="row" style="border:none;"><span class="label">Admission No</span><span class="val" id="vAdm">--</span></div>
             </div>
         </div>
 
         <div class="card marks-card" style="border-top: 5px solid var(--danger);">
-            <div class="card-header"><i class="fas fa-award"></i> Academic Progress Grid</div>
+            <div class="card-header"><i class="fas fa-graduation-cap"></i> Academic Performance Grid</div>
             <div class="table-wrapper">
                 <table class="marks-table">
                     <thead>
@@ -179,7 +205,7 @@
                 </table>
             </div>
             <div class="avg-percent-box">
-                AVG PERCENTAGE <span id="vMarkPercent">0.0%</span>
+                AGGREGATE ACADEMIC PERFORMANCE <span id="vMarkPercent">0.0%</span>
             </div>
         </div>
     </div>
@@ -203,193 +229,7 @@ const firebaseConfig = { apiKey: "AIzaSyDRYk9KOK-ga0c88dnYMsAoifW2NJTd_Y8", data
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-const studentData = {
-    "1472070": { Name: "Hanish Macharla", Class: "Pre-KG", Father: "M.Vinay", Roll: "1472070", Phone: "9182861346", Adm: "2052" },
-    "1478225": { Name: "Arjun Vihaar Illandula", Class: "Pre-KG", Father: "Illandula Ravi", Roll: "1478225", Phone: "9848742172", Adm: "2061" },
-    "1469391": { Name: "Thanu sree Allakunta", Class: "Pre-KG", Father: "Srinu", Roll: "1469391", Phone: "9533030806", Adm: "2047" },
-    "1459555": { Name: "Aadhya Gangaraboina", Class: "Pre-KG", Father: "Vijay", Roll: "1459555", Phone: "8686191768", Adm: "2024" },
-    "1459560": { Name: "Aadhya Sri Oggula", Class: "Pre-KG", Father: "Raju", Roll: "1459560", Phone: "9704592874", Adm: "2017" },
-    "1474500": { Name: "Aadhyasri Shivagoni", Class: "Pre-KG", Father: "S.Abhinav", Roll: "1474500", Phone: "8074771010", Adm: "2058" },
-    "1460680": { Name: "Afraha Begum", Class: "Pre-KG", Father: "Amjad Khan", Roll: "1460680", Phone: "9440107489", Adm: "2043" },
-    "1472299": { Name: "Aliya Sultana", Class: "Pre-KG", Father: "MD.Allayar Khan", Roll: "1472299", Phone: "6304312988", Adm: "2054" },
-    "1459683": { Name: "Anvika Bandi", Class: "Pre-KG", Father: "Sridhar", Roll: "1459683", Phone: "9398418487", Adm: "2020" },
-    "1459620": { Name: "Aradana Devara konda", Class: "Pre-KG", Father: "Rajendraprasad", Roll: "1459620", Phone: "6305756873", Adm: "2016" },
-    "1459605": { Name: "Devansh Bandi", Class: "Pre-KG", Father: "Rajukumar", Roll: "1459605", Phone: "9121285781", Adm: "2030" },
-    "1472069": { Name: "Hanvitha Mulkalapelli", Class: "Pre-KG", Father: "M.Rajkumar", Roll: "1472069", Phone: "7780262276", Adm: "2050" },
-    "1472723": { Name: "Harsha Vardhan Seenapelli", Class: "Pre-KG", Father: "S.Prashanth", Roll: "1472723", Phone: "9515837322", Adm: "2056" },
-    "1459658": { Name: "Hiranya Bandi", Class: "Pre-KG", Father: "Ramesh", Roll: "1459658", Phone: "8790611868", Adm: "2033" },
-    "1478248": { Name: "Jashritha Boina", Class: "Pre-KG", Father: "B.Poorna Chander", Roll: "1478248", Phone: "6302186195", Adm: "2060" },
-    "1481135": { Name: "Konreddy Shreyanvi", Class: "Pre-KG", Father: "K.Akhil", Roll: "1481135", Phone: "8179316869", Adm: "0" },
-    "1459568": { Name: "Kriyansh Sammeta", Class: "Pre-KG", Father: "Shivakumar", Roll: "1459568", Phone: "7842370658", Adm: "2014" },
-    "1459652": { Name: "Mohammed Mohiuddin Sayyad", Class: "Pre-KG", Father: "Sayeed", Roll: "1459652", Phone: "9948172033", Adm: "2023" },
-    "1459636": { Name: "Nethra Narkurthi", Class: "Pre-KG", Father: "Shivaram", Roll: "1459636", Phone: "9347825403", Adm: "2019" },
-    "1463720": { Name: "Reeyansh Bandi", Class: "Pre-KG", Father: "Ramesh", Roll: "1463720", Phone: "7386940719", Adm: "2045" },
-    "1459582": { Name: "Rishi Manupati", Class: "Pre-KG", Father: "Kittu", Roll: "1459582", Phone: "9391993955", Adm: "2039" },
-    "1459607": { Name: "Rudransh Bandi", Class: "Pre-KG", Father: "Raju", Roll: "1459607", Phone: "8686262543", Adm: "2041" },
-    "1459604": { Name: "Rudransh Bandi", Class: "Pre-KG", Father: "Ramulu", Roll: "1459604", Phone: "7893718047", Adm: "2032" },
-    "1459625": { Name: "Sanvika Bandi", Class: "Pre-KG", Father: "Bixapathi", Roll: "1459625", Phone: "7702551738", Adm: "2038" },
-    "1472074": { Name: "Shanvith Khatha", Class: "Pre-KG", Father: "K.Venkateshwarlu", Roll: "1472074", Phone: "8712525233", Adm: "2053" },
-    "1469395": { Name: "Shishira Jalagam", Class: "Pre-KG", Father: "Yaka Swami", Roll: "1469395", Phone: "9052020711", Adm: "2042" },
-    "1456748": { Name: "Shiva Sai Mekala", Class: "Pre-KG", Father: "VASU", Roll: "1456748", Phone: "9912101753", Adm: "2013" },
-    "1459687": { Name: "Shree Rudhraveer Chevvu", Class: "Pre-KG", Father: "Shivaramakrishna", Roll: "1459687", Phone: "9398065483", Adm: "2040" },
-    "1459572": { Name: "Shreyansh Gangaraboina", Class: "Pre-KG", Father: "Vijay", Roll: "1459572", Phone: "8686191768", Adm: "2012" },
-    "1459643": { Name: "Sreeja Thalla", Class: "Pre-KG", Father: "Arun", Roll: "1459643", Phone: "9346300709", Adm: "2029" },
-    "1459603": { Name: "Srikrithini Myakala", Class: "Pre-KG", Father: "Srikanth", Roll: "1459603", Phone: "8309708832", Adm: "2037" },
-    "1472536": { Name: "Srivatsav Vanam", Class: "Pre-KG", Father: "V.Kiran Kumar", Roll: "1472536", Phone: "9642539015", Adm: "2055" },
-    "1456743": { Name: "Sriyansh Mekala", Class: "Pre-KG", Father: "RANGITH", Roll: "1456743", Phone: "9949327643", Adm: "2025" },
-    "1473500": { Name: "Thanvika Lakka", Class: "Pre-KG", Father: "L.Rahul", Roll: "1473500", Phone: "9010913855", Adm: "2057" },
-    "1463724": { Name: "Thrilokansh Vudari", Class: "Pre-KG", Father: "Bharat Kumar", Roll: "1463724", Phone: "8074833651", Adm: "2046" },
-    "1459694": { Name: "Ujjwal Chekka", Class: "Pre-KG", Father: "Kranthi", Roll: "1459694", Phone: "9963987952", Adm: "2022" },
-    "1474815": { Name: "Vaishnavi Lakka", Class: "Pre-KG", Father: "L.Shiva", Roll: "1474815", Phone: "9182045866", Adm: "2059" },
-    "1460690": { Name: "Vedansh Myakala", Class: "Pre-KG", Father: "Anil Kumar", Roll: "1460690", Phone: "9703293930", Adm: "2044" },
-    "1478250": { Name: "Vishnu Priya Molugu", Class: "Pre-KG", Father: "MM Suresh kumar", Roll: "1478250", Phone: "8247448532", Adm: "2006" },
-    "1413563": { Name: "Vyshnav Tej Boina", Class: "Pre-KG", Father: "Shekar", Roll: "1413563", Phone: "7671807331", Adm: "2015" },
-    "1459577": { Name: "Yafiah Mohammad", Class: "Pre-KG", Father: "Yousuf Shareef", Roll: "1459577", Phone: "9392670257", Adm: "2018" },
-    "1424084": { Name: "Aadhya Sri Amaravadi", Class: "KG-1", Father: "Rakesh", Roll: "1424084", Phone: "9502626801", Adm: "2007" },
-    "1426519": { Name: "Aditya Manda", Class: "KG-1", Father: "Mohan Lal", Roll: "1426519", Phone: "8374173873", Adm: "2004" },
-    "1426518": { Name: "Aadhya Jella", Class: "KG-1", Father: "Bhikshapathi", Roll: "1426518", Phone: "9959633484", Adm: "2003" },
-    "1392920": { Name: "Advaita Gauri Bandi", Class: "KG-1", Father: "B. Karnakar", Roll: "1392920", Phone: "9550011612", Adm: "1993" },
-    "1392683": { Name: "Aizah Amna Shaik", Class: "KG-1", Father: "Jahed Ali", Roll: "1392683", Phone: "9014984808", Adm: "1986" },
-    "1472077": { Name: "Akshara Singaram", Class: "KG-1", Father: "S.Prasanth", Roll: "1472077", Phone: "7095527244", Adm: "2051" },
-    "1469394": { Name: "Bhahuveer Raj Somishetti", Class: "KG-1", Father: "Harinivas", Roll: "1469394", Phone: "9951394609", Adm: "2048" },
-    "1392676": { Name: "Gayathri Erroju", Class: "KG-1", Father: "Rajesh", Roll: "1392676", Phone: "9010050059", Adm: "1989" },
-    "1390570": { Name: "Hanvika Mulkalapelli", Class: "KG-1", Father: "Raju", Roll: "1390570", Phone: "9177159519", Adm: "1977" },
-    "1396188": { Name: "Manvith Kondoju", Class: "KG-1", Father: "K.Sai Kumar", Roll: "1396188", Phone: "7075175578", Adm: "1995" },
-    "1392703": { Name: "Sayyad Vajeed", Class: "KG-1", Father: "Mariyam", Roll: "1392703", Phone: "8885451958", Adm: "1991" },
-    "1412110": { Name: "Mekala Manu sri", Class: "KG-1", Father: "Rangith", Roll: "1412110", Phone: "7793959897", Adm: "1998" },
-    "1392687": { Name: "Oliva Grace Vallapu", Class: "KG-1", Father: "Naveen", Roll: "1392687", Phone: "9951886334", Adm: "1990" },
-    "1392696": { Name: "Rithwik Oggula", Class: "KG-1", Father: "Sampath", Roll: "1392696", Phone: "8464872522", Adm: "1984" },
-    "1413326": { Name: "Rithwika Kandagatla", Class: "KG-1", Father: "Ajay", Roll: "1413326", Phone: "8106023490", Adm: "2000" },
-    "1392679": { Name: "Srimahi Chevvu", Class: "KG-1", Father: "Gavaskaar", Roll: "1392679", Phone: "9966573771", Adm: "1983" },
-    "1459706": { Name: "Thanvesh Thalla", Class: "KG-1", Father: "Rajesh", Roll: "1459706", Phone: "9550995231", Adm: "2011" },
-    "1317800": { Name: "Trishul Nanduri", Class: "KG-1", Father: "Vijaykanth", Roll: "1317800", Phone: "9949668558", Adm: "1969" },
-    "1424085": { Name: "Yoganshika Nanduri", Class: "KG-1", Father: "Vijay Kanth", Roll: "1424085", Phone: "9949668558", Adm: "2005" },
-    "1387264": { Name: "Yusra Mohammad", Class: "KG-1", Father: "Yousuf Shareef", Roll: "1387264", Phone: "9392661854", Adm: "1974" },
-    "1402461": { Name: "Zainul Abideen Syed", Class: "KG-1", Father: "Akbar", Roll: "1402461", Phone: "8106972447", Adm: "1997" },
-    "1298438": { Name: "Deekshanth Sammeta", Class: "KG-2", Father: "Shivakumar", Roll: "1298438", Phone: "7842370658", Adm: "1946" },
-    "1298439": { Name: "Hanshith Erroju", Class: "KG-2", Father: "Rajesh", Roll: "1298439", Phone: "9010150059", Adm: "1960" },
-    "1298447": { Name: "Harika Bandi", Class: "KG-2", Father: "Raju", Roll: "1298447", Phone: "9573818773", Adm: "1968" },
-    "1298432": { Name: "Himarsha Naini", Class: "KG-2", Father: "Raju", Roll: "1298432", Phone: "7993636204", Adm: "1966" },
-    "1298440": { Name: "Karthik Vallepu", Class: "KG-2", Father: "Ramesh", Roll: "1298440", Phone: "9704840650", Adm: "1945" },
-    "1298433": { Name: "Kruthika Bandi", Class: "KG-2", Father: "Ramesh", Roll: "1298433", Phone: "8790611868", Adm: "1951" },
-    "1298441": { Name: "Rajavardhan Gampala", Class: "KG-2", Father: "Kanaka Raju", Roll: "1298441", Phone: "8074393994", Adm: "1950" },
-    "1298443": { Name: "Roshan Kaitha", Class: "KG-2", Father: "Rajashekar", Roll: "1298443", Phone: "6300582916", Adm: "1955" },
-    "1298448": { Name: "Sri Anshu Ayaan Lyadala", Class: "KG-2", Father: "Rajashekar", Roll: "1298448", Phone: "8008113407", Adm: "1965" },
-    "1298444": { Name: "Srihansh Bandi", Class: "KG-2", Father: "Sridhar", Roll: "1298444", Phone: "9398418487", Adm: "1947" },
-    "1298435": { Name: "Srikshitha Guduri", Class: "KG-2", Father: "Raju", Roll: "1298435", Phone: "9398716665", Adm: "1959" },
-    "1298445": { Name: "Varshith Gonela", Class: "KG-2", Father: "Ramu", Roll: "1298445", Phone: "9966960107", Adm: "1956" },
-    "1392815": { Name: "Adyasri Makala", Class: "KG-2", Father: "Laxmi Narayana", Roll: "1392815", Phone: "9985420659", Adm: "1988" },
-    "1394463": { Name: "Anvik Boini", Class: "KG-2", Father: "B.Raju", Roll: "1394463", Phone: "9705653666", Adm: "1995" },
-    "1459764": { Name: "Anvith Pokanati", Class: "KG-2", Father: "Keshavulu (Late)", Roll: "1459764", Phone: "6300854330", Adm: "2025" },
-    "1459748": { Name: "Awais Ur Rehman Mohammad", Class: "KG-2", Father: "Imran Mahammad", Roll: "1459748", Phone: "9705839237", Adm: "2010" },
-    "1459742": { Name: "Dakshu Pothuganti", Class: "KG-2", Father: "Rajashekhar", Roll: "1459742", Phone: "8074781031", Adm: "2027" },
-    "1393477": { Name: "Hansith Reddy Katukuri", Class: "KG-2", Father: "Thirupathi Reddy", Roll: "1393477", Phone: "7995553736", Adm: "1972" },
-    "1459762": { Name: "Harshith Pokanati", Class: "KG-2", Father: "Keshavulu (Late)", Roll: "1459762", Phone: "6300854330", Adm: "2026" },
-    "1402310": { Name: "Jella Aditya", Class: "KG-2", Father: "J.Bhikshapathi", Roll: "1402310", Phone: "6281221851", Adm: "1997" },
-    "1390563": { Name: "Krishank Nallabothula", Class: "KG-2", Father: "Lingaraju", Roll: "1390563", Phone: "9014498296", Adm: "1976" },
-    "1459771": { Name: "Kundana Katkuri", Class: "KG-2", Father: "Chiranjeevi", Roll: "1459771", Phone: "8247004380", Adm: "2008" },
-    "1307790": { Name: "Munukuntla Revanth Rudhra", Class: "KG-2", Father: "Subhash", Roll: "1307790", Phone: "8686799532", Adm: "1967" },
-    "1459758": { Name: "Niraja Nethri Siluveru", Class: "KG-2", Father: "Kapil", Roll: "1459758", Phone: "7286805213", Adm: "2033" },
-    "1459752": { Name: "Pranav Mattepelli", Class: "KG-2", Father: "Vijay", Roll: "1459752", Phone: "9704839982", Adm: "2009" },
-    "1390566": { Name: "Sreenith Yadav Naini", Class: "KG-2", Father: "Ramesh", Roll: "1390566", Phone: "8121293251", Adm: "1975" },
-    "1459756": { Name: "Uvan Reddy Dasari", Class: "KG-2", Father: "Raghupathi Reddy", Roll: "1459756", Phone: "9573557696", Adm: "2030" },
-    "1459775": { Name: "Zayan Mohammad", Class: "KG-2", Father: "Zaffar", Roll: "1459775", Phone: "9182909190", Adm: "2034" },
-    "1459714": { Name: "Zoya Mohammed", Class: "KG-2", Father: "Chand Pasha", Roll: "1459714", Phone: "9848465650", Adm: "2035" },
-    "1298423": { Name: "Dheeraj Gattu", Class: "Grade-1", Father: "Raju", Roll: "1298423", Phone: "9346457748", Adm: "151" },
-    "1298425": { Name: "Preetham Sannayala", Class: "Grade-1", Father: "Shiva", Roll: "1298425", Phone: "9000283858", Adm: "138" },
-    "1298428": { Name: "Shiva nandu Gonela", Class: "Grade-1", Father: "Ramu", Roll: "1298428", Phone: "9966960107", Adm: "137" },
-    "1298429": { Name: "Shrayan Nuthanakanti", Class: "Grade-1", Father: "Sridhar", Roll: "1298429", Phone: "7075567649", Adm: "148" },
-    "1392864": { Name: "Sriyanksha Mandala", Class: "Grade-1", Father: "Arun Kumar", Roll: "1392864", Phone: "8885767607", Adm: "143" },
-    "1298411": { Name: "Advitha Garige", Class: "Grade-1", Father: "Chiranjeevi", Roll: "1298411", Phone: "9959114639", Adm: "147" },
-    "1298413": { Name: "Harika Bandi", Class: "Grade-1", Father: "Rajkumar", Roll: "1298413", Phone: "8008707668", Adm: "145" },
-    "1298414": { Name: "Himansi Kondoju", Class: "Grade-1", Father: "Sai kumar", Roll: "1298414", Phone: "7075175578", Adm: "141" },
-    "1392895": { Name: "Izhaan Rahamath Syed", Class: "Grade-1", Father: "Syed Fayaz", Roll: "1392895", Phone: "8074667438", Adm: "154" },
-    "1298424": { Name: "Jaisurya Myakala", Class: "Grade-1", Father: "Sravan Kumar", Roll: "1298424", Phone: "9010506760", Adm: "136" },
-    "1298415": { Name: "Khadeeja Fathima", Class: "Grade-1", Father: "Khaja Faheemuddin", Roll: "1298415", Phone: "9959414786", Adm: "146" },
-    "1298416": { Name: "Manaswini Dandugula", Class: "Grade-1", Father: "Srinivas", Roll: "1298416", Phone: "7075342014", Adm: "150" },
-    "1298417": { Name: "Manusri Bandi", Class: "Grade-1", Father: "Ramesh", Roll: "1298417", Phone: "9177313069", Adm: "144" },
-    "1298426": { Name: "Rithwik krishna Amaravadi", Class: "Grade-1", Father: "Rakesh", Roll: "1298426", Phone: "9502626801", Adm: "149" },
-    "1298427": { Name: "Rohan Bandi", Class: "Grade-1", Father: "Vijay kumar", Roll: "1298427", Phone: "6309561181", Adm: "140" },
-    "1392876": { Name: "Shiva Junnu", Class: "Grade-1", Father: "Parusharamulu", Roll: "1392876", Phone: "8096253875", Adm: "152" },
-    "1392885": { Name: "Shivanandh Bandi", Class: "Grade-1", Father: "Rajesh", Roll: "1392885", Phone: "9848509341", Adm: "155" },
-    "1459709": { Name: "Sridha Thalla", Class: "Grade-1", Father: "Rajesh", Roll: "1459709", Phone: "9550995231", Adm: "164" },
-    "1298419": { Name: "Srinika Chengelly", Class: "Grade-1", Father: "Vykunta Chary", Roll: "1298419", Phone: "9703045606", Adm: "139" },
-    "1298420": { Name: "Sriyanshi Oggula", Class: "Grade-1", Father: "Sampath", Roll: "1298420", Phone: "7730886474", Adm: "142" },
-    "1298431": { Name: "Vishwak Chekka", Class: "Grade-1", Father: "Naresh", Roll: "1298431", Phone: "9912945240", Adm: "143" },
-    "1298397": { Name: "Aliza Manha Shaik", Class: "Grade-2", Father: "Moin Pasha", Roll: "1298397", Phone: "7989482920", Adm: "117" },
-    "1298407": { Name: "Dhruvan Reddy Katukuri", Class: "Grade-2", Father: "Thirupathi Reddy", Roll: "1298407", Phone: "7995553736", Adm: "111" },
-    "1298398": { Name: "Druthika Enugala", Class: "Grade-2", Father: "Karthik Reddy", Roll: "1298398", Phone: "8686077799", Adm: "116" },
-    "1298399": { Name: "Manaswini Bandi", Class: "Grade-2", Father: "Bixapathi", Roll: "1298399", Phone: "7702551738", Adm: "115" },
-    "1298408": { Name: "Rakshith Macharla", Class: "Grade-2", Father: "Ganesh", Roll: "1298408", Phone: "8074638822", Adm: "112" },
-    "1298401": { Name: "Sathwika Katkuri", Class: "Grade-2", Father: "Shivaiah", Roll: "1298401", Phone: "6300199764", Adm: "113" },
-    "1298402": { Name: "Shalini Uppala", Class: "Grade-2", Father: "Anji", Roll: "1298402", Phone: "9701160185", Adm: "109" },
-    "1459786": { Name: "Chandu Devarakonda", Class: "Grade-2", Father: "Ramesh", Roll: "1459786", Phone: "9392270984", Adm: "161" },
-    "1459815": { Name: "Gnaneshwar Pokanati", Class: "Grade-2", Father: "Keshavulu (Late)", Roll: "1459815", Phone: "6300854330", Adm: "162" },
-    "1298409": { Name: "Hasnain Syed", Class: "Grade-2", Father: "Khader Syed", Roll: "1298409", Phone: "8333021076", Adm: "118" },
-    "1459832": { Name: "Koushik Siluveru", Class: "Grade-2", Father: "Kapil", Roll: "1459832", Phone: "7286805213", Adm: "167" },
-    "1316732": { Name: "Senen Desabattula", Class: "Grade-2", Father: "Samuel Sparjan Babu", Roll: "1316732", Phone: "9052820502", Adm: "119" },
-    "1459817": { Name: "Shivarajan Pothuganti", Class: "Grade-2", Father: "Rajashekhar", Roll: "1459817", Phone: "8074781031", Adm: "163" },
-    "1298393": { Name: "Nagavelly Manikanta", Class: "Grade-3", Father: "Ravi kumar", Roll: "1298393", Phone: "9492098006", Adm: "73" },
-    "1459834": { Name: "Mirja Ismail", Class: "Grade-3", Father: "Yusuf Baig", Roll: "1459834", Phone: "9989367263", Adm: "166" },
-    "1298390": { Name: "Bandi Aryan", Class: "Grade-3", Father: "Anil", Roll: "1298390", Phone: "9502098594", Adm: "88" },
-    "1298392": { Name: "Dandugula Mahesh Babu", Class: "Grade-3", Father: "Srinivas", Roll: "1298392", Phone: "7075342014", Adm: "91" },
-    "1298387": { Name: "Bandi Tejasri", Class: "Grade-3", Father: "Raghu", Roll: "1298387", Phone: "9618791981", Adm: "102" },
-    "1298391": { Name: "Bandi Harshavardhan", Class: "Grade-3", Father: "Rajkumar", Roll: "1298391", Phone: "8008707668", Adm: "99" },
-    "1298389": { Name: "Gampala Vyshnavi", Class: "Grade-3", Father: "Kanakaraju", Roll: "1298389", Phone: "8074393994", Adm: "89" },
-    "1298384": { Name: "Gampala Laxmi", Class: "Grade-3", Father: "Kanakaraju", Roll: "1298384", Phone: "8074393994", Adm: "90" },
-    "1298410": { Name: "Garige Harshith", Class: "Grade-3", Father: "Chiranjeevi", Roll: "1298410", Phone: "9959114639", Adm: "106" },
-    "1459844": { Name: "Katkuri Hanish", Class: "Grade-3", Father: "Katkuri Suryaprasad", Roll: "1459844", Phone: "9000557009", Adm: "169" },
-    "1459798": { Name: "Katukuri Manideep", Class: "Grade-3", Father: "Chiranjeevi", Roll: "1459798", Phone: "8247004380", Adm: "172" },
-    "1459805": { Name: "MD Abdul Quddus", Class: "Grade-3", Father: "Raja.S", Roll: "1459805", Phone: "7300303319", Adm: "160" },
-    "1298395": { Name: "Muppa Sathwik Patel", Class: "Grade-3", Father: "Janardhan", Roll: "1298395", Phone: "9553800447", Adm: "81" },
-    "1298386": { Name: "Nuthanakanti Sansita", Class: "Grade-3", Father: "Sridhar", Roll: "1298386", Phone: "7989663380", Adm: "75" },
-    "1298396": { Name: "Pasarakonda Ritwin", Class: "Grade-3", Father: "Karnakar", Roll: "1298396", Phone: "7702007402", Adm: "104" },
-    "1459841": { Name: "Pinninti Rakshith Rao", Class: "Grade-3", Father: "Chander Rao (Late)", Roll: "1459841", Phone: "9848523514", Adm: "170" },
-    "1400203": { Name: "Rayi Sriman Adithya", Class: "Grade-3", Father: "Venkataramana", Roll: "1400203", Phone: "6305872732", Adm: "135" },
-    "1298376": { Name: "Abdul Saqib Mohammad", Class: "Grade-4", Father: "Abdul Rawoof", Roll: "1298376", Phone: "8328695850", Adm: "41" },
-    "1298366": { Name: "Anudeep Chintha", Class: "Grade-4", Father: "Anil", Roll: "1298366", Phone: "9848448941", Adm: "64" },
-    "1298368": { Name: "Bhavan Bandi", Class: "Grade-4", Father: "Devendar", Roll: "1298368", Phone: "8897141289", Adm: "95" },
-    "1298370": { Name: "Harshavardhan Gonela", Class: "Grade-4", Father: "Raju", Roll: "1298370", Phone: "9391704022", Adm: "80" },
-    "1298372": { Name: "Jayadev Chiluveru", Class: "Grade-4", Father: "Madhavarao", Roll: "1298372", Phone: "9700409933", Adm: "84" },
-    "1298373": { Name: "Mahaboob Syed", Class: "Grade-4", Father: "Khader", Roll: "1298373", Phone: "8333021076", Adm: "103" },
-    "1298374": { Name: "Nandith Reddy Enugala", Class: "Grade-4", Father: "Karthik Reddy", Roll: "1298374", Phone: "8686077799", Adm: "49" },
-    "1392930": { Name: "Sai Charan Goud Mandala", Class: "Grade-4", Father: "Arun Kumar", Roll: "1392930", Phone: "8885767607", Adm: "123" },
-    "1298380": { Name: "Sai Prasanna Keerthi", Class: "Grade-4", Father: "Venkateshwarlu", Roll: "1298380", Phone: "9951567253", Adm: "105" },
-    "1298363": { Name: "Ajmeri Shaik", Class: "Grade-4", Father: "Hidayath Pasha", Roll: "1298363", Phone: "9302145468", Adm: "87" },
-    "1392939": { Name: "Akshith Chiluveru", Class: "Grade-4", Father: "Kranthi Kumar", Roll: "1392939", Phone: "8179352423", Adm: "128" },
-    "1298364": { Name: "Jayasri Myakala", Class: "Grade-4", Father: "Sravan kumar", Roll: "1298364", Phone: "9010506760", Adm: "68" },
-    "1298381": { Name: "Rahul Kanjarla", Class: "Grade-4", Father: "Kumaraswamy", Roll: "1298381", Phone: "8897047979", Adm: "79" },
-    "1459784": { Name: "Saketh Devarakonda", Class: "Grade-4", Father: "Ramesh", Roll: "1459784", Phone: "9392270984", Adm: "159" },
-    "1298353": { Name: "Adya Reddy Vangala", Class: "Grade-5", Father: "Mahipal Reddy", Roll: "1298353", Phone: "9949109221", Adm: "21" },
-    "1298361": { Name: "Kowshik Patel Muppa", Class: "Grade-5", Father: "Janardhan", Roll: "1298361", Phone: "9553800447", Adm: "77" },
-    "1298355": { Name: "Siri Singaram", Class: "Grade-5", Father: "Madhu", Roll: "1298355", Phone: "9550726263", Adm: "83" },
-    "1298360": { Name: "Srikar Mandala", Class: "Grade-5", Father: "Ramesh", Roll: "1298360", Phone: "9550073190", Adm: "76" },
-    "1459801": { Name: "Abdus Salaam MD", Class: "Grade-5", Father: "Raja.S", Roll: "1459801", Phone: "7300303319", Adm: "158" },
-    "1392968": { Name: "Akshith Ram Kalvacharla", Class: "Grade-5", Father: "Hareen Chary", Roll: "1392968", Phone: "7672058517", Adm: "126" },
-    "1392965": { Name: "Jaffar Anas Shaik", Class: "Grade-5", Father: "Khaja Pasha", Roll: "1392965", Phone: "9391854024", Adm: "130" },
-    "1298359": { Name: "Khaja Azeemuddin Mohammed", Class: "Grade-5", Father: "Khaja Faheemuddin", Roll: "1298359", Phone: "9959414786", Adm: "30" },
-    "1459839": { Name: "Nihan Mohammed", Class: "Grade-5", Father: "Chand Pasha", Roll: "1459839", Phone: "9848465650", Adm: "168" },
-    "1392963": { Name: "Saif Shaik", Class: "Grade-5", Father: "Salmaan", Roll: "1392963", Phone: "8179352120", Adm: "120" },
-    "1459794": { Name: "Saketh Renukuntla", Class: "Grade-5", Father: "Rajesh", Roll: "1459794", Phone: "7569518371", Adm: "157" },
-    "1392955": { Name: "Sreeja Dasari", Class: "Grade-5", Father: "Kumar", Roll: "1392955", Phone: "6301871704", Adm: "123" },
-    "1459821": { Name: "Vidhaatri Sahani", Class: "Grade-5", Father: "Abhishek Sahani", Roll: "1459821", Phone: "9704394869", Adm: "165" },
-    "1298347": { Name: "Abdul Razzak Mohammad", Class: "Grade-6", Father: "Abdul Rawoof", Roll: "1298347", Phone: "9573226386", Adm: "19" },
-    "1298341": { Name: "Anudeepthi Chintha", Class: "Grade-6", Father: "Anil", Roll: "1298341", Phone: "9052927765", Adm: "63" },
-    "1298350": { Name: "Saketh Ranaveni", Class: "Grade-6", Father: "Sampath", Roll: "1298350", Phone: "8688129606", Adm: "61" },
-    "1298346": { Name: "Shiva Sri Katukuri", Class: "Grade-6", Father: "Shivaiah", Roll: "1298346", Phone: "6300199764", Adm: "48" },
-    "1298348": { Name: "Aklees Shaik", Class: "Grade-6", Father: "Hidayath Pasha", Roll: "1298348", Phone: "9302145468", Adm: "85" },
-    "1392992": { Name: "Akshya Kalvacharla", Class: "Grade-6", Father: "Hareen Chary", Roll: "1392992", Phone: "7672058517", Adm: "125" },
-    "1472577": { Name: "Prince Katkuri", Class: "Grade-6", Father: "Katkuri Suryaprasad", Roll: "1472577", Phone: "9000557009", Adm: "0" },
-    "1298339": { Name: "Manikanta Sannayala", Class: "Grade-7", Father: "Shiva", Roll: "1298339", Phone: "9000283858", Adm: "38" },
-    "1298340": { Name: "Sreeyan Reddy Karra", Class: "Grade-7", Father: "Krishna Reddy", Roll: "1298340", Phone: "9848774257", Adm: "33" },
-    "1393008": { Name: "Jayadhithya Chiluveru", Class: "Grade-7", Father: "CH.Madhava Rao", Roll: "1393008", Phone: "8886826838", Adm: "131" },
-    "1459846": { Name: "Akshaya Gampala", Class: "Grade-8", Father: "Balaiah", Roll: "1459846", Phone: "9948184498", Adm: "171" },
-    "1298335": { Name: "Ganesh Oggula", Class: "Grade-8", Father: "Cheralu", Roll: "1298335", Phone: "6304381153", Adm: "56" },
-    "1459792": { Name: "Gayathri Renukuntla", Class: "Grade-8", Father: "Rajesh", Roll: "1459792", Phone: "7569518371", Adm: "156" },
-    "1298337": { Name: "Khaja Sadeemuddin Mohammed", Class: "Grade-8", Father: "Khaja Faheemuddin", Roll: "1298337", Phone: "9959414786", Adm: "28" },
-    "1298333": { Name: "Sathwika Nagavelly", Class: "Grade-8", Father: "Ravi", Roll: "1298333", Phone: "9492098006", Adm: "39" },
-    "1298334": { Name: "Vyshnavi Uppala", Class: "Grade-8", Father: "Ramesh", Roll: "1298334", Phone: "8179254251", Adm: "34" }
-};
+const studentData = { "1472070": { Name: "Hanish Macharla", Class: "Pre-KG", Father: "M.Vinay", Roll: "1472070", Phone: "9182861346", Adm: "2052" }, "1478225": { Name: "Arjun Vihaar Illandula", Class: "Pre-KG", Father: "Illandula Ravi", Roll: "1478225", Phone: "9848742172", Adm: "2061" }, "1469391": { Name: "Thanu sree Allakunta", Class: "Pre-KG", Father: "Srinu", Roll: "1469391", Phone: "9533030806", Adm: "2047" }, "1459555": { Name: "Aadhya Gangaraboina", Class: "Pre-KG", Father: "Vijay", Roll: "1459555", Phone: "8686191768", Adm: "2024" }, "1459560": { Name: "Aadhya Sri Oggula", Class: "Pre-KG", Father: "Raju", Roll: "1459560", Phone: "9704592874", Adm: "2017" }, "1474500": { Name: "Aadhyasri Shivagoni", Class: "Pre-KG", Father: "S.Abhinav", Roll: "1474500", Phone: "8074771010", Adm: "2058" }, "1460680": { Name: "Afraha Begum", Class: "Pre-KG", Father: "Amjad Khan", Roll: "1460680", Phone: "9440107489", Adm: "2043" }, "1472299": { Name: "Aliya Sultana", Class: "Pre-KG", Father: "MD.Allayar Khan", Roll: "1472299", Phone: "6304312988", Adm: "2054" }, "1459683": { Name: "Anvika Bandi", Class: "Pre-KG", Father: "Sridhar", Roll: "1459683", Phone: "9398418487", Adm: "2020" }, "1459620": { Name: "Aradana Devara konda", Class: "Pre-KG", Father: "Rajendraprasad", Roll: "1459620", Phone: "6305756873", Adm: "2016" }, "1459605": { Name: "Devansh Bandi", Class: "Pre-KG", Father: "Rajukumar", Roll: "1459605", Phone: "9121285781", Adm: "2030" }, "1472069": { Name: "Hanvitha Mulkalapelli", Class: "Pre-KG", Father: "M.Rajkumar", Roll: "1472069", Phone: "7780262276", Adm: "2050" }, "1472723": { Name: "Harsha Vardhan Seenapelli", Class: "Pre-KG", Father: "S.Prashanth", Roll: "1472723", Phone: "9515837322", Adm: "2056" }, "1459658": { Name: "Hiranya Bandi", Class: "Pre-KG", Father: "Ramesh", Roll: "1459658", Phone: "8790611868", Adm: "2033" }, "1478248": { Name: "Jashritha Boina", Class: "Pre-KG", Father: "B.Poorna Chander", Roll: "1478248", Phone: "6302186195", Adm: "2060" }, "1481135": { Name: "Konreddy Shreyanvi", Class: "Pre-KG", Father: "K.Akhil", Roll: "1481135", Phone: "8179316869", Adm: "0" }, "1459568": { Name: "Kriyansh Sammeta", Class: "Pre-KG", Father: "Shivakumar", Roll: "1459568", Phone: "7842370658", Adm: "2014" }, "1459652": { Name: "Mohammed Mohiuddin Sayyad", Class: "Pre-KG", Father: "Sayeed", Roll: "1459652", Phone: "9948172033", Adm: "2023" }, "1459636": { Name: "Nethra Narkurthi", Class: "Pre-KG", Father: "Shivaram", Roll: "1459636", Phone: "9347825403", Adm: "2019" }, "1463720": { Name: "Reeyansh Bandi", Class: "Pre-KG", Father: "Ramesh", Roll: "1463720", Phone: "7386940719", Adm: "2045" }, "1459582": { Name: "Rishi Manupati", Class: "Pre-KG", Father: "Kittu", Roll: "1459582", Phone: "9391993955", Adm: "2039" }, "1459607": { Name: "Rudransh Bandi", Class: "Pre-KG", Father: "Raju", Roll: "1459607", Phone: "8686262543", Adm: "2041" }, "1459604": { Name: "Rudransh Bandi", Class: "Pre-KG", Father: "Ramulu", Roll: "1459604", Phone: "7893718047", Adm: "2032" }, "1459625": { Name: "Sanvika Bandi", Class: "Pre-KG", Father: "Bixapathi", Roll: "1459625", Phone: "7702551738", Adm: "2038" }, "1472074": { Name: "Shanvith Khatha", Class: "Pre-KG", Father: "K.Venkateshwarlu", Roll: "1472074", Phone: "8712525233", Adm: "2053" }, "1469395": { Name: "Shishira Jalagam", Class: "Pre-KG", Father: "Yaka Swami", Roll: "1469395", Phone: "9052020711", Adm: "2042" }, "1456748": { Name: "Shiva Sai Mekala", Class: "Pre-KG", Father: "VASU", Roll: "1456748", Phone: "9912101753", Adm: "2013" }, "1459687": { Name: "Shree Rudhraveer Chevvu", Class: "Pre-KG", Father: "Shivaramakrishna", Roll: "1459687", Phone: "9398065483", Adm: "2040" }, "1459572": { Name: "Shreyansh Gangaraboina", Class: "Pre-KG", Father: "Vijay", Roll: "1459572", Phone: "8686191768", Adm: "2012" }, "1459643": { Name: "Sreeja Thalla", Class: "Pre-KG", Father: "Arun", Roll: "1459643", Phone: "9346300709", Adm: "2029" }, "1459603": { Name: "Srikrithini Myakala", Class: "Pre-KG", Father: "Srikanth", Roll: "1459603", Phone: "8309708832", Adm: "2037" }, "1472536": { Name: "Srivatsav Vanam", Class: "Pre-KG", Father: "V.Kiran Kumar", Roll: "1472536", Phone: "9642539015", Adm: "2055" }, "1456743": { Name: "Sriyansh Mekala", Class: "Pre-KG", Father: "RANGITH", Roll: "1456743", Phone: "9949327643", Adm: "2025" }, "1473500": { Name: "Thanvika Lakka", Class: "Pre-KG", Father: "L.Rahul", Roll: "1473500", Phone: "9010913855", Adm: "2057" }, "1463724": { Name: "Thrilokansh Vudari", Class: "Pre-KG", Father: "Bharat Kumar", Roll: "1463724", Phone: "8074833651", Adm: "2046" }, "1459694": { Name: "Ujjwal Chekka", Class: "Pre-KG", Father: "Kranthi", Roll: "1459694", Phone: "9963987952", Adm: "2022" }, "1474815": { Name: "Vaishnavi Lakka", Class: "Pre-KG", Father: "L.Shiva", Roll: "1474815", Phone: "9182045866", Adm: "2059" }, "1460690": { Name: "Vedansh Myakala", Class: "Pre-KG", Father: "Anil Kumar", Roll: "1460690", Phone: "9703293930", Adm: "2044" }, "1478250": { Name: "Vishnu Priya Molugu", Class: "Pre-KG", Father: "MM Suresh kumar", Roll: "1478250", Phone: "8247448532", Adm: "2006" }, "1413563": { Name: "Vyshnav Tej Boina", Class: "Pre-KG", Father: "Shekar", Roll: "1413563", Phone: "7671807331", Adm: "2015" }, "1459577": { Name: "Yafiah Mohammad", Class: "Pre-KG", Father: "Yousuf Shareef", Roll: "1459577", Phone: "9392670257", Adm: "2018" }, "1424084": { Name: "Aadhya Sri Amaravadi", Class: "KG-1", Father: "Rakesh", Roll: "1424084", Phone: "9502626801", Adm: "2007" }, "1426519": { Name: "Aditya Manda", Class: "KG-1", Father: "Mohan Lal", Roll: "1426519", Phone: "8374173873", Adm: "2004" }, "1426518": { Name: "Aadhya Jella", Class: "KG-1", Father: "Bhikshapathi", Roll: "1426518", Phone: "9959633484", Adm: "2003" }, "1392920": { Name: "Advaita Gauri Bandi", Class: "KG-1", Father: "B. Karnakar", Roll: "1392920", Phone: "9550011612", Adm: "1993" }, "1392683": { Name: "Aizah Amna Shaik", Class: "KG-1", Father: "Jahed Ali", Roll: "1392683", Phone: "9014984808", Adm: "1986" }, "1472077": { Name: "Akshara Singaram", Class: "KG-1", Father: "S.Prasanth", Roll: "1472077", Phone: "7095527244", Adm: "2051" }, "1469394": { Name: "Bhahuveer Raj Somishetti", Class: "KG-1", Father: "Harinivas", Roll: "1469394", Phone: "9951394609", Adm: "2048" }, "1392676": { Name: "Gayathri Erroju", Class: "KG-1", Father: "Rajesh", Roll: "1392676", Phone: "9010050059", Adm: "1989" }, "1390570": { Name: "Hanvika Mulkalapelli", Class: "KG-1", Father: "Raju", Roll: "1390570", Phone: "9177159519", Adm: "1977" }, "1396188": { Name: "Manvith Kondoju", Class: "KG-1", Father: "K.Sai Kumar", Roll: "1396188", Phone: "7075175578", Adm: "1995" }, "1392703": { Name: "Sayyad Vajeed", Class: "KG-1", Father: "Mariyam", Roll: "1392703", Phone: "8885451958", Adm: "1991" }, "1412110": { Name: "Mekala Manu sri", Class: "KG-1", Father: "Rangith", Roll: "1412110", Phone: "7793959897", Adm: "1998" }, "1392687": { Name: "Oliva Grace Vallapu", Class: "KG-1", Father: "Naveen", Roll: "1392687", Phone: "9951886334", Adm: "1990" }, "1392696": { Name: "Rithwik Oggula", Class: "KG-1", Father: "Sampath", Roll: "1392696", Phone: "8464872522", Adm: "1984" }, "1413326": { Name: "Rithwika Kandagatla", Class: "KG-1", Father: "Ajay", Roll: "1413326", Phone: "8106023490", Adm: "2000" }, "1392679": { Name: "Srimahi Chevvu", Class: "KG-1", Father: "Gavaskaar", Roll: "1392679", Phone: "9966573771", Adm: "1983" }, "1459706": { Name: "Thanvesh Thalla", Class: "KG-1", Father: "Rajesh", Roll: "1459706", Phone: "9550995231", Adm: "2011" }, "1317800": { Name: "Trishul Nanduri", Class: "KG-1", Father: "Vijaykanth", Roll: "1317800", Phone: "9949668558", Adm: "1969" }, "1424085": { Name: "Yoganshika Nanduri", Class: "KG-1", Father: "Vijay Kanth", Roll: "1424085", Phone: "9949668558", Adm: "2005" }, "1387264": { Name: "Yusra Mohammad", Class: "KG-1", Father: "Yousuf Shareef", Roll: "1387264", Phone: "9392661854", Adm: "1974" }, "1402461": { Name: "Zainul Abideen Syed", Class: "KG-1", Father: "Akbar", Roll: "1402461", Phone: "8106972447", Adm: "1997" }, "1298438": { Name: "Deekshanth Sammeta", Class: "KG-2", Father: "Shivakumar", Roll: "1298438", Phone: "7842370658", Adm: "1946" }, "1298439": { Name: "Hanshith Erroju", Class: "KG-2", Father: "Rajesh", Roll: "1298439", Phone: "9010150059", Adm: "1960" }, "1298447": { Name: "Harika Bandi", Class: "KG-2", Father: "Raju", Roll: "1298447", Phone: "9573818773", Adm: "1968" }, "1298432": { Name: "Himarsha Naini", Class: "KG-2", Father: "Raju", Roll: "1298432", Phone: "7993636204", Adm: "1966" }, "1298440": { Name: "Karthik Vallepu", Class: "KG-2", Father: "Ramesh", Roll: "1298440", Phone: "9704840650", Adm: "1945" }, "1298433": { Name: "Kruthika Bandi", Class: "KG-2", Father: "Ramesh", Roll: "1298433", Phone: "8790611868", Adm: "1951" }, "1298441": { Name: "Rajavardhan Gampala", Class: "KG-2", Father: "Kanaka Raju", Roll: "1298441", Phone: "8074393994", Adm: "1950" }, "1298443": { Name: "Roshan Kaitha", Class: "KG-2", Father: "Rajashekar", Roll: "1298443", Phone: "6300582916", Adm: "1955" }, "1298448": { Name: "Sri Anshu Ayaan Lyadala", Class: "KG-2", Father: "Rajashekar", Roll: "1298448", Phone: "8008113407", Adm: "1965" }, "1298444": { Name: "Srihansh Bandi", Class: "KG-2", Father: "Sridhar", Roll: "1298444", Phone: "9398418487", Adm: "1947" }, "1298435": { Name: "Srikshitha Guduri", Class: "KG-2", Father: "Raju", Roll: "1298435", Phone: "9398716665", Adm: "1959" }, "1298445": { Name: "Varshith Gonela", Class: "KG-2", Father: "Ramu", Roll: "1298445", Phone: "9966960107", Adm: "1956" }, "1392815": { Name: "Adyasri Makala", Class: "KG-2", Father: "Laxmi Narayana", Roll: "1392815", Phone: "9985420659", Adm: "1988" }, "1394463": { Name: "Anvik Boini", Class: "KG-2", Father: "B.Raju", Roll: "1394463", Phone: "9705653666", Adm: "1995" }, "1459764": { Name: "Anvith Pokanati", Class: "KG-2", Father: "Keshavulu (Late)", Roll: "1459764", Phone: "6300854330", Adm: "2025" }, "1459748": { Name: "Awais Ur Rehman Mohammad", Class: "KG-2", Father: "Imran Mahammad", Roll: "1459748", Phone: "9705839237", Adm: "2010" }, "1459742": { Name: "Dakshu Pothuganti", Class: "KG-2", Father: "Rajashekhar", Roll: "1459742", Phone: "8074781031", Adm: "2027" }, "1393477": { Name: "Hansith Reddy Katukuri", Class: "KG-2", Father: "Thirupathi Reddy", Roll: "1393477", Phone: "7995553736", Adm: "1972" }, "1459762": { Name: "Harshith Pokanati", Class: "KG-2", Father: "Keshavulu (Late)", Roll: "1459762", Phone: "6300854330", Adm: "2026" }, "1402310": { Name: "Jella Aditya", Class: "KG-2", Father: "J.Bhikshapathi", Roll: "1402310", Phone: "6281221851", Adm: "1997" }, "1390563": { Name: "Krishank Nallabothula", Class: "KG-2", Father: "Lingaraju", Roll: "1390563", Phone: "9014498296", Adm: "1976" }, "1459771": { Name: "Kundana Katkuri", Class: "KG-2", Father: "Chiranjeevi", Roll: "1459771", Phone: "8247004380", Adm: "2008" }, "1307790": { Name: "Munukuntla Revanth Rudhra", Class: "KG-2", Father: "Subhash", Roll: "1307790", Phone: "8686799532", Adm: "1967" }, "1459758": { Name: "Niraja Nethri Siluveru", Class: "KG-2", Father: "Kapil", Roll: "1459758", Phone: "7286805213", Adm: "2033" }, "1459752": { Name: "Pranav Mattepelli", Class: "KG-2", Father: "Vijay", Roll: "1459752", Phone: "9704839982", Adm: "2009" }, "1390566": { Name: "Sreenith Yadav Naini", Class: "KG-2", Father: "Ramesh", Roll: "1390566", Phone: "8121293251", Adm: "1975" }, "1459756": { Name: "Uvan Reddy Dasari", Class: "KG-2", Father: "Raghupathi Reddy", Roll: "1459756", Phone: "9573557696", Adm: "2030" }, "1459775": { Name: "Zayan Mohammad", Class: "KG-2", Father: "Zaffar", Roll: "1459775", Phone: "9182909190", Adm: "2034" }, "1459714": { Name: "Zoya Mohammed", Class: "KG-2", Father: "Chand Pasha", Roll: "1459714", Phone: "9848465650", Adm: "2035" }, "1298423": { Name: "Dheeraj Gattu", Class: "Grade-1", Father: "Raju", Roll: "1298423", Phone: "9346457748", Adm: "151" }, "1298425": { Name: "Preetham Sannayala", Class: "Grade-1", Father: "Shiva", Roll: "1298425", Phone: "9000283858", Adm: "138" }, "1298428": { Name: "Shiva nandu Gonela", Class: "Grade-1", Father: "Ramu", Roll: "1298428", Phone: "9966960107", Adm: "137" }, "1298429": { Name: "Shrayan Nuthanakanti", Class: "Grade-1", Father: "Sridhar", Roll: "1298429", Phone: "7075567649", Adm: "148" }, "1392864": { Name: "Sriyanksha Mandala", Class: "Grade-1", Father: "Arun Kumar", Roll: "1392864", Phone: "8885767607", Adm: "143" }, "1298411": { Name: "Advitha Garige", Class: "Grade-1", Father: "Chiranjeevi", Roll: "1298411", Phone: "9959114639", Adm: "147" }, "1298413": { Name: "Harika Bandi", Class: "Grade-1", Father: "Rajkumar", Roll: "1298413", Phone: "8008707668", Adm: "145" }, "1298414": { Name: "Himansi Kondoju", Class: "Grade-1", Father: "Sai kumar", Roll: "1298414", Phone: "7075175578", Adm: "141" }, "1392895": { Name: "Izhaan Rahamath Syed", Class: "Grade-1", Father: "Syed Fayaz", Roll: "1392895", Phone: "8074667438", Adm: "154" }, "1298424": { Name: "Jaisurya Myakala", Class: "Grade-1", Father: "Sravan Kumar", Roll: "1298424", Phone: "9010506760", Adm: "136" }, "1298415": { Name: "Khadeeja Fathima", Class: "Grade-1", Father: "Khaja Faheemuddin", Roll: "1298415", Phone: "9959414786", Adm: "146" }, "1298416": { Name: "Manaswini Dandugula", Class: "Grade-1", Father: "Srinivas", Roll: "1298416", Phone: "7075342014", Adm: "150" }, "1298417": { Name: "Manusri Bandi", Class: "Grade-1", Father: "Ramesh", Roll: "1298417", Phone: "9177313069", Adm: "144" }, "1298426": { Name: "Rithwik krishna Amaravadi", Class: "Grade-1", Father: "Rakesh", Roll: "1298426", Phone: "9502626801", Adm: "149" }, "1298427": { Name: "Rohan Bandi", Class: "Grade-1", Father: "Vijay kumar", Roll: "1298427", Phone: "6309561181", Adm: "140" }, "1392876": { Name: "Shiva Junnu", Class: "Grade-1", Father: "Parusharamulu", Roll: "1392876", Phone: "8096253875", Adm: "152" }, "1392885": { Name: "Shivanandh Bandi", Class: "Grade-1", Father: "Rajesh", Roll: "1392885", Phone: "9848509341", Adm: "155" }, "1459709": { Name: "Sridha Thalla", Class: "Grade-1", Father: "Rajesh", Roll: "1459709", Phone: "9550995231", Adm: "164" }, "1298419": { Name: "Srinika Chengelly", Class: "Grade-1", Father: "Vykunta Chary", Roll: "1298419", Phone: "9703045606", Adm: "139" }, "1298420": { Name: "Sriyanshi Oggula", Class: "Grade-1", Father: "Sampath", Roll: "1298420", Phone: "7730886474", Adm: "142" }, "1298431": { Name: "Vishwak Chekka", Class: "Grade-1", Father: "Naresh", Roll: "1298431", Phone: "9912945240", Adm: "143" }, "1298397": { Name: "Aliza Manha Shaik", Class: "Grade-2", Father: "Moin Pasha", Roll: "1298397", Phone: "7989482920", Adm: "117" }, "1298407": { Name: "Dhruvan Reddy Katukuri", Class: "Grade-2", Father: "Thirupathi Reddy", Roll: "1298407", Phone: "7995553736", Adm: "111" }, "1298398": { Name: "Druthika Enugala", Class: "Grade-2", Father: "Karthik Reddy", Roll: "1298398", Phone: "8686077799", Adm: "116" }, "1298399": { Name: "Manaswini Bandi", Class: "Grade-2", Father: "Bixapathi", Roll: "1298399", Phone: "7702551738", Adm: "115" }, "1298408": { Name: "Rakshith Macharla", Class: "Grade-2", Father: "Ganesh", Roll: "1298408", Phone: "8074638822", Adm: "112" }, "1298401": { Name: "Sathwika Katkuri", Class: "Grade-2", Father: "Shivaiah", Roll: "1298401", Phone: "6300199764", Adm: "113" }, "1298402": { Name: "Shalini Uppala", Class: "Grade-2", Father: "Anji", Roll: "1298402", Phone: "9701160185", Adm: "109" }, "1459786": { Name: "Chandu Devarakonda", Class: "Grade-2", Father: "Ramesh", Roll: "1459786", Phone: "9392270984", Adm: "161" }, "1459815": { Name: "Gnaneshwar Pokanati", Class: "Grade-2", Father: "Keshavulu (Late)", Roll: "1459815", Phone: "6300854330", Adm: "162" }, "1298409": { Name: "Hasnain Syed", Class: "Grade-2", Father: "Khader Syed", Roll: "1298409", Phone: "8333021076", Adm: "118" }, "1459832": { Name: "Koushik Siluveru", Class: "Grade-2", Phone: "7286805213", Adm: "167" }, "1316732": { Name: "Senen Desabattula", Class: "Grade-2", Father: "Samuel Sparjan Babu", Roll: "1316732", Phone: "9052820502", Adm: "119" }, "1459817": { Name: "Shivarajan Pothuganti", Class: "Grade-2", Father: "Rajashekhar", Roll: "1459817", Phone: "8074781031", Adm: "163" }, "1298393": { Name: "Nagavelly Manikanta", Class: "Grade-3", Father: "Ravi kumar", Roll: "1298393", Phone: "9492098006", Adm: "73" }, "1459834": { Name: "Mirja Ismail", Class: "Grade-3", Father: "Yusuf Baig", Roll: "1459834", Phone: "9989367263", Adm: "166" }, "1298390": { Name: "Bandi Aryan", Class: "Grade-3", Father: "Anil", Roll: "1298390", Phone: "9502098594", Adm: "88" }, "1298392": { Name: "Dandugula Mahesh Babu", Class: "Grade-3", Father: "Srinivas", Roll: "1298392", Phone: "7075342014", Adm: "91" }, "1298387": { Name: "Bandi Tejasri", Class: "Grade-3", Father: "Raghu", Roll: "1298387", Phone: "9618791981", Adm: "102" }, "1298391": { Name: "Bandi Harshavardhan", Class: "Grade-3", Father: "Rajkumar", Roll: "1298391", Phone: "8008707668", Adm: "99" }, "1298389": { Name: "Gampala Vyshnavi", Class: "Grade-3", Father: "Kanakaraju", Roll: "1298389", Phone: "8074393994", Adm: "89" }, "1298384": { Name: "Gampala Laxmi", Class: "Grade-3", Father: "Kanakaraju", Roll: "1298384", Phone: "8074393994", Adm: "90" }, "1298410": { Name: "Garige Harshith", Class: "Grade-3", Father: "Chiranjeevi", Roll: "1298410", Phone: "9959114639", Adm: "106" }, "1459844": { Name: "Katkuri Hanish", Class: "Grade-3", Father: "Katkuri Suryaprasad", Roll: "1459844", Phone: "9000557009", Adm: "169" }, "1459798": { Name: "Katukuri Manideep", Class: "Grade-3", Father: "Chiranjeevi", Roll: "1459798", Phone: "8247004380", Adm: "172" }, "1459805": { Name: "MD Abdul Quddus", Class: "Grade-3", Father: "Raja.S", Roll: "1459805", Phone: "7300303319", Adm: "160" }, "1298395": { Name: "Muppa Sathwik Patel", Class: "Grade-3", Father: "Janardhan", Roll: "1298395", Phone: "9553800447", Adm: "81" }, "1298386": { Name: "Nuthanakanti Sansita", Class: "Grade-3", Father: "Sridhar", Roll: "1298386", Phone: "7989663380", Adm: "75" }, "1298396": { Name: "Pasarakonda Ritwin", Class: "Grade-3", Father: "Karnakar", Roll: "1298396", Phone: "7702007402", Adm: "104" }, "1459841": { Name: "Pinninti Rakshith Rao", Class: "Grade-3", Father: "Chander Rao (Late)", Roll: "1459841", Phone: "9848523514", Adm: "170" }, "1400203": { Name: "Rayi Sriman Adithya", Class: "Grade-3", Father: "Venkataramana", Roll: "1400203", Phone: "6305872732", Adm: "135" }, "1298376": { Name: "Abdul Saqib Mohammad", Class: "Grade-4", Father: "Abdul Rawoof", Roll: "1298376", Phone: "8328695850", Adm: "41" }, "1298366": { Name: "Anudeep Chintha", Class: "Grade-4", Father: "Anil", Roll: "1298366", Phone: "9848448941", Adm: "64" }, "1298368": { Name: "Bhavan Bandi", Class: "Grade-4", Father: "Devendar", Roll: "1298368", Phone: "8897141289", Adm: "95" }, "1298370": { Name: "Harshavardhan Gonela", Class: "Grade-4", Father: "Raju", Roll: "1298370", Phone: "9391704022", Adm: "80" }, "1298372": { Name: "Jayadev Chiluveru", Class: "Grade-4", Father: "Madhavarao", Roll: "1298372", Phone: "9700409933", Adm: "84" }, "1298373": { Name: "Mahaboob Syed", Class: "Grade-4", Father: "Khader", Roll: "1298373", Phone: "8333021076", Adm: "103" }, "1298374": { Name: "Nandith Reddy Enugala", Class: "Grade-4", Father: "Karthik Reddy", Roll: "1298374", Phone: "8686077799", Adm: "49" }, "1392930": { Name: "Sai Charan Goud Mandala", Class: "Grade-4", Father: "Arun Kumar", Roll: "1392930", Phone: "8885767607", Adm: "123" }, "1298380": { Name: "Sai Prasanna Keerthi", Class: "Grade-4", Father: "Venkateshwarlu", Roll: "1298380", Phone: "9951567253", Adm: "105" }, "1298363": { Name: "Ajmeri Shaik", Class: "Grade-4", Father: "Hidayath Pasha", Roll: "1298363", Phone: "9302145468", Adm: "87" }, "1392939": { Name: "Akshith Chiluveru", Class: "Grade-4", Father: "Kranthi Kumar", Roll: "1392939", Phone: "8179352423", Adm: "128" }, "1298364": { Name: "Jayasri Myakala", Class: "Grade-4", Father: "Sravan kumar", Roll: "1298364", Phone: "9010506760", Adm: "68" }, "1298381": { Name: "Rahul Kanjarla", Class: "Grade-4", Father: "Kumaraswamy", Roll: "1298381", Phone: "8897047979", Adm: "79" }, "1459784": { Name: "Saketh Devarakonda", Class: "Grade-4", Father: "Ramesh", Roll: "1459784", Phone: "9392270984", Adm: "159" }, "1298353": { Name: "Adya Reddy Vangala", Class: "Grade-5", Father: "Mahipal Reddy", Roll: "1298353", Phone: "9949109221", Adm: "21" }, "1298361": { Name: "Kowshik Patel Muppa", Class: "Grade-5", Father: "Janardhan", Roll: "1298361", Phone: "9553800447", Adm: "77" }, "1298355": { Name: "Siri Singaram", Class: "Grade-5", Father: "Madhu", Roll: "1298355", Phone: "9550726263", Adm: "83" }, "1298360": { Name: "Srikar Mandala", Class: "Grade-5", Father: "Ramesh", Roll: "1298360", Phone: "9550073190", Adm: "76" }, "1459801": { Name: "Abdus Salaam MD", Class: "Grade-5", Father: "Raja.S", Roll: "1459801", Phone: "7300303319", Adm: "158" }, "1392968": { Name: "Akshith Ram Kalvacharla", Class: "Grade-5", Father: "Hareen Chary", Roll: "1392968", Phone: "7672058517", Adm: "126" }, "1392965": { Name: "Jaffar Anas Shaik", Class: "Grade-5", Father: "Khaja Pasha", Roll: "1392965", Phone: "9391854024", Adm: "130" }, "1298359": { Name: "Khaja Azeemuddin Mohammed", Class: "Grade-5", Father: "Khaja Faheemuddin", Roll: "1298359", Phone: "9959414786", Adm: "30" }, "1459839": { Name: "Nihan Mohammed", Class: "Grade-5", Father: "Chand Pasha", Roll: "1459839", Phone: "9848465650", Adm: "168" }, "1392963": { Name: "Saif Shaik", Class: "Grade-5", Father: "Salmaan", Roll: "1392963", Phone: "8179352120", Adm: "120" }, "1459794": { Name: "Saketh Renukuntla", Class: "Grade-5", Father: "Rajesh", Roll: "1459794", Phone: "7569518371", Adm: "157" }, "1392955": { Name: "Sreeja Dasari", Class: "Grade-5", Father: "Kumar", Roll: "1392955", Phone: "6301871704", Adm: "123" }, "1459821": { Name: "Vidhaatri Sahani", Class: "Grade-5", Father: "Abhishek Sahani", Roll: "1459821", Phone: "9704394869", Adm: "165" }, "1298347": { Name: "Abdul Razzak Mohammad", Class: "Grade-6", Father: "Abdul Rawoof", Roll: "1298347", Phone: "9573226386", Adm: "19" }, "1298341": { Name: "Anudeepthi Chintha", Class: "Grade-6", Father: "Anil", Roll: "1298341", Phone: "9052927765", Adm: "63" }, "1298350": { Name: "Saketh Ranaveni", Class: "Grade-6", Father: "Sampath", Roll: "1298350", Phone: "8688129606", Adm: "61" }, "1298346": { Name: "Shiva Sri Katukuri", Class: "Grade-6", Father: "Shivaiah", Roll: "1298346", Phone: "6300199764", Adm: "48" }, "1298348": { Name: "Aklees Shaik", Class: "Grade-6", Father: "Hidayath Pasha", Roll: "1298348", Phone: "9302145468", Adm: "85" }, "1392992": { Name: "Akshya Kalvacharla", Class: "Grade-6", Father: "Hareen Chary", Roll: "1392992", Phone: "7672058517", Adm: "125" }, "1472577": { Name: "Prince Katkuri", Class: "Grade-6", Father: "Katkuri Suryaprasad", Roll: "1472577", Phone: "9000557009", Adm: "0" }, "1298339": { Name: "Manikanta Sannayala", Class: "Grade-7", Father: "Shiva", Roll: "1298339", Phone: "9000283858", Adm: "38" }, "1298340": { Name: "Sreeyan Reddy Karra", Class: "Grade-7", Father: "Krishna Reddy", Roll: "1298340", Phone: "9848774257", Adm: "33" }, "1393008": { Name: "Jayadhithya Chiluveru", Class: "Grade-7", Father: "CH.Madhava Rao", Roll: "1393008", Phone: "8886826838", Adm: "131" }, "1459846": { Name: "Akshaya Gampala", Class: "Grade-8", Father: "Balaiah", Roll: "1459846", Phone: "9948184498", Adm: "171" }, "1298335": { Name: "Ganesh Oggula", Class: "Grade-8", Father: "Cheralu", Roll: "1298335", Phone: "6304381153", Adm: "56" }, "1459792": { Name: "Gayathri Renukuntla", Class: "Grade-8", Father: "Rajesh", Roll: "1459792", Phone: "7569518371", Adm: "156" }, "1298337": { Name: "Khaja Sadeemuddin Mohammed", Class: "Grade-8", Father: "Khaja Faheemuddin", Roll: "1298337", Phone: "9959414786", Adm: "28" }, "1298333": { Name: "Sathwika Nagavelly", Class: "Grade-8", Father: "Ravi", Roll: "1298333", Phone: "9492098006", Adm: "39" }, "1298334": { Name: "Vyshnavi Uppala", Class: "Grade-8", Father: "Ramesh", Roll: "1298334", Phone: "8179254251", Adm: "34" } };
 
 async function fetchAllData() {
     const roll = document.getElementById('rollNumberInput').value.trim();
@@ -406,7 +246,6 @@ async function fetchAllData() {
         const name = student.Name;
         const cls = student.Class;
         const now = new Date();
-        
         document.getElementById('vTimestamp').innerText = "GENERATED: " + now.toLocaleString();
 
         // 1. FEES SYNC
