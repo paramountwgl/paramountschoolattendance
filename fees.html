@@ -20,22 +20,21 @@
         .auth-input { width: 100%; padding: 12px; border-radius: 10px; border: 2px solid #eee; margin-bottom: 15px; text-align: center; font-size: 16px; height: 50px; outline: none; }
         .btn-unlock { background: linear-gradient(135deg, var(--forest), #004d26); color: white; padding: 15px; border-radius: 50px; font-weight: bold; border: 2px solid var(--gold); cursor: pointer; width: 100%; height: 55px; display: flex; align-items: center; justify-content: center; gap: 8px; }
 
-        /* --- HEADER WITH LIVE CLOCK & SIGN OUT --- */
-        header { background: var(--forest); color: white; padding: 12px 3%; box-shadow: 0 4px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 50; }
-        .header-content { display: flex; align-items: center; justify-content: space-between; max-width: 1400px; margin: 0 auto; width: 100%; }
-        
-        .header-left { display: flex; align-items: center; gap: 10px; }
-        .header-logo { height: 50px; }
-        .school-branding { display: flex; flex-direction: column; line-height: 1; }
-        .school-name-main { font-family: 'Montserrat', sans-serif; font-size: 1.2rem; font-weight: 800; }
-        .school-name-sub { font-family: 'Montserrat', sans-serif; font-size: 0.6rem; color: var(--gold); font-weight: 700; text-transform: uppercase; }
-        
-        .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
-        .live-clock { font-family: 'Montserrat', sans-serif; font-size: 0.8rem; font-weight: 700; color: white; background: rgba(0,0,0,0.2); padding: 4px 10px; border-radius: 5px; }
+        /* --- UPDATED HEADER (ADMIN STYLE) --- */
+        header { background: var(--forest); color: white; padding: 20px 5%; box-shadow: 0 4px 12px rgba(0,0,0,0.15); position: sticky; top: 0; z-index: 50; }
+        .header-content { display: flex; align-items: center; max-width: 1400px; margin: 0 auto; width: 100%; }
+        .header-left { display: flex; align-items: center; gap: 15px; padding-right: 20px; border-right: 2px solid rgba(255,255,255,0.3); }
+        .header-logo { height: 55px; }
+        .school-branding { display: flex; flex-direction: column; line-height: 1.1; }
+        .school-name-main { font-family: 'Montserrat', sans-serif; font-size: 1.6rem; font-weight: 800; letter-spacing: 1px; }
+        .school-name-sub { font-family: 'Montserrat', sans-serif; font-size: 0.75rem; color: var(--gold); font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; }
+        .portal-title { padding-left: 20px; font-family: 'Montserrat', sans-serif; font-size: 1.8rem; font-weight: 800; text-transform: uppercase; flex-grow: 1; }
+        .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+        .live-clock { font-family: 'Montserrat', sans-serif; font-size: 0.8rem; font-weight: 700; color: white; background: rgba(0,0,0,0.2); padding: 5px 12px; border-radius: 5px; }
         .sign-out { color: #ffcccc; font-size: 0.75rem; text-decoration: none; font-weight: 800; text-transform: uppercase; display: flex; align-items: center; gap: 5px; cursor: pointer; }
 
         /* --- MAIN FORM --- */
-        .container { max-width: 600px; margin: 20px auto; padding: 0 15px; }
+        .container { max-width: 600px; margin: 30px auto; padding: 0 15px; }
         .card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); border-top: 8px solid var(--forest); }
         h3 { color: var(--forest); margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; display: flex; align-items: center; gap: 8px; font-size: 1.1rem; }
         
@@ -46,16 +45,23 @@
         .due-box { background: #fff5f5; border: 1px solid #ffcdd2; padding: 15px; border-radius: 15px; text-align: center; margin-top: 20px; }
         .due-box strong { font-size: 24px; color: var(--danger); }
 
-        .chart-container { margin-top: 25px; padding: 15px; background: #f9f9f9; border-radius: 15px; border: 1px solid #eee; }
-        .bar-bg { width: 100%; height: 25px; background: #eee; border-radius: 50px; overflow: hidden; display: flex; }
-        .bar-paid { height: 100%; background: linear-gradient(to right, var(--forest), #00b359); transition: width 0.8s ease; width: 0%; }
-        
+        /* --- CIRCULAR PROGRESS CHART --- */
+        .chart-container { display: flex; flex-direction: column; align-items: center; margin-top: 25px; padding: 20px; background: #f9f9f9; border-radius: 15px; border: 1px solid #eee; }
+        .circular-progress { position: relative; width: 120px; height: 120px; }
+        .circular-progress svg { width: 120px; height: 120px; transform: rotate(-90deg); }
+        .circular-progress circle { width: 100%; height: 100%; fill: none; stroke-width: 10; stroke-linecap: round; }
+        .circle-bg { stroke: #eee; }
+        .circle-bar { stroke: var(--forest); stroke-dasharray: 314.15; stroke-dashoffset: 314.15; transition: stroke-dashoffset 0.8s ease; }
+        .percentage-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-weight: 800; font-size: 1.2rem; color: #333; }
+
         .btn-action { width: 100%; color: white; border: 2px solid var(--gold); padding: 16px; border-radius: 50px; font-weight: 700; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .btn-save { background: var(--forest); margin-top: 25px; height: 55px; }
         
-        @media (max-width: 480px) {
-            .school-name-main { font-size: 0.9rem; }
-            .live-clock { font-size: 0.7rem; }
+        @media (max-width: 768px) {
+            .portal-title { font-size: 1.2rem; padding-left: 10px; }
+            .header-left { padding-right: 10px; }
+            .school-name-main { font-size: 1rem; }
+            .header-logo { height: 40px; }
         }
     </style>
 </head>
@@ -89,9 +95,10 @@
                 <img src="logo.png" class="header-logo">
                 <div class="school-branding">
                     <span class="school-name-main">PARAMOUNT</span>
-                    <span class="school-name-sub">ENGLISH MEDIUM</span>
+                    <span class="school-name-sub">ENGLISH MEDIUM SCHOOL</span>
                 </div>
             </div>
+            <div class="portal-title">FEE ENTRY PORTAL</div>
             <div class="header-right">
                 <div id="liveClock" class="live-clock">--:--:--</div>
                 <div class="sign-out" onclick="location.reload()">
@@ -120,14 +127,20 @@
 
             <div class="calc-row">
                 <div><label>Total Fee</label><input type="number" id="totalFee" oninput="calculateRealTime()"></div>
-                <div><label>Paid Now</label><input type="number" id="payingAmount" oninput="calculateRealTime()"></div>
+                <div><label>Paying Now</label><input type="number" id="payingAmount" oninput="calculateRealTime()"></div>
             </div>
 
             <div class="due-box"><span>BALANCE DUE</span><br><strong id="dueDisplay">₹ 0</strong></div>
 
             <div class="chart-container">
-                <div class="bar-bg"><div id="barPaid" class="bar-paid"></div></div>
-                <p id="percentText" style="text-align:center; font-weight:bold; margin-top:10px; font-size:12px; color:#555;">0% Paid</p>
+                <div class="circular-progress">
+                    <svg>
+                        <circle class="circle-bg" cx="60" cy="60" r="50"></circle>
+                        <circle id="progressCircle" class="circle-bar" cx="60" cy="60" r="50"></circle>
+                    </svg>
+                    <div id="percentText" class="percentage-text">0%</div>
+                </div>
+                <p style="text-align:center; font-weight:bold; margin-top:10px; font-size:12px; color:#555;">Payment Progress</p>
             </div>
 
             <label>Date</label><input type="date" id="payDate">
@@ -143,7 +156,6 @@
 </div>
 
 <script>
-    // LIVE CLOCK LOGIC
     function updateClock() {
         const now = new Date();
         const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
@@ -159,6 +171,7 @@
 
     const authorized = { "Mr. Ahmad": "Ahmad@123", "Ms. Roqiya": "Roqiya@123", "Ms. Jyothi": "Jyothi@123" };
     let activeTeacher = "";
+    let studentLifetimePaid = 0; // Tracks previous payments
 
     function unlockFees() {
         const name = document.getElementById('staffName').value;
@@ -186,23 +199,43 @@
         const cls = document.getElementById('feeClass').value;
         const name = document.getElementById('feeStudent').value;
         if(!cls || !name) return;
-        const snap = await db.ref(`fee_records/${cls}/${name}`).limitToLast(1).once('value');
+        
+        const snap = await db.ref(`fee_records/${cls}/${name}`).once('value');
         const data = snap.val();
+        studentLifetimePaid = 0;
+        let totalVal = "";
+
         if(data) {
-            const last = Object.values(data)[0];
-            document.getElementById('totalFee').value = last.total || "";
-            calculateRealTime();
+            // Loop through all records to calculate lifetime paid amount
+            Object.values(data).forEach(record => {
+                studentLifetimePaid += parseFloat(record.paid || 0);
+                totalVal = record.total; // Get the most recent total fee set
+            });
+            document.getElementById('totalFee').value = totalVal;
+        } else {
+            document.getElementById('totalFee').value = "";
         }
+        calculateRealTime();
     }
 
     function calculateRealTime() {
         const total = parseFloat(document.getElementById('totalFee').value) || 0;
-        const paid = parseFloat(document.getElementById('payingAmount').value) || 0;
-        const due = total - paid;
+        const payingNow = parseFloat(document.getElementById('payingAmount').value) || 0;
+        
+        // Total already paid + what they are paying now
+        const combinedPaid = studentLifetimePaid + payingNow;
+        const due = total - combinedPaid;
+        
         document.getElementById('dueDisplay').innerText = "₹ " + (due < 0 ? 0 : due);
-        let pct = (total > 0) ? (paid / total) * 100 : 0;
-        document.getElementById('barPaid').style.width = Math.min(pct, 100) + "%";
-        document.getElementById('percentText').innerText = Math.round(pct) + "% Paid";
+        
+        // Update Circle
+        let pct = (total > 0) ? (combinedPaid / total) * 100 : 0;
+        if(pct > 100) pct = 100;
+
+        const circle = document.getElementById('progressCircle');
+        const offset = 314.15 - (314.15 * pct / 100);
+        circle.style.strokeDashoffset = offset;
+        document.getElementById('percentText').innerText = Math.round(pct) + "%";
     }
 
     function saveFee() {
@@ -211,12 +244,21 @@
         const total = document.getElementById('totalFee').value;
         const paid = document.getElementById('payingAmount').value;
         const date = document.getElementById('payDate').value;
+        
         if(!name || !paid) return Swal.fire('Error', 'Missing Data', 'warning');
-        const record = { total, paid, due: total - paid, recordedBy: activeTeacher, date, timestamp: new Date().toLocaleString() };
+        
+        const record = { 
+            total, 
+            paid, 
+            recordedBy: activeTeacher, 
+            date, 
+            timestamp: new Date().toLocaleString() 
+        };
+
         db.ref(`fee_records/${cls}/${name}`).push(record).then(() => {
             Swal.fire('Saved!', 'Record updated.', 'success');
             document.getElementById('payingAmount').value = '';
-            calculateRealTime();
+            fetchExistingFeeData(); // Refresh life-time calculation
         });
     }
 
@@ -232,7 +274,7 @@
         win.document.write(`<html><body style="padding:20px; font-family:sans-serif;">
             <center><img src="logo.png" style="height:60px;"><br><h2 style="color:#006633;">PARAMOUNT SCHOOL</h2><hr></center>
             <p><strong>Student:</strong> ${name} (${cls})</p><p><strong>Date:</strong> ${date}</p>
-            <p><strong>Paid:</strong> ₹ ${paid}</p><p><strong>Balance:</strong> ${due}</p>
+            <p><strong>Paid:</strong> ₹ ${paid}</p><p><strong>Current Balance:</strong> ${due}</p>
             <hr><p style="text-align:center; font-size:12px;">Processed by: ${activeTeacher}</p>
         </body></html>`);
         win.document.close(); win.print();
@@ -248,6 +290,7 @@
                 Swal.fire('Deleted', '', 'success');
                 document.getElementById('totalFee').value = '';
                 document.getElementById('payingAmount').value = '';
+                studentLifetimePaid = 0;
                 calculateRealTime();
             });
         }
