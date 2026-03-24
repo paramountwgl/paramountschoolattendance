@@ -81,7 +81,7 @@
         <img src="logo.png" class="auth-logo">
         <div class="auth-branding-text">
             <h2>PARAMOUNT</h2>
-            <p>ADMIN ACCESS BOX</p>
+            <p>FEE ENTRY ACCESS </p>
         </div>
         
         <select id="staffName" class="auth-input">
@@ -91,7 +91,7 @@
             <option value="Ms. Jyothi">Ms. Jyothi</option>
         </select>
         
-        <input type="password" id="staffPass" class="auth-input" placeholder="Admin Password" onkeypress="if(event.key === 'Enter') unlockFees()">
+        <input type="password" id="staffPass" class="auth-input" placeholder="Enter Password" onkeypress="if(event.key === 'Enter') unlockFees()">
         
         <button onclick="unlockFees()" class="btn-unlock">Unlock Dashboard <i class="fas fa-lock"></i></button>
         
@@ -205,7 +205,7 @@
         const { value: pin } = await Swal.fire({
             title: `Recover Password for ${selectedFaculty}`,
             input: 'password',
-            inputPlaceholder: 'Enter Recovery PIN',
+            inputPlaceholder: 'Enter Recovery Password',
             showCancelButton: true,
             confirmButtonText: 'Reveal Password'
         });
