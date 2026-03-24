@@ -34,8 +34,8 @@
         .sign-out { color: #ffcccc; font-size: 0.75rem; text-decoration: none; font-weight: 800; text-transform: uppercase; display: flex; align-items: center; gap: 5px; cursor: pointer; }
 
         /* --- MAIN FORM --- */
-        .container { max-width: 600px; margin: 30px auto; padding: 0 15px; }
-        .card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); border-top: 8px solid var(--forest); }
+        .container { max-width: 650px; margin: 30px auto; padding: 0 15px; }
+        .card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); border-top: 8px solid var(--forest); margin-bottom: 25px; }
         h3 { color: var(--forest); margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; display: flex; align-items: center; gap: 8px; font-size: 1.1rem; }
         
         label { display: block; font-size: 10px; font-weight: 900; color: #777; margin: 15px 0 5px; text-transform: uppercase; letter-spacing: 1px; }
@@ -45,10 +45,17 @@
         .due-box { background: #fff5f5; border: 1px solid #ffcdd2; padding: 15px; border-radius: 15px; text-align: center; margin-top: 20px; }
         .due-box strong { font-size: 24px; color: var(--danger); }
 
-        .audit-info { font-size: 11px; color: #666; background: #f0f4f2; padding: 10px; border-radius: 8px; border-left: 4px solid var(--gold); margin-top: 10px; display: none; }
-        .audit-info b { color: var(--forest); }
+        .audit-info { font-size: 11px; color: #666; background: #f0f4f2; padding: 10px; border-radius: 8px; border-left: 4px solid var(--gold); margin-bottom: 15px; display: none; }
 
-        /* --- CIRCULAR PROGRESS CHART --- */
+        /* --- HISTORY TABLE --- */
+        .history-card { border-top-color: var(--gold); }
+        .history-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.85rem; }
+        .history-table th { text-align: left; padding: 10px; background: #f8fafc; color: #64748b; font-size: 10px; text-transform: uppercase; border-bottom: 2px solid #eee; }
+        .history-table td { padding: 12px 10px; border-bottom: 1px solid #f1f5f9; font-weight: 600; color: #334155; }
+        .history-table tr:last-child td { border-bottom: none; }
+        .history-table .amt-cell { color: var(--paid); font-weight: 800; }
+
+        /* --- CIRCULAR PROGRESS --- */
         .chart-container { display: flex; flex-direction: column; align-items: center; margin-top: 25px; padding: 20px; background: #f9f9f9; border-radius: 15px; border: 1px solid #eee; }
         .circular-progress { position: relative; width: 120px; height: 120px; }
         .circular-progress svg { width: 120px; height: 120px; transform: rotate(-90deg); }
@@ -59,13 +66,6 @@
 
         .btn-action { width: 100%; color: white; border: 2px solid var(--gold); padding: 16px; border-radius: 50px; font-weight: 700; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .btn-save { background: var(--forest); margin-top: 25px; height: 55px; }
-        
-        @media (max-width: 768px) {
-            .portal-title { font-size: 1.2rem; padding-left: 10px; }
-            .header-left { padding-right: 10px; }
-            .school-name-main { font-size: 1rem; }
-            .header-logo { height: 40px; }
-        }
     </style>
 </head>
 <body>
@@ -87,7 +87,6 @@
         </select>
         <input type="password" id="staffPass" class="auth-input" placeholder="Password" onkeypress="if(event.key === 'Enter') unlockFees()">
         <button onclick="unlockFees()" class="btn-unlock">Unlock Portal <i class="fas fa-unlock"></i></button>
-        <p onclick="window.location.href='index.html'" style="margin-top:20px; cursor:pointer; color:#999; font-size:12px; font-weight:bold; text-decoration:underline;">Return to Portal</p>
     </div>
 </div>
 
@@ -114,16 +113,10 @@
     <div class="container">
         <div class="card">
             <div id="staffDisplay" style="text-align:center; font-weight:bold; color:var(--forest); background:#e8f5e9; padding:10px; border-radius:12px; margin-bottom:15px; font-size:13px;"></div>
-            <h3><i class="fas fa-file-invoice-dollar"></i> Fee Management</h3>
+            <h3><i class="fas fa-file-invoice-dollar"></i> Update Payment</h3>
             
             <label>Class</label>
-            <select id="feeClass" onchange="populateStudents()">
-                <option value="">-- Choose Class --</option>
-                <option value="Pre-KG">Pre-KG</option><option value="KG-1">KG-1</option><option value="KG-2">KG-2</option>
-                <option value="Grade-1">Grade-1</option><option value="Grade-2">Grade-2</option><option value="Grade-3">Grade-3</option>
-                <option value="Grade-4">Grade-4</option><option value="Grade-5">Grade-5</option><option value="Grade-6">Grade-6</option>
-                <option value="Grade-7">Grade-7</option><option value="Grade-8">Grade-8</option>
-            </select>
+            <select id="feeClass" onchange="populateStudents()"></select>
 
             <label>Student Name</label>
             <select id="feeStudent" onchange="fetchExistingFeeData()"><option value="">-- Select Student --</option></select>
@@ -147,7 +140,6 @@
                     </svg>
                     <div id="percentText" class="percentage-text">0%</div>
                 </div>
-                <p style="text-align:center; font-weight:bold; margin-top:10px; font-size:12px; color:#555;">Payment Progress</p>
             </div>
 
             <label>Date</label><input type="date" id="payDate">
@@ -155,8 +147,24 @@
             <button class="btn-action btn-save" onclick="saveFee()">Update Records <i class="fas fa-save"></i></button>
             
             <div style="display: flex; gap: 10px; margin-top: 10px;">
-                <button class="btn-action" onclick="generateReceipt()" style="background:var(--sky); border-color:white; flex:1;">Receipt <i class="fas fa-print"></i></button>
-                <button class="btn-action" onclick="clearStudentData()" style="background:var(--danger); border-color:white; flex:1;">Clear <i class="fas fa-trash-alt"></i></button>
+                <button id="receiptBtn" class="btn-action" onclick="generateReceipt()" style="background:var(--sky); border-color:white; flex:1; opacity:0.5;">Print Receipt <i class="fas fa-print"></i></button>
+                <button class="btn-action" onclick="clearStudentData()" style="background:var(--danger); border-color:white; flex:1;">Wipe History <i class="fas fa-trash-alt"></i></button>
+            </div>
+        </div>
+
+        <div class="card history-card" id="historyCard" style="display:none;">
+            <h3><i class="fas fa-list-ul"></i> Payment History</h3>
+            <div class="table-wrapper">
+                <table class="history-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Amount</th>
+                            <th>Faculty</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historyTableBody"></tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -165,9 +173,7 @@
 <script>
     function updateClock() {
         const now = new Date();
-        const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-        const date = now.toLocaleDateString([], { day: 'numeric', month: 'short' });
-        document.getElementById('liveClock').innerText = `${date} | ${time}`;
+        document.getElementById('liveClock').innerText = now.toLocaleDateString([], {day:'numeric', month:'short'}) + " | " + now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit', second:'2-digit'});
     }
     setInterval(updateClock, 1000);
     updateClock();
@@ -179,6 +185,13 @@
     const authorized = { "Mr. Ahmad": "Ahmad@123", "Ms. Roqiya": "Roqiya@123", "Ms. Jyothi": "Jyothi@123" };
     let activeTeacher = "";
     let studentLifetimePaid = 0;
+    let lastReceiptData = null;
+
+    const studentData = { "Pre-KG": ["Hanish Macharla", "Arjun Vihaar Illandula", "Thanu sree Allakunta", "Aadhya Gangaraboina", "Aadhya Sri Oggula", "Aadhyasri Shivagoni", "Afraha Begum", "Aliya Sultana", "Anvika Bandi", "Aradana Devara konda", "Devansh Bandi", "Hanvitha Mulkalapelli", "Harsha Vardhan Seenapelli", "Hiranya Bandi", "Jashritha Boina", "Konreddy Shreyanvi", "Kriyansh Sammeta", "Mohammed Mohiuddin Sayyad", "Nethra Narkurthi", "Reeyansh Bandi", "Rishi Myakala", "Rudransh Bandi", "Sanvika Bandi", "Shanvith Khatha", "Shishira Jalagam", "Shiva Sai Mekala", "Shree Rudhraveer Chevvu", "Shreyansh Gangaraboina", "Sreeja Thalla", "Srikrithini Myakala", "Srivatsav Vanam", "Sriyansh Mekala", "Thanvika Lakka", "Thrilokansh Vudari", "Ujjwal Chekka", "Vaishnavi Lakka", "Vedansh Myakala", "Vishnu Priya Molugu", "Vyshnav Tej Boina", "Yafiah Mohammad"], "KG-1": ["Aadhya Sri Amaravadi", "Aditya Manda", "Aadhya Jella", "Advaita Gauri Bandi", "Aizah Amna Shaik", "Akshara Singaram", "Bhahuveer Raj Somishetti", "Gayathri Erroju", "Hanvika Mulkalapelli", "Manvith Kondoju", "Sayyad Vajeed", "Mekala Manu sri", "Oliva Grace Vallapu", "Rithwik Oggula", "Rithwika Kandagatla", "Srimahi Chevvu", "Thanvesh Thalla", "Trishul Nanduri", "Yoganshika Nanduri", "Yusra Mohammad", "Zainul Abideen Syed"], "KG-2": ["Deekshanth Sammeta", "Hanshith Erroju", "Harika Bandi", "Himarsha Naini", "Karthik Vallepu", "Kruthika Bandi", "Rajavardhan Gampala", "Roshan Kaitha", "Sri Anshu Ayaan Lyadala", "Srihansh Bandi", "Srikshitha Guduri", "Varshith Gonela", "Adyasri Makala", "Anvik Boini", "Anvith Pokanati", "Awais Ur Rehman Mohammad", "Dakshu Pothuganti", "Hansith Reddy Katukuri", "Harshith Pokanati", "Jella Aditya", "Krishank Nallabothula", "Kundana Katkuri", "Munukuntla Revanth Rudhra", "Niraja Nethri Siluveru", "Pranav Mattepelli", "Sreenith Yadav Naini", "Uvan Reddy Dasari", "Zayan Mohammad", "Zoya Mohammed"], "Grade-1": ["Dheeraj Gattu", "Preetham Sannayala", "Shiva nandu Gonela", "Shrayan Nuthanakanti", "Sriyanksha Mandala", "Advitha Garige", "Harika Bandi", "Himansi Kondoju", "Izhaan Rahamath Syed", "Jaisurya Myakala", "Khadeeja Fathima", "Manaswini Dandugula", "Manusri Bandi", "Rithwik krishna Amaravadi", "Rohan Bandi", "Shiva Junnu", "Shivanandh Bandi", "Sridha Thalla", "Srinika Chengelly", "Sriyanshi Oggula", "Vishwak Chekka"], "Grade-2": ["Aliza Manha Shaik", "Dhruvan Reddy Katukuri", "Druthika Enugala", "Manaswini Bandi", "Rakshith Macharla", "Sathwika Katkuri", "Shalini Uppala", "Chandu Devarakonda", "Gnaneshwar Pokanati", "Hasnain Syed", "Koushik Siluveru", "Senen Desabattula", "Shivarajan Pothuganti"], "Grade-3": ["Nagavelly Manikanta", "Mirja Ismail", "Bandi Aryan", "Dandugula Mahesh Babu", "Bandi Tejasri", "Bandi Harshavardhan", "Gampala Vyshnavi", "Gampala Laxmi", "Garige Harshith", "Katkuri Hanish", "Katukuri Manideep", "MD Abdul Quddus", "Muppa Sathwik Patel", "Nuthanakanti Sansita", "Pasarakonda Ritwin", "Pinninti Rakshith Rao", "Rayi Sriman Adithya"], "Grade-4": ["Abdul Saqib Mohammad", "Anudeep Chintha", "Bhavan Bandi", "Harshavardhan Gonela", "Jayadev Chiluveru", "Mahaboob Syed", "Nandith Reddy Enugala", "Sai Charan Goud Mandala", "Sai Prasanna Keerthi", "Ajmeri Shaik", "Akshith Chiluveru", "Jayasri Myakala", "Rahul Kanjarla", "Saketh Devarakonda"], "Grade-5": ["Adya Reddy Vangala", "Kowshik Patel Muppa", "Siri Singaram", "Srikar Mandala", "Abdus Salaam MD", "Akshith Ram Kalvacharla", "Jaffar Anas Shaik", "Khaja Azeemuddin Mohammed", "Nihan Mohammed", "Saif Shaik", "Saketh Renukuntla", "Sreeja Dasari", "Vidhaatri Sahani"], "Grade-6": ["Abdul Razzak Mohammad", "Anudeepthi Chintha", "Saketh Ranaveni", "Shiva Sri Katukuri", "Aklees Shaik", "Akshya Kalvacharla", "Prince Katkuri"], "Grade-7": ["Manikanta Sannayala", "Sreeyan Reddy Karra", "Jayadhithya Chiluveru"], "Grade-8": ["Sathwika Nagavelly", "Vyshnavi Uppala", "Akshaya Gampala", "Ganesh Oggula", "Gayathri Renukuntla", "Khaja Sadeemuddin Mohammed"] };
+
+    // Initial Populate
+    const classSel = document.getElementById('feeClass');
+    classSel.innerHTML = '<option value="">-- Choose Class --</option>' + Object.keys(studentData).map(c => `<option value="${c}">${c}</option>`).join('');
 
     function unlockFees() {
         const name = document.getElementById('staffName').value;
@@ -188,12 +201,8 @@
             document.getElementById('feeLoginScreen').style.display = 'none';
             document.getElementById('feeApp').style.display = 'block';
             document.getElementById('staffDisplay').innerText = "Logged in: " + name;
-        } else {
-            Swal.fire('Error', 'Invalid Credentials', 'error');
-        }
+        } else { Swal.fire('Error', 'Invalid Credentials', 'error'); }
     }
-
-    const studentData = { "Pre-KG": ["Hanish Macharla", "Arjun Vihaar Illandula", "Thanu sree Allakunta", "Aadhya Gangaraboina", "Aadhya Sri Oggula", "Aadhyasri Shivagoni", "Afraha Begum", "Aliya Sultana", "Anvika Bandi", "Aradana Devara konda", "Devansh Bandi", "Hanvitha Mulkalapelli", "Harsha Vardhan Seenapelli", "Hiranya Bandi", "Jashritha Boina", "Konreddy Shreyanvi", "Kriyansh Sammeta", "Mohammed Mohiuddin Sayyad", "Nethra Narkurthi", "Reeyansh Bandi", "Rishi Myakala", "Rudransh Bandi", "Sanvika Bandi", "Shanvith Khatha", "Shishira Jalagam", "Shiva Sai Mekala", "Shree Rudhraveer Chevvu", "Shreyansh Gangaraboina", "Sreeja Thalla", "Srikrithini Myakala", "Srivatsav Vanam", "Sriyansh Mekala", "Thanvika Lakka", "Thrilokansh Vudari", "Ujjwal Chekka", "Vaishnavi Lakka", "Vedansh Myakala", "Vishnu Priya Molugu", "Vyshnav Tej Boina", "Yafiah Mohammad"], "KG-1": ["Aadhya Sri Amaravadi", "Aditya Manda", "Aadhya Jella", "Advaita Gauri Bandi", "Aizah Amna Shaik", "Akshara Singaram", "Bhahuveer Raj Somishetti", "Gayathri Erroju", "Hanvika Mulkalapelli", "Manvith Kondoju", "Sayyad Vajeed", "Mekala Manu sri", "Oliva Grace Vallapu", "Rithwik Oggula", "Rithwika Kandagatla", "Srimahi Chevvu", "Thanvesh Thalla", "Trishul Nanduri", "Yoganshika Nanduri", "Yusra Mohammad", "Zainul Abideen Syed"], "KG-2": ["Deekshanth Sammeta", "Hanshith Erroju", "Harika Bandi", "Himarsha Naini", "Karthik Vallepu", "Kruthika Bandi", "Rajavardhan Gampala", "Roshan Kaitha", "Sri Anshu Ayaan Lyadala", "Srihansh Bandi", "Srikshitha Guduri", "Varshith Gonela", "Adyasri Makala", "Anvik Boini", "Anvith Pokanati", "Awais Ur Rehman Mohammad", "Dakshu Pothuganti", "Hansith Reddy Katukuri", "Harshith Pokanati", "Jella Aditya", "Krishank Nallabothula", "Kundana Katkuri", "Munukuntla Revanth Rudhra", "Niraja Nethri Siluveru", "Pranav Mattepelli", "Sreenith Yadav Naini", "Uvan Reddy Dasari", "Zayan Mohammad", "Zoya Mohammed"], "Grade-1": ["Dheeraj Gattu", "Preetham Sannayala", "Shiva nandu Gonela", "Shrayan Nuthanakanti", "Sriyanksha Mandala", "Advitha Garige", "Harika Bandi", "Himansi Kondoju", "Izhaan Rahamath Syed", "Jaisurya Myakala", "Khadeeja Fathima", "Manaswini Dandugula", "Manusri Bandi", "Rithwik krishna Amaravadi", "Rohan Bandi", "Shiva Junnu", "Shivanandh Bandi", "Sridha Thalla", "Srinika Chengelly", "Sriyanshi Oggula", "Vishwak Chekka"], "Grade-2": ["Aliza Manha Shaik", "Dhruvan Reddy Katukuri", "Druthika Enugala", "Manaswini Bandi", "Rakshith Macharla", "Sathwika Katkuri", "Shalini Uppala", "Chandu Devarakonda", "Gnaneshwar Pokanati", "Hasnain Syed", "Koushik Siluveru", "Senen Desabattula", "Shivarajan Pothuganti"], "Grade-3": ["Nagavelly Manikanta", "Mirja Ismail", "Bandi Aryan", "Dandugula Mahesh Babu", "Bandi Tejasri", "Bandi Harshavardhan", "Gampala Vyshnavi", "Gampala Laxmi", "Garige Harshith", "Katkuri Hanish", "Katukuri Manideep", "MD Abdul Quddus", "Muppa Sathwik Patel", "Nuthanakanti Sansita", "Pasarakonda Ritwin", "Pinninti Rakshith Rao", "Rayi Sriman Adithya"], "Grade-4": ["Abdul Saqib Mohammad", "Anudeep Chintha", "Bhavan Bandi", "Harshavardhan Gonela", "Jayadev Chiluveru", "Mahaboob Syed", "Nandith Reddy Enugala", "Sai Charan Goud Mandala", "Sai Prasanna Keerthi", "Ajmeri Shaik", "Akshith Chiluveru", "Jayasri Myakala", "Rahul Kanjarla", "Saketh Devarakonda"], "Grade-5": ["Adya Reddy Vangala", "Kowshik Patel Muppa", "Siri Singaram", "Srikar Mandala", "Abdus Salaam MD", "Akshith Ram Kalvacharla", "Jaffar Anas Shaik", "Khaja Azeemuddin Mohammed", "Nihan Mohammed", "Saif Shaik", "Saketh Renukuntla", "Sreeja Dasari", "Vidhaatri Sahani"], "Grade-6": ["Abdul Razzak Mohammad", "Anudeepthi Chintha", "Saketh Ranaveni", "Shiva Sri Katukuri", "Aklees Shaik", "Akshya Kalvacharla", "Prince Katkuri"], "Grade-7": ["Manikanta Sannayala", "Sreeyan Reddy Karra", "Jayadhithya Chiluveru"], "Grade-8": ["Sathwika Nagavelly", "Vyshnavi Uppala", "Akshaya Gampala", "Ganesh Oggula", "Gayathri Renukuntla", "Khaja Sadeemuddin Mohammed"] };
 
     function populateStudents() {
         const cls = document.getElementById('feeClass').value;
@@ -206,30 +215,38 @@
         const cls = document.getElementById('feeClass').value;
         const name = document.getElementById('feeStudent').value;
         const auditDiv = document.getElementById('auditTrail');
-        if(!cls || !name) { auditDiv.style.display = 'none'; return; }
+        const historyTable = document.getElementById('historyTableBody');
+        const historyCard = document.getElementById('historyCard');
+
+        if(!cls || !name) { auditDiv.style.display = 'none'; historyCard.style.display = 'none'; return; }
         
         const snap = await db.ref(`fee_records/${cls}/${name}`).once('value');
         const data = snap.val();
         studentLifetimePaid = 0;
-        let totalVal = "";
-        let lastStaff = "";
-        let lastTime = "";
+        let totalVal = ""; let lastStaff = ""; let lastTime = "";
+        let tableRows = "";
 
         if(data) {
             Object.keys(data).forEach(key => {
                 const record = data[key];
                 studentLifetimePaid += parseFloat(record.paid || 0);
                 totalVal = record.total; 
-                lastStaff = record.recordedBy || "System";
+                lastStaff = record.recordedBy || "Admin";
                 lastTime = record.timestamp || record.date;
+                
+                tableRows += `<tr><td>${record.date || 'N/A'}</td><td class="amt-cell">₹ ${record.paid}</td><td>${record.recordedBy || 'Admin'}</td></tr>`;
             });
             document.getElementById('totalFee').value = totalVal;
             document.getElementById('lastUpdatedBy').innerText = lastStaff;
             document.getElementById('lastUpdatedTime').innerText = lastTime;
             auditDiv.style.display = 'block';
+            
+            historyTable.innerHTML = tableRows;
+            historyCard.style.display = 'block';
         } else {
             document.getElementById('totalFee').value = "";
             auditDiv.style.display = 'none';
+            historyCard.style.display = 'none';
         }
         calculateRealTime();
     }
@@ -243,11 +260,8 @@
         
         let pct = (total > 0) ? (combinedPaid / total) * 100 : 0;
         if(pct > 100) pct = 100;
-
         const circle = document.getElementById('progressCircle');
-        // Math fix: dashoffset should be (total circumference - (circumference * percentage))
-        const offset = 314.15 - (314.15 * pct / 100);
-        circle.style.strokeDashoffset = offset + "px";
+        circle.style.strokeDashoffset = (314.15 - (314.15 * pct / 100)) + "px";
         document.getElementById('percentText').innerText = Math.round(pct) + "%";
     }
 
@@ -259,34 +273,27 @@
         const date = document.getElementById('payDate').value;
         if(!name || !paid) return Swal.fire('Error', 'Missing Data', 'warning');
         
-        const record = { 
-            total, 
-            paid, 
-            recordedBy: activeTeacher, 
-            date, 
-            timestamp: new Date().toLocaleString() 
-        };
+        lastReceiptData = { name, cls, paid, total, date, teacher: activeTeacher };
+        const record = { total, paid, recordedBy: activeTeacher, date, timestamp: new Date().toLocaleString() };
 
         db.ref(`fee_records/${cls}/${name}`).push(record).then(() => {
             Swal.fire('Saved!', 'Record updated.', 'success');
             document.getElementById('payingAmount').value = '';
+            document.getElementById('receiptBtn').style.opacity = "1";
             fetchExistingFeeData(); 
         });
     }
 
     function generateReceipt() {
-        const cls = document.getElementById('feeClass').value;
-        const name = document.getElementById('feeStudent').value;
-        const paid = document.getElementById('payingAmount').value;
-        const due = document.getElementById('dueDisplay').innerText;
-        const date = document.getElementById('payDate').value;
-        if (!name || !paid) return Swal.fire('Error', 'No data', 'warning');
+        if(!lastReceiptData) return Swal.fire('Note', 'Save a payment first to print.', 'info');
+        const { name, cls, paid, date, teacher } = lastReceiptData;
         const win = window.open('', '', 'height=600,width=400');
-        win.document.write(`<html><body style="padding:20px; font-family:sans-serif;">
+        win.document.write(`<html><body style="padding:20px; font-family:sans-serif; border: 2px solid #eee;">
             <center><img src="logo.png" style="height:60px;"><br><h2 style="color:#006633;">PARAMOUNT SCHOOL</h2><hr></center>
-            <p><strong>Student:</strong> ${name} (${cls})</p><p><strong>Date:</strong> ${date}</p>
-            <p><strong>Paid:</strong> ₹ ${paid}</p><p><strong>Current Balance:</strong> ${due}</p>
-            <hr><p style="text-align:center; font-size:12px;">Processed by: ${activeTeacher}</p>
+            <p><strong>Student:</strong> ${name} (${cls})</p>
+            <p><strong>Date:</strong> ${date}</p>
+            <p style="font-size: 20px; color:green;"><strong>Paid Amount:</strong> ₹ ${paid}</p>
+            <hr><p style="text-align:center; font-size:12px;">Processed by: ${teacher}</p>
         </body></html>`);
         win.document.close(); win.print();
     }
@@ -294,15 +301,12 @@
     async function clearStudentData() {
         const cls = document.getElementById('feeClass').value;
         const name = document.getElementById('feeStudent').value;
-        if (!name) return Swal.fire('Error', 'Select a student', 'warning');
-        const { value: pass } = await Swal.fire({ title: 'Confirm Delete', text: `Enter password for ${activeTeacher}`, input: 'password' });
+        if (!name) return Swal.fire('Error', 'Select student', 'warning');
+        const { value: pass } = await Swal.fire({ title: 'Auth Required', text: 'Enter password to clear history', input: 'password' });
         if (pass === authorized[activeTeacher]) {
             db.ref(`fee_records/${cls}/${name}`).remove().then(() => {
-                Swal.fire('Deleted', '', 'success');
-                document.getElementById('totalFee').value = '';
-                document.getElementById('payingAmount').value = '';
-                studentLifetimePaid = 0;
-                calculateRealTime();
+                Swal.fire('Wiped', '', 'success');
+                fetchExistingFeeData();
             });
         }
     }
