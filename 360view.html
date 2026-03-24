@@ -22,25 +22,14 @@
         .school-name-sub { font-family: 'Montserrat', sans-serif; font-size: 0.7rem; color: var(--gold); font-weight: 700; text-transform: uppercase; }
         .portal-title { padding-left: 20px; font-family: 'Montserrat', sans-serif; font-size: 1.2rem; font-weight: 800; text-transform: uppercase; flex-grow: 1; }
 
-        /* PREMIUM HEADER RIGHT & EXIT BUTTON */
-        .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+        /* PREMIUM EXIT BUTTON */
+        .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; }
         .live-clock { font-family: 'Montserrat', sans-serif; font-size: 0.75rem; font-weight: 700; color: white; background: rgba(0,0,0,0.2); padding: 4px 12px; border-radius: 5px; white-space: nowrap; }
-        
         .btn-premium-exit { 
             background: linear-gradient(135deg, var(--gold), #ffcc00); 
-            border: 2px solid white; 
-            color: var(--forest); 
-            padding: 8px 22px; 
-            border-radius: 50px; 
-            font-size: 0.7rem; 
-            font-weight: 800; 
-            cursor: pointer; 
-            text-transform: uppercase; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.3s ease;
+            border: 2px solid white; color: var(--forest); padding: 8px 22px; border-radius: 50px; 
+            font-size: 0.7rem; font-weight: 800; cursor: pointer; text-transform: uppercase; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3); display: flex; align-items: center; gap: 8px; transition: all 0.3s ease;
         }
         .btn-premium-exit:hover { transform: translateY(-2px); background: white; box-shadow: 0 6px 20px rgba(255,215,0,0.5); }
 
@@ -53,10 +42,10 @@
         /* DASHBOARD LAYOUT */
         .dashboard { max-width: 1200px; margin: 0 auto; padding: 20px; display: none; }
         
-        /* FIXED IMAGE SIZE CONTAINER */
+        /* IMAGE SIZE FIX */
         .profile-hero { background: white; border-radius: 20px; padding: 30px; display: flex; align-items: center; gap: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom: 25px; border-left: 10px solid var(--forest); position: relative; }
-        .img-container { width: 160px; height: 160px; flex-shrink: 0; border-radius: 15px; overflow: hidden; border: 4px solid var(--forest); background: #eee; }
-        .img-container img { width: 100%; height: 100%; object-fit: cover; }
+        .student-img-container { width: 160px; height: 160px; flex-shrink: 0; border-radius: 15px; overflow: hidden; border: 4px solid var(--forest); background: #f0f0f0; }
+        .student-img-container img { width: 100%; height: 100%; object-fit: cover; }
         .timestamp-badge { position: absolute; top: 15px; right: 25px; font-size: 10px; font-weight: 800; color: #aaa; text-transform: uppercase; }
         
         .hero-text h1 { margin: 0; color: var(--forest); font-family: 'Montserrat', sans-serif; font-size: 1.8rem; }
@@ -76,10 +65,12 @@
         .circle-bg { fill: none; stroke: #eee; stroke-width: 8; }
         .circle-bar { fill: none; stroke: var(--forest); stroke-width: 8; stroke-dasharray: 283; stroke-dashoffset: 283; transition: 1.2s ease-in-out; stroke-linecap: round; }
 
+        .marks-badge { background: #e3f2fd; color: #1976d2; padding: 5px 12px; border-radius: 10px; font-weight: 800; }
+        
         @media (max-width: 768px) {
             .profile-hero { flex-direction: column; text-align: center; }
             .portal-title { display: none; }
-            .img-container { width: 140px; height: 140px; }
+            .student-img-container { width: 140px; height: 140px; }
         }
     </style>
 </head>
@@ -112,7 +103,7 @@
 <div id="dashboard" class="dashboard">
     <div class="profile-hero">
         <div id="vTimestamp" class="timestamp-badge">Fetched: --</div>
-        <div class="img-container">
+        <div class="student-img-container">
             <img id="vImg" src="logo.png" alt="Student">
         </div>
         <div class="hero-text">
@@ -142,17 +133,17 @@
             <div id="hwBox" style="text-align:center; padding:20px;">
                 <i class="fas fa-tasks" style="font-size:2rem; color:var(--sky); margin-bottom:10px;"></i>
                 <h2 id="vHW" style="margin:0; color:var(--dark);">Pending</h2>
-                <p style="font-size:0.8rem; color:#888;">Latest assignment tracking from cloud node.</p>
+                <p id="hwDetail" style="font-size:0.8rem; color:#888; margin-top:5px;">Waiting for cloud data...</p>
             </div>
         </div>
 
-        <div class="card">
+        <div class="card" style="border-top: 5px solid var(--danger);">
             <div class="card-header"><i class="fas fa-award"></i> Exam Marks</div>
             <div id="marksList" style="max-height: 200px; overflow-y: auto;">
-                <p style="text-align:center; color:#ccc;">Searching marks...</p>
+                <p style="text-align:center; color:#ccc;">Searching academic data...</p>
             </div>
             <div class="row" style="margin-top:15px; background:#f0f7ff; padding:10px; border-radius:10px;">
-                <span class="label">Total Percentage</span><span class="val" id="vMarkPercent" style="background:#1976d2; color:white; padding:4px 10px; border-radius:8px;">0%</span>
+                <span class="label">Total Percentage</span><span class="val marks-badge" id="vMarkPercent">0%</span>
             </div>
         </div>
 
@@ -168,7 +159,7 @@
             <div class="row"><span class="label">Father Name</span><span class="val" id="vFather">--</span></div>
             <div class="row"><span class="label">Primary Phone</span><span class="val" id="vPhone">--</span></div>
             <div class="row"><span class="label">Admission No</span><span class="val" id="vAdm">--</span></div>
-            <div class="row"><span class="label">Profile Status</span><span class="val" style="color:green;">Synced</span></div>
+            <div class="row"><span class="label">Status</span><span class="val" style="color:green;">Live Sync</span></div>
         </div>
     </div>
 </div>
@@ -388,36 +379,45 @@ async function fetchAllData() {
         return;
     }
 
-    Swal.fire({ title: 'Fetching 360° Profile...', didOpen: () => Swal.showLoading() });
+    Swal.fire({ title: 'Establishing Secure Cloud Sync...', didOpen: () => Swal.showLoading() });
 
     try {
         const name = student.Name;
         const cls = student.Class;
 
-        // TIMESTAMP FOR THE REPORT
         const now = new Date();
-        document.getElementById('vTimestamp').innerText = "Fetched: " + now.toLocaleString();
+        document.getElementById('vTimestamp').innerText = "Report Generated: " + now.toLocaleString();
 
-        // 1. FEES
+        // 1. FEES SYNC
         const feeSnap = await db.ref(`fee_records/${cls}/${name}`).once('value');
         let tPaid = 0, tFee = 0;
         if(feeSnap.exists()){
-            feeSnap.forEach(c => { tPaid += parseFloat(c.val().paid || 0); tFee = c.val().total; });
+            feeSnap.forEach(c => { 
+                const data = c.val();
+                tPaid += parseFloat(data.paid || 0); 
+                tFee = data.total; 
+            });
         }
 
-        // 2. EXAM MARKS
-        const marksSnap = await db.ref(`marks/${cls}/${name}`).once('value');
+        // 2. EXAM MARKS SYNC (TRI-PATH CHECK)
+        let marksSnap = await db.ref(`marks/${cls}/${name}`).once('value');
+        if(!marksSnap.exists()) marksSnap = await db.ref(`exam_marks/${cls}/${name}`).once('value');
+        if(!marksSnap.exists()) marksSnap = await db.ref(`Marks/${cls}/${name}`).once('value');
+        
         let marksHTML = "";
         let obt = 0, pos = 0;
+        
         if(marksSnap.exists()){
             const data = marksSnap.val();
             Object.keys(data).forEach(sub => {
-                marksHTML += `<div class="row"><span class="label">${sub}</span><span class="val">${data[sub]}</span></div>`;
-                obt += parseFloat(data[sub]); pos += 100;
+                if(typeof data[sub] !== 'object') {
+                    marksHTML += `<div class="row"><span class="label">${sub}</span><span class="val">${data[sub]}</span></div>`;
+                    obt += parseFloat(data[sub]); pos += 100;
+                }
             });
-        } else { marksHTML = "<p style='text-align:center; padding:20px; color:#999;'>No Exam Data</p>"; }
+        } else { marksHTML = "<p style='text-align:center; padding:10px; color:#ccc;'>No Exam Data Sync found.</p>"; }
 
-        // 3. ATTENDANCE
+        // 3. ATTENDANCE SYNC
         const shortCls = cls.split(" ")[0];
         const attSnap = await db.ref('daily_attendance').once('value');
         let tDays = 0, pDays = 0;
@@ -430,10 +430,18 @@ async function fetchAllData() {
             });
         }
 
-        // 4. HOMEWORK
-        const hwSnap = await db.ref(`homework/${cls}`).limitToLast(1).once('value');
+        // 4. HOMEWORK SYNC (MULTIPLE FOLDER CHECK)
+        let hwSnap = await db.ref(`homework/${cls}`).limitToLast(1).once('value');
+        if(!hwSnap.exists()) hwSnap = await db.ref(`Homework/${cls}`).limitToLast(1).once('value');
+        
         let hwStatus = "Pending";
-        if(hwSnap.exists()) hwStatus = "Assigned";
+        let hwText = "No live tasks recorded.";
+        if(hwSnap.exists()) {
+            const hwData = hwSnap.val();
+            const lastEntry = Object.values(hwData)[0];
+            hwStatus = "Task Assigned";
+            hwText = lastEntry.subject || lastEntry.task || "Latest task is active.";
+        }
 
         // UPDATE UI
         document.getElementById('vName').innerText = name;
@@ -442,7 +450,9 @@ async function fetchAllData() {
         document.getElementById('vFather').innerText = student.Father;
         document.getElementById('vPhone').innerText = student.Phone;
         document.getElementById('vAdm').innerText = student.Adm;
+        
         document.getElementById('vHW').innerText = hwStatus;
+        document.getElementById('hwDetail').innerText = hwText;
 
         // Fee Updates
         document.getElementById('vTotalFee').innerText = `₹ ${tFee}`;
@@ -452,7 +462,7 @@ async function fetchAllData() {
         document.getElementById('vFeeCircle').style.strokeDashoffset = 283 - fPct;
         document.getElementById('vFeePercent').innerText = tFee > 0 ? Math.round((tPaid/tFee)*100) + "%" : "0%";
 
-        // Marks Updates
+        // Academic Updates
         document.getElementById('marksList').innerHTML = marksHTML;
         document.getElementById('vMarkPercent').innerText = pos > 0 ? Math.round((obt/pos)*100) + "%" : "0%";
 
@@ -466,7 +476,7 @@ async function fetchAllData() {
         window.scrollTo({ top: 400, behavior: 'smooth' });
 
     } catch (e) {
-        Swal.fire('Error', 'Connection Failed', 'error');
+        Swal.fire('Error', 'Connection Failure', 'error');
     }
 }
 </script>
