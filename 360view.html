@@ -25,6 +25,7 @@
         /* PREMIUM EXIT BUTTON */
         .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; }
         .live-clock { font-family: 'Montserrat', sans-serif; font-size: 0.75rem; font-weight: 700; color: white; background: rgba(0,0,0,0.2); padding: 4px 12px; border-radius: 5px; white-space: nowrap; }
+        
         .btn-premium-exit { 
             background: linear-gradient(135deg, var(--gold), #ffcc00); 
             border: 2px solid white; color: var(--forest); padding: 8px 22px; border-radius: 50px; 
@@ -42,8 +43,11 @@
         /* DASHBOARD LAYOUT */
         .dashboard { max-width: 1200px; margin: 0 auto; padding: 20px; display: none; }
         .profile-hero { background: white; border-radius: 20px; padding: 30px; display: flex; align-items: center; gap: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom: 25px; border-left: 10px solid var(--forest); position: relative; }
+        
+        /* IMAGE SIZE FIX */
         .student-img-container { width: 160px; height: 160px; flex-shrink: 0; border-radius: 15px; overflow: hidden; border: 4px solid var(--forest); background: #f0f0f0; }
         .student-img-container img { width: 100%; height: 100%; object-fit: cover; }
+        
         .timestamp-badge { position: absolute; top: 15px; right: 25px; font-size: 10px; font-weight: 800; color: #aaa; text-transform: uppercase; }
         .hero-text h1 { margin: 0; color: var(--forest); font-family: 'Montserrat', sans-serif; font-size: 1.8rem; }
         .hero-text p { font-weight: 700; color: #666; margin: 5px 0; }
@@ -51,6 +55,7 @@
         .data-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
         .card { background: white; border-radius: 20px; padding: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); position: relative; overflow: hidden; }
         .card-header { display: flex; align-items: center; gap: 10px; border-bottom: 2px solid #f0f0f0; padding-bottom: 12px; margin-bottom: 15px; color: var(--forest); font-weight: 800; text-transform: uppercase; font-size: 0.9rem; }
+        
         .row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f9f9f9; }
         .label { color: #888; font-weight: 600; font-size: 0.85rem; }
         .val { font-weight: 700; color: var(--dark); }
@@ -60,6 +65,7 @@
         .circle-svg { width: 100px; height: 100px; transform: rotate(-90deg); }
         .circle-bg { fill: none; stroke: #eee; stroke-width: 8; }
         .circle-bar { fill: none; stroke: var(--forest); stroke-width: 8; stroke-dasharray: 283; stroke-dashoffset: 283; transition: 1.2s ease-in-out; stroke-linecap: round; }
+
         .marks-badge { background: #e3f2fd; color: #1976d2; padding: 5px 12px; border-radius: 10px; font-weight: 800; }
         
         @media (max-width: 768px) {
@@ -80,7 +86,7 @@
                 <span class="school-name-sub">ENGLISH MEDIUM SCHOOL</span>
             </div>
         </div>
-        <div class="portal-title">Student 360° View</div>
+        <div class="portal-title">Student 360° view </div>
         <div class="header-right">
             <div id="liveClock" class="live-clock">--:--:--</div>
             <button onclick="window.location.href='admin.html'" class="btn-premium-exit">Exit Portal <i class="fas fa-power-off"></i></button>
@@ -125,10 +131,11 @@
 
         <div class="card" style="border-top: 5px solid var(--sky);">
             <div class="card-header"><i class="fas fa-book-reader"></i> Homework Status</div>
-            <div id="hwBox" style="text-align:center; padding:20px;">
-                <i class="fas fa-tasks" style="font-size:2rem; color:var(--sky); margin-bottom:10px;"></i>
-                <h2 id="vHW" style="margin:0; color:var(--dark); font-size: 1.3rem;">Pending</h2>
-                <p id="hwDetail" style="font-size:0.8rem; color:#888; margin-top:5px;">Latest assignment tracking.</p>
+            <div id="hwBox" style="padding:10px;">
+                <h2 id="vHW" style="color:var(--sky); margin:0; font-size: 1.1rem; text-align:center;">Pending</h2>
+                <div id="hwList" style="margin-top:10px; font-size: 0.85rem; color:#444; max-height: 150px; overflow-y: auto;">
+                    <p style="text-align:center; color:#999;">No homework assigned today.</p>
+                </div>
             </div>
         </div>
 
@@ -379,7 +386,6 @@ async function fetchAllData() {
     try {
         const name = student.Name;
         const cls = student.Class;
-
         const now = new Date();
         document.getElementById('vTimestamp').innerText = "Report Generated: " + now.toLocaleString();
 
@@ -394,7 +400,7 @@ async function fetchAllData() {
             });
         }
 
-        // 2. EXAM MARKS SYNC (TRI-PATH DEEP SCAN)
+        // 2. EXAM MARKS SYNC
         let marksSnap = await db.ref(`marks/${cls}/${name}`).once('value');
         if(!marksSnap.exists()) marksSnap = await db.ref(`exam_marks/${cls}/${name}`).once('value');
         if(!marksSnap.exists()) marksSnap = await db.ref(`Marks/${cls}/${name}`).once('value');
@@ -425,28 +431,30 @@ async function fetchAllData() {
             });
         }
 
-        // 4. HOMEWORK SYNC (DEEP SCAN)
-        // Check both lowercase and uppercase nodes
-        let hwSnap = await db.ref(`homework/${cls}`).limitToLast(1).once('value');
-        if(!hwSnap.exists()) hwSnap = await db.ref(`Homework/${cls}`).limitToLast(1).once('value');
-        
+        // 4. UNIVERSAL HOMEWORK SYNC (FIXED: Scanning by date folder)
         let hwStatus = "Pending";
-        let hwDetailText = "No live tasks recorded.";
+        let hwDetailHTML = "<p style='text-align:center; color:#999;'>No live tasks recorded.</p>";
 
-        if(hwSnap.exists()) {
-            const hwData = hwSnap.val();
-            // Get the actual data object (handle both push IDs and direct mapping)
-            const entries = Object.values(hwData);
-            const lastEntry = entries[entries.length - 1];
+        const hwRef = await db.ref('homework').once('value');
+        if(hwRef.exists()){
+            const dates = hwRef.val();
+            // Get all dates, sort them, and pick the latest one
+            const sortedDates = Object.keys(dates).sort().reverse();
             
-            hwStatus = "Assigned";
-            
-            // This 'Deep Scan' looks for ANY property that contains the text
-            if (typeof lastEntry === 'string') {
-                hwDetailText = lastEntry;
-            } else if (typeof lastEntry === 'object') {
-                // Priority keys: subject, task, desc, homework, text
-                hwDetailText = lastEntry.subject || lastEntry.task || lastEntry.desc || lastEntry.homework || lastEntry.text || "Class task is active.";
+            let foundHomework = false;
+            for(let date of sortedDates) {
+                if(dates[date][cls]) {
+                    hwStatus = "Assigned";
+                    hwDetailHTML = "";
+                    const classTasks = dates[date][cls];
+                    Object.keys(classTasks).forEach(sub => {
+                        const entry = classTasks[sub];
+                        const taskMsg = (typeof entry === 'object') ? (entry.task || "Check register") : entry;
+                        hwDetailHTML += `<div style="border-bottom:1px solid #eee; padding:8px 0;"><b>${sub}:</b> ${taskMsg}</div>`;
+                    });
+                    foundHomework = true;
+                    break; // Stop at the most recent date found for this class
+                }
             }
         }
 
@@ -459,9 +467,9 @@ async function fetchAllData() {
         document.getElementById('vAdm').innerText = student.Adm;
         
         document.getElementById('vHW').innerText = hwStatus;
-        document.getElementById('hwDetail').innerText = hwDetailText;
+        document.getElementById('hwList').innerHTML = hwDetailHTML;
 
-        // Fee Updates
+        // Fee UI
         document.getElementById('vTotalFee').innerText = `₹ ${tFee}`;
         document.getElementById('vPaidFee').innerText = `₹ ${tPaid}`;
         document.getElementById('vDueFee').innerText = `₹ ${tFee - tPaid}`;
@@ -469,11 +477,11 @@ async function fetchAllData() {
         document.getElementById('vFeeCircle').style.strokeDashoffset = 283 - fPct;
         document.getElementById('vFeePercent').innerText = tFee > 0 ? Math.round((tPaid/tFee)*100) + "%" : "0%";
 
-        // Performance Updates
+        // Performance UI
         document.getElementById('marksList').innerHTML = marksHTML;
         document.getElementById('vMarkPercent').innerText = pos > 0 ? Math.round((obt/pos)*100) + "%" : "0%";
 
-        // Attendance Updates
+        // Attendance UI
         document.getElementById('vTotalDays').innerText = tDays;
         document.getElementById('vPresent').innerText = pDays;
         document.getElementById('vAttPercent').innerText = tDays > 0 ? Math.round((pDays/tDays)*100) + "%" : "0%";
