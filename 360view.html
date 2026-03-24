@@ -55,14 +55,22 @@
         .label { color: #888; font-weight: 600; font-size: 0.85rem; }
         .val { font-weight: 700; color: var(--dark); }
 
+        /* PROGRESS TABLE STYLING (EXACTLY LIKE PROGRESS PORTAL) */
+        .marks-card { grid-column: 1 / -1; } /* Spans full width */
+        .table-wrapper { width: 100%; overflow-x: auto; border-radius: 10px; border: 1px solid #eee; margin-top: 10px; }
+        .marks-table { width: 100%; border-collapse: collapse; min-width: 500px; }
+        .marks-table th { background: var(--forest); color: white; padding: 12px; font-size: 10px; text-transform: uppercase; border: 1px solid #004d26; }
+        .marks-table td { padding: 12px; text-align: center; border: 1px solid #eee; font-weight: 700; font-size: 13px; color: #333; }
+        .marks-table td:first-child { text-align: left; background: #f9f9f9; color: var(--forest); font-weight: 800; }
+        .avg-percent-box { margin-top: 15px; padding: 15px; background: #f0f7ff; border-radius: 12px; text-align: center; border: 1px solid #d1e9ff; font-family: 'Montserrat'; font-weight: 800; color: #555; }
+        .avg-percent-box span { color: var(--forest); font-size: 1.4rem; margin-left: 10px; }
+
         /* CIRCLE PROGRESS */
         .fee-circle-box { display: flex; flex-direction: column; align-items: center; padding: 10px; }
         .circle-svg { width: 100px; height: 100px; transform: rotate(-90deg); }
         .circle-bg { fill: none; stroke: #eee; stroke-width: 8; }
         .circle-bar { fill: none; stroke: var(--forest); stroke-width: 8; stroke-dasharray: 283; stroke-dashoffset: 283; transition: 1.2s ease-in-out; stroke-linecap: round; }
-        .marks-badge { background: #e3f2fd; color: #1976d2; padding: 5px 12px; border-radius: 10px; font-weight: 800; }
-        .exam-divider { background: #f4f7f6; padding: 5px 10px; font-weight: 800; font-size: 10px; color: var(--forest); border-radius: 5px; margin: 10px 0 5px 0; }
-        
+
         @media (max-width: 768px) {
             .profile-hero { flex-direction: column; text-align: center; }
             .portal-title { display: none; }
@@ -129,18 +137,31 @@
             <div id="hwBox" style="padding:10px;">
                 <h2 id="vHW" style="color:var(--sky); margin:0; font-size: 1.1rem; text-align:center;">Pending</h2>
                 <div id="hwList" style="margin-top:10px; font-size: 0.85rem; color:#444; max-height: 150px; overflow-y: auto;">
-                    <p style="text-align:center; color:#999;">No homework assigned today.</p>
+                    <p style="text-align:center; color:#999;">Loading homework data...</p>
                 </div>
             </div>
         </div>
 
-        <div class="card" style="border-top: 5px solid var(--danger);">
-            <div class="card-header"><i class="fas fa-award"></i> Exam Marks</div>
-            <div id="marksList" style="max-height: 250px; overflow-y: auto;">
-                <p style="text-align:center; color:#ccc;">Searching academic cards...</p>
+        <div class="card marks-card" style="border-top: 5px solid var(--danger);">
+            <div class="card-header"><i class="fas fa-award"></i> Academic Progress Report</div>
+            <div class="table-wrapper">
+                <table class="marks-table">
+                    <thead>
+                        <tr>
+                            <th>Subject</th>
+                            <th>FA-1</th>
+                            <th>FA-2</th>
+                            <th>FA-3</th>
+                            <th>SA-1</th>
+                            <th>SA-2</th>
+                        </tr>
+                    </thead>
+                    <tbody id="marksTableBody">
+                        </tbody>
+                </table>
             </div>
-            <div class="row" style="margin-top:15px; background:#f0f7ff; padding:10px; border-radius:10px;">
-                <span class="label">Overall Avg</span><span class="val marks-badge" id="vMarkPercent">0%</span>
+            <div class="avg-percent-box">
+                AVG PERCENTAGE <span id="vMarkPercent">0.0%</span>
             </div>
         </div>
 
@@ -395,26 +416,39 @@ async function fetchAllData() {
             });
         }
 
-        // 2. EXAM MARKS SYNC (Corrected to search progress_cards folder)
-        let marksHTML = "";
-        let totalObt = 0, totalMax = 0;
+        // 2. EXAM MARKS SYNC (TABULAR STRUCTURE MATCHED TO PORTAL)
+        const allSubjects = ["TEL", "HIN", "ENG", "MAT", "SCI", "SOC", "PHY", "CHE", "BIO", "IIT"];
         const examTypes = ["FA-1", "FA-2", "FA-3", "SA-1", "SA-2"];
-        
+        let tableHTML = "";
+        let totalObt = 0, totalMax = 0;
+
+        allSubjects.forEach(sub => {
+            let rowHTML = `<tr><td>${sub}</td>`;
+            examTypes.forEach(ex => {
+                rowHTML += `<td id="m-${sub}-${ex}">-</td>`;
+            });
+            rowHTML += `</tr>`;
+            tableHTML += rowHTML;
+        });
+        document.getElementById('marksTableBody').innerHTML = tableHTML;
+
+        // Fetch marks and populate table cells
         for (let exam of examTypes) {
             const mSnap = await db.ref(`progress_cards/${cls}/${exam}/${name}`).once('value');
             if(mSnap.exists()){
                 const exData = mSnap.val();
-                marksHTML += `<div style="background:#f4f7f6; padding:5px 10px; font-weight:800; font-size:10px; color:var(--forest); border-radius:5px; margin:10px 0 5px 0;">${exam} RESULTS</div>`;
                 if(exData.marks) {
                     Object.keys(exData.marks).forEach(sub => {
-                        marksHTML += `<div class="row"><span class="label">${sub}</span><span class="val">${exData.marks[sub]}</span></div>`;
-                        totalObt += parseFloat(exData.marks[sub] || 0);
-                        totalMax += 100;
+                        const cell = document.getElementById(`m-${sub}-${exam}`);
+                        if(cell) {
+                            cell.innerText = exData.marks[sub];
+                            totalObt += parseFloat(exData.marks[sub] || 0);
+                            totalMax += 100;
+                        }
                     });
                 }
             }
         }
-        if(marksHTML === "") marksHTML = "<p style='text-align:center; padding:10px; color:#ccc;'>No academic records found.</p>";
 
         // 3. ATTENDANCE SYNC
         const shortCls = cls.split(" ")[0];
@@ -429,7 +463,7 @@ async function fetchAllData() {
             });
         }
 
-        // 4. UNIVERSAL HOMEWORK SYNC (Matches Teacher PortalStructure)
+        // 4. UNIVERSAL HOMEWORK SYNC
         let hwStatus = "Pending";
         let hwDetailHTML = "";
 
@@ -451,7 +485,7 @@ async function fetchAllData() {
                 }
             }
         }
-        if(hwDetailHTML === "") hwDetailHTML = "<p style='text-align:center; color:#999;'>No homework synced for this class.</p>";
+        if(hwDetailHTML === "") hwDetailHTML = "<p style='text-align:center; color:#999;'>No homework assigned today.</p>";
 
         // UPDATE UI
         document.getElementById('vName').innerText = name;
@@ -464,7 +498,7 @@ async function fetchAllData() {
         document.getElementById('vHW').innerText = hwStatus;
         document.getElementById('hwList').innerHTML = hwDetailHTML;
 
-        // Fee UI
+        // Fee Updates
         document.getElementById('vTotalFee').innerText = `₹ ${tFee}`;
         document.getElementById('vPaidFee').innerText = `₹ ${tPaid}`;
         document.getElementById('vDueFee').innerText = `₹ ${tFee - tPaid}`;
@@ -472,11 +506,10 @@ async function fetchAllData() {
         document.getElementById('vFeeCircle').style.strokeDashoffset = 283 - fPct;
         document.getElementById('vFeePercent').innerText = tFee > 0 ? Math.round((tPaid/tFee)*100) + "%" : "0%";
 
-        // Academic UI
-        document.getElementById('marksList').innerHTML = marksHTML;
-        document.getElementById('vMarkPercent').innerText = totalMax > 0 ? Math.round((totalObt/totalMax)*100) + "%" : "0%";
+        // Performance Updates
+        document.getElementById('vMarkPercent').innerText = totalMax > 0 ? ((totalObt/totalMax)*100).toFixed(1) + "%" : "0.0%";
 
-        // Attendance UI
+        // Attendance Updates
         document.getElementById('vTotalDays').innerText = tDays;
         document.getElementById('vPresent').innerText = pDays;
         document.getElementById('vAttPercent').innerText = tDays > 0 ? Math.round((pDays/tDays)*100) + "%" : "0%";
