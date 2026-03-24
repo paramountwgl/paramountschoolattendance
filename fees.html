@@ -12,7 +12,7 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; } 
         body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; padding-bottom: 50px; }
 
-        /* --- LOGIN SCREEN (EXACT REFERENCE MATCH) --- */
+        /* --- LOGIN SCREEN --- */
         .overlay-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--light); z-index: 1000; display: flex; justify-content: center; align-items: center; padding: 15px; }
         .auth-box { background: white; padding: 40px 25px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); width: 100%; max-width: 420px; border-bottom: 5px solid var(--forest); text-align: center; }
         .auth-logo { height: 75px; margin-bottom: 10px; }
@@ -27,52 +27,58 @@
         .auth-links { margin-top: 20px; display: flex; flex-direction: column; gap: 8px; }
         .auth-links a { color: #999; font-size: 12px; font-weight: bold; text-decoration: underline; cursor: pointer; }
 
-        /* --- HEADER (ORIGINAL STYLE RESTORED) --- */
-        header { background: var(--forest); color: white; padding: 20px 5%; box-shadow: 0 4px 12px rgba(0,0,0,0.15); position: sticky; top: 0; z-index: 50; border-bottom: 4px solid var(--gold); }
+        /* --- HEADER --- */
+        header { background: var(--forest); color: white; padding: 15px 5%; box-shadow: 0 4px 12px rgba(0,0,0,0.15); position: sticky; top: 0; z-index: 50; border-bottom: 4px solid var(--gold); }
         .header-content { display: flex; align-items: center; max-width: 1400px; margin: 0 auto; width: 100%; }
-        .header-left { display: flex; align-items: center; gap: 15px; padding-right: 20px; border-right: 2px solid rgba(255,255,255,0.3); }
-        .header-logo { height: 55px; }
+        .header-left { display: flex; align-items: center; gap: 10px; padding-right: 15px; border-right: 2px solid rgba(255,255,255,0.3); }
+        .header-logo { height: 45px; }
         .school-branding { display: flex; flex-direction: column; line-height: 1.1; }
-        .school-name-main { font-family: 'Montserrat', sans-serif; font-size: 1.6rem; font-weight: 800; letter-spacing: 1px; }
-        .school-name-sub { font-family: 'Montserrat', sans-serif; font-size: 0.75rem; color: var(--gold); font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; }
-        .portal-title { padding-left: 20px; font-family: 'Montserrat', sans-serif; font-size: 1.8rem; font-weight: 800; text-transform: uppercase; flex-grow: 1; }
-        .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
-        .live-clock { font-family: 'Montserrat', sans-serif; font-size: 0.8rem; font-weight: 700; color: white; background: rgba(0,0,0,0.2); padding: 5px 12px; border-radius: 5px; }
-        .sign-out { color: #ffcccc; font-size: 0.75rem; text-decoration: none; font-weight: 800; text-transform: uppercase; display: flex; align-items: center; gap: 5px; cursor: pointer; }
+        .school-name-main { font-family: 'Montserrat', sans-serif; font-size: 1.1rem; font-weight: 800; letter-spacing: 0.5px; }
+        .school-name-sub { font-family: 'Montserrat', sans-serif; font-size: 0.6rem; color: var(--gold); font-weight: 700; text-transform: uppercase; }
+        .portal-title { padding-left: 15px; font-family: 'Montserrat', sans-serif; font-size: 1.2rem; font-weight: 800; text-transform: uppercase; flex-grow: 1; }
+        .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+        .live-clock { font-family: 'Montserrat', sans-serif; font-size: 0.7rem; font-weight: 700; color: white; background: rgba(0,0,0,0.2); padding: 4px 10px; border-radius: 5px; }
+        .sign-out { color: #ffcccc; font-size: 0.65rem; text-decoration: none; font-weight: 800; text-transform: uppercase; display: flex; align-items: center; gap: 4px; cursor: pointer; }
 
         /* --- MAIN FORM --- */
-        .container { max-width: 650px; margin: 30px auto; padding: 0 15px; }
-        .card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); border-top: 8px solid var(--forest); margin-bottom: 25px; }
-        h3 { color: var(--forest); margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; display: flex; align-items: center; gap: 8px; font-size: 1.1rem; }
+        .container { max-width: 650px; margin: 20px auto; padding: 0 15px; }
+        .card { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); border-top: 8px solid var(--forest); margin-bottom: 25px; }
+        h3 { color: var(--forest); margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; display: flex; align-items: center; gap: 8px; font-size: 1rem; }
         
-        label { display: block; font-size: 10px; font-weight: 900; color: #777; margin: 15px 0 5px; text-transform: uppercase; letter-spacing: 1px; }
+        label { display: block; font-size: 10px; font-weight: 900; color: #777; margin: 12px 0 5px; text-transform: uppercase; letter-spacing: 1px; }
         select, input { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #eee; font-size: 15px; outline: none; background: #fafafa; height: 48px; }
         
-        .calc-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px; }
-        .due-box { background: #fff5f5; border: 1px solid #ffcdd2; padding: 15px; border-radius: 15px; text-align: center; margin-top: 20px; }
-        .due-box strong { font-size: 24px; color: var(--danger); }
+        .calc-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 5px; }
+        .due-box { background: #fff5f5; border: 1px solid #ffcdd2; padding: 12px; border-radius: 15px; text-align: center; margin-top: 20px; }
+        .due-box strong { font-size: 22px; color: var(--danger); }
 
-        .audit-info { font-size: 11px; color: #666; background: #f0f4f2; padding: 10px; border-radius: 8px; border-left: 4px solid var(--gold); margin-bottom: 15px; display: none; }
+        .audit-info { font-size: 10px; color: #666; background: #f0f4f2; padding: 10px; border-radius: 8px; border-left: 4px solid var(--gold); margin-bottom: 15px; display: none; line-height: 1.4; }
 
         /* --- CIRCULAR PROGRESS --- */
-        .chart-container { display: flex; flex-direction: column; align-items: center; margin-top: 25px; padding: 20px; background: #f9f9f9; border-radius: 15px; border: 1px solid #eee; }
-        .circular-progress { position: relative; width: 120px; height: 120px; }
-        .circular-progress svg { width: 120px; height: 120px; transform: rotate(-90deg); }
-        .circular-progress circle { fill: none; stroke-width: 10; stroke-linecap: round; cx: 60; cy: 60; r: 50; }
+        .chart-container { display: flex; flex-direction: column; align-items: center; margin-top: 20px; padding: 15px; background: #f9f9f9; border-radius: 15px; border: 1px solid #eee; }
+        .circular-progress { position: relative; width: 100px; height: 100px; }
+        .circular-progress svg { width: 100px; height: 100px; transform: rotate(-90deg); }
+        .circular-progress circle { fill: none; stroke-width: 10; stroke-linecap: round; cx: 50; cy: 50; r: 40; }
         .circle-bg { stroke: #eee; }
-        .circle-bar { stroke: var(--forest); stroke-dasharray: 314.15; stroke-dashoffset: 314.15; transition: stroke-dashoffset 0.8s ease; }
-        .percentage-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-weight: 800; font-size: 1.2rem; color: #333; }
+        .circle-bar { stroke: var(--forest); stroke-dasharray: 251.32; stroke-dashoffset: 251.32; transition: stroke-dashoffset 0.8s ease; }
+        .percentage-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-weight: 800; font-size: 1.1rem; color: #333; }
 
         /* --- HISTORY TABLE --- */
         .history-table-wrapper { width: 100%; overflow-x: auto; border-radius: 10px; border: 1px solid #f1f5f9; }
-        .history-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
-        .history-table th { text-align: left; padding: 10px; background: #f8fafc; color: #64748b; font-size: 10px; text-transform: uppercase; border-bottom: 2px solid #eee; }
-        .history-table td { padding: 12px 10px; border-bottom: 1px solid #f1f5f9; font-weight: 600; color: #334155; }
+        .history-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; min-width: 350px; }
+        .history-table th { text-align: left; padding: 10px; background: #f8fafc; color: #64748b; font-size: 9px; text-transform: uppercase; border-bottom: 2px solid #eee; }
+        .history-table td { padding: 10px; border-bottom: 1px solid #f1f5f9; font-weight: 600; color: #334155; }
         .history-table .amt-cell { color: var(--forest); font-weight: 800; }
-        .history-table .time-cell { color: #94a3b8; font-size: 0.75rem; }
 
-        .btn-action { width: 100%; color: white; border: 2px solid var(--gold); padding: 16px; border-radius: 50px; font-weight: 700; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .btn-save { background: var(--forest); margin-top: 25px; height: 55px; }
+        .btn-action { width: 100%; color: white; border: 2px solid var(--gold); padding: 14px; border-radius: 50px; font-weight: 700; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-save { background: var(--forest); margin-top: 25px; height: 50px; }
+
+        @media (max-width: 600px) {
+            .portal-title { display: none; }
+            .calc-row { grid-template-columns: 1fr; gap: 10px; }
+            .header-left { border-right: none; }
+            .card { padding: 15px; }
+        }
     </style>
 </head>
 <body>
@@ -84,7 +90,7 @@
 <div id="feeLoginScreen" class="overlay-screen">
     <div class="auth-box">
         <img src="logo.png" class="auth-logo">
-        <div class="auth-branding-text"><h2>PARAMOUNT</h2><p style="color:var(--gold); font-weight:800; text-transform:uppercase; font-size:11px;">Fee Access Box</p></div>
+        <div class="auth-branding-text"><h2>PARAMOUNT</h2><p style="color:var(--gold); font-weight:800; text-transform:uppercase; font-size:11px;">Fee Entry Access </p></div>
         <br>
         <select id="staffName" class="auth-input">
             <option value="">-- Select Staff --</option>
@@ -112,10 +118,10 @@
                 <img src="logo.png" class="header-logo">
                 <div class="school-branding">
                     <span class="school-name-main">PARAMOUNT</span>
-                    <span class="school-name-sub">ENGLISH MEDIUM SCHOOL</span>
+                    <span class="school-name-sub">SCHOOL</span>
                 </div>
             </div>
-            <div class="portal-title">FEE ENTRY PORTAL</div>
+            <div class="portal-title">FEE PORTAL</div>
             <div class="header-right">
                 <div id="liveClock" class="live-clock">--:--:--</div>
                 <div class="sign-out" onclick="location.reload()">
@@ -127,8 +133,8 @@
 
     <div class="container">
         <div class="card">
-            <div id="staffDisplay" style="text-align:center; font-weight:bold; color:var(--forest); background:#e8f5e9; padding:10px; border-radius:12px; margin-bottom:15px; font-size:13px;"></div>
-            <h3><i class="fas fa-file-invoice-dollar"></i> Update Records</h3>
+            <div id="staffDisplay" style="text-align:center; font-weight:bold; color:var(--forest); background:#e8f5e9; padding:10px; border-radius:12px; margin-bottom:15px; font-size:12px;"></div>
+            <h3><i class="fas fa-file-invoice-dollar"></i> Update Payment</h3>
             
             <label>Class</label>
             <select id="feeClass" onchange="populateStudents()"></select>
@@ -149,7 +155,7 @@
 
             <div class="chart-container">
                 <div class="circular-progress">
-                    <svg viewBox="0 0 120 120">
+                    <svg viewBox="0 0 100 100">
                         <circle class="circle-bg"></circle>
                         <circle id="progressCircle" class="circle-bar"></circle>
                     </svg>
@@ -162,8 +168,8 @@
             <button class="btn-action btn-save" onclick="saveFee()">Update Records <i class="fas fa-save"></i></button>
             
             <div style="display: flex; gap: 10px; margin-top: 10px;">
-                <button id="receiptBtn" class="btn-action" onclick="generateReceipt()" style="background:var(--sky); border-color:white; flex:1; opacity:0.5;">Print Receipt <i class="fas fa-print"></i></button>
-                <button class="btn-action" onclick="clearStudentData()" style="background:var(--danger); border-color:white; flex:1;">Wipe History <i class="fas fa-trash-alt"></i></button>
+                <button id="receiptBtn" class="btn-action" onclick="generateReceipt()" style="background:var(--sky); border-color:white; flex:1; opacity:0.5; font-size: 13px;">Receipt <i class="fas fa-print"></i></button>
+                <button class="btn-action" onclick="clearStudentData()" style="background:var(--danger); border-color:white; flex:1; font-size: 13px;">Wipe <i class="fas fa-trash-alt"></i></button>
             </div>
         </div>
 
@@ -176,7 +182,7 @@
                             <th>Date</th>
                             <th>Amount</th>
                             <th>Faculty</th>
-                            <th>Time (AM/PM)</th>
+                            <th>Time</th>
                         </tr>
                     </thead>
                     <tbody id="historyTableBody"></tbody>
@@ -189,7 +195,7 @@
 <script>
     function updateClock() {
         const now = new Date();
-        document.getElementById('liveClock').innerText = now.toLocaleDateString([], {day:'numeric', month:'short'}) + " | " + now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit', second:'2-digit'});
+        document.getElementById('liveClock').innerText = now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit', hour12:true});
     }
     setInterval(updateClock, 1000); updateClock();
 
@@ -249,7 +255,7 @@
                 studentLifetimePaid += parseFloat(record.paid || 0);
                 totalVal = record.total; lastStaff = record.recordedBy || "Admin"; lastTime = record.timestamp || record.date;
                 let timeOnly = record.timestamp && record.timestamp.includes(',') ? record.timestamp.split(',')[1].trim() : "N/A";
-                tableRows += `<tr><td>${record.date || 'N/A'}</td><td class="amt-cell">₹ ${record.paid}</td><td>${record.recordedBy || 'Admin'}</td><td class="time-cell">${timeOnly}</td></tr>`;
+                tableRows += `<tr><td>${record.date || 'N/A'}</td><td class="amt-cell">₹ ${record.paid}</td><td>${record.recordedBy || 'Admin'}</td><td>${timeOnly}</td></tr>`;
             });
             document.getElementById('totalFee').value = totalVal;
             document.getElementById('lastUpdatedBy').innerText = lastStaff;
@@ -268,7 +274,7 @@
         let pct = (total > 0) ? (combinedPaid / total) * 100 : 0;
         if(pct > 100) pct = 100;
         const circle = document.getElementById('progressCircle');
-        circle.style.strokeDashoffset = (314.15 - (314.15 * pct / 100)) + "px";
+        circle.style.strokeDashoffset = (251.32 - (251.32 * pct / 100)) + "px";
         document.getElementById('percentText').innerText = Math.round(pct) + "%";
     }
 
@@ -279,7 +285,7 @@
         const paid = document.getElementById('payingAmount').value;
         const date = document.getElementById('payDate').value;
         if(!name || !paid) return Swal.fire('Error', 'Missing Data', 'warning');
-        const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+        const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
         const fullStamp = new Date().toLocaleDateString() + ", " + currentTime;
         lastReceiptData = { name, cls, paid, total, date, teacher: activeTeacher };
         const record = { total, paid, recordedBy: activeTeacher, date, timestamp: fullStamp };
@@ -287,7 +293,7 @@
             Swal.fire('Saved!', 'Record updated.', 'success');
             document.getElementById('payingAmount').value = '';
             document.getElementById('receiptBtn').style.opacity = "1";
-            fetchExistingFeeData(); 
+            fetchExistingFeeData(); 
         });
     }
 
@@ -295,8 +301,8 @@
         if(!lastReceiptData) return;
         const { name, cls, paid, date, teacher } = lastReceiptData;
         const win = window.open('', '', 'height=600,width=400');
-        win.document.write(`<html><body style="padding:40px; font-family:sans-serif; text-align:center; border: 2px solid #eee;">
-            <img src="logo.png" style="height:60px;"><br><h2 style="color:#006633;">PARAMOUNT SCHOOL</h2><hr>
+        win.document.write(`<html><body style="padding:20px; font-family:sans-serif; text-align:center; border: 2px solid #eee;">
+            <center><img src="logo.png" style="height:60px;"><br><h2 style="color:#006633;">PARAMOUNT SCHOOL</h2><hr></center>
             <p><strong>Student:</strong> ${name} (${cls})</p>
             <p><strong>Date:</strong> ${date}</p>
             <p style="font-size: 20px; color:green;"><strong>Paid Amount:</strong> ₹ ${paid}</p>
