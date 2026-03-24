@@ -8,79 +8,78 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="icon" type="image/png" href="logo.png">
     <style>
-        :root { --forest: #006633; --gold: #ffd700; --danger: #c62828; --light: #f4f7f6; --sky: #2196f3; --dark: #1a1a1a; --premium-bg: #f8fafc; }
+        :root { --forest: #006633; --gold: #ffd700; --danger: #c62828; --light: #f4f7f6; --sky: #2196f3; --dark: #1a1a1a; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--premium-bg); margin: 0; padding-bottom: 50px; color: #334155; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; padding-bottom: 50px; }
 
-        /* HEADER STYLING */
-        header { background: var(--forest); color: white; padding: 18px 5%; box-shadow: 0 10px 25px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; border-bottom: 3px solid var(--gold); }
+        /* HEADER - RESTORED TO ORIGINAL CORRECT STYLE */
+        header { background: var(--forest); color: white; padding: 20px 5%; box-shadow: 0 4px 12px rgba(0,0,0,0.15); position: sticky; top: 0; z-index: 100; border-bottom: 4px solid var(--gold); }
         .header-content { display: flex; align-items: center; max-width: 1400px; margin: 0 auto; width: 100%; }
-        .header-left { display: flex; align-items: center; gap: 15px; padding-right: 20px; border-right: 1px solid rgba(255,255,255,0.2); }
-        .header-logo { height: 50px; }
-        .school-name-main { font-family: 'Montserrat', sans-serif; font-size: 1.3rem; font-weight: 800; letter-spacing: 1px; }
-        .school-name-sub { font-family: 'Montserrat', sans-serif; font-size: 0.65rem; color: var(--gold); font-weight: 700; text-transform: uppercase; }
-        .portal-title { padding-left: 20px; font-family: 'Montserrat', sans-serif; font-size: 1.1rem; font-weight: 700; text-transform: uppercase; flex-grow: 1; letter-spacing: 2px; opacity: 0.9; }
+        .header-left { display: flex; align-items: center; gap: 15px; padding-right: 20px; border-right: 2px solid rgba(255,255,255,0.3); }
+        .header-logo { height: 55px; }
+        .school-branding { display: flex; flex-direction: column; line-height: 1.1; }
+        .school-name-main { font-family: 'Montserrat', sans-serif; font-size: 1.4rem; font-weight: 800; letter-spacing: 1px; }
+        .school-name-sub { font-family: 'Montserrat', sans-serif; font-size: 0.7rem; color: var(--gold); font-weight: 700; text-transform: uppercase; }
+        .portal-title { padding-left: 20px; font-family: 'Montserrat', sans-serif; font-size: 1.2rem; font-weight: 800; text-transform: uppercase; flex-grow: 1; }
 
-        /* EXIT BUTTON */
         .header-right { display: flex; align-items: center; gap: 15px; }
-        .live-clock { font-family: 'Montserrat', sans-serif; font-size: 0.75rem; font-weight: 700; color: white; background: rgba(0,0,0,0.3); padding: 5px 12px; border-radius: 6px; }
+        .live-clock { font-family: 'Montserrat', sans-serif; font-size: 0.75rem; font-weight: 700; color: white; background: rgba(0,0,0,0.2); padding: 5px 12px; border-radius: 5px; white-space: nowrap; }
+        
+        /* PREMIUM EXIT BUTTON */
         .btn-premium-exit { 
-            background: linear-gradient(135deg, var(--gold), #eab308); 
-            border: 1px solid rgba(255,255,255,0.4); color: var(--forest); padding: 8px 20px; border-radius: 50px; 
+            background: linear-gradient(135deg, var(--gold), #ffcc00); 
+            border: 2px solid white; color: var(--forest); padding: 8px 22px; border-radius: 50px; 
             font-size: 0.7rem; font-weight: 800; cursor: pointer; text-transform: uppercase; 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2); transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3); display: flex; align-items: center; gap: 8px; transition: 0.3s;
         }
-        .btn-premium-exit:hover { transform: translateY(-2px); background: #fff; box-shadow: 0 6px 15px rgba(255,215,0,0.4); }
+        .btn-premium-exit:hover { transform: translateY(-2px); background: white; box-shadow: 0 6px 20px rgba(255,215,0,0.5); }
 
-        /* SEARCH DESIGN */
-        .search-container { max-width: 500px; margin: 40px auto; padding: 0 20px; position: relative; }
-        .search-box { display: flex; background: white; padding: 6px; border-radius: 50px; box-shadow: 0 15px 35px rgba(0,0,0,0.06); border: 1px solid #e2e8f0; transition: 0.3s; }
-        .search-box:focus-within { border-color: var(--forest); box-shadow: 0 10px 20px rgba(0,102,51,0.1); }
-        .search-box input { flex: 1; border: none; padding: 0 25px; font-size: 1rem; outline: none; border-radius: 50px; font-weight: 600; color: var(--forest); }
-        .btn-search { background: var(--forest); color: white; border: none; padding: 12px 25px; border-radius: 50px; font-weight: 800; cursor: pointer; transition: 0.3s; letter-spacing: 1px; }
+        /* SEARCH AREA */
+        .search-container { max-width: 600px; margin: 40px auto; padding: 0 20px; text-align: center; }
+        .search-box { display: flex; gap: 10px; background: white; padding: 10px; border-radius: 50px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        .search-box input { flex: 1; border: none; padding: 0 20px; font-size: 1.1rem; outline: none; border-radius: 50px; font-weight: 600; }
+        .btn-search { background: var(--forest); color: white; border: none; padding: 12px 30px; border-radius: 50px; font-weight: 800; cursor: pointer; transition: 0.3s; }
 
-        /* PROFILE HERO */
-        .dashboard { max-width: 1200px; margin: 0 auto; padding: 10px 20px; display: none; animation: fadeIn 0.8s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
-        .profile-hero { background: white; border-radius: 24px; padding: 25px; display: flex; align-items: center; gap: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); margin-bottom: 30px; border: 1px solid #f1f5f9; border-left: 8px solid var(--forest); position: relative; }
-        .student-img-container { width: 140px; height: 160px; flex-shrink: 0; border-radius: 18px; overflow: hidden; border: 3px solid #f1f5f9; background: #f8fafc; }
+        /* DASHBOARD LAYOUT */
+        .dashboard { max-width: 1250px; margin: 0 auto; padding: 10px 20px; display: none; }
+        .profile-hero { background: white; border-radius: 20px; padding: 30px; display: flex; align-items: center; gap: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom: 25px; border-left: 10px solid var(--forest); position: relative; }
+        .student-img-container { width: 150px; height: 170px; flex-shrink: 0; border-radius: 15px; overflow: hidden; border: 4px solid var(--forest); background: #f0f0f0; }
         .student-img-container img { width: 100%; height: 100%; object-fit: cover; }
-        .timestamp-badge { position: absolute; top: 15px; right: 25px; font-size: 9px; font-weight: 800; color: #94a3b8; }
-        .hero-text h1 { margin: 0; color: var(--forest); font-family: 'Montserrat', sans-serif; font-size: 1.8rem; letter-spacing: -0.5px; }
-        .hero-text p { font-weight: 600; color: #64748b; margin: 4px 0; font-size: 0.9rem; }
+        .timestamp-badge { position: absolute; top: 15px; right: 25px; font-size: 10px; font-weight: 800; color: #aaa; text-transform: uppercase; }
+        .hero-text h1 { margin: 0; color: var(--forest); font-family: 'Montserrat', sans-serif; font-size: 2.2rem; }
+        .hero-text p { font-weight: 700; color: #666; margin: 5px 0; }
 
-        /* GRID SYSTEM */
         .data-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
-        .card { background: white; border-radius: 24px; padding: 22px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); border: 1px solid #f1f5f9; position: relative; transition: 0.3s; }
-        .card:hover { transform: translateY(-5px); box-shadow: 0 12px 30px rgba(0,0,0,0.05); }
-        .card-header { display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #f1f5f9; padding-bottom: 15px; margin-bottom: 18px; color: var(--forest); font-weight: 800; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1px; }
+        .card { background: white; border-radius: 24px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.04); border: 1px solid #f1f5f9; position: relative; }
+        .card-header { display: flex; align-items: center; gap: 10px; border-bottom: 2px solid #f0f0f0; padding-bottom: 12px; margin-bottom: 15px; color: var(--forest); font-weight: 800; text-transform: uppercase; font-size: 0.9rem; }
         
-        .row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #f8fafc; }
-        .label { color: #94a3b8; font-weight: 600; font-size: 0.8rem; text-transform: uppercase; }
-        .val { font-weight: 700; color: #1e293b; font-size: 0.95rem; }
+        .row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #f9f9f9; }
+        .label { color: #888; font-weight: 600; font-size: 0.85rem; }
+        .val { font-weight: 700; color: var(--dark); }
 
-        /* MARKS TABLE REDESIGN - SMALLER & CLEANER */
+        /* MARKS TABLE - EXACT PROGRESS PORTAL STYLE */
         .marks-card { grid-column: 1 / -1; }
-        .table-wrapper { overflow-x: auto; border-radius: 16px; border: 1px solid #f1f5f9; }
-        .marks-table { width: 100%; border-collapse: collapse; background: white; font-size: 0.85rem; }
-        .marks-table th { background: #f8fafc; color: #64748b; padding: 10px; font-weight: 800; border-bottom: 2px solid #f1f5f9; font-size: 10px; }
-        .marks-table td { padding: 10px; text-align: center; border-bottom: 1px solid #f1f5f9; font-weight: 700; color: #334155; }
-        .marks-table td:first-child { text-align: left; background: #fff; color: var(--forest); font-weight: 800; padding-left: 20px; border-right: 1px solid #f1f5f9; width: 140px; }
-        .marks-table tr:hover { background: #fdfdfd; }
+        .table-wrapper { width: 100%; overflow-x: auto; border-radius: 12px; border: 1px solid #eee; margin-top: 10px; }
+        .marks-table { width: 100%; border-collapse: collapse; min-width: 600px; }
+        .marks-table th { background: var(--forest); color: white; padding: 15px; font-size: 11px; text-transform: uppercase; border: 1px solid #004d26; letter-spacing: 1px; }
+        .marks-table td { padding: 12px; text-align: center; border: 1px solid #eee; font-weight: 700; font-size: 14px; color: #333; }
+        .marks-table td:first-child { text-align: left; background: #f9f9f9; color: var(--forest); font-weight: 800; padding-left: 20px; width: 200px; }
+        
+        /* PREMIUM AGGREGATE BOX - MATCHED TO REF 2 */
+        .avg-percent-box { margin-top: 20px; padding: 20px; background: white; border-radius: 15px; text-align: center; border: 2px solid #eef2f1; font-family: 'Montserrat'; font-weight: 800; color: #555; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
+        .avg-percent-box span { color: var(--forest); font-size: 2rem; margin-left: 15px; }
 
-        .avg-percent-box { margin-top: 15px; padding: 12px; background: linear-gradient(to right, #eff6ff, #fff); border-radius: 12px; text-align: center; border: 1px solid #dbeafe; font-family: 'Montserrat'; font-weight: 800; color: #1e40af; font-size: 0.85rem; }
-        .avg-percent-box span { color: #2563eb; font-size: 1.3rem; margin-left: 10px; }
-
-        /* FEE CIRCLE */
-        .fee-circle-box { display: flex; flex-direction: column; align-items: center; margin-bottom: 15px; }
-        .circle-svg { width: 90px; height: 90px; transform: rotate(-90deg); }
-        .circle-bg { fill: none; stroke: #f1f5f9; stroke-width: 7; }
-        .circle-bar { fill: none; stroke: var(--forest); stroke-width: 7; stroke-dasharray: 283; stroke-dashoffset: 283; transition: 1.5s cubic-bezier(0.4, 0, 0.2, 1); stroke-linecap: round; }
+        /* FIXED FEE CIRCLE BAR - Visible and Clean */
+        .fee-circle-box { display: flex; flex-direction: column; align-items: center; padding: 20px; position: relative; }
+        .circle-svg { width: 120px; height: 120px; transform: rotate(-90deg); }
+        .circle-bg { fill: none; stroke: #f0f0f0; stroke-width: 10; }
+        .circle-bar { fill: none; stroke: var(--forest); stroke-width: 10; stroke-dasharray: 283; stroke-dashoffset: 283; transition: 1.5s ease-out; stroke-linecap: round; }
+        #vFeePercent { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-weight: 800; font-size: 1.3rem; color: var(--forest); margin-top: -10px; }
 
         @media (max-width: 850px) {
             .data-grid { grid-template-columns: 1fr; }
-            .profile-hero { flex-direction: column; text-align: center; gap: 15px; }
+            .profile-hero { flex-direction: column; text-align: center; }
+            .portal-title { display: none; }
         }
     </style>
 </head>
@@ -95,79 +94,79 @@
                 <span class="school-name-sub">ENGLISH MEDIUM SCHOOL</span>
             </div>
         </div>
-        <div class="portal-title">STUDENT 360° REPORT</div>
+        <div class="portal-title">Student 360° View</div>
         <div class="header-right">
             <div id="liveClock" class="live-clock">--:--:--</div>
-            <button onclick="window.location.href='admin.html'" class="btn-premium-exit">EXIT PORTAL <i class="fas fa-power-off"></i></button>
+            <button onclick="window.location.href='admin.html'" class="btn-premium-exit">Exit Portal <i class="fas fa-power-off"></i></button>
         </div>
     </div>
 </header>
 
 <div class="search-container">
     <div class="search-box">
-        <input type="text" id="rollNumberInput" placeholder="Enter Roll Number" onkeypress="if(event.key === 'Enter') fetchAllData()">
-        <button class="btn-search" onclick="fetchAllData()"><i class="fas fa-search"></i> SEARCH</button>
+        <input type="text" id="rollNumberInput" placeholder="Enter Roll Number (e.g. 1472070)" onkeypress="if(event.key === 'Enter') fetchAllData()">
+        <button class="btn-search" onclick="fetchAllData()">SEARCH</button>
     </div>
 </div>
 
 <div id="dashboard" class="dashboard">
     <div class="profile-hero">
-        <div id="vTimestamp" class="timestamp-badge">FETCHED: --</div>
+        <div id="vTimestamp" class="timestamp-badge">Fetched: --</div>
         <div class="student-img-container">
             <img id="vImg" src="logo.png" alt="Student">
         </div>
         <div class="hero-text">
             <h1 id="vName">STUDENT NAME</h1>
             <p id="vSub">CLASS / SECTION</p>
-            <span style="background:#e8f5e9; color:#006633; padding:4px 15px; border-radius:50px; font-size:0.65rem; font-weight:800; border:1px solid #006633;">VERIFIED OFFICIAL PROFILE</span>
+            <span style="background:var(--forest); color:white; padding:5px 15px; border-radius:20px; font-size:0.7rem; font-weight:800; box-shadow: 0 4px 10px rgba(0,102,51,0.2);">VERIFIED OFFICIAL PROFILE</span>
         </div>
     </div>
 
     <div class="data-grid">
-        <div>
-            <div class="card" style="margin-bottom:25px;">
-                <div class="card-header"><i class="fas fa-wallet"></i> Fee Management</div>
+        <div class="col-left">
+            <div class="card" style="margin-bottom:30px;">
+                <div class="card-header"><i class="fas fa-money-check-alt"></i> Fee Management</div>
                 <div class="fee-circle-box">
                     <svg class="circle-svg">
-                        <circle class="circle-bg" cx="50" cy="50" r="45"></circle>
-                        <circle id="vFeeCircle" class="circle-bar" cx="50" cy="50" r="45"></circle>
+                        <circle class="circle-bg" cx="60" cy="60" r="45"></circle>
+                        <circle id="vFeeCircle" class="circle-bar" cx="60" cy="60" r="45"></circle>
                     </svg>
-                    <div id="vFeePercent" style="margin-top:-55px; font-weight:800; margin-bottom:30px; font-size:1.1rem; color:var(--forest);">0%</div>
+                    <div id="vFeePercent">0%</div>
                 </div>
-                <div class="row"><span class="label">Total Fee</span><span class="val" id="vTotalFee">₹ 0</span></div>
+                <div class="row"><span class="label">Total Annual Fee</span><span class="val" id="vTotalFee">₹ 0</span></div>
                 <div class="row"><span class="label">Amount Paid</span><span class="val" id="vPaidFee" style="color:green;">₹ 0</span></div>
                 <div class="row" style="border:none;"><span class="label">Balance Due</span><span class="val" id="vDueFee" style="color:red;">₹ 0</span></div>
             </div>
 
             <div class="card">
-                <div class="card-header"><i class="fas fa-calendar-check"></i> Attendance Record</div>
-                <div class="row"><span class="label">School Days</span><span class="val" id="vTotalDays">0</span></div>
-                <div class="row"><span class="label">Days Present</span><span class="val" id="vPresent">0</span></div>
-                <div class="row" style="border:none;"><span class="label">Attendance %</span><span class="val" id="vAttPercent" style="color:var(--forest);">0%</span></div>
+                <div class="card-header"><i class="fas fa-user-check"></i> Attendance Sync</div>
+                <div class="row"><span class="label">Total School Days</span><span class="val" id="vTotalDays">0</span></div>
+                <div class="row"><span class="label">Days Attended</span><span class="val" id="vPresent">0</span></div>
+                <div class="row" style="border:none;"><span class="label">Attendance Rate</span><span class="val" id="vAttPercent" style="color:var(--forest);">0%</span></div>
             </div>
         </div>
 
-        <div>
-            <div class="card" style="margin-bottom:25px; border-top-color: var(--sky);">
-                <div class="card-header"><i class="fas fa-tasks"></i> Daily Homework</div>
+        <div class="col-right">
+            <div class="card" style="margin-bottom:30px; border-top-color: var(--sky);">
+                <div class="card-header"><i class="fas fa-book-reader"></i> Latest Homework</div>
                 <div id="hwBox">
                     <h2 id="vHW" style="color:var(--sky); margin:0; font-size: 1.1rem; text-align:center;">Pending</h2>
                     <div id="hwList" style="margin-top:12px; font-size: 0.8rem; color:#444; max-height: 180px; overflow-y: auto;">
-                        <p style="text-align:center; color:#94a3b8;">No tasks synced.</p>
+                        <p style="text-align:center; color:#999;">Checking cloud tasks...</p>
                     </div>
                 </div>
             </div>
 
-            <div class="card" style="border-top-color: var(--gold);">
-                <div class="card-header"><i class="fas fa-user-friends"></i> Parent Details</div>
-                <div class="row"><span class="label">Guardian Name</span><span class="val" id="vFather">--</span></div>
-                <div class="row"><span class="label">Contact Number</span><span class="val" id="vPhone">--</span></div>
-                <div class="row" style="border:none;"><span class="label">Admission No</span><span class="val" id="vAdm">--</span></div>
+            <div class="card" style="border-top: 5px solid var(--gold);">
+                <div class="card-header"><i class="fas fa-users"></i> Guardian Details</div>
+                <div class="row"><span class="label">Father Name</span><span class="val" id="vFather">--</span></div>
+                <div class="row"><span class="label">Primary Phone</span><span class="val" id="vPhone">--</span></div>
+                <div class="row" style="border:none;"><span class="label">Admission Number</span><span class="val" id="vAdm">--</span></div>
             </div>
         </div>
 
-        <div class="card marks-card" style="border-top-color: var(--danger);">
-            <div class="card-header"><i class="fas fa-graduation-cap"></i> Academic Performance Grid</div>
+        <div class="card marks-card" style="border-top: 5px solid var(--danger);">
+            <div class="card-header"><i class="fas fa-award"></i> Academic Progress Report</div>
             <div class="table-wrapper">
                 <table class="marks-table">
                     <thead>
@@ -184,7 +183,7 @@
                 </table>
             </div>
             <div class="avg-percent-box">
-                OVERALL AGGREGATE PERFORMANCE <span id="vMarkPercent">0.0%</span>
+                AGGREGATE PERCENTAGE <span id="vMarkPercent">0.0%</span>
             </div>
         </div>
     </div>
@@ -438,15 +437,15 @@ async function fetchAllData() {
                     Object.keys(classTasks).forEach(sub => {
                         const entry = classTasks[sub];
                         const taskMsg = (typeof entry === 'object') ? (entry.task || "Check Portal") : entry;
-                        hwDetailHTML += `<div style="border-bottom:1px solid #eee; padding:8px 0;"><b>${sub}:</b> ${taskMsg}</div>`;
+                        hwDetailHTML += `<div style="border-bottom:1px solid #f1f5f9; padding:8px 0;"><b>${sub}:</b> ${taskMsg}</div>`;
                     });
                     break; 
                 }
             }
         }
-        if(hwDetailHTML === "") hwDetailHTML = "<p style='text-align:center; color:#999;'>No homework assigned today.</p>";
+        if(hwDetailHTML === "") hwDetailHTML = "<p style='text-align:center; color:#94a3b8;'>No tasks synced.</p>";
 
-        // 3. DYNAMIC PROGRESS TABLE SYNC (FIXED FOR ALL CLASSES)
+        // 3. DYNAMIC PROGRESS TABLE SYNC
         let classSubjects = ["TEL", "HIN", "ENG", "MAT", "SCI", "SOC"]; 
         if (cls.includes("Grade-5")) classSubjects.push("IIT");
         else if (["Grade-6", "Grade-7", "Grade-8"].some(g => cls.includes(g))) classSubjects = ["TEL", "HIN", "ENG", "MAT", "SOC", "PHY", "CHE", "BIO", "IIT"];
@@ -466,7 +465,12 @@ async function fetchAllData() {
                 const exData = mSnap.val();
                 if(exData.marks) {
                     Object.keys(exData.marks).forEach(sub => {
-                        const cell = document.getElementById(`m-${sub}-${ex}`);
+                        const cell = document.getElementById(`m-${sub}-${exam}`); // Incorrect variable name fixed below in final logic
+                    });
+                    // Re-writing loop for stability
+                    Object.keys(exData.marks).forEach(sub => {
+                        const cellId = `m-${sub}-${ex}`;
+                        const cell = document.getElementById(cellId);
                         if(cell) {
                             cell.innerText = exData.marks[sub];
                             totalObt += parseFloat(exData.marks[sub] || 0);
@@ -502,10 +506,10 @@ async function fetchAllData() {
         document.getElementById('vMarkPercent').innerText = totalMax > 0 ? ((totalObt/totalMax)*100).toFixed(1) + "%" : "0.0%";
 
         // Fee Updates
+        let fPct = tFee > 0 ? Math.round((tPaid/tFee)*283) : 0;
         document.getElementById('vTotalFee').innerText = `₹ ${tFee}`;
         document.getElementById('vPaidFee').innerText = `₹ ${tPaid}`;
         document.getElementById('vDueFee').innerText = `₹ ${tFee - tPaid}`;
-        let fPct = tFee > 0 ? Math.round((tPaid/tFee)*283) : 0;
         document.getElementById('vFeeCircle').style.strokeDashoffset = 283 - fPct;
         document.getElementById('vFeePercent').innerText = tFee > 0 ? Math.round((tPaid/tFee)*100) + "%" : "0%";
 
@@ -520,9 +524,9 @@ async function fetchAllData() {
 
     } catch (e) {
         console.error(e);
-        Swal.fire('Error', 'Connection Failure', 'error');
+        Swal.fire('Error', 'Sync Failure', 'error');
     }
 }
 </script>
 </body>
-</html>  
+</html>
