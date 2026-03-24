@@ -8,11 +8,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="icon" type="image/png" href="logo.png">
     <style>
-        :root { --forest: #006633; --gold: #ffd700; --danger: #c62828; --light: #f4f7f6; --sky: #2196f3; --dark: #1a1a1a; }
+        :root { --forest: #006633; --gold: #ffd700; --danger: #ef4444; --light: #f8fafc; --sky: #2196f3; --dark: #1a1a1a; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; padding-bottom: 50px; }
 
-        /* HEADER STYLING - PREMIUM RESTORED */
+        /* HEADER STYLING */
         header { background: var(--forest); color: white; padding: 15px 5%; box-shadow: 0 4px 12px rgba(0,0,0,0.15); position: sticky; top: 0; z-index: 100; border-bottom: 4px solid var(--gold); }
         .header-content { display: flex; align-items: center; max-width: 1400px; margin: 0 auto; width: 100%; }
         .header-left { display: flex; align-items: center; gap: 15px; padding-right: 20px; border-right: 2px solid rgba(255,255,255,0.3); }
@@ -22,16 +22,10 @@
         .school-name-sub { font-family: 'Montserrat', sans-serif; font-size: 0.7rem; color: var(--gold); font-weight: 700; text-transform: uppercase; }
         .portal-title { padding-left: 20px; font-family: 'Montserrat', sans-serif; font-size: 1.2rem; font-weight: 800; text-transform: uppercase; flex-grow: 1; }
 
-        /* HEADER RIGHT - PREMIUM TIMESTAMP ABOVE BUTTON */
-        .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
-        .live-clock { font-family: 'Montserrat', sans-serif; font-size: 0.65rem; font-weight: 800; color: var(--gold); letter-spacing: 1.5px; text-shadow: 0 0 5px rgba(255,215,0,0.3); }
-        .btn-premium-exit { 
-            background: linear-gradient(135deg, var(--gold), #ffcc00); 
-            border: 2px solid white; color: var(--forest); padding: 7px 18px; border-radius: 50px; 
-            font-size: 0.65rem; font-weight: 900; cursor: pointer; text-transform: uppercase; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3); display: flex; align-items: center; gap: 8px; transition: 0.3s;
-        }
-        .btn-premium-exit:hover { transform: translateY(-2px); background: white; box-shadow: 0 6px 20px rgba(255,215,0,0.5); }
+        .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; }
+        .live-clock { font-family: 'Montserrat', sans-serif; font-size: 0.7rem; font-weight: 800; color: var(--gold); letter-spacing: 1px; }
+        .btn-premium-exit { background: linear-gradient(135deg, var(--gold), #ffcc00); border: 2px solid white; color: var(--forest); padding: 7px 20px; border-radius: 50px; font-size: 0.65rem; font-weight: 800; cursor: pointer; text-transform: uppercase; box-shadow: 0 4px 15px rgba(0,0,0,0.3); display: flex; align-items: center; gap: 8px; transition: 0.3s; }
+        .btn-premium-exit:hover { transform: translateY(-2px); background: white; }
 
         /* SEARCH AREA */
         .search-container { max-width: 500px; margin: 40px auto; padding: 0 20px; text-align: center; }
@@ -39,57 +33,42 @@
         .search-box input { flex: 1; border: none; padding: 0 20px; font-size: 1.1rem; outline: none; border-radius: 50px; font-weight: 600; }
         .btn-search { background: var(--forest); color: white; border: none; padding: 12px 30px; border-radius: 50px; font-weight: 800; cursor: pointer; transition: 0.3s; }
 
-        /* DASHBOARD LAYOUT */
-        .dashboard { max-width: 1300px; margin: 0 auto; padding: 10px 20px; display: none; }
-        .profile-hero { background: white; border-radius: 25px; padding: 30px; display: flex; align-items: center; gap: 30px; box-shadow: 0 8px 25px rgba(0,0,0,0.05); margin-bottom: 30px; border-left: 10px solid var(--forest); position: relative; }
+        /* DASHBOARD */
+        .dashboard { max-width: 1250px; margin: 0 auto; padding: 10px 20px; display: none; }
+        .profile-hero { background: white; border-radius: 20px; padding: 30px; display: flex; align-items: center; gap: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom: 25px; border-left: 10px solid var(--forest); position: relative; }
         .student-img-container { width: 140px; height: 160px; flex-shrink: 0; border-radius: 15px; overflow: hidden; border: 4px solid var(--forest); background: #f0f0f0; }
         .student-img-container img { width: 100%; height: 100%; object-fit: cover; }
-        .timestamp-badge { position: absolute; top: 15px; right: 25px; font-size: 9px; font-weight: 800; color: #999; text-transform: uppercase; background: #f9f9f9; padding: 4px 10px; border-radius: 50px; }
+        .timestamp-badge { position: absolute; top: 15px; right: 25px; font-size: 10px; font-weight: 800; color: #aaa; text-transform: uppercase; }
         .hero-text h1 { margin: 0; color: var(--forest); font-family: 'Montserrat', sans-serif; font-size: 2.2rem; }
         .hero-text p { font-weight: 700; color: #666; margin: 5px 0; }
 
-        /* DATA GRID SETUP */
+        /* DATA GRID */
         .data-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
-        .card { background: white; border-radius: 25px; padding: 25px; box-shadow: 0 5px 20px rgba(0,0,0,0.03); border: 1px solid #f1f5f9; position: relative; }
-        .card-header { display: flex; align-items: center; gap: 10px; border-bottom: 2px solid #f0f0f0; padding-bottom: 12px; margin-bottom: 15px; color: var(--forest); font-weight: 800; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1px; }
-        
+        .card { background: white; border-radius: 24px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.04); border: 1px solid #f1f5f9; position: relative; }
+        .card-header { display: flex; align-items: center; gap: 10px; border-bottom: 2px solid #f0f0f0; padding-bottom: 12px; margin-bottom: 15px; color: var(--forest); font-weight: 800; text-transform: uppercase; font-size: 0.9rem; }
         .row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #f9f9f9; }
-        .label { color: #888; font-weight: 600; font-size: 0.85rem; text-transform: uppercase; }
+        .label { color: #888; font-weight: 600; font-size: 0.85rem; }
         .val { font-weight: 700; color: var(--dark); }
 
-        /* PREMIUM PROGRESS TABLE */
+        /* MARKS TABLE */
         .marks-card { grid-column: 1 / -1; }
         .table-wrapper { width: 100%; overflow-x: auto; border-radius: 12px; border: 1px solid #eee; margin-top: 10px; }
         .marks-table { width: 100%; border-collapse: collapse; min-width: 600px; }
         .marks-table th { background: var(--forest); color: white; padding: 15px; font-size: 11px; text-transform: uppercase; border: 1px solid #004d26; }
         .marks-table td { padding: 12px; text-align: center; border: 1px solid #eee; font-weight: 700; font-size: 14px; color: #333; }
-        .marks-table td:first-child { text-align: left; background: #f9f9f9; color: var(--forest); font-weight: 800; padding-left: 20px; width: 180px; }
-        .avg-percent-box { margin-top: 20px; padding: 20px; background: white; border-radius: 15px; text-align: center; border: 3px solid #f1f5f9; font-family: 'Montserrat'; font-weight: 800; color: #555; }
+        .marks-table td:first-child { text-align: left; background: #f9f9f9; color: var(--forest); font-weight: 800; padding-left: 20px; }
+        .avg-percent-box { margin-top: 20px; padding: 20px; background: white; border-radius: 15px; text-align: center; border: 2px solid #eef2f1; font-family: 'Montserrat'; font-weight: 800; color: #555; }
         .avg-percent-box span { color: var(--forest); font-size: 2rem; margin-left: 15px; }
 
-        /* PREMIUM FEE GAUGE - NO CLIPPING */
-        .fee-circle-box { display: flex; flex-direction: column; align-items: center; padding: 15px; position: relative; }
-        .circle-svg { width: 130px; height: 130px; transform: rotate(-90deg); }
-        .circle-bg { fill: none; stroke: #f0f0f0; stroke-width: 12; }
-        .circle-bar { 
-            fill: none; 
-            stroke: url(#feeGradient); 
-            stroke-width: 12; 
-            stroke-dasharray: 283; 
-            stroke-dashoffset: 283; 
-            transition: 1.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-            stroke-linecap: round; 
-        }
-        #vFeePercent { 
-            position: absolute; 
-            top: 50%; left: 50%; 
-            transform: translate(-50%, -50%); 
-            font-family: 'Montserrat'; 
-            font-weight: 800; 
-            font-size: 1.4rem; 
-            color: var(--forest); 
-            margin-top: -10px;
-        }
+        /* --- PREMIUM DUAL FEE GAUGE --- */
+        .fee-circle-box { display: flex; flex-direction: column; align-items: center; padding: 20px; position: relative; }
+        .circle-svg { width: 150px; height: 150px; transform: rotate(-90deg); }
+        .circle-bg { fill: none; stroke: var(--danger); stroke-width: 14; opacity: 0.2; } /* Red base representing Due */
+        .circle-bar { fill: none; stroke: var(--forest); stroke-width: 14; stroke-dasharray: 283; stroke-dashoffset: 283; transition: 2s ease-out; stroke-linecap: round; }
+        
+        .fee-text-container { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; width: 100%; }
+        #vFeePercent { font-weight: 800; font-size: 1.5rem; color: var(--forest); display: block; line-height: 1; }
+        #vDueLabel { font-size: 0.65rem; font-weight: 800; color: var(--danger); text-transform: uppercase; margin-top: 4px; display: block; }
 
         @media (max-width: 850px) {
             .data-grid { grid-template-columns: 1fr; }
@@ -103,7 +82,7 @@
 <header>
     <div class="header-content">
         <div class="header-left">
-            <img src="logo.png" class="header-logo" onerror="this.src='https://via.placeholder.com/50'">
+            <img src="logo.png" class="header-logo">
             <div class="school-branding">
                 <span class="school-name-main">PARAMOUNT</span>
                 <span class="school-name-sub">ENGLISH MEDIUM SCHOOL</span>
@@ -119,14 +98,14 @@
 
 <div class="search-container">
     <div class="search-box">
-        <input type="text" id="rollNumberInput" placeholder="Enter Roll Number">
+        <input type="text" id="rollNumberInput" placeholder="Enter Roll Number (e.g. 1472070)" onkeypress="if(event.key === 'Enter') fetchAllData()">
         <button class="btn-search" onclick="fetchAllData()">SEARCH</button>
     </div>
 </div>
 
 <div id="dashboard" class="dashboard">
     <div class="profile-hero">
-        <div id="vTimestamp" class="timestamp-badge">FETCHED: --</div>
+        <div id="vTimestamp" class="timestamp-badge">Fetched: --</div>
         <div class="student-img-container">
             <img id="vImg" src="logo.png" alt="Student">
         </div>
@@ -138,57 +117,49 @@
     </div>
 
     <div class="data-grid">
-        <div class="col-left">
-            <div class="card" style="margin-bottom:25px;">
-                <div class="card-header"><i class="fas fa-money-check-alt"></i> Fee Management</div>
-                <div class="fee-circle-box">
-                    <svg class="circle-svg">
-                        <defs>
-                            <linearGradient id="feeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                                <stop offset="0%" style="stop-color:#006633; stop-opacity:1" />
-                                <stop offset="100%" style="stop-color:#2ecc71; stop-opacity:1" />
-                            </linearGradient>
-                        </defs>
-                        <circle class="circle-bg" cx="65" cy="65" r="45"></circle>
-                        <circle id="vFeeCircle" class="circle-bar" cx="65" cy="65" r="45"></circle>
-                    </svg>
-                    <div id="vFeePercent">0%</div>
+        <div class="card">
+            <div class="card-header"><i class="fas fa-money-check-alt"></i> Fee Status</div>
+            <div class="fee-circle-box">
+                <svg class="circle-svg">
+                    <circle class="circle-bg" cx="75" cy="75" r="45"></circle>
+                    <circle id="vFeeCircle" class="circle-bar" cx="75" cy="75" r="45"></circle>
+                </svg>
+                <div class="fee-text-container">
+                    <span id="vFeePercent">0%</span>
+                    <span id="vDueLabel">Due: 0%</span>
                 </div>
-                <div class="row"><span class="label">Total Fee</span><span class="val" id="vTotalFee">₹ 0</span></div>
-                <div class="row"><span class="label">Paid</span><span class="val" id="vPaidFee" style="color:green;">₹ 0</span></div>
-                <div class="row" style="border:none;"><span class="label">Balance</span><span class="val" id="vDueFee" style="color:red;">₹ 0</span></div>
             </div>
+            <div class="row"><span class="label">Total Fee</span><span class="val" id="vTotalFee">₹ 0</span></div>
+            <div class="row"><span class="label">Paid</span><span class="val" id="vPaidFee" style="color:green;">₹ 0</span></div>
+            <div class="row" style="border:none;"><span class="label">Balance</span><span class="val" id="vDueFee" style="color:red;">₹ 0</span></div>
+        </div>
 
-            <div class="card">
-                <div class="card-header"><i class="fas fa-user-check"></i> Attendance Summary</div>
-                <div class="row"><span class="label">Total School Days</span><span class="val" id="vTotalDays">0</span></div>
-                <div class="row"><span class="label">Days Present</span><span class="val" id="vPresent" style="color:green;">0</span></div>
-                <div class="row"><span class="label">Days Absent</span><span class="val" id="vAbsent" style="color:red;">0</span></div>
-                <div class="row" style="border:none;"><span class="label">Attendance %</span><span class="val" id="vAttPercent" style="color:var(--forest);">0%</span></div>
+        <div class="card" style="border-top: 5px solid var(--sky);">
+            <div class="card-header"><i class="fas fa-book-reader"></i> Homework Status</div>
+            <div id="hwBox" style="padding:10px;">
+                <h2 id="vHW" style="color:var(--sky); margin:0; font-size: 1.1rem; text-align:center;">Pending</h2>
+                <div id="hwList" style="margin-top:10px; font-size: 0.85rem; color:#444; max-height: 150px; overflow-y: auto;">
+                </div>
             </div>
         </div>
 
-        <div class="col-right">
-            <div class="card" style="margin-bottom:25px; border-top-color: var(--sky);">
-                <div class="card-header"><i class="fas fa-book-reader"></i> Homework Tracking</div>
-                <div id="hwBox">
-                    <h2 id="vHW" style="color:var(--sky); margin:0; font-size: 1.1rem; text-align:center;">-</h2>
-                    <div id="hwList" style="margin-top:12px; font-size: 0.8rem; color:#444; max-height: 180px; overflow-y: auto;">
-                        <p style="text-align:center; color:#999;">Loading homework...</p>
-                    </div>
-                </div>
-            </div>
+        <div class="card">
+            <div class="card-header"><i class="fas fa-user-check"></i> Attendance Record</div>
+            <div class="row"><span class="label">Total Working Days</span><span class="val" id="vTotalDays">0</span></div>
+            <div class="row"><span class="label">Days Present</span><span class="val" id="vPresent" style="color:green;">0</span></div>
+            <div class="row"><span class="label">Days Absent</span><span class="val" id="vAbsent" style="color:red;">0</span></div>
+            <div class="row" style="border:none;"><span class="label">Rate</span><span class="val" id="vAttPercent" style="color:var(--forest);">0%</span></div>
+        </div>
 
-            <div class="card" style="border-top: 5px solid var(--gold);">
-                <div class="card-header"><i class="fas fa-users"></i> Contact Information</div>
-                <div class="row"><span class="label">Guardian Name</span><span class="val" id="vFather">--</span></div>
-                <div class="row"><span class="label">Primary Phone</span><span class="val" id="vPhone">--</span></div>
-                <div class="row" style="border:none;"><span class="label">Admission No</span><span class="val" id="vAdm">--</span></div>
-            </div>
+        <div class="card" style="border-top: 5px solid var(--gold);">
+            <div class="card-header"><i class="fas fa-users"></i> Parent Details</div>
+            <div class="row"><span class="label">Father Name</span><span class="val" id="vFather">--</span></div>
+            <div class="row"><span class="label">Primary Phone</span><span class="val" id="vPhone">--</span></div>
+            <div class="row" style="border:none;"><span class="label">Admission No</span><span class="val" id="vAdm">--</span></div>
         </div>
 
         <div class="card marks-card" style="border-top: 5px solid var(--danger);">
-            <div class="card-header"><i class="fas fa-graduation-cap"></i> Academic Performance Grid</div>
+            <div class="card-header"><i class="fas fa-award"></i> Academic Progress Grid</div>
             <div class="table-wrapper">
                 <table class="marks-table">
                     <thead>
@@ -205,7 +176,7 @@
                 </table>
             </div>
             <div class="avg-percent-box">
-                AGGREGATE ACADEMIC PERFORMANCE <span id="vMarkPercent">0.0%</span>
+                AGGREGATE PERCENTAGE <span id="vMarkPercent">0.0%</span>
             </div>
         </div>
     </div>
@@ -246,6 +217,7 @@ async function fetchAllData() {
         const name = student.Name;
         const cls = student.Class;
         const now = new Date();
+        
         document.getElementById('vTimestamp').innerText = "GENERATED: " + now.toLocaleString();
 
         // 1. FEES SYNC
@@ -363,4 +335,4 @@ async function fetchAllData() {
 }
 </script>
 </body>
-</html>
+</html>     
