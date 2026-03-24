@@ -10,69 +10,69 @@
     <style>
         :root { --forest: #006633; --gold: #ffd700; --danger: #c62828; --light: #f4f7f6; --sky: #2196f3; --dark-green: #004d26; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; } 
-        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; padding-bottom: 50px; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; padding-bottom: 50px; }
 
-        /* --- LOGIN SCREEN (EXACT MATCH TO REFERENCE) --- */
-        .overlay-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f0f2f5; z-index: 1000; display: flex; justify-content: center; align-items: center; padding: 20px; }
-        .auth-box { background: white; padding: 50px 40px; border-radius: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); width: 100%; max-width: 450px; text-align: center; }
-        .auth-logo { height: 90px; margin-bottom: 20px; }
-        .auth-branding-text h2 { margin: 0; font-family: 'Montserrat', sans-serif; font-size: 2rem; font-weight: 800; color: var(--forest); letter-spacing: 1px; }
-        .auth-branding-text p { margin: 0 0 30px; color: #94a3b8; font-weight: 700; text-transform: uppercase; font-size: 12px; letter-spacing: 1px; }
-        
-        .auth-input { width: 100%; padding: 15px; border-radius: 12px; border: 1.5px solid #e2e8f0; margin-bottom: 20px; text-align: center; font-size: 16px; outline: none; background: #fff; transition: 0.3s; color: #334155; }
+        /* --- LOGIN SCREEN (EXACT REFERENCE MATCH) --- */
+        .overlay-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--light); z-index: 1000; display: flex; justify-content: center; align-items: center; padding: 15px; }
+        .auth-box { background: white; padding: 40px 25px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); width: 100%; max-width: 420px; border-bottom: 5px solid var(--forest); text-align: center; }
+        .auth-logo { height: 75px; margin-bottom: 10px; }
+        .auth-branding-text h2 { margin: 5px 0 0; font-family: 'Montserrat', sans-serif; font-size: 1.6rem; font-weight: 800; color: var(--forest); }
+        .auth-input { width: 100%; padding: 12px; border-radius: 10px; border: 2px solid #eee; margin-bottom: 15px; text-align: center; font-size: 16px; height: 50px; outline: none; transition: 0.3s; }
         .auth-input:focus { border-color: var(--forest); }
 
-        .btn-unlock { background: var(--dark-green); color: white; padding: 15px; border-radius: 50px; font-weight: 700; border: none; cursor: pointer; width: 100%; font-size: 1rem; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; }
-        .btn-unlock:hover { background: #003d1e; transform: translateY(-1px); }
+        .auth-buttons { display: flex; flex-direction: column; gap: 12px; margin-top: 10px; }
+        .btn-unlock { background: linear-gradient(135deg, var(--forest), #004d26); color: white; padding: 15px; border-radius: 50px; font-weight: bold; border: 2px solid var(--gold); cursor: pointer; width: 100%; height: 55px; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.3s; }
+        .btn-return { background: #f1f5f9; color: #475569; padding: 12px; border-radius: 50px; font-weight: 700; border: 1px solid #e2e8f0; cursor: pointer; font-size: 0.8rem; text-transform: uppercase; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; }
 
-        .auth-links { margin-top: 25px; display: flex; flex-direction: column; gap: 12px; }
-        .auth-links a { color: #64748b; font-size: 14px; font-weight: 600; text-decoration: underline; cursor: pointer; transition: 0.2s; }
-        .auth-links a:hover { color: var(--forest); }
+        .auth-links { margin-top: 20px; display: flex; flex-direction: column; gap: 8px; }
+        .auth-links a { color: #999; font-size: 12px; font-weight: bold; text-decoration: underline; cursor: pointer; }
 
-        /* --- HEADER --- */
+        /* --- HEADER (ORIGINAL STYLE RESTORED) --- */
         header { background: var(--forest); color: white; padding: 20px 5%; box-shadow: 0 4px 12px rgba(0,0,0,0.15); position: sticky; top: 0; z-index: 50; border-bottom: 4px solid var(--gold); }
         .header-content { display: flex; align-items: center; max-width: 1400px; margin: 0 auto; width: 100%; }
         .header-left { display: flex; align-items: center; gap: 15px; padding-right: 20px; border-right: 2px solid rgba(255,255,255,0.3); }
-        .header-logo-mini { height: 50px; }
-        .portal-title { padding-left: 20px; font-family: 'Montserrat', sans-serif; font-size: 1.6rem; font-weight: 800; text-transform: uppercase; flex-grow: 1; }
+        .header-logo { height: 55px; }
+        .school-branding { display: flex; flex-direction: column; line-height: 1.1; }
+        .school-name-main { font-family: 'Montserrat', sans-serif; font-size: 1.6rem; font-weight: 800; letter-spacing: 1px; }
+        .school-name-sub { font-family: 'Montserrat', sans-serif; font-size: 0.75rem; color: var(--gold); font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; }
+        .portal-title { padding-left: 20px; font-family: 'Montserrat', sans-serif; font-size: 1.8rem; font-weight: 800; text-transform: uppercase; flex-grow: 1; }
         .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
-        .live-clock { font-family: 'Montserrat', sans-serif; font-size: 0.75rem; font-weight: 800; color: var(--gold); }
-        .sign-out { color: #ffcccc; font-size: 0.75rem; text-decoration: none; font-weight: 800; text-transform: uppercase; cursor: pointer; }
+        .live-clock { font-family: 'Montserrat', sans-serif; font-size: 0.8rem; font-weight: 700; color: white; background: rgba(0,0,0,0.2); padding: 5px 12px; border-radius: 5px; }
+        .sign-out { color: #ffcccc; font-size: 0.75rem; text-decoration: none; font-weight: 800; text-transform: uppercase; display: flex; align-items: center; gap: 5px; cursor: pointer; }
 
         /* --- MAIN FORM --- */
-        .container { max-width: 700px; margin: 30px auto; padding: 0 15px; }
-        .card { background: white; padding: 30px; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.04); border-top: 8px solid var(--forest); margin-bottom: 30px; }
-        h3 { color: var(--forest); margin-bottom: 25px; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px; display: flex; align-items: center; gap: 10px; }
+        .container { max-width: 650px; margin: 30px auto; padding: 0 15px; }
+        .card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); border-top: 8px solid var(--forest); margin-bottom: 25px; }
+        h3 { color: var(--forest); margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; display: flex; align-items: center; gap: 8px; font-size: 1.1rem; }
         
-        label { display: block; font-size: 11px; font-weight: 800; color: #94a3b8; margin: 15px 0 6px; text-transform: uppercase; letter-spacing: 1px; }
-        select, input { width: 100%; padding: 14px; border-radius: 12px; border: 1.5px solid #e2e8f0; font-size: 15px; outline: none; background: #f8fafc; }
+        label { display: block; font-size: 10px; font-weight: 900; color: #777; margin: 15px 0 5px; text-transform: uppercase; letter-spacing: 1px; }
+        select, input { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #eee; font-size: 15px; outline: none; background: #fafafa; height: 48px; }
         
-        .calc-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .due-box { background: #fff5f5; border: 1.5px solid #fee2e2; padding: 18px; border-radius: 18px; text-align: center; margin-top: 25px; }
-        .due-box strong { font-size: 26px; color: var(--danger); font-family: 'Montserrat'; }
+        .calc-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px; }
+        .due-box { background: #fff5f5; border: 1px solid #ffcdd2; padding: 15px; border-radius: 15px; text-align: center; margin-top: 20px; }
+        .due-box strong { font-size: 24px; color: var(--danger); }
 
         .audit-info { font-size: 11px; color: #666; background: #f0f4f2; padding: 10px; border-radius: 8px; border-left: 4px solid var(--gold); margin-bottom: 15px; display: none; }
 
         /* --- CIRCULAR PROGRESS --- */
-        .chart-container { display: flex; flex-direction: column; align-items: center; margin-top: 30px; padding: 25px; background: #f8fafc; border-radius: 20px; border: 1.5px solid #f1f5f9; }
-        .circular-progress { position: relative; width: 140px; height: 140px; }
-        .circular-progress svg { width: 140px; height: 140px; transform: rotate(-90deg); }
-        .circular-progress circle { cx: 70; cy: 70; r: 60; fill: none; stroke-width: 12; stroke-linecap: round; }
-        .circle-bg { stroke: #e2e8f0; }
-        .circle-bar { stroke: var(--forest); stroke-dasharray: 377; stroke-dashoffset: 377; transition: stroke-dashoffset 1s cubic-bezier(0.4, 0, 0.2, 1); }
-        .percentage-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-weight: 800; font-size: 1.5rem; color: #1e293b; }
+        .chart-container { display: flex; flex-direction: column; align-items: center; margin-top: 25px; padding: 20px; background: #f9f9f9; border-radius: 15px; border: 1px solid #eee; }
+        .circular-progress { position: relative; width: 120px; height: 120px; }
+        .circular-progress svg { width: 120px; height: 120px; transform: rotate(-90deg); }
+        .circular-progress circle { fill: none; stroke-width: 10; stroke-linecap: round; cx: 60; cy: 60; r: 50; }
+        .circle-bg { stroke: #eee; }
+        .circle-bar { stroke: var(--forest); stroke-dasharray: 314.15; stroke-dashoffset: 314.15; transition: stroke-dashoffset 0.8s ease; }
+        .percentage-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-weight: 800; font-size: 1.2rem; color: #333; }
 
         /* --- HISTORY TABLE --- */
-        .history-card { border-top-color: var(--gold); }
         .history-table-wrapper { width: 100%; overflow-x: auto; border-radius: 10px; border: 1px solid #f1f5f9; }
-        .history-table { width: 100%; border-collapse: collapse; }
-        .history-table th { text-align: left; padding: 12px; background: #f8fafc; color: #64748b; font-size: 10px; text-transform: uppercase; border-bottom: 2px solid #f1f5f9; }
-        .history-table td { padding: 15px 12px; border-bottom: 1px solid #f1f5f9; font-weight: 600; color: #334155; font-size: 0.85rem; }
-        .amt-cell { color: var(--forest); font-weight: 800; }
-        .time-cell { color: #94a3b8; font-size: 0.75rem; }
+        .history-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+        .history-table th { text-align: left; padding: 10px; background: #f8fafc; color: #64748b; font-size: 10px; text-transform: uppercase; border-bottom: 2px solid #eee; }
+        .history-table td { padding: 12px 10px; border-bottom: 1px solid #f1f5f9; font-weight: 600; color: #334155; }
+        .history-table .amt-cell { color: var(--forest); font-weight: 800; }
+        .history-table .time-cell { color: #94a3b8; font-size: 0.75rem; }
 
-        .btn-action { width: 100%; color: white; border-radius: 50px; font-weight: 800; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; border: none; height: 55px; text-transform: uppercase; letter-spacing: 1px; }
-        .btn-save { background: var(--forest); margin-top: 30px; box-shadow: 0 4px 15px rgba(0,102,51,0.2); }
+        .btn-action { width: 100%; color: white; border: 2px solid var(--gold); padding: 16px; border-radius: 50px; font-weight: 700; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-save { background: var(--forest); margin-top: 25px; height: 55px; }
     </style>
 </head>
 <body>
@@ -84,24 +84,22 @@
 <div id="feeLoginScreen" class="overlay-screen">
     <div class="auth-box">
         <img src="logo.png" class="auth-logo">
-        <div class="auth-branding-text">
-            <h2>PARAMOUNT</h2>
-            <p>FEE ENTRY ACCESS </p>
-        </div>
-        
+        <div class="auth-branding-text"><h2>PARAMOUNT</h2><p style="color:var(--gold); font-weight:800; text-transform:uppercase; font-size:11px;">Fee Access Box</p></div>
+        <br>
         <select id="staffName" class="auth-input">
-            <option value="">-- Select Faculty --</option>
+            <option value="">-- Select Staff --</option>
             <option value="Mr. Ahmad">Mr. Ahmad</option>
             <option value="Ms. Roqiya">Ms. Roqiya</option>
             <option value="Ms. Jyothi">Ms. Jyothi</option>
         </select>
+        <input type="password" id="staffPass" class="auth-input" placeholder="Password" onkeypress="if(event.key === 'Enter') unlockFees()">
         
-        <input type="password" id="staffPass" class="auth-input" placeholder="Enter Password" onkeypress="if(event.key === 'Enter') unlockFees()">
-        
-        <button onclick="unlockFees()" class="btn-unlock">Unlock Dashboard <i class="fas fa-lock"></i></button>
+        <div class="auth-buttons">
+            <button onclick="unlockFees()" class="btn-unlock">Unlock Portal <i class="fas fa-unlock"></i></button>
+            <button onclick="window.location.href='index.html'" class="btn-return"><i class="fas fa-arrow-left"></i> Return to Portal</button>
+        </div>
         
         <div class="auth-links">
-            <a onclick="window.location.href='index.html'">Cancel & Return</a>
             <a onclick="handleForgotPassword()">Forgot Password?</a>
         </div>
     </div>
@@ -111,72 +109,74 @@
     <header>
         <div class="header-content">
             <div class="header-left">
-                <img src="logo.png" class="header-logo-mini">
+                <img src="logo.png" class="header-logo">
                 <div class="school-branding">
                     <span class="school-name-main">PARAMOUNT</span>
                     <span class="school-name-sub">ENGLISH MEDIUM SCHOOL</span>
                 </div>
             </div>
-            <div class="portal-title">FEE ENTRY</div>
+            <div class="portal-title">FEE ENTRY PORTAL</div>
             <div class="header-right">
                 <div id="liveClock" class="live-clock">--:--:--</div>
-                <div class="sign-out" onclick="location.reload()">SIGN OUT <i class="fas fa-power-off"></i></div>
+                <div class="sign-out" onclick="location.reload()">
+                    <i class="fas fa-sign-out-alt"></i> SIGN OUT
+                </div>
             </div>
         </div>
     </header>
 
     <div class="container">
         <div class="card">
-            <div id="staffDisplay" style="text-align:center; font-weight:800; color:var(--forest); background:#ecfdf5; padding:12px; border-radius:15px; margin-bottom:20px; font-size:12px; border: 1px dashed var(--forest);"></div>
-            <h3><i class="fas fa-edit"></i> Update Records</h3>
+            <div id="staffDisplay" style="text-align:center; font-weight:bold; color:var(--forest); background:#e8f5e9; padding:10px; border-radius:12px; margin-bottom:15px; font-size:13px;"></div>
+            <h3><i class="fas fa-file-invoice-dollar"></i> Update Records</h3>
             
-            <label>Class Level</label>
+            <label>Class</label>
             <select id="feeClass" onchange="populateStudents()"></select>
 
-            <label>Student Profile</label>
-            <select id="feeStudent" onchange="fetchExistingFeeData()"><option value="">-- Choose Name --</option></select>
+            <label>Student Name</label>
+            <select id="feeStudent" onchange="fetchExistingFeeData()"><option value="">-- Select Student --</option></select>
 
             <div id="auditTrail" class="audit-info">
                 <i class="fas fa-history"></i> Last update by <b id="lastUpdatedBy"></b> at <b id="lastUpdatedTime"></b>
             </div>
 
             <div class="calc-row">
-                <div><label>Annual Fee</label><input type="number" id="totalFee" oninput="calculateRealTime()"></div>
+                <div><label>Total Fee</label><input type="number" id="totalFee" oninput="calculateRealTime()"></div>
                 <div><label>Paying Now</label><input type="number" id="payingAmount" oninput="calculateRealTime()"></div>
             </div>
 
-            <div class="due-box"><span>OUTSTANDING BALANCE</span><br><strong id="dueDisplay">₹ 0</strong></div>
+            <div class="due-box"><span>BALANCE DUE</span><br><strong id="dueDisplay">₹ 0</strong></div>
 
             <div class="chart-container">
                 <div class="circular-progress">
-                    <svg viewBox="0 0 140 140">
-                        <circle style="stroke:#e2e8f0; fill:none; stroke-width:12;" cx="70" cy="70" r="60"></circle>
-                        <circle id="progressCircle" class="circle-bar" cx="70" cy="70" r="60" fill="none" stroke-width="12"></circle>
+                    <svg viewBox="0 0 120 120">
+                        <circle class="circle-bg"></circle>
+                        <circle id="progressCircle" class="circle-bar"></circle>
                     </svg>
                     <div id="percentText" class="percentage-text">0%</div>
                 </div>
             </div>
 
-            <label>Transaction Date</label><input type="date" id="payDate">
+            <label>Date</label><input type="date" id="payDate">
 
-            <button class="btn-save btn-action" onclick="saveFee()">Sync to Server <i class="fas fa-cloud-upload-alt"></i></button>
+            <button class="btn-action btn-save" onclick="saveFee()">Update Records <i class="fas fa-save"></i></button>
             
-            <div style="display: flex; gap: 15px; margin-top: 15px;">
-                <button id="receiptBtn" class="btn-action" onclick="generateReceipt()" style="background:var(--sky); flex:1; opacity:0.5;">Receipt <i class="fas fa-print"></i></button>
-                <button class="btn-action" onclick="clearStudentData()" style="background:var(--danger); flex:1;">Wipe <i class="fas fa-trash"></i></button>
+            <div style="display: flex; gap: 10px; margin-top: 10px;">
+                <button id="receiptBtn" class="btn-action" onclick="generateReceipt()" style="background:var(--sky); border-color:white; flex:1; opacity:0.5;">Print Receipt <i class="fas fa-print"></i></button>
+                <button class="btn-action" onclick="clearStudentData()" style="background:var(--danger); border-color:white; flex:1;">Wipe History <i class="fas fa-trash-alt"></i></button>
             </div>
         </div>
 
         <div class="card history-card" id="historyCard" style="display:none;">
-            <h3><i class="fas fa-list-alt"></i> Payment History</h3>
+            <h3><i class="fas fa-list-ul"></i> Payment History</h3>
             <div class="history-table-wrapper">
                 <table class="history-table">
                     <thead>
                         <tr>
                             <th>Date</th>
                             <th>Amount</th>
-                            <th>Staff</th>
-                            <th>Time</th>
+                            <th>Faculty</th>
+                            <th>Time (AM/PM)</th>
                         </tr>
                     </thead>
                     <tbody id="historyTableBody"></tbody>
@@ -189,7 +189,7 @@
 <script>
     function updateClock() {
         const now = new Date();
-        document.getElementById('liveClock').innerText = now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:true});
+        document.getElementById('liveClock').innerText = now.toLocaleDateString([], {day:'numeric', month:'short'}) + " | " + now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit', second:'2-digit'});
     }
     setInterval(updateClock, 1000); updateClock();
 
@@ -203,29 +203,28 @@
 
     async function handleForgotPassword() {
         const selectedFaculty = document.getElementById('staffName').value;
-        if (!selectedFaculty) return Swal.fire('Action Required', 'Select your name first.', 'warning');
-        const { value: pin } = await Swal.fire({ title: `Recovery for ${selectedFaculty}`, input: 'password', inputPlaceholder: 'Enter your personal Recovery PIN', showCancelButton: true });
+        if (!selectedFaculty) return Swal.fire('Select Name', 'Please select your name from the list.', 'warning');
+        const { value: pin } = await Swal.fire({ title: 'Recovery PIN', input: 'password', inputPlaceholder: 'Enter Recovery PIN for ' + selectedFaculty, showCancelButton: true });
         if (pin === recoveryPins[selectedFaculty]) {
-            Swal.fire({ title: 'Secure Recovery', html: `Your password is: <br><h2 style="color:var(--forest);">${authorized[selectedFaculty]}</h2>`, icon: 'success' });
-        } else if (pin) { Swal.fire('Access Denied', 'Incorrect Personal Recovery PIN.', 'error'); }
+            Swal.fire('Recovery Success', `Your password is: <b>${authorized[selectedFaculty]}</b>`, 'success');
+        } else if (pin) { Swal.fire('Error', 'Incorrect PIN', 'error'); }
     }
 
     function unlockFees() {
         const name = document.getElementById('staffName').value;
         const pass = document.getElementById('staffPass').value;
-        if(!name) return Swal.fire('Error','Select faculty name.','warning');
         if(pass === authorized[name]) {
             activeTeacher = name;
             document.getElementById('feeLoginScreen').style.display = 'none';
             document.getElementById('feeApp').style.display = 'block';
-            document.getElementById('staffDisplay').innerText = "SESSION ACTIVE: " + name;
-        } else { Swal.fire('Unauthorized', 'Invalid password.', 'error'); }
+            document.getElementById('staffDisplay').innerText = "Logged in: " + name;
+        } else { Swal.fire('Error', 'Invalid Credentials', 'error'); }
     }
 
     const studentData = { "Pre-KG": ["Hanish Macharla", "Arjun Vihaar Illandula", "Thanu sree Allakunta", "Aadhya Gangaraboina", "Aadhya Sri Oggula", "Aadhyasri Shivagoni", "Afraha Begum", "Aliya Sultana", "Anvika Bandi", "Aradana Devara konda", "Devansh Bandi", "Hanvitha Mulkalapelli", "Harsha Vardhan Seenapelli", "Hiranya Bandi", "Jashritha Boina", "Konreddy Shreyanvi", "Kriyansh Sammeta", "Mohammed Mohiuddin Sayyad", "Nethra Narkurthi", "Reeyansh Bandi", "Rishi Myakala", "Rudransh Bandi", "Sanvika Bandi", "Shanvith Khatha", "Shishira Jalagam", "Shiva Sai Mekala", "Shree Rudhraveer Chevvu", "Shreyansh Gangaraboina", "Sreeja Thalla", "Srikrithini Myakala", "Srivatsav Vanam", "Sriyansh Mekala", "Thanvika Lakka", "Thrilokansh Vudari", "Ujjwal Chekka", "Vaishnavi Lakka", "Vedansh Myakala", "Vishnu Priya Molugu", "Vyshnav Tej Boina", "Yafiah Mohammad"], "KG-1": ["Aadhya Sri Amaravadi", "Aditya Manda", "Aadhya Jella", "Advaita Gauri Bandi", "Aizah Amna Shaik", "Akshara Singaram", "Bhahuveer Raj Somishetti", "Gayathri Erroju", "Hanvika Mulkalapelli", "Manvith Kondoju", "Sayyad Vajeed", "Mekala Manu sri", "Oliva Grace Vallapu", "Rithwik Oggula", "Rithwika Kandagatla", "Srimahi Chevvu", "Thanvesh Thalla", "Trishul Nanduri", "Yoganshika Nanduri", "Yusra Mohammad", "Zainul Abideen Syed"], "KG-2": ["Deekshanth Sammeta", "Hanshith Erroju", "Harika Bandi", "Himarsha Naini", "Karthik Vallepu", "Kruthika Bandi", "Rajavardhan Gampala", "Roshan Kaitha", "Sri Anshu Ayaan Lyadala", "Srihansh Bandi", "Srikshitha Guduri", "Varshith Gonela", "Adyasri Makala", "Anvik Boini", "Anvith Pokanati", "Awais Ur Rehman Mohammad", "Dakshu Pothuganti", "Hansith Reddy Katukuri", "Harshith Pokanati", "Jella Aditya", "Krishank Nallabothula", "Kundana Katkuri", "Munukuntla Revanth Rudhra", "Niraja Nethri Siluveru", "Pranav Mattepelli", "Sreenith Yadav Naini", "Uvan Reddy Dasari", "Zayan Mohammad", "Zoya Mohammed"], "Grade-1": ["Dheeraj Gattu", "Preetham Sannayala", "Shiva nandu Gonela", "Shrayan Nuthanakanti", "Sriyanksha Mandala", "Advitha Garige", "Harika Bandi", "Himansi Kondoju", "Izhaan Rahamath Syed", "Jaisurya Myakala", "Khadeeja Fathima", "Manaswini Dandugula", "Manusri Bandi", "Rithwik krishna Amaravadi", "Rohan Bandi", "Shiva Junnu", "Shivanandh Bandi", "Sridha Thalla", "Srinika Chengelly", "Sriyanshi Oggula", "Vishwak Chekka"], "Grade-2": ["Aliza Manha Shaik", "Dhruvan Reddy Katukuri", "Druthika Enugala", "Manaswini Bandi", "Rakshith Macharla", "Sathwika Katkuri", "Shalini Uppala", "Chandu Devarakonda", "Gnaneshwar Pokanati", "Hasnain Syed", "Koushik Siluveru", "Senen Desabattula", "Shivarajan Pothuganti"], "Grade-3": ["Nagavelly Manikanta", "Mirja Ismail", "Bandi Aryan", "Dandugula Mahesh Babu", "Bandi Tejasri", "Bandi Harshavardhan", "Gampala Vyshnavi", "Gampala Laxmi", "Garige Harshith", "Katkuri Hanish", "Katukuri Manideep", "MD Abdul Quddus", "Muppa Sathwik Patel", "Nuthanakanti Sansita", "Pasarakonda Ritwin", "Pinninti Rakshith Rao", "Rayi Sriman Adithya"], "Grade-4": ["Abdul Saqib Mohammad", "Anudeep Chintha", "Bhavan Bandi", "Harshavardhan Gonela", "Jayadev Chiluveru", "Mahaboob Syed", "Nandith Reddy Enugala", "Sai Charan Goud Mandala", "Sai Prasanna Keerthi", "Ajmeri Shaik", "Akshith Chiluveru", "Jayasri Myakala", "Rahul Kanjarla", "Saketh Devarakonda"], "Grade-5": ["Adya Reddy Vangala", "Kowshik Patel Muppa", "Siri Singaram", "Srikar Mandala", "Abdus Salaam MD", "Akshith Ram Kalvacharla", "Jaffar Anas Shaik", "Khaja Azeemuddin Mohammed", "Nihan Mohammed", "Saif Shaik", "Saketh Renukuntla", "Sreeja Dasari", "Vidhaatri Sahani"], "Grade-6": ["Abdul Razzak Mohammad", "Anudeepthi Chintha", "Saketh Ranaveni", "Shiva Sri Katukuri", "Aklees Shaik", "Akshya Kalvacharla", "Prince Katkuri"], "Grade-7": ["Manikanta Sannayala", "Sreeyan Reddy Karra", "Jayadhithya Chiluveru"], "Grade-8": ["Sathwika Nagavelly", "Vyshnavi Uppala", "Akshaya Gampala", "Ganesh Oggula", "Gayathri Renukuntla", "Khaja Sadeemuddin Mohammed"] };
 
     const classSel = document.getElementById('feeClass');
-    classSel.innerHTML = '<option value="">-- Level --</option>' + Object.keys(studentData).map(c => `<option value="${c}">${c}</option>`).join('');
+    classSel.innerHTML = '<option value="">-- Choose Class --</option>' + Object.keys(studentData).map(c => `<option value="${c}">${c}</option>`).join('');
 
     function populateStudents() {
         const cls = document.getElementById('feeClass').value;
@@ -240,32 +239,23 @@
         const auditDiv = document.getElementById('auditTrail');
         const historyTable = document.getElementById('historyTableBody');
         const historyCard = document.getElementById('historyCard');
-
         if(!cls || !name) { auditDiv.style.display = 'none'; historyCard.style.display = 'none'; return; }
         const snap = await db.ref(`fee_records/${cls}/${name}`).once('value');
         const data = snap.val();
-        studentLifetimePaid = 0;
-        let totalVal = ""; let lastStaff = ""; let lastTime = ""; let tableRows = "";
-
+        studentLifetimePaid = 0; let totalVal = ""; let lastStaff = ""; let lastTime = ""; let tableRows = "";
         if(data) {
             Object.keys(data).forEach(key => {
                 const record = data[key];
                 studentLifetimePaid += parseFloat(record.paid || 0);
-                totalVal = record.total; 
-                lastStaff = record.recordedBy || "Admin";
-                lastTime = record.timestamp || record.date;
+                totalVal = record.total; lastStaff = record.recordedBy || "Admin"; lastTime = record.timestamp || record.date;
                 let timeOnly = record.timestamp && record.timestamp.includes(',') ? record.timestamp.split(',')[1].trim() : "N/A";
                 tableRows += `<tr><td>${record.date || 'N/A'}</td><td class="amt-cell">₹ ${record.paid}</td><td>${record.recordedBy || 'Admin'}</td><td class="time-cell">${timeOnly}</td></tr>`;
             });
             document.getElementById('totalFee').value = totalVal;
             document.getElementById('lastUpdatedBy').innerText = lastStaff;
             document.getElementById('lastUpdatedTime').innerText = lastTime;
-            auditDiv.style.display = 'block';
-            historyTable.innerHTML = tableRows;
-            historyCard.style.display = 'block';
-        } else {
-            document.getElementById('totalFee').value = ""; auditDiv.style.display = 'none'; historyCard.style.display = 'none';
-        }
+            auditDiv.style.display = 'block'; historyTable.innerHTML = tableRows; historyCard.style.display = 'block';
+        } else { document.getElementById('totalFee').value = ""; auditDiv.style.display = 'none'; historyCard.style.display = 'none'; }
         calculateRealTime();
     }
 
@@ -278,7 +268,7 @@
         let pct = (total > 0) ? (combinedPaid / total) * 100 : 0;
         if(pct > 100) pct = 100;
         const circle = document.getElementById('progressCircle');
-        circle.style.strokeDashoffset = (377 - (377 * pct / 100)) + "px";
+        circle.style.strokeDashoffset = (314.15 - (314.15 * pct / 100)) + "px";
         document.getElementById('percentText').innerText = Math.round(pct) + "%";
     }
 
@@ -288,15 +278,13 @@
         const total = document.getElementById('totalFee').value;
         const paid = document.getElementById('payingAmount').value;
         const date = document.getElementById('payDate').value;
-        if(!name || !paid) return Swal.fire('Error', 'Amount is required.', 'warning');
-        
+        if(!name || !paid) return Swal.fire('Error', 'Missing Data', 'warning');
         const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
         const fullStamp = new Date().toLocaleDateString() + ", " + currentTime;
         lastReceiptData = { name, cls, paid, total, date, teacher: activeTeacher };
         const record = { total, paid, recordedBy: activeTeacher, date, timestamp: fullStamp };
-
         db.ref(`fee_records/${cls}/${name}`).push(record).then(() => {
-            Swal.fire('Success', 'Record Synced.', 'success');
+            Swal.fire('Saved!', 'Record updated.', 'success');
             document.getElementById('payingAmount').value = '';
             document.getElementById('receiptBtn').style.opacity = "1";
             fetchExistingFeeData(); 
@@ -308,11 +296,11 @@
         const { name, cls, paid, date, teacher } = lastReceiptData;
         const win = window.open('', '', 'height=600,width=400');
         win.document.write(`<html><body style="padding:40px; font-family:sans-serif; text-align:center; border: 2px solid #eee;">
-            <img src="logo.png" style="height:60px;"><h2 style="color:#006633;">PARAMOUNT SCHOOL</h2><hr>
-            <p><b>Student:</b> ${name} (${cls})</p>
-            <p><b>Date:</b> ${date}</p>
-            <h1>₹ ${paid}</h1>
-            <hr><p>Admin: ${teacher}</p>
+            <img src="logo.png" style="height:60px;"><br><h2 style="color:#006633;">PARAMOUNT SCHOOL</h2><hr>
+            <p><strong>Student:</strong> ${name} (${cls})</p>
+            <p><strong>Date:</strong> ${date}</p>
+            <p style="font-size: 20px; color:green;"><strong>Paid Amount:</strong> ₹ ${paid}</p>
+            <hr><p style="text-align:center; font-size:12px;">Processed by: ${teacher}</p>
         </body></html>`);
         win.document.close(); win.print();
     }
@@ -320,11 +308,11 @@
     async function clearStudentData() {
         const cls = document.getElementById('feeClass').value;
         const name = document.getElementById('feeStudent').value;
-        if (!name) return;
-        const { value: pass } = await Swal.fire({ title: 'Authorization', text: 'Enter password to WIPE history', input: 'password' });
+        if (!name) return Swal.fire('Error', 'Select student', 'warning');
+        const { value: pass } = await Swal.fire({ title: 'Auth Required', text: 'Enter password to clear history', input: 'password' });
         if (pass === authorized[activeTeacher]) {
             db.ref(`fee_records/${cls}/${name}`).remove().then(() => {
-                Swal.fire('Cleared', '', 'success'); fetchExistingFeeData();
+                Swal.fire('Deleted', '', 'success'); fetchExistingFeeData();
             });
         }
     }
