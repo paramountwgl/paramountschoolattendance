@@ -22,11 +22,28 @@
         .school-name-sub { font-family: 'Montserrat', sans-serif; font-size: 0.7rem; color: var(--gold); font-weight: 700; text-transform: uppercase; }
         .portal-title { padding-left: 20px; font-family: 'Montserrat', sans-serif; font-size: 1.2rem; font-weight: 800; text-transform: uppercase; flex-grow: 1; }
 
-        /* CLOCK & EXIT */
-        .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; }
-        .live-clock { font-family: 'Montserrat', sans-serif; font-size: 0.75rem; font-weight: 700; color: white; background: rgba(0,0,0,0.2); padding: 4px 10px; border-radius: 5px; white-space: nowrap; }
-        .btn-exit { background: var(--gold); border: none; color: var(--forest); padding: 6px 15px; border-radius: 20px; font-size: 0.7rem; font-weight: 800; cursor: pointer; text-transform: uppercase; transition: 0.3s; }
-        .btn-exit:hover { background: white; }
+        /* PREMIUM HEADER RIGHT & EXIT BUTTON */
+        .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+        .live-clock { font-family: 'Montserrat', sans-serif; font-size: 0.75rem; font-weight: 700; color: white; background: rgba(0,0,0,0.2); padding: 4px 12px; border-radius: 5px; white-space: nowrap; }
+        
+        .btn-premium-exit { 
+            background: linear-gradient(135deg, var(--gold), #ffcc00); 
+            border: 2px solid white; 
+            color: var(--forest); 
+            padding: 8px 22px; 
+            border-radius: 50px; 
+            font-size: 0.7rem; 
+            font-weight: 800; 
+            cursor: pointer; 
+            text-transform: uppercase; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            letter-spacing: 0.5px;
+        }
+        .btn-premium-exit:hover { transform: translateY(-2px); background: white; box-shadow: 0 6px 20px rgba(255,215,0,0.5); }
 
         /* SEARCH AREA */
         .search-container { max-width: 600px; margin: 30px auto; padding: 0 20px; text-align: center; }
@@ -36,9 +53,14 @@
 
         /* DASHBOARD LAYOUT */
         .dashboard { max-width: 1200px; margin: 0 auto; padding: 20px; display: none; }
+        
+        /* FIXED IMAGE & HERO SIZE */
         .profile-hero { background: white; border-radius: 20px; padding: 30px; display: flex; align-items: center; gap: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom: 25px; border-left: 10px solid var(--forest); }
-        .student-img { width: 130px; height: 130px; border-radius: 20px; object-fit: cover; border: 4px solid var(--forest); background: #eee; }
-        .hero-text h1 { margin: 0; color: var(--forest); font-family: 'Montserrat', sans-serif; font-size: 2rem; }
+        .student-img-box { width: 160px; height: 160px; flex-shrink: 0; border-radius: 15px; overflow: hidden; border: 4px solid var(--forest); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+        .student-img-box img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .hero-text h1 { margin: 0; color: var(--forest); font-family: 'Montserrat', sans-serif; font-size: 1.8rem; }
+        .hero-text p { font-weight: 700; color: #666; margin: 5px 0; }
 
         .data-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
         .card { background: white; border-radius: 20px; padding: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); position: relative; overflow: hidden; }
@@ -59,6 +81,7 @@
         @media (max-width: 768px) {
             .profile-hero { flex-direction: column; text-align: center; }
             .portal-title { display: none; }
+            .student-img-box { width: 150px; height: 150px; }
         }
     </style>
 </head>
@@ -76,7 +99,7 @@
         <div class="portal-title">CORRESPONDENT 360°</div>
         <div class="header-right">
             <div id="liveClock" class="live-clock">--:--:--</div>
-            <button onclick="window.location.href='admin.html'" class="btn-exit">Back to Dashboard <i class="fas fa-sign-out-alt"></i></button>
+            <button onclick="window.location.href='admin.html'" class="btn-premium-exit">Exit Portal <i class="fas fa-sign-out-alt"></i></button>
         </div>
     </div>
 </header>
@@ -90,7 +113,9 @@
 
 <div id="dashboard" class="dashboard">
     <div class="profile-hero">
-        <img id="vImg" src="logo.png" class="Student images">
+        <div class="student-img-box">
+            <img id="vImg" src="logo.png" alt="Student Photo">
+        </div>
         <div class="hero-text">
             <h1 id="vName">STUDENT NAME</h1>
             <p id="vSub">CLASS / SECTION</p>
@@ -435,4 +460,4 @@ async function fetchAllData() {
 }
 </script>
 </body>
-</html>  
+</html>
