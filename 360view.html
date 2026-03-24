@@ -41,7 +41,6 @@
             align-items: center;
             gap: 8px;
             transition: all 0.3s ease;
-            letter-spacing: 0.5px;
         }
         .btn-premium-exit:hover { transform: translateY(-2px); background: white; box-shadow: 0 6px 20px rgba(255,215,0,0.5); }
 
@@ -54,10 +53,11 @@
         /* DASHBOARD LAYOUT */
         .dashboard { max-width: 1200px; margin: 0 auto; padding: 20px; display: none; }
         
-        /* FIXED IMAGE & HERO SIZE */
-        .profile-hero { background: white; border-radius: 20px; padding: 30px; display: flex; align-items: center; gap: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom: 25px; border-left: 10px solid var(--forest); }
-        .student-img-box { width: 160px; height: 160px; flex-shrink: 0; border-radius: 15px; overflow: hidden; border: 4px solid var(--forest); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
-        .student-img-box img { width: 100%; height: 100%; object-fit: cover; }
+        /* FIXED IMAGE SIZE CONTAINER */
+        .profile-hero { background: white; border-radius: 20px; padding: 30px; display: flex; align-items: center; gap: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom: 25px; border-left: 10px solid var(--forest); position: relative; }
+        .img-container { width: 160px; height: 160px; flex-shrink: 0; border-radius: 15px; overflow: hidden; border: 4px solid var(--forest); background: #eee; }
+        .img-container img { width: 100%; height: 100%; object-fit: cover; }
+        .timestamp-badge { position: absolute; top: 15px; right: 25px; font-size: 10px; font-weight: 800; color: #aaa; text-transform: uppercase; }
         
         .hero-text h1 { margin: 0; color: var(--forest); font-family: 'Montserrat', sans-serif; font-size: 1.8rem; }
         .hero-text p { font-weight: 700; color: #666; margin: 5px 0; }
@@ -74,14 +74,12 @@
         .fee-circle-box { display: flex; flex-direction: column; align-items: center; padding: 10px; }
         .circle-svg { width: 100px; height: 100px; transform: rotate(-90deg); }
         .circle-bg { fill: none; stroke: #eee; stroke-width: 8; }
-        .circle-bar { fill: none; stroke: var(--forest); stroke-width: 8; stroke-dasharray: 283; stroke-dashoffset: 283; transition: 1s; stroke-linecap: round; }
+        .circle-bar { fill: none; stroke: var(--forest); stroke-width: 8; stroke-dasharray: 283; stroke-dashoffset: 283; transition: 1.2s ease-in-out; stroke-linecap: round; }
 
-        .marks-badge { background: #e3f2fd; color: #1976d2; padding: 5px 12px; border-radius: 10px; font-weight: 800; }
-        
         @media (max-width: 768px) {
             .profile-hero { flex-direction: column; text-align: center; }
             .portal-title { display: none; }
-            .student-img-box { width: 150px; height: 150px; }
+            .img-container { width: 140px; height: 140px; }
         }
     </style>
 </head>
@@ -99,7 +97,7 @@
         <div class="portal-title">CORRESPONDENT 360°</div>
         <div class="header-right">
             <div id="liveClock" class="live-clock">--:--:--</div>
-            <button onclick="window.location.href='admin.html'" class="btn-premium-exit">Exit Portal <i class="fas fa-sign-out-alt"></i></button>
+            <button onclick="window.location.href='admin.html'" class="btn-premium-exit">Exit Portal <i class="fas fa-power-off"></i></button>
         </div>
     </div>
 </header>
@@ -113,29 +111,39 @@
 
 <div id="dashboard" class="dashboard">
     <div class="profile-hero">
-        <div class="student-img-box">
-            <img id="vImg" src="logo.png" alt="Student Photo">
+        <div id="vTimestamp" class="timestamp-badge">Fetched: --</div>
+        <div class="img-container">
+            <img id="vImg" src="logo.png" alt="Student">
         </div>
         <div class="hero-text">
             <h1 id="vName">STUDENT NAME</h1>
             <p id="vSub">CLASS / SECTION</p>
-            <span id="vStatus" style="background:var(--forest); color:white; padding:5px 15px; border-radius:20px; font-size:0.7rem; font-weight:800;">ACTIVE PROFILE</span>
+            <span style="background:var(--forest); color:white; padding:5px 15px; border-radius:20px; font-size:0.7rem; font-weight:800;">VERIFIED PROFILE</span>
         </div>
     </div>
 
     <div class="data-grid">
         <div class="card">
-            <div class="card-header"><i class="fas fa-money-check-alt"></i> Fee Details</div>
+            <div class="card-header"><i class="fas fa-money-check-alt"></i> Fee Status</div>
             <div class="fee-circle-box">
                 <svg class="circle-svg">
                     <circle class="circle-bg" cx="50" cy="50" r="45"></circle>
                     <circle id="vFeeCircle" class="circle-bar" cx="50" cy="50" r="45"></circle>
                 </svg>
-                <div id="vFeePercent" style="margin-top:-60px; font-weight:800; margin-bottom:40px;">0%</div>
+                <div id="vFeePercent" style="margin-top:-60px; font-weight:800; margin-bottom:40px; font-size:1.2rem;">0%</div>
             </div>
             <div class="row"><span class="label">Total Fee</span><span class="val" id="vTotalFee">₹ 0</span></div>
             <div class="row"><span class="label">Paid</span><span class="val" id="vPaidFee" style="color:green;">₹ 0</span></div>
             <div class="row"><span class="label">Balance</span><span class="val" id="vDueFee" style="color:red;">₹ 0</span></div>
+        </div>
+
+        <div class="card" style="border-top: 5px solid var(--sky);">
+            <div class="card-header"><i class="fas fa-book-reader"></i> Homework Status</div>
+            <div id="hwBox" style="text-align:center; padding:20px;">
+                <i class="fas fa-tasks" style="font-size:2rem; color:var(--sky); margin-bottom:10px;"></i>
+                <h2 id="vHW" style="margin:0; color:var(--dark);">Pending</h2>
+                <p style="font-size:0.8rem; color:#888;">Latest assignment tracking from cloud node.</p>
+            </div>
         </div>
 
         <div class="card">
@@ -144,7 +152,7 @@
                 <p style="text-align:center; color:#ccc;">Searching marks...</p>
             </div>
             <div class="row" style="margin-top:15px; background:#f0f7ff; padding:10px; border-radius:10px;">
-                <span class="label">Total Percentage</span><span class="val marks-badge" id="vMarkPercent">0%</span>
+                <span class="label">Total Percentage</span><span class="val" id="vMarkPercent" style="background:#1976d2; color:white; padding:4px 10px; border-radius:8px;">0%</span>
             </div>
         </div>
 
@@ -152,15 +160,15 @@
             <div class="card-header"><i class="fas fa-user-check"></i> Attendance Record</div>
             <div class="row"><span class="label">Total Days</span><span class="val" id="vTotalDays">0</span></div>
             <div class="row"><span class="label">Present</span><span class="val" id="vPresent">0</span></div>
-            <div class="row"><span class="label">Attendance %</span><span class="val" id="vAttPercent" style="color:var(--forest);">0%</span></div>
+            <div class="row"><span class="label">Rate</span><span class="val" id="vAttPercent" style="color:var(--forest);">0%</span></div>
         </div>
 
-        <div class="card">
-            <div class="card-header"><i class="fas fa-info-circle"></i> Parent & Profile</div>
+        <div class="card" style="border-top: 5px solid var(--gold);">
+            <div class="card-header"><i class="fas fa-users"></i> Parent Details</div>
             <div class="row"><span class="label">Father Name</span><span class="val" id="vFather">--</span></div>
-            <div class="row"><span class="label">Phone</span><span class="val" id="vPhone">--</span></div>
-            <div class="row"><span class="label">Adm No</span><span class="val" id="vAdm">--</span></div>
-            <div class="row"><span class="label">Homework</span><span class="val" id="vHW" style="color:var(--sky);">Pending</span></div>
+            <div class="row"><span class="label">Primary Phone</span><span class="val" id="vPhone">--</span></div>
+            <div class="row"><span class="label">Admission No</span><span class="val" id="vAdm">--</span></div>
+            <div class="row"><span class="label">Profile Status</span><span class="val" style="color:green;">Synced</span></div>
         </div>
     </div>
 </div>
@@ -170,7 +178,6 @@
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
 <script>
-// LIVE CLOCK LOGIC
 function updateClock() {
     const now = new Date();
     const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
@@ -387,6 +394,10 @@ async function fetchAllData() {
         const name = student.Name;
         const cls = student.Class;
 
+        // TIMESTAMP FOR THE REPORT
+        const now = new Date();
+        document.getElementById('vTimestamp').innerText = "Fetched: " + now.toLocaleString();
+
         // 1. FEES
         const feeSnap = await db.ref(`fee_records/${cls}/${name}`).once('value');
         let tPaid = 0, tFee = 0;
@@ -421,8 +432,8 @@ async function fetchAllData() {
 
         // 4. HOMEWORK
         const hwSnap = await db.ref(`homework/${cls}`).limitToLast(1).once('value');
-        let hwStatus = "No Tasks";
-        if(hwSnap.exists()) hwStatus = "Task Assigned";
+        let hwStatus = "Pending";
+        if(hwSnap.exists()) hwStatus = "Assigned";
 
         // UPDATE UI
         document.getElementById('vName').innerText = name;
