@@ -21,7 +21,7 @@
         .btn-unlock { background: linear-gradient(135deg, var(--forest), #004d26); color: white; padding: 15px; border-radius: 50px; font-weight: bold; border: 2px solid var(--gold); cursor: pointer; width: 100%; height: 55px; display: flex; align-items: center; justify-content: center; gap: 8px; }
 
         /* --- HEADER --- */
-        header { background: var(--forest); color: white; padding: 20px 5%; box-shadow: 0 4px 12px rgba(0,0,0,0.15); position: sticky; top: 0; z-index: 50; }
+        header { background: var(--forest); color: white; padding: 20px 5%; box-shadow: 0 4px 12px rgba(0,0,0,0.15); position: sticky; top: 0; z-index: 50; border-bottom: 4px solid var(--gold); }
         .header-content { display: flex; align-items: center; max-width: 1400px; margin: 0 auto; width: 100%; }
         .header-left { display: flex; align-items: center; gap: 15px; padding-right: 20px; border-right: 2px solid rgba(255,255,255,0.3); }
         .header-logo { height: 55px; }
@@ -49,11 +49,12 @@
 
         /* --- HISTORY TABLE --- */
         .history-card { border-top-color: var(--gold); }
-        .history-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.85rem; }
-        .history-table th { text-align: left; padding: 10px; background: #f8fafc; color: #64748b; font-size: 10px; text-transform: uppercase; border-bottom: 2px solid #eee; }
-        .history-table td { padding: 12px 10px; border-bottom: 1px solid #f1f5f9; font-weight: 600; color: #334155; }
-        .history-table tr:last-child td { border-bottom: none; }
-        .history-table .amt-cell { color: var(--paid); font-weight: 800; }
+        .history-table-wrapper { width: 100%; overflow-x: auto; border-radius: 10px; border: 1px solid #f1f5f9; }
+        .history-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+        .history-table th { text-align: left; padding: 12px; background: #f8fafc; color: #64748b; font-size: 10px; text-transform: uppercase; border-bottom: 2px solid #eee; white-space: nowrap; }
+        .history-table td { padding: 12px; border-bottom: 1px solid #f1f5f9; font-weight: 600; color: #334155; }
+        .history-table .amt-cell { color: var(--forest); font-weight: 800; }
+        .history-table .time-cell { color: #94a3b8; font-size: 0.75rem; }
 
         /* --- CIRCULAR PROGRESS --- */
         .chart-container { display: flex; flex-direction: column; align-items: center; margin-top: 25px; padding: 20px; background: #f9f9f9; border-radius: 15px; border: 1px solid #eee; }
@@ -154,13 +155,14 @@
 
         <div class="card history-card" id="historyCard" style="display:none;">
             <h3><i class="fas fa-list-ul"></i> Payment History</h3>
-            <div class="table-wrapper">
+            <div class="history-table-wrapper">
                 <table class="history-table">
                     <thead>
                         <tr>
                             <th>Date</th>
                             <th>Amount</th>
                             <th>Faculty</th>
+                            <th>Time (AM/PM)</th>
                         </tr>
                     </thead>
                     <tbody id="historyTableBody"></tbody>
@@ -189,7 +191,6 @@
 
     const studentData = { "Pre-KG": ["Hanish Macharla", "Arjun Vihaar Illandula", "Thanu sree Allakunta", "Aadhya Gangaraboina", "Aadhya Sri Oggula", "Aadhyasri Shivagoni", "Afraha Begum", "Aliya Sultana", "Anvika Bandi", "Aradana Devara konda", "Devansh Bandi", "Hanvitha Mulkalapelli", "Harsha Vardhan Seenapelli", "Hiranya Bandi", "Jashritha Boina", "Konreddy Shreyanvi", "Kriyansh Sammeta", "Mohammed Mohiuddin Sayyad", "Nethra Narkurthi", "Reeyansh Bandi", "Rishi Myakala", "Rudransh Bandi", "Sanvika Bandi", "Shanvith Khatha", "Shishira Jalagam", "Shiva Sai Mekala", "Shree Rudhraveer Chevvu", "Shreyansh Gangaraboina", "Sreeja Thalla", "Srikrithini Myakala", "Srivatsav Vanam", "Sriyansh Mekala", "Thanvika Lakka", "Thrilokansh Vudari", "Ujjwal Chekka", "Vaishnavi Lakka", "Vedansh Myakala", "Vishnu Priya Molugu", "Vyshnav Tej Boina", "Yafiah Mohammad"], "KG-1": ["Aadhya Sri Amaravadi", "Aditya Manda", "Aadhya Jella", "Advaita Gauri Bandi", "Aizah Amna Shaik", "Akshara Singaram", "Bhahuveer Raj Somishetti", "Gayathri Erroju", "Hanvika Mulkalapelli", "Manvith Kondoju", "Sayyad Vajeed", "Mekala Manu sri", "Oliva Grace Vallapu", "Rithwik Oggula", "Rithwika Kandagatla", "Srimahi Chevvu", "Thanvesh Thalla", "Trishul Nanduri", "Yoganshika Nanduri", "Yusra Mohammad", "Zainul Abideen Syed"], "KG-2": ["Deekshanth Sammeta", "Hanshith Erroju", "Harika Bandi", "Himarsha Naini", "Karthik Vallepu", "Kruthika Bandi", "Rajavardhan Gampala", "Roshan Kaitha", "Sri Anshu Ayaan Lyadala", "Srihansh Bandi", "Srikshitha Guduri", "Varshith Gonela", "Adyasri Makala", "Anvik Boini", "Anvith Pokanati", "Awais Ur Rehman Mohammad", "Dakshu Pothuganti", "Hansith Reddy Katukuri", "Harshith Pokanati", "Jella Aditya", "Krishank Nallabothula", "Kundana Katkuri", "Munukuntla Revanth Rudhra", "Niraja Nethri Siluveru", "Pranav Mattepelli", "Sreenith Yadav Naini", "Uvan Reddy Dasari", "Zayan Mohammad", "Zoya Mohammed"], "Grade-1": ["Dheeraj Gattu", "Preetham Sannayala", "Shiva nandu Gonela", "Shrayan Nuthanakanti", "Sriyanksha Mandala", "Advitha Garige", "Harika Bandi", "Himansi Kondoju", "Izhaan Rahamath Syed", "Jaisurya Myakala", "Khadeeja Fathima", "Manaswini Dandugula", "Manusri Bandi", "Rithwik krishna Amaravadi", "Rohan Bandi", "Shiva Junnu", "Shivanandh Bandi", "Sridha Thalla", "Srinika Chengelly", "Sriyanshi Oggula", "Vishwak Chekka"], "Grade-2": ["Aliza Manha Shaik", "Dhruvan Reddy Katukuri", "Druthika Enugala", "Manaswini Bandi", "Rakshith Macharla", "Sathwika Katkuri", "Shalini Uppala", "Chandu Devarakonda", "Gnaneshwar Pokanati", "Hasnain Syed", "Koushik Siluveru", "Senen Desabattula", "Shivarajan Pothuganti"], "Grade-3": ["Nagavelly Manikanta", "Mirja Ismail", "Bandi Aryan", "Dandugula Mahesh Babu", "Bandi Tejasri", "Bandi Harshavardhan", "Gampala Vyshnavi", "Gampala Laxmi", "Garige Harshith", "Katkuri Hanish", "Katukuri Manideep", "MD Abdul Quddus", "Muppa Sathwik Patel", "Nuthanakanti Sansita", "Pasarakonda Ritwin", "Pinninti Rakshith Rao", "Rayi Sriman Adithya"], "Grade-4": ["Abdul Saqib Mohammad", "Anudeep Chintha", "Bhavan Bandi", "Harshavardhan Gonela", "Jayadev Chiluveru", "Mahaboob Syed", "Nandith Reddy Enugala", "Sai Charan Goud Mandala", "Sai Prasanna Keerthi", "Ajmeri Shaik", "Akshith Chiluveru", "Jayasri Myakala", "Rahul Kanjarla", "Saketh Devarakonda"], "Grade-5": ["Adya Reddy Vangala", "Kowshik Patel Muppa", "Siri Singaram", "Srikar Mandala", "Abdus Salaam MD", "Akshith Ram Kalvacharla", "Jaffar Anas Shaik", "Khaja Azeemuddin Mohammed", "Nihan Mohammed", "Saif Shaik", "Saketh Renukuntla", "Sreeja Dasari", "Vidhaatri Sahani"], "Grade-6": ["Abdul Razzak Mohammad", "Anudeepthi Chintha", "Saketh Ranaveni", "Shiva Sri Katukuri", "Aklees Shaik", "Akshya Kalvacharla", "Prince Katkuri"], "Grade-7": ["Manikanta Sannayala", "Sreeyan Reddy Karra", "Jayadhithya Chiluveru"], "Grade-8": ["Sathwika Nagavelly", "Vyshnavi Uppala", "Akshaya Gampala", "Ganesh Oggula", "Gayathri Renukuntla", "Khaja Sadeemuddin Mohammed"] };
 
-    // Initial Populate
     const classSel = document.getElementById('feeClass');
     classSel.innerHTML = '<option value="">-- Choose Class --</option>' + Object.keys(studentData).map(c => `<option value="${c}">${c}</option>`).join('');
 
@@ -234,7 +235,19 @@
                 lastStaff = record.recordedBy || "Admin";
                 lastTime = record.timestamp || record.date;
                 
-                tableRows += `<tr><td>${record.date || 'N/A'}</td><td class="amt-cell">₹ ${record.paid}</td><td>${record.recordedBy || 'Admin'}</td></tr>`;
+                // EXTRACTING TIME FOR THE NEW COLUMN
+                let timeOnly = "N/A";
+                if(record.timestamp) {
+                    // Extracting only the time part if it includes date
+                    timeOnly = record.timestamp.includes(',') ? record.timestamp.split(',')[1].trim() : record.timestamp;
+                }
+
+                tableRows += `<tr>
+                    <td>${record.date || 'N/A'}</td>
+                    <td class="amt-cell">₹ ${record.paid}</td>
+                    <td>${record.recordedBy || 'Admin'}</td>
+                    <td class="time-cell"><i class="far fa-clock"></i> ${timeOnly}</td>
+                </tr>`;
             });
             document.getElementById('totalFee').value = totalVal;
             document.getElementById('lastUpdatedBy').innerText = lastStaff;
@@ -273,8 +286,12 @@
         const date = document.getElementById('payDate').value;
         if(!name || !paid) return Swal.fire('Error', 'Missing Data', 'warning');
         
+        // Generate current time with AM/PM
+        const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+        const fullStamp = new Date().toLocaleDateString() + ", " + currentTime;
+
         lastReceiptData = { name, cls, paid, total, date, teacher: activeTeacher };
-        const record = { total, paid, recordedBy: activeTeacher, date, timestamp: new Date().toLocaleString() };
+        const record = { total, paid, recordedBy: activeTeacher, date, timestamp: fullStamp };
 
         db.ref(`fee_records/${cls}/${name}`).push(record).then(() => {
             Swal.fire('Saved!', 'Record updated.', 'success');
