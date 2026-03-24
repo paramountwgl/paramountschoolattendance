@@ -37,11 +37,17 @@
         .container { max-width: 900px; margin: 20px auto; padding: 0 10px; }
         .card { background: white; padding: 15px; border-radius: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); margin-bottom: 20px; border-top: 6px solid var(--forest); }
         h3 { color: var(--forest); margin: 0 0 15px; font-size: 1.1rem; border-bottom: 1px solid #eee; padding-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+        
+        /* NEW NAVIGATION STYLING */
+        .nav-card { cursor: pointer; background: #fff; border-radius: 15px; padding: 20px; text-align: center; border: 2px solid #eee; transition: 0.3s; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: center; gap: 15px; }
+        .nav-card:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); border-color: var(--gold); }
+        .nav-card i { font-size: 1.8rem; color: var(--forest); }
+        .nav-card h4 { margin: 0; color: #333; font-family: 'Montserrat'; font-size: 1.2rem; }
+
         .filter-row { display: flex; gap: 8px; align-items: center; margin-top: 10px; width: 100%; }
         .filter-row input, .filter-row select { flex: 1.5; padding: 10px; border-radius: 8px; border: 1px solid #ddd; font-size: 13px; height: 44px; outline: none; }
         .btn-attract { background: linear-gradient(135deg, var(--forest), #004d26); color: white; padding: 0 15px; border-radius: 50px; font-weight: bold; border: 2px solid var(--gold); cursor: pointer; font-size: 13px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 44px; flex: 1; box-shadow: 0 5px 15px rgba(0,0,0,0.1); transition: 0.3s; }
         
-        /* MOBILE OPTIMIZED TABLE */
         .table-container { width: 100%; overflow: hidden; margin-top: 15px; border-radius: 10px; border: 1px solid #eee; }
         table { width: 100%; border-collapse: collapse; table-layout: fixed; }
         th { background: var(--forest); color: white; padding: 8px 4px; text-transform: uppercase; font-size: 9px; text-align: center; }
@@ -100,6 +106,13 @@
     </header>
 
     <div class="container">
+        
+        <div class="nav-card" onclick="window.location.href='360view.html'">
+            <i class="fas fa-sync-alt"></i>
+            <h4>Student 360° View Portal</h4>
+            <i class="fas fa-chevron-right" style="font-size: 1rem; color: #ccc;"></i>
+        </div>
+
         <div class="card" style="border-top-color: var(--gold);">
             <h3><i class="fas fa-bullhorn"></i> Broadcast</h3>
             <textarea id="annMsg" style="width:100%; height:70px; padding:10px; border-radius:10px; border:1px solid #ddd; outline:none; resize:none; margin-bottom:10px;" placeholder="Message for teachers..."></textarea>
@@ -218,7 +231,6 @@
     
     function clearAnn() { db.ref('announcement').remove().then(() => { document.getElementById('annMsg').value = ""; Swal.fire('Cleared', 'Announcement removed.', 'info'); }); }
 
-    // THE FIX: DYNAMIC CALCULATION ENGINE
     async function viewAtt() {
         const cls = document.getElementById('clsPick').value;
         const type = document.getElementById('viewType').value;
@@ -244,7 +256,6 @@
             });
             
         } else {
-            // MONTHLY AND OVERALL - PULLS FROM TEACHER SUBMISSIONS DIRECTLY
             head.innerHTML = `<tr><th>Student Name</th><th>P</th><th>A</th><th>Tot</th><th>%</th></tr>`;
             const m = document.getElementById('monthInput').value;
             if(type === 'monthly' && !m) return Swal.fire('Error', 'Pick Month', 'warning');
@@ -255,7 +266,7 @@
                 studentDataMaster[cls].forEach(n => stats[n] = { p: 0, t: 0 });
 
                 Object.keys(allData).forEach(date => {
-                    if(type === 'monthly' && !date.startsWith(m)) return; // Filter by month if needed
+                    if(type === 'monthly' && !date.startsWith(m)) return; 
                     const classData = allData[date][cls];
                     if(classData) {
                         Object.keys(classData).forEach(student => {
@@ -300,7 +311,6 @@
         sheet.getRow(7).values = ['S.No', 'Student Name', 'Present', 'Absent', 'Total', '%'];
         sheet.getRow(7).font = {bold:true};
         
-        // DYNAMIC EXCEL CALCULATION
         const snap = await db.ref(`daily_attendance`).once('value');
         const allData = snap.val() || {};
         const stats = {};
@@ -337,7 +347,6 @@
         if(pass === "Ahmad@07") {
             Swal.fire({title: 'Processing...', text: 'Generating spreadsheet backup.', icon: 'info', showConfirmButton: false});
 
-            // GENERATE BRANDED BACKUP
             const workbook = new ExcelJS.Workbook();
             const sheet = workbook.addWorksheet('System Backup');
             sheet.mergeCells('A1:F3');
@@ -376,7 +385,6 @@
             const buffer = await workbook.xlsx.writeBuffer();
             saveAs(new Blob([buffer]), `Paramount_Backup_${new Date().toISOString().slice(0,10)}.xlsx`);
 
-            // WIPE DATABASE AFTER DOWNLOAD
             if(mode === 'master') { 
                 await db.ref('daily_attendance').remove(); 
             } else {
