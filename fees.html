@@ -12,7 +12,7 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; } 
         body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; padding-bottom: 50px; }
 
-        /* --- LOGIN SCREEN (MATCHING REFERENCE) --- */
+        /* --- LOGIN SCREEN --- */
         .overlay-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f0f2f5; z-index: 1000; display: flex; justify-content: center; align-items: center; padding: 20px; }
         .auth-box { background: white; padding: 50px 40px; border-radius: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); width: 100%; max-width: 450px; text-align: center; }
         .auth-logo { height: 90px; margin-bottom: 20px; }
@@ -30,36 +30,30 @@
         .auth-links a:hover { color: var(--forest); }
 
         /* --- HEADER --- */
-        header { background: var(--forest); color: white; padding: 20px 5%; box-shadow: 0 4px 12px rgba(0,0,0,0.15); position: sticky; top: 0; z-index: 50; border-bottom: 4px solid var(--gold); }
+        header { background: var(--forest); color: white; padding: 20px 5%; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border-bottom: 4px solid var(--gold); }
         .header-content { display: flex; align-items: center; max-width: 1400px; margin: 0 auto; width: 100%; }
         .header-left { display: flex; align-items: center; gap: 15px; padding-right: 20px; border-right: 2px solid rgba(255,255,255,0.3); }
         .header-logo-mini { height: 50px; }
         .portal-title { padding-left: 20px; font-family: 'Montserrat', sans-serif; font-size: 1.6rem; font-weight: 800; text-transform: uppercase; flex-grow: 1; }
         .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
         .live-clock { font-family: 'Montserrat', sans-serif; font-size: 0.75rem; font-weight: 800; color: var(--gold); }
-        .sign-out { color: #ffcccc; font-size: 0.75rem; text-decoration: none; font-weight: 800; text-transform: uppercase; cursor: pointer; }
 
-        /* --- MAIN FORM --- */
+        /* --- DASHBOARD --- */
         .container { max-width: 700px; margin: 30px auto; padding: 0 15px; }
         .card { background: white; padding: 30px; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.04); border-top: 8px solid var(--forest); margin-bottom: 30px; }
         
         label { display: block; font-size: 11px; font-weight: 800; color: #94a3b8; margin: 15px 0 6px; text-transform: uppercase; letter-spacing: 1px; }
         select, input { width: 100%; padding: 14px; border-radius: 12px; border: 1.5px solid #e2e8f0; font-size: 15px; outline: none; background: #f8fafc; }
         
-        .calc-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         .due-box { background: #fff5f5; border: 1.5px solid #fee2e2; padding: 18px; border-radius: 18px; text-align: center; margin-top: 25px; }
         .due-box strong { font-size: 26px; color: var(--danger); font-family: 'Montserrat'; }
 
-        /* --- PROGRESS --- */
+        /* --- CIRCULAR PROGRESS --- */
         .chart-container { display: flex; flex-direction: column; align-items: center; margin-top: 30px; padding: 25px; background: #f8fafc; border-radius: 20px; }
-        .circular-progress { position: relative; width: 140px; height: 140px; }
-        .circular-progress svg { width: 140px; height: 140px; transform: rotate(-90deg); }
         .circular-progress circle { cx: 70; cy: 70; r: 60; fill: none; stroke-width: 12; stroke-linecap: round; }
-        .circle-bg { stroke: #e2e8f0; }
         .circle-bar { stroke: var(--forest); stroke-dasharray: 377; stroke-dashoffset: 377; transition: stroke-dashoffset 1s ease; }
         .percentage-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-weight: 800; font-size: 1.5rem; color: #1e293b; }
 
-        /* --- HISTORY --- */
         .history-table { width: 100%; border-collapse: collapse; }
         .history-table th { text-align: left; padding: 12px; background: #f8fafc; color: #64748b; font-size: 10px; text-transform: uppercase; border-bottom: 2px solid #f1f5f9; }
         .history-table td { padding: 15px 12px; border-bottom: 1px solid #f1f5f9; font-weight: 600; color: #334155; font-size: 0.85rem; }
@@ -115,7 +109,7 @@
             <div class="portal-title">FEE ENTRY</div>
             <div class="header-right">
                 <div id="liveClock" class="live-clock">--:--:--</div>
-                <div class="sign-out" onclick="location.reload()">SIGN OUT <i class="fas fa-power-off"></i></div>
+                <div class="sign-out" onclick="location.reload()" style="cursor:pointer; color:#ffcccc; font-weight:800; font-size:0.75rem;">SIGN OUT <i class="fas fa-power-off"></i></div>
             </div>
         </div>
     </header>
@@ -145,8 +139,8 @@
             <div class="chart-container">
                 <div class="circular-progress">
                     <svg viewBox="0 0 140 140">
-                        <circle class="circle-bg"></circle>
-                        <circle id="progressCircle" class="circle-bar"></circle>
+                        <circle style="stroke:#e2e8f0; fill:none; stroke-width:12;" cx="70" cy="70" r="60"></circle>
+                        <circle id="progressCircle" class="circle-bar" cx="70" cy="70" r="60" fill="none" stroke-width="12"></circle>
                     </svg>
                     <div id="percentText" class="percentage-text">0%</div>
                 </div>
@@ -154,7 +148,7 @@
 
             <label>Transaction Date</label><input type="date" id="payDate">
 
-            <button class="btn-action btn-save" onclick="saveFee()">Sync to Server <i class="fas fa-cloud-upload-alt"></i></button>
+            <button class="btn-save btn-action" onclick="saveFee()">Sync to Server <i class="fas fa-cloud-upload-alt"></i></button>
             
             <div style="display: flex; gap: 15px; margin-top: 15px;">
                 <button id="receiptBtn" class="btn-action" onclick="generateReceipt()" style="background:var(--sky); flex:1; opacity:0.5;">Receipt <i class="fas fa-print"></i></button>
@@ -192,32 +186,40 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    const authorized = { "Mr. Ahmad": "Ahmad@123", "Ms. Roqiya": "Roqiya@123", "Ms. Jyothi": "Jyothi@123" };
-    const RECOVERY_PIN = "Paramount@07";
+    const authorized = { 
+        "Mr. Ahmad": "Ahmad@123", 
+        "Ms. Roqiya": "Roqiya@123", 
+        "Ms. Jyothi": "Jyothi@123" 
+    };
+
+    // UNIQUE RECOVERY PINS FOR EACH FACULTY
+    const recoveryPins = {
+        "Mr. Ahmad": "Ahmad@07",
+        "Ms. Roqiya": "Roqiya@07",
+        "Ms. Jyothi": "Jyothi@07"
+    };
 
     async function handleForgotPassword() {
         const selectedFaculty = document.getElementById('staffName').value;
-        
         if (!selectedFaculty) {
-            return Swal.fire('Action Required', 'Please select your name from the dropdown list first.', 'warning');
+            return Swal.fire('Action Required', 'Select your name first.', 'warning');
         }
 
         const { value: pin } = await Swal.fire({
-            title: `Recover Password for ${selectedFaculty}`,
+            title: `Recovery for ${selectedFaculty}`,
             input: 'password',
-            inputPlaceholder: 'Enter Recovery Password',
-            showCancelButton: true,
-            confirmButtonText: 'Reveal Password'
+            inputPlaceholder: 'Enter your personal Recovery PIN',
+            showCancelButton: true
         });
 
-        if (pin === RECOVERY_PIN) {
+        if (pin === recoveryPins[selectedFaculty]) {
             Swal.fire({
-                title: 'Access Granted',
-                html: `Password for <b>${selectedFaculty}</b> is:<br><h2 style="color:var(--forest); letter-spacing:2px;">${authorized[selectedFaculty]}</h2>`,
+                title: 'Secure Recovery',
+                html: `Your password is: <br><h2 style="color:var(--forest);">${authorized[selectedFaculty]}</h2>`,
                 icon: 'success'
             });
         } else if (pin) {
-            Swal.fire('Denied', 'Incorrect Recovery PIN.', 'error');
+            Swal.fire('Access Denied', 'Incorrect Personal Recovery PIN.', 'error');
         }
     }
 
@@ -230,7 +232,7 @@
             document.getElementById('feeLoginScreen').style.display = 'none';
             document.getElementById('feeApp').style.display = 'block';
             document.getElementById('staffDisplay').innerText = "SESSION ACTIVE: " + name;
-        } else { Swal.fire('Unauthorized', 'Invalid password for this faculty member.', 'error'); }
+        } else { Swal.fire('Unauthorized', 'Invalid password.', 'error'); }
     }
 
     const studentData = { "Pre-KG": ["Hanish Macharla", "Arjun Vihaar Illandula", "Thanu sree Allakunta", "Aadhya Gangaraboina", "Aadhya Sri Oggula", "Aadhyasri Shivagoni", "Afraha Begum", "Aliya Sultana", "Anvika Bandi", "Aradana Devara konda", "Devansh Bandi", "Hanvitha Mulkalapelli", "Harsha Vardhan Seenapelli", "Hiranya Bandi", "Jashritha Boina", "Konreddy Shreyanvi", "Kriyansh Sammeta", "Mohammed Mohiuddin Sayyad", "Nethra Narkurthi", "Reeyansh Bandi", "Rishi Myakala", "Rudransh Bandi", "Sanvika Bandi", "Shanvith Khatha", "Shishira Jalagam", "Shiva Sai Mekala", "Shree Rudhraveer Chevvu", "Shreyansh Gangaraboina", "Sreeja Thalla", "Srikrithini Myakala", "Srivatsav Vanam", "Sriyansh Mekala", "Thanvika Lakka", "Thrilokansh Vudari", "Ujjwal Chekka", "Vaishnavi Lakka", "Vedansh Myakala", "Vishnu Priya Molugu", "Vyshnav Tej Boina", "Yafiah Mohammad"], "KG-1": ["Aadhya Sri Amaravadi", "Aditya Manda", "Aadhya Jella", "Advaita Gauri Bandi", "Aizah Amna Shaik", "Akshara Singaram", "Bhahuveer Raj Somishetti", "Gayathri Erroju", "Hanvika Mulkalapelli", "Manvith Kondoju", "Sayyad Vajeed", "Mekala Manu sri", "Oliva Grace Vallapu", "Rithwik Oggula", "Rithwika Kandagatla", "Srimahi Chevvu", "Thanvesh Thalla", "Trishul Nanduri", "Yoganshika Nanduri", "Yusra Mohammad", "Zainul Abideen Syed"], "KG-2": ["Deekshanth Sammeta", "Hanshith Erroju", "Harika Bandi", "Himarsha Naini", "Karthik Vallepu", "Kruthika Bandi", "Rajavardhan Gampala", "Roshan Kaitha", "Sri Anshu Ayaan Lyadala", "Srihansh Bandi", "Srikshitha Guduri", "Varshith Gonela", "Adyasri Makala", "Anvik Boini", "Anvith Pokanati", "Awais Ur Rehman Mohammad", "Dakshu Pothuganti", "Hansith Reddy Katukuri", "Harshith Pokanati", "Jella Aditya", "Krishank Nallabothula", "Kundana Katkuri", "Munukuntla Revanth Rudhra", "Niraja Nethri Siluveru", "Pranav Mattepelli", "Sreenith Yadav Naini", "Uvan Reddy Dasari", "Zayan Mohammad", "Zoya Mohammed"], "Grade-1": ["Dheeraj Gattu", "Preetham Sannayala", "Shiva nandu Gonela", "Shrayan Nuthanakanti", "Sriyanksha Mandala", "Advitha Garige", "Harika Bandi", "Himansi Kondoju", "Izhaan Rahamath Syed", "Jaisurya Myakala", "Khadeeja Fathima", "Manaswini Dandugula", "Manusri Bandi", "Rithwik krishna Amaravadi", "Rohan Bandi", "Shiva Junnu", "Shivanandh Bandi", "Sridha Thalla", "Srinika Chengelly", "Sriyanshi Oggula", "Vishwak Chekka"], "Grade-2": ["Aliza Manha Shaik", "Dhruvan Reddy Katukuri", "Druthika Enugala", "Manaswini Bandi", "Rakshith Macharla", "Sathwika Katkuri", "Shalini Uppala", "Chandu Devarakonda", "Gnaneshwar Pokanati", "Hasnain Syed", "Koushik Siluveru", "Senen Desabattula", "Shivarajan Pothuganti"], "Grade-3": ["Nagavelly Manikanta", "Mirja Ismail", "Bandi Aryan", "Dandugula Mahesh Babu", "Bandi Tejasri", "Bandi Harshavardhan", "Gampala Vyshnavi", "Gampala Laxmi", "Garige Harshith", "Katkuri Hanish", "Katukuri Manideep", "MD Abdul Quddus", "Muppa Sathwik Patel", "Nuthanakanti Sansita", "Pasarakonda Ritwin", "Pinninti Rakshith Rao", "Rayi Sriman Adithya"], "Grade-4": ["Abdul Saqib Mohammad", "Anudeep Chintha", "Bhavan Bandi", "Harshavardhan Gonela", "Jayadev Chiluveru", "Mahaboob Syed", "Nandith Reddy Enugala", "Sai Charan Goud Mandala", "Sai Prasanna Keerthi", "Ajmeri Shaik", "Akshith Chiluveru", "Jayasri Myakala", "Rahul Kanjarla", "Saketh Devarakonda"], "Grade-5": ["Adya Reddy Vangala", "Kowshik Patel Muppa", "Siri Singaram", "Srikar Mandala", "Abdus Salaam MD", "Akshith Ram Kalvacharla", "Jaffar Anas Shaik", "Khaja Azeemuddin Mohammed", "Nihan Mohammed", "Saif Shaik", "Saketh Renukuntla", "Sreeja Dasari", "Vidhaatri Sahani"], "Grade-6": ["Abdul Razzak Mohammad", "Anudeepthi Chintha", "Saketh Ranaveni", "Shiva Sri Katukuri", "Aklees Shaik", "Akshya Kalvacharla", "Prince Katkuri"], "Grade-7": ["Manikanta Sannayala", "Sreeyan Reddy Karra", "Jayadhithya Chiluveru"], "Grade-8": ["Sathwika Nagavelly", "Vyshnavi Uppala", "Akshaya Gampala", "Ganesh Oggula", "Gayathri Renukuntla", "Khaja Sadeemuddin Mohammed"] };
@@ -286,6 +288,7 @@
         const combinedPaid = studentLifetimePaid + payingNow;
         const due = total - combinedPaid;
         document.getElementById('dueDisplay').innerText = "₹ " + (due < 0 ? 0 : due);
+        
         let pct = (total > 0) ? (combinedPaid / total) * 100 : 0;
         if(pct > 100) pct = 100;
         const circle = document.getElementById('progressCircle');
@@ -300,12 +303,14 @@
         const paid = document.getElementById('payingAmount').value;
         const date = document.getElementById('payDate').value;
         if(!name || !paid) return Swal.fire('Error', 'Amount is required.', 'warning');
+        
         const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
         const fullStamp = new Date().toLocaleDateString() + ", " + currentTime;
         lastReceiptData = { name, cls, paid, total, date, teacher: activeTeacher };
         const record = { total, paid, recordedBy: activeTeacher, date, timestamp: fullStamp };
+
         db.ref(`fee_records/${cls}/${name}`).push(record).then(() => {
-            Swal.fire('Success', 'Sync complete.', 'success');
+            Swal.fire('Success', 'Record Synced.', 'success');
             document.getElementById('payingAmount').value = '';
             document.getElementById('receiptBtn').style.opacity = "1";
             fetchExistingFeeData(); 
@@ -316,11 +321,12 @@
         if(!lastReceiptData) return;
         const { name, cls, paid, date, teacher } = lastReceiptData;
         const win = window.open('', '', 'height=600,width=400');
-        win.document.write(`<html><body style="padding:40px; font-family:sans-serif; text-align:center;">
+        win.document.write(`<html><body style="padding:40px; font-family:sans-serif; text-align:center; border: 2px solid #eee;">
             <img src="logo.png" style="height:60px;"><h2 style="color:#006633;">PARAMOUNT SCHOOL</h2><hr>
-            <p><b>Student:</b> ${name}<br><b>Class:</b> ${cls}<br><b>Date:</b> ${date}</p>
-            <h1>PAID: ₹ ${paid}</h1><hr>
-            <p>Admin: ${teacher}</p>
+            <p><b>Student:</b> ${name} (${cls})</p>
+            <p><b>Date:</b> ${date}</p>
+            <h1>₹ ${paid}</h1>
+            <hr><p>Admin: ${teacher}</p>
         </body></html>`);
         win.document.close(); win.print();
     }
