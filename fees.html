@@ -3,320 +3,367 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Fee Portal | Paramount School</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Segoe+UI:wght@400;700&display=swap" rel="stylesheet">
+    <title>Progress Portal | Paramount School</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Segoe+UI:wght@400;700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/png" href="logo.png">
     <style>
-        :root { --forest: #006633; --gold: #ffd700; --danger: #c62828; --light: #f4f7f6; --sky: #2196f3; --dark-green: #004d26; }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; } 
-        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; padding-bottom: 50px; }
-
-        /* --- LOGIN SCREEN (EXACT REFERENCE MATCH) --- */
-        .overlay-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f0f2f5; z-index: 1000; display: flex; justify-content: center; align-items: center; padding: 15px; }
-        .auth-box { background: white; padding: 40px 25px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); width: 100%; max-width: 420px; border-bottom: 5px solid var(--forest); text-align: center; }
-        .auth-logo { height: 75px; margin-bottom: 10px; }
-        .auth-branding-text h2 { margin: 5px 0 0; font-family: 'Montserrat', sans-serif; font-size: 1.6rem; font-weight: 800; color: var(--forest); }
-        .auth-input { width: 100%; padding: 12px; border-radius: 10px; border: 2px solid #eee; margin-bottom: 15px; text-align: center; font-size: 16px; height: 50px; outline: none; transition: 0.3s; }
-        .auth-input:focus { border-color: var(--forest); }
-        .auth-buttons { display: flex; flex-direction: column; gap: 12px; margin-top: 10px; }
-        .btn-unlock { background: linear-gradient(135deg, var(--forest), #004d26); color: white; padding: 15px; border-radius: 50px; font-weight: bold; border: 2px solid var(--gold); cursor: pointer; width: 100%; height: 55px; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.3s; }
-        .btn-return { background: #f1f5f9; color: #475569; padding: 12px; border-radius: 50px; font-weight: 700; border: 1px solid #e2e8f0; cursor: pointer; font-size: 0.8rem; text-transform: uppercase; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .auth-links { margin-top: 20px; display: flex; flex-direction: column; gap: 8px; }
-        .auth-links a { color: #999; font-size: 12px; font-weight: bold; text-decoration: underline; cursor: pointer; }
-
-        /* --- PREMIUM RESPONSIVE HEADER --- */
-        header { background: var(--forest); color: white; padding: 15px 5%; box-shadow: 0 4px 12px rgba(0,0,0,0.15); position: sticky; top: 0; z-index: 50; border-bottom: 4px solid var(--gold); }
-        .header-content { display: flex; align-items: center; justify-content: space-between; max-width: 1400px; margin: 0 auto; width: 100%; flex-wrap: wrap; }
-        .header-left { display: flex; align-items: center; gap: 10px; }
-        .header-logo { height: 45px; }
-        .school-name-main { font-family: 'Montserrat', sans-serif; font-size: 1.2rem; font-weight: 800; letter-spacing: 0.5px; }
-        .school-name-sub { font-family: 'Montserrat', sans-serif; font-size: 0.65rem; color: var(--gold); font-weight: 700; text-transform: uppercase; }
-        .portal-title { font-family: 'Montserrat', sans-serif; font-size: 1.1rem; font-weight: 800; text-transform: uppercase; padding-left: 15px; border-left: 2px solid rgba(255,255,255,0.3); }
-        .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
-        .live-clock { font-family: 'Montserrat', sans-serif; font-size: 0.7rem; font-weight: 700; color: white; background: rgba(0,0,0,0.2); padding: 4px 10px; border-radius: 5px; }
-        .sign-out { color: #ffcccc; font-size: 0.65rem; text-decoration: none; font-weight: 800; text-transform: uppercase; display: flex; align-items: center; gap: 4px; cursor: pointer; }
-
-        @media (max-width: 768px) {
-            .portal-title { flex-basis: 100%; border-left: none; padding-left: 0; text-align: center; margin-top: 10px; font-size: 1rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 5px; }
-            .header-left { flex-grow: 1; }
+        :root { --forest: #006633; --gold: #ffd700; --danger: #e53935; --light: #f4f7f6; --premium-gradient: linear-gradient(135deg, #006633 0%, #004d26 100%); }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Segoe UI', sans-serif; background: #eef2f1; margin: 0; padding-bottom: 100px; overflow-x: hidden; }
+        
+        /* PREMIUM LOGIN SECTION */
+        .auth-container {
+            background: linear-gradient(rgba(0, 50, 25, 0.8), rgba(0, 50, 25, 0.9)), url('https://images.unsplash.com/photo-1523050853064-185e6b7ce248?auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            border-radius: 25px;
+            padding: 40px 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            border-bottom: 5px solid var(--gold);
         }
+        .auth-logo-small { height: 70px; width: auto; margin-bottom: 15px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3)); }
+        .auth-container h3 { color: var(--gold) !important; font-weight: 800; margin: 0 0 20px 0; text-transform: uppercase; letter-spacing: 1px; }
+        .auth-container label { color: white !important; font-weight: 700; font-size: 11px; margin-bottom: 8px; }
 
-        /* --- DASHBOARD ELEMENTS --- */
-        .container { max-width: 650px; margin: 20px auto; padding: 0 15px; }
-        .card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); border-top: 8px solid var(--forest); margin-bottom: 25px; }
-        h3 { color: var(--forest); margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; display: flex; align-items: center; gap: 8px; font-size: 1.1rem; }
-        label { display: block; font-size: 10px; font-weight: 900; color: #777; margin: 12px 0 5px; text-transform: uppercase; }
-        select, input { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #eee; font-size: 16px; outline: none; background: #fafafa; height: 50px; }
-        .calc-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        @media (max-width: 500px) { .calc-row { grid-template-columns: 1fr; } }
-        .due-box { background: #fff5f5; border: 1px solid #ffcdd2; padding: 15px; border-radius: 15px; text-align: center; margin-top: 20px; }
-        .due-box strong { font-size: 24px; color: var(--danger); }
-        .audit-info { font-size: 10px; color: #666; background: #f0f4f2; padding: 10px; border-radius: 8px; border-left: 4px solid var(--gold); margin-bottom: 15px; display: none; }
+        header { background: var(--forest); color: white; padding: 20px 15px; border-bottom: 4px solid var(--gold); }
+        .header-content { display: flex; flex-direction: column; align-items: center; gap: 10px; max-width: 1200px; margin: 0 auto; text-align: center; }
+        .header-logo { height: 60px; width: auto; }
+        .school-text { display: flex; flex-direction: column; line-height: 1.1; }
+        .school-name-main { font-family: 'Montserrat', sans-serif; font-size: 1.4rem; font-weight: 800; letter-spacing: 1px; }
+        .school-name-sub { font-family: 'Montserrat', sans-serif; font-size: 0.7rem; color: var(--gold); font-weight: 700; text-transform: uppercase; }
+        .page-brand { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 1.2rem; color: white; text-transform: uppercase; margin-top: 5px; }
 
-        /* CIRCULAR PROGRESS */
-        .chart-container { display: flex; flex-direction: column; align-items: center; margin-top: 25px; padding: 20px; background: #f9f9f9; border-radius: 15px; border: 1px solid #eee; }
-        .circular-progress { position: relative; width: 120px; height: 120px; }
-        .circular-progress svg { width: 120px; height: 120px; transform: rotate(-90deg); }
-        .circular-progress circle { fill: none; stroke-width: 10; stroke-linecap: round; cx: 60; cy: 60; r: 50; }
-        .circle-bg { stroke: #eee; }
-        .circle-bar { stroke: var(--forest); stroke-dasharray: 314.15; stroke-dashoffset: 314.15; transition: stroke-dashoffset 1s ease; }
-        .percentage-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-weight: 800; font-size: 1.2rem; color: #333; }
+        .container { width: 100%; max-width: 900px; margin: 15px auto; padding: 0 10px; }
+        .card { background: white; padding: 20px; border-radius: 25px; box-shadow: 0 10px 40px rgba(0,0,0,0.06); margin-bottom: 20px; border-top: 5px solid var(--gold); }
+        h3 { color: var(--forest); text-align: center; font-size: 1.1rem; text-transform: uppercase; margin-bottom: 20px; font-weight: 800; }
 
-        /* HISTORY TABLE */
-        .history-table-wrapper { width: 100%; overflow-x: auto; border-radius: 10px; border: 1px solid #f1f5f9; }
-        .history-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; min-width: 450px; }
-        .history-table th { text-align: left; padding: 12px; background: #f8fafc; color: #64748b; font-size: 10px; text-transform: uppercase; border-bottom: 2px solid #eee; }
-        .history-table td { padding: 12px 10px; border-bottom: 1px solid #f1f5f9; font-weight: 600; color: #334155; }
-        .amt-cell { color: var(--forest); font-weight: 800; }
-        .time-cell { color: #94a3b8; font-size: 0.75rem; }
+        .setup-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
+        label { display: block; font-size: 10px; font-weight: 900; color: #777; margin-bottom: 5px; text-transform: uppercase; }
+        select, .search-input { width: 100%; padding: 14px; border-radius: 12px; border: 2px solid #eee; background: #fafafa; font-weight: 700; outline: none; }
+        
+        #searchBox { display: none; margin-bottom: 20px; }
+        .search-input { border: 2px solid var(--forest); background: white; }
 
-        .btn-action { width: 100%; color: white; border: 2px solid var(--gold); padding: 16px; border-radius: 50px; font-weight: 700; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; border: none; }
-        .btn-save { background: var(--forest); margin-top: 25px; height: 55px; }
+        .student-mark-card { background: white; border: 1px solid #eee; border-radius: 20px; padding: 15px; margin-bottom: 15px; }
+        .student-name { font-weight: 800; color: var(--forest); font-size: 1rem; display: block; margin-bottom: 15px; border-bottom: 1px solid #f1f1f1; padding-bottom: 8px; }
+        
+        .marks-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+        .subject-box { background: #f9fcf9; padding: 8px; border-radius: 12px; border: 1px solid #f0f0f0; text-align: center; }
+        .subject-box label { font-size: 9px; margin-bottom: 5px; color: #555; }
+        
+        /* DASH PLACEHOLDER STYLING */
+        .marks-grid input { width: 100%; text-align: center; padding: 10px 2px; font-weight: 800; border-radius: 8px; border: 2px solid #ddd; font-size: 16px; outline: none; background: white; }
+        
+        .split-inputs { display: flex; gap: 4px; }
+        .split-inputs div { flex: 1; }
+        .split-inputs label { font-size: 7px; margin-bottom: 2px; }
+
+        .stats-bar { display: flex; justify-content: space-between; margin-top: 15px; padding: 12px; background: #f1f8f4; border-radius: 12px; font-size: 11px; font-weight: 800; color: var(--forest); }
+        .audit-footer { font-size: 9px; color: #999; font-style: italic; margin-top: 10px; text-align: left; padding-top: 8px; border-top: 1px dashed #eee; display: none; }
+
+        .btn-fetch { background: var(--forest); color: white; border: none; border-radius: 12px; padding: 15px; font-weight: 800; width: 100%; margin-top: 15px; cursor: pointer; text-transform: uppercase; font-size: 11px; }
+        .action-row { display: none; gap: 10px; margin-top: 20px; }
+        .btn-save { flex: 2; background: var(--premium-gradient); color: white; border: none; padding: 18px; border-radius: 50px; font-weight: 800; cursor: pointer; text-transform: uppercase; font-size: 12px; box-shadow: 0 5px 15px rgba(0,102,51,0.2); }
+        .btn-delete { flex: 1; background: white; color: var(--danger); border: 2px solid var(--danger); padding: 18px; border-radius: 50px; font-weight: 800; cursor: pointer; text-transform: uppercase; font-size: 12px; }
+
+        @media (min-width: 768px) {
+            .header-content { flex-direction: row; justify-content: center; gap: 20px; text-align: left; }
+            .divider-v { display: block; }
+            .setup-grid { grid-template-columns: 1fr 1fr; }
+            .marks-grid { grid-template-columns: repeat(6, 1fr); }
+            .page-brand { margin-top: 0; font-size: 1.5rem; border-left: 2px solid rgba(255,255,255,0.3); padding-left: 20px; }
+        }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
-<body>
+<body autocomplete="off">
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<header>
+    <div class="header-content">
+        <img src="logo.png" class="header-logo" alt="Logo">
+        <div class="school-text">
+            <span class="school-name-main">PARAMOUNT</span>
+            <span class="school-name-sub">ENGLISH MEDIUM SCHOOL</span>
+        </div>
+        <div class="page-brand">PROGRESS PORTAL</div>
+    </div>
+</header>
+
+<div class="container">
+    <div class="auth-container" id="authCard">
+        <img src="logo.png" class="auth-logo-small" alt="School Logo" onerror="this.style.display='none'">
+        
+        <input type="text" style="display:none" tabindex="-1">
+        <input type="password" style="display:none" tabindex="-1">
+
+        <h3>Teacher Access</h3>
+        <div style="max-width:320px; margin:0 auto;">
+            <label>Confirm Your Name</label>
+            <select id="teacherSelect" onchange="verifyStaff()" style="margin-top:10px; background: white; border: none; box-shadow: 0 8px 20px rgba(0,0,0,0.15);">
+                <option value="">-- Select Your Name --</option>
+                <option value="Mr. Shaik Ahmad">Mr. Shaik Ahmad</option>
+                <option value="Ms. Riha">Ms. Riha (IIT)</option>
+                <option value="Ms. Raniya Zainab">Ms. Raniya Zainab (Physics)</option>
+                <option value="Ms. Roqiya Begum">Ms. Roqiya Begum</option>
+                <option value="Ms. G.Rajitha">Ms. G.Rajitha</option>
+                <option value="Ms. Ameena Tabassum">Ms. Ameena Tabassum</option>
+                <option value="Ms. Shaik Shabana">Ms. Shaik Shabana</option>
+                <option value="Ms. B.Ravali">Ms. B.Ravali</option>
+                <option value="Ms. L.Kalyani">Ms. L.Kalyani</option>
+                <option value="Ms. J.Alaya Sree">Ms. J.Alaya Sree</option>
+                <option value="Ms. S.Sujatha">Ms. S.Sujatha</option>
+                <option value="Ms. J.Prathibha">Ms. J.Prathibha</option>
+                <option value="Ms. P.Shailaja">Ms. P.Shailaja</option>
+                <option value="Ms. A.Jhansi Rani">Ms. A.Jhansi Rani</option>
+                <option value="Ms. S. Neelima">Ms. S. Neelima</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="card" id="selectionCard" style="display:none;">
+        <h3><i class="fas fa-edit"></i> Marksheet Manager</h3>
+        <div class="setup-grid">
+            <div><label>Class</label><select id="examClass" onchange="loadStudentMarksheet()">
+                <option value="">-- Select Class --</option>
+                <option value="Pre-KG">Pre-KG</option><option value="KG-1">KG-1</option><option value="KG-2">KG-2</option>
+                <option value="Grade-1">Grade-1</option><option value="Grade-2">Grade-2</option><option value="Grade-3">Grade-3</option>
+                <option value="Grade-4">Grade-4</option><option value="Grade-5">Grade-5</option><option value="Grade-6">Grade-6</option>
+                <option value="Grade-7">Grade-7</option><option value="Grade-8">Grade-8</option>
+            </select></div>
+            <div><label>Exam Type</label><select id="examType" onchange="loadStudentMarksheet()">
+                <option value="FA-1">FA-1</option><option value="FA-2">FA-2</option><option value="FA-3">FA-3</option>
+                <option value="SA-1">SA-1</option><option value="SA-2">SA-2</option>
+            </select></div>
+        </div>
+        <button class="btn-fetch" onclick="fetchExistingData()">
+            <i class="fas fa-sync-alt"></i> Load Records
+        </button>
+    </div>
+
+    <div id="searchBox">
+        <input type="text" class="search-input" id="studentSearch" placeholder="🔍 Find student by name..." onkeyup="filterStudents()">
+    </div>
+
+    <div id="marksList"></div>
+    
+    <div class="action-row" id="actionRow">
+        <button id="saveAllBtn" class="btn-save" onclick="saveAllMarks()">Save All Records <i class="fas fa-cloud-upload-alt"></i></button>
+        <button class="btn-delete" onclick="deleteAllMarks()">Clear Data <i class="fas fa-trash-alt"></i></button>
+    </div>
+
+    <div style="text-align:center; margin-top:20px;">
+        <a href="index.html" style="color:#666; font-size:12px; text-decoration:none; font-weight:700;"><i class="fas fa-arrow-left"></i> BACK TO DASHBOARD</a>
+    </div>
+</div>
+
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-
-<div id="feeLoginScreen" class="overlay-screen">
-    <div class="auth-box">
-        <img src="logo.png" class="auth-logo">
-        <div class="auth-branding-text"><h2>PARAMOUNT</h2><p style="color:var(--gold); font-weight:800; text-transform:uppercase; font-size:11px;">Fee Entry Access</p></div>
-        <br>
-        <select id="staffName" class="auth-input">
-            <option value="">-- Select Staff --</option>
-            <option value="Mr. Ahmad">Mr. Ahmad</option>
-            <option value="Ms. Roqiya">Ms. Roqiya</option>
-            <option value="Ms. Jyothi">Ms. Jyothi</option>
-        </select>
-        <input type="password" id="staffPass" class="auth-input" placeholder="Password" onkeypress="if(event.key === 'Enter') unlockFees()">
-        
-        <div class="auth-buttons">
-            <button onclick="unlockFees()" class="btn-unlock">Unlock Portal <i class="fas fa-unlock"></i></button>
-            <button onclick="window.location.href='index.html'" class="btn-return"><i class="fas fa-arrow-left"></i> Return to Portal</button>
-        </div>
-        
-        <div class="auth-links">
-            <a onclick="handleForgotPassword()">Forgot Password?</a>
-        </div>
-    </div>
-</div>
-
-<div id="feeApp" style="display:none;">
-    <header>
-        <div class="header-content">
-            <div class="header-left">
-                <img src="logo.png" class="header-logo">
-                <div class="school-branding">
-                    <span class="school-name-main">PARAMOUNT</span>
-                    <span class="school-name-sub">SCHOOL</span>
-                </div>
-            </div>
-            <div class="header-right">
-                <div id="liveClock" class="live-clock">--:--:--</div>
-                <div class="sign-out" onclick="location.reload()">
-                    <i class="fas fa-sign-out-alt"></i> SIGN OUT
-                </div>
-            </div>
-            <div class="portal-title">FEE ENTRY PORTAL</div>
-        </div>
-    </header>
-
-    <div class="container">
-        <div class="card">
-            <div id="staffDisplay" style="text-align:center; font-weight:bold; color:var(--forest); background:#e8f5e9; padding:10px; border-radius:12px; margin-bottom:15px; font-size:12px;"></div>
-            <h3><i class="fas fa-file-invoice-dollar"></i> Update Records</h3>
-            
-            <label>Class</label>
-            <select id="feeClass" onchange="populateStudents()"></select>
-
-            <label>Student Name</label>
-            <select id="feeStudent" onchange="fetchExistingFeeData()"><option value="">-- Select Student --</option></select>
-
-            <div id="auditTrail" class="audit-info">
-                <i class="fas fa-history"></i> Last update by <b id="lastUpdatedBy"></b> at <b id="lastUpdatedTime"></b>
-            </div>
-
-            <div class="calc-row">
-                <div><label>Total Fee</label><input type="number" id="totalFee" oninput="calculateRealTime()"></div>
-                <div><label>Paying Now</label><input type="number" id="payingAmount" oninput="calculateRealTime()"></div>
-            </div>
-
-            <div class="due-box"><span>BALANCE DUE</span><br><strong id="dueDisplay">₹ 0</strong></div>
-
-            <div class="chart-container">
-                <div class="circular-progress">
-                    <svg viewBox="0 0 120 120">
-                        <circle class="circle-bg"></circle>
-                        <circle id="progressCircle" class="circle-bar"></circle>
-                    </svg>
-                    <div id="percentText" class="percentage-text">0%</div>
-                </div>
-            </div>
-
-            <label>Date</label><input type="date" id="payDate">
-
-            <button class="btn-action btn-save" onclick="saveFee()">Update Records <i class="fas fa-save"></i></button>
-            
-            <div style="display: flex; gap: 10px; margin-top: 10px;">
-                <button id="receiptBtn" class="btn-action" onclick="generateReceipt()" style="background:var(--sky); border-color:white; flex:1; opacity:0.5; font-size: 13px;">Receipt <i class="fas fa-print"></i></button>
-                <button class="btn-action" onclick="clearStudentData()" style="background:var(--danger); border-color:white; flex:1; font-size: 13px;">Wipe <i class="fas fa-trash-alt"></i></button>
-            </div>
-        </div>
-
-        <div class="card history-card" id="historyCard" style="display:none;">
-            <h3><i class="fas fa-list-ul"></i> Payment History</h3>
-            <div class="history-table-wrapper">
-                <table class="history-table">
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Amount</th>
-                            <th>Faculty</th>
-                            <th>Time</th>
-                        </tr>
-                    </thead>
-                    <tbody id="historyTableBody"></tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
-
 <script>
-    function updateClock() {
-        const now = new Date();
-        document.getElementById('liveClock').innerText = now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit', hour12:true});
-    }
-    setInterval(updateClock, 1000); updateClock();
-
     const firebaseConfig = { apiKey: "AIzaSyDRYk9KOK-ga0c88dnYMsAoifW2NJTd_Y8", databaseURL: "https://paramount-school-d55bc-default-rtdb.firebaseio.com", projectId: "paramount-school-d55bc" };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    const authorized = { "Mr. Ahmad": "Ahmad@123", "Ms. Roqiya": "Roqiya@123", "Ms. Jyothi": "Jyothi@123" };
-    const recoveryPins = { "Mr. Ahmad": "Ahmad@07", "Ms. Roqiya": "Roqiya@07", "Ms. Jyothi": "Jyothi@07" };
-    let activeTeacher = ""; let studentLifetimePaid = 0; let lastReceiptData = null;
-
-    async function handleForgotPassword() {
-        const selectedFaculty = document.getElementById('staffName').value;
-        if (!selectedFaculty) return Swal.fire('Select Name', 'Please select your name from the list.', 'warning');
-        const { value: pin } = await Swal.fire({ title: 'Recovery PIN', input: 'password', inputPlaceholder: 'Enter Recovery PIN for ' + selectedFaculty, showCancelButton: true });
-        if (pin === recoveryPins[selectedFaculty]) {
-            Swal.fire('Recovery Success', `Your password is: <b>${authorized[selectedFaculty]}</b>`, 'success');
-        } else if (pin) { Swal.fire('Error', 'Incorrect PIN', 'error'); }
-    }
-
-    function unlockFees() {
-        const name = document.getElementById('staffName').value;
-        const pass = document.getElementById('staffPass').value;
-        if(pass === authorized[name]) {
-            activeTeacher = name;
-            document.getElementById('feeLoginScreen').style.display = 'none';
-            document.getElementById('feeApp').style.display = 'block';
-            document.getElementById('staffDisplay').innerText = "Logged in: " + name;
-        } else { Swal.fire('Error', 'Invalid Credentials', 'error'); }
-    }
+    let authenticatedTeacher = "";
+    const registry = { "Mr. Shaik Ahmad": "Ahmad@123", "Ms. Roqiya Begum": "Roqiya@123", "Ms. G.Rajitha": "Rajitha@123", "Ms. Ameena Tabassum": "Ameena@123", "Ms. Shaik Shabana": "Shabana@123", "Ms. B.Ravali": "Ravali@123", "Ms. L.Kalyani": "Kalyani@123", "Ms. J.Alaya Sree": "Alaya@123", "Ms. S.Sujatha": "Sujatha@123", "Ms. J.Prathibha": "Prathibha@123", "Ms. P.Shailaja": "Phailaja@123", "Ms. A.Jhansi Rani": "Jhansi@123", "Ms. S. Neelima": "Neelima@123", "Ms. Riha": "Riha@123", "Ms. Raniya Zainab": "Raniya@123" };
 
     const studentData = { "Pre-KG": ["Hanish Macharla", "Arjun Vihaar Illandula", "Thanu sree Allakunta", "Aadhya Gangaraboina", "Aadhya Sri Oggula", "Aadhyasri Shivagoni", "Afraha Begum", "Aliya Sultana", "Anvika Bandi", "Aradana Devara konda", "Devansh Bandi", "Hanvitha Mulkalapelli", "Harsha Vardhan Seenapelli", "Hiranya Bandi", "Jashritha Boina", "Konreddy Shreyanvi", "Kriyansh Sammeta", "Mohammed Mohiuddin Sayyad", "Nethra Narkurthi", "Reeyansh Bandi", "Rishi Myakala", "Rudransh Bandi", "Sanvika Bandi", "Shanvith Khatha", "Shishira Jalagam", "Shiva Sai Mekala", "Shree Rudhraveer Chevvu", "Shreyansh Gangaraboina", "Sreeja Thalla", "Srikrithini Myakala", "Srivatsav Vanam", "Sriyansh Mekala", "Thanvika Lakka", "Thrilokansh Vudari", "Ujjwal Chekka", "Vaishnavi Lakka", "Vedansh Myakala", "Vishnu Priya Molugu", "Vyshnav Tej Boina", "Yafiah Mohammad"], "KG-1": ["Aadhya Sri Amaravadi", "Aditya Manda", "Aadhya Jella", "Advaita Gauri Bandi", "Aizah Amna Shaik", "Akshara Singaram", "Bhahuveer Raj Somishetti", "Gayathri Erroju", "Hanvika Mulkalapelli", "Manvith Kondoju", "Sayyad Vajeed", "Mekala Manu sri", "Oliva Grace Vallapu", "Rithwik Oggula", "Rithwika Kandagatla", "Srimahi Chevvu", "Thanvesh Thalla", "Trishul Nanduri", "Yoganshika Nanduri", "Yusra Mohammad", "Zainul Abideen Syed"], "KG-2": ["Deekshanth Sammeta", "Hanshith Erroju", "Harika Bandi", "Himarsha Naini", "Karthik Vallepu", "Kruthika Bandi", "Rajavardhan Gampala", "Roshan Kaitha", "Sri Anshu Ayaan Lyadala", "Srihansh Bandi", "Srikshitha Guduri", "Varshith Gonela", "Adyasri Makala", "Anvik Boini", "Anvith Pokanati", "Awais Ur Rehman Mohammad", "Dakshu Pothuganti", "Hansith Reddy Katukuri", "Harshith Pokanati", "Jella Aditya", "Krishank Nallabothula", "Kundana Katkuri", "Munukuntla Revanth Rudhra", "Niraja Nethri Siluveru", "Pranav Mattepelli", "Sreenith Yadav Naini", "Uvan Reddy Dasari", "Zayan Mohammad", "Zoya Mohammed"], "Grade-1": ["Dheeraj Gattu", "Preetham Sannayala", "Shiva nandu Gonela", "Shrayan Nuthanakanti", "Sriyanksha Mandala", "Advitha Garige", "Harika Bandi", "Himansi Kondoju", "Izhaan Rahamath Syed", "Jaisurya Myakala", "Khadeeja Fathima", "Manaswini Dandugula", "Manusri Bandi", "Rithwik krishna Amaravadi", "Rohan Bandi", "Shiva Junnu", "Shivanandh Bandi", "Sridha Thalla", "Srinika Chengelly", "Sriyanshi Oggula", "Vishwak Chekka"], "Grade-2": ["Aliza Manha Shaik", "Dhruvan Reddy Katukuri", "Druthika Enugala", "Manaswini Bandi", "Rakshith Macharla", "Sathwika Katkuri", "Shalini Uppala", "Chandu Devarakonda", "Gnaneshwar Pokanati", "Hasnain Syed", "Koushik Siluveru", "Senen Desabattula", "Shivarajan Pothuganti"], "Grade-3": ["Nagavelly Manikanta", "Mirja Ismail", "Bandi Aryan", "Dandugula Mahesh Babu", "Bandi Tejasri", "Bandi Harshavardhan", "Gampala Vyshnavi", "Gampala Laxmi", "Garige Harshith", "Katkuri Hanish", "Katukuri Manideep", "MD Abdul Quddus", "Muppa Sathwik Patel", "Nuthanakanti Sansita", "Pasarakonda Ritwin", "Pinninti Rakshith Rao", "Rayi Sriman Adithya"], "Grade-4": ["Abdul Saqib Mohammad", "Anudeep Chintha", "Bhavan Bandi", "Harshavardhan Gonela", "Jayadev Chiluveru", "Mahaboob Syed", "Nandith Reddy Enugala", "Sai Charan Goud Mandala", "Sai Prasanna Keerthi", "Ajmeri Shaik", "Akshith Chiluveru", "Jayasri Myakala", "Rahul Kanjarla", "Saketh Devarakonda"], "Grade-5": ["Adya Reddy Vangala", "Kowshik Patel Muppa", "Siri Singaram", "Srikar Mandala", "Abdus Salaam MD", "Akshith Ram Kalvacharla", "Jaffar Anas Shaik", "Khaja Azeemuddin Mohammed", "Nihan Mohammed", "Saif Shaik", "Saketh Renukuntla", "Sreeja Dasari", "Vidhaatri Sahani"], "Grade-6": ["Abdul Razzak Mohammad", "Anudeepthi Chintha", "Saketh Ranaveni", "Shiva Sri Katukuri", "Aklees Shaik", "Akshya Kalvacharla", "Prince Katkuri"], "Grade-7": ["Manikanta Sannayala", "Sreeyan Reddy Karra", "Jayadhithya Chiluveru"], "Grade-8": ["Sathwika Nagavelly", "Vyshnavi Uppala", "Akshaya Gampala", "Ganesh Oggula", "Gayathri Renukuntla", "Khaja Sadeemuddin Mohammed"] };
 
-    const classSel = document.getElementById('feeClass');
-    classSel.innerHTML = '<option value="">-- Choose Class --</option>' + Object.keys(studentData).map(c => `<option value="${c}">${c}</option>`).join('');
+    async function verifyStaff() {
+        const name = document.getElementById('teacherSelect').value;
+        if(!name) return;
+        document.getElementById('teacherSelect').blur();
+        
+        const { value: pw } = await Swal.fire({ 
+            title: `Verification`, 
+            text: `Enter password for ${name}`, 
+            input: 'password', 
+            inputAttributes: { autocomplete: 'new-password' },
+            showCancelButton: true, 
+            confirmButtonColor: '#006633' 
+        });
 
-    function populateStudents() {
-        const cls = document.getElementById('feeClass').value;
-        const select = document.getElementById('feeStudent');
-        select.innerHTML = '<option value="">-- Select Student --</option>';
-        if(studentData[cls]) studentData[cls].forEach(s => select.innerHTML += `<option value="${s}">${s}</option>`);
+        if(pw === registry[name]) { 
+            authenticatedTeacher = name; 
+            document.getElementById('selectionCard').style.display = 'block'; 
+            document.getElementById('authCard').style.display = 'none'; 
+            Swal.fire('Logged In', `Welcome ${name}`, 'success'); 
+        } else { 
+            Swal.fire('Error', 'Incorrect Password', 'error'); 
+            document.getElementById('teacherSelect').value = ""; 
+        }
     }
 
-    async function fetchExistingFeeData() {
-        const cls = document.getElementById('feeClass').value;
-        const name = document.getElementById('feeStudent').value;
-        const auditDiv = document.getElementById('auditTrail');
-        const historyTable = document.getElementById('historyTableBody');
-        const historyCard = document.getElementById('historyCard');
-        if(!cls || !name) { auditDiv.style.display = 'none'; historyCard.style.display = 'none'; return; }
-        const snap = await db.ref(`fee_records/${cls}/${name}`).once('value');
-        const data = snap.val();
-        studentLifetimePaid = 0; let totalVal = ""; let lastStaff = ""; let lastTime = ""; let tableRows = "";
-        if(data) {
-            Object.keys(data).forEach(key => {
-                const record = data[key];
-                studentLifetimePaid += parseFloat(record.paid || 0);
-                totalVal = record.total; lastStaff = record.recordedBy || "Admin"; lastTime = record.timestamp || record.date;
-                let timeOnly = record.timestamp && record.timestamp.includes(',') ? record.timestamp.split(',')[1].trim() : "N/A";
-                tableRows += `<tr><td>${record.date || 'N/A'}</td><td class="amt-cell">₹ ${record.paid}</td><td>${record.recordedBy || 'Admin'}</td><td>${timeOnly}</td></tr>`;
-            });
-            document.getElementById('totalFee').value = totalVal;
-            document.getElementById('lastUpdatedBy').innerText = lastStaff;
-            document.getElementById('lastUpdatedTime').innerText = lastTime;
-            auditDiv.style.display = 'block'; historyTable.innerHTML = tableRows; historyCard.style.display = 'block';
-        } else { document.getElementById('totalFee').value = ""; auditDiv.style.display = 'none'; historyCard.style.display = 'none'; }
-        calculateRealTime();
-    }
-
-    function calculateRealTime() {
-        const total = parseFloat(document.getElementById('totalFee').value) || 0;
-        const payingNow = parseFloat(document.getElementById('payingAmount').value) || 0;
-        const combinedPaid = studentLifetimePaid + payingNow;
-        const due = total - combinedPaid;
-        document.getElementById('dueDisplay').innerText = "₹ " + (due < 0 ? 0 : due);
-        let pct = (total > 0) ? (combinedPaid / total) * 100 : 0;
-        if(pct > 100) pct = 100;
-        const circle = document.getElementById('progressCircle');
-        circle.style.strokeDashoffset = (314.15 - (314.15 * pct / 100)) + "px";
-        document.getElementById('percentText').innerText = Math.round(pct) + "%";
-    }
-
-    function saveFee() {
-        const cls = document.getElementById('feeClass').value;
-        const name = document.getElementById('feeStudent').value;
-        const total = document.getElementById('totalFee').value;
-        const paid = document.getElementById('payingAmount').value;
-        const date = document.getElementById('payDate').value;
-        if(!name || !paid) return Swal.fire('Error', 'Missing Data', 'warning');
-        const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
-        const fullStamp = new Date().toLocaleDateString() + ", " + currentTime;
-        lastReceiptData = { name, cls, paid, total, date, teacher: activeTeacher };
-        const record = { total, paid, recordedBy: activeTeacher, date, timestamp: fullStamp };
-        db.ref(`fee_records/${cls}/${name}`).push(record).then(() => {
-            Swal.fire('Saved!', 'Record updated.', 'success');
-            document.getElementById('payingAmount').value = '';
-            document.getElementById('receiptBtn').style.opacity = "1";
-            fetchExistingFeeData(); 
+    function filterStudents() {
+        const query = document.getElementById('studentSearch').value.toLowerCase();
+        document.querySelectorAll('.student-mark-card').forEach(card => {
+            const name = card.getAttribute('data-student').toLowerCase();
+            card.style.display = name.includes(query) ? "block" : "none";
         });
     }
 
-    function generateReceipt() {
-        if(!lastReceiptData) return;
-        const { name, cls, paid, date, teacher } = lastReceiptData;
-        const win = window.open('', '', 'height=600,width=400');
-        win.document.write(`<html><body style="padding:20px; font-family:sans-serif; text-align:center; border: 2px solid #eee;">
-            <center><img src="logo.png" style="height:60px;"><br><h2 style="color:#006633;">PARAMOUNT SCHOOL</h2><hr></center>
-            <p><strong>Student:</strong> ${name} (${cls})</p>
-            <p><strong>Date:</strong> ${date}</p>
-            <p style="font-size: 20px; color:green;"><strong>Paid Amount:</strong> ₹ ${paid}</p>
-            <hr><p style="text-align:center; font-size:12px;">Processed by: ${teacher}</p>
-        </body></html>`);
-        win.document.close(); win.print();
+    function loadStudentMarksheet() {
+        const cls = document.getElementById('examClass').value;
+        const exam = document.getElementById('examType').value;
+        const list = document.getElementById('marksList');
+        if(!cls || !authenticatedTeacher) return;
+
+        document.getElementById('searchBox').style.display = "block";
+        let subjects = ["TEL", "HIN", "ENG", "MAT", "SOC"];
+        if (["Grade-6", "Grade-7", "Grade-8"].includes(cls)) subjects.push("PHY", "BIO", "IIT");
+        else if (cls === "Grade-5") subjects.push("SCI", "IIT");
+        else subjects.push("SCI");
+
+        const isGrade6to8 = ["Grade-6", "Grade-7", "Grade-8"].includes(cls);
+        const isFA = exam.startsWith("FA");
+
+        let html = "";
+        studentData[cls].forEach((name, index) => {
+            const studentId = name.replace(/\s+/g, '');
+            html += `<div class="student-mark-card" data-student="${name}">
+                <span class="student-name">${index + 1}. ${name}</span>
+                <div class="marks-grid">
+                    ${subjects.map(sub => {
+                        if(sub === "IIT") {
+                            return `<div class="subject-box" style="background:#e3f2fd;"><label>IIT (50)</label><input type="text" placeholder="-" class="sub-input total-inp" data-sub="IIT" oninput="validateInput(this, 50)"></div>`;
+                        }
+                        if(isGrade6to8) {
+                            return `<div class="subject-box"><label>${sub}</label><div class="split-inputs">
+                                <div><label>EXT</label><input type="text" placeholder="-" class="sub-input ext" data-sub="${sub}" oninput="validateInput(this, ${isFA?40:80})"></div>
+                                <div><label>INT</label><input type="text" placeholder="-" class="sub-input int" data-sub="${sub}" oninput="validateInput(this, ${isFA?10:20})"></div>
+                            </div></div>`;
+                        } else {
+                            return `<div class="subject-box"><label>${sub}</label><input type="text" placeholder="-" class="sub-input total-inp" data-sub="${sub}" oninput="validateInput(this, ${isFA?50:100})"></div>`;
+                        }
+                    }).join('')}
+                </div>
+                <div class="stats-bar">
+                    <span>TOTAL: <span class="res-total">0</span></span>
+                    <span>%: <span class="res-perc">0%</span></span>
+                    <span>GRADE: <span class="res-grade">-</span></span>
+                </div>
+                <div class="audit-footer" id="audit-${studentId}"></div>
+            </div>`;
+        });
+        list.innerHTML = html;
+        document.getElementById('actionRow').style.display = 'flex';
     }
 
-    async function clearStudentData() {
-        const cls = document.getElementById('feeClass').value;
-        const name = document.getElementById('feeStudent').value;
-        if (!name) return Swal.fire('Error', 'Select student', 'warning');
-        const { value: pass } = await Swal.fire({ title: 'Auth Required', text: 'Enter password to clear history', input: 'password' });
-        if (pass === authorized[activeTeacher]) {
-            db.ref(`fee_records/${cls}/${name}`).remove().then(() => {
-                Swal.fire('Deleted', '', 'success'); fetchExistingFeeData();
+    function validateInput(input, max) {
+        if(input.value === "") { calculateStats(input); return; }
+        let val = parseInt(input.value);
+        if (val > max) input.value = max;
+        if (val < 0) input.value = 0;
+        calculateStats(input);
+    }
+
+    function calculateStats(input) {
+        const card = input.closest('.student-mark-card');
+        const exam = document.getElementById('examType').value;
+        const cls = document.getElementById('examClass').value;
+        const isFA = exam.startsWith("FA");
+        const isGrade6to8 = ["Grade-6", "Grade-7", "Grade-8"].includes(cls);
+
+        let totalObtained = 0, totalMax = 0;
+
+        card.querySelectorAll('.subject-box').forEach(box => {
+            const subLabel = box.querySelector('label').innerText;
+            if(subLabel.includes("IIT")) {
+                totalObtained += parseInt(box.querySelector('input').value) || 0;
+                totalMax += 50;
+            } else if (isGrade6to8) {
+                const ext = parseInt(box.querySelector('.ext').value) || 0;
+                const int = parseInt(box.querySelector('.int').value) || 0;
+                totalObtained += (ext + int);
+                totalMax += (isFA ? 50 : 100);
+            } else {
+                totalObtained += parseInt(box.querySelector('.total-inp').value) || 0;
+                totalMax += (isFA ? 50 : 100);
+            }
+        });
+
+        const perc = totalMax > 0 ? ((totalObtained / totalMax) * 100).toFixed(1) : 0;
+        const roundPerc = Math.round(perc);
+        let grade = "F";
+        if(roundPerc >= 91) grade = "A1"; else if(roundPerc >= 81) grade = "A2"; else if(roundPerc >= 71) grade = "B1";
+        else if(roundPerc >= 61) grade = "B2"; else if(roundPerc >= 51) grade = "C1"; else if(roundPerc >= 35) grade = "D";
+
+        card.querySelector('.res-total').innerText = totalObtained;
+        card.querySelector('.res-perc').innerText = perc + "%";
+        card.querySelector('.res-grade').innerText = grade;
+    }
+
+    async function fetchExistingData() {
+        const cls = document.getElementById('examClass').value;
+        const exam = document.getElementById('examType').value;
+        if(!cls || !exam) return;
+        Swal.fire({ title: 'Establishing Cloud Sync...', didOpen: () => Swal.showLoading() });
+        db.ref(`progress_cards/${cls}/${exam}`).once('value', (snap) => {
+            const data = snap.val() || {};
+            Swal.close();
+            document.querySelectorAll('.student-mark-card').forEach(card => {
+                const name = card.getAttribute('data-student');
+                const studentId = name.replace(/\s+/g, '');
+                if(data[name]) {
+                    Object.keys(data[name].marks).forEach(sub => {
+                        const mData = data[name].marks[sub];
+                        if (typeof mData === 'object') {
+                            if(card.querySelector(`.ext[data-sub="${sub}"]`)) card.querySelector(`.ext[data-sub="${sub}"]`).value = mData.ext || "";
+                            if(card.querySelector(`.int[data-sub="${sub}"]`)) card.querySelector(`.int[data-sub="${sub}"]`).value = mData.int || "";
+                        } else {
+                            if(card.querySelector(`.total-inp[data-sub="${sub}"]`)) card.querySelector(`.total-inp[data-sub="${sub}"]`).value = mData || "";
+                        }
+                    });
+                    calculateStats(card.querySelector('input'));
+                    const audit = document.getElementById(`audit-${studentId}`);
+                    if(data[name].updatedBy) {
+                        audit.innerHTML = `Last modified: <b>${data[name].updatedBy}</b> on <b>${data[name].updatedAt}</b>`;
+                        audit.style.display = "block";
+                    }
+                }
+            });
+        });
+    }
+
+    async function saveAllMarks() {
+        const cls = document.getElementById('examClass').value;
+        const exam = document.getElementById('examType').value;
+        const isGrade6to8 = ["Grade-6", "Grade-7", "Grade-8"].includes(cls);
+        const updates = {};
+        const timeStamp = new Date().toLocaleString();
+
+        document.querySelectorAll('.student-mark-card').forEach(card => {
+            const name = card.getAttribute('data-student');
+            const studentMarks = {};
+            card.querySelectorAll('.subject-box').forEach(box => {
+                const subInp = box.querySelector('input');
+                const subName = subInp.getAttribute('data-sub');
+                if (subName === "IIT") { studentMarks[subName] = subInp.value || 0; }
+                else if (isGrade6to8) { studentMarks[subName] = { ext: box.querySelector('.ext').value || 0, int: box.querySelector('.int').value || 0 }; }
+                else { studentMarks[subName] = box.querySelector('.total-inp').value || 0; }
+            });
+            updates[`progress_cards/${cls}/${exam}/${name}`] = {
+                marks: studentMarks, total: card.querySelector('.res-total').innerText,
+                percentage: card.querySelector('.res-perc').innerText, grade: card.querySelector('.res-grade').innerText,
+                updatedBy: authenticatedTeacher, updatedAt: timeStamp
+            };
+        });
+        db.ref().update(updates).then(() => Swal.fire('Synced!', 'Records safely stored.', 'success'));
+    }
+
+    async function deleteAllMarks() {
+        const cls = document.getElementById('examClass').value;
+        const exam = document.getElementById('examType').value;
+        const res = await Swal.fire({ title: 'Are you sure?', text: `This will wipe all marks for ${cls} ${exam}.`, icon: 'warning', showCancelButton: true });
+        if (res.isConfirmed) {
+            db.ref(`progress_cards/${cls}/${exam}`).remove().then(() => {
+                Swal.fire('Deleted', 'Database cleared.', 'success');
+                loadStudentMarksheet();
             });
         }
     }
-    document.getElementById('payDate').valueAsDate = new Date();
 </script>
 </body>
 </html>
