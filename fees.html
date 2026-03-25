@@ -10,10 +10,10 @@
     <style>
         :root { --forest: #006633; --gold: #ffd700; --danger: #c62828; --light: #f4f7f6; --sky: #2196f3; --dark-green: #004d26; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; } 
-        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; padding-bottom: 50px; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; padding-bottom: 50px; }
 
         /* --- LOGIN SCREEN --- */
-        .overlay-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f0f2f5; z-index: 1000; display: flex; justify-content: center; align-items: center; padding: 15px; }
+        .overlay-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--light); z-index: 1000; display: flex; justify-content: center; align-items: center; padding: 15px; }
         .auth-box { background: white; padding: 40px 25px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); width: 100%; max-width: 420px; border-bottom: 5px solid var(--forest); text-align: center; }
         .auth-logo { height: 75px; margin-bottom: 10px; }
         .auth-branding-text h2 { margin: 5px 0 0; font-family: 'Montserrat', sans-serif; font-size: 1.6rem; font-weight: 800; color: var(--forest); }
@@ -25,23 +25,20 @@
         .auth-links { margin-top: 20px; display: flex; flex-direction: column; gap: 8px; }
         .auth-links a { color: #999; font-size: 12px; font-weight: bold; text-decoration: underline; cursor: pointer; }
 
-        /* --- HEADER --- */
+        /* --- HEADER (RESTORED ORIGINAL) --- */
         header { background: var(--forest); color: white; padding: 15px 5%; box-shadow: 0 4px 12px rgba(0,0,0,0.15); position: sticky; top: 0; z-index: 50; border-bottom: 4px solid var(--gold); }
-        .header-content { display: flex; align-items: center; justify-content: space-between; max-width: 1400px; margin: 0 auto; width: 100%; flex-wrap: wrap; }
-        .header-left { display: flex; align-items: center; gap: 10px; }
+        .header-content { display: flex; align-items: center; max-width: 1400px; margin: 0 auto; width: 100%; }
+        .header-left { display: flex; align-items: center; gap: 10px; padding-right: 15px; border-right: 2px solid rgba(255,255,255,0.3); }
         .header-logo { height: 45px; }
-        .school-name-main { font-family: 'Montserrat', sans-serif; font-size: 1.2rem; font-weight: 800; letter-spacing: 0.5px; }
-        .school-name-sub { font-family: 'Montserrat', sans-serif; font-size: 0.65rem; color: var(--gold); font-weight: 700; text-transform: uppercase; }
-        .portal-title { font-family: 'Montserrat', sans-serif; font-size: 1.1rem; font-weight: 800; text-transform: uppercase; padding-left: 15px; border-left: 2px solid rgba(255,255,255,0.3); }
+        .school-branding { display: flex; flex-direction: column; line-height: 1.1; }
+        .school-name-main { font-family: 'Montserrat', sans-serif; font-size: 1.1rem; font-weight: 800; letter-spacing: 0.5px; }
+        .school-name-sub { font-family: 'Montserrat', sans-serif; font-size: 0.6rem; color: var(--gold); font-weight: 700; text-transform: uppercase; }
+        .portal-title { padding-left: 15px; font-family: 'Montserrat', sans-serif; font-size: 1.2rem; font-weight: 800; text-transform: uppercase; flex-grow: 1; }
         .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
         .live-clock { font-family: 'Montserrat', sans-serif; font-size: 0.7rem; font-weight: 700; color: white; background: rgba(0,0,0,0.2); padding: 4px 10px; border-radius: 5px; }
         .sign-out { color: #ffcccc; font-size: 0.65rem; text-decoration: none; font-weight: 800; text-transform: uppercase; display: flex; align-items: center; gap: 4px; cursor: pointer; }
 
-        @media (max-width: 768px) {
-            .portal-title { flex-basis: 100%; border-left: none; padding-left: 0; text-align: center; margin-top: 10px; font-size: 1rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 5px; }
-        }
-
-        /* --- DASHBOARD --- */
+        /* --- MAIN FORM --- */
         .container { max-width: 650px; margin: 20px auto; padding: 0 15px; }
         .card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); border-top: 8px solid var(--forest); margin-bottom: 25px; }
         h3 { color: var(--forest); margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; display: flex; align-items: center; gap: 8px; font-size: 1.1rem; }
@@ -51,15 +48,16 @@
         .due-box { background: #fff5f5; border: 1px solid #ffcdd2; padding: 15px; border-radius: 15px; text-align: center; margin-top: 20px; }
         .due-box strong { font-size: 24px; color: var(--danger); }
         
-        /* GAUGE */
-        .chart-container { display: flex; flex-direction: column; align-items: center; margin-top: 25px; background: #f9f9f9; padding: 20px; border-radius: 15px; border: 1px solid #eee; }
+        /* CIRCULAR PROGRESS */
+        .chart-container { display: flex; flex-direction: column; align-items: center; margin-top: 25px; padding: 20px; background: #f9f9f9; border-radius: 15px; border: 1px solid #eee; }
         .circular-progress { position: relative; width: 120px; height: 120px; }
         .circular-progress svg { width: 120px; height: 120px; transform: rotate(-90deg); }
         .circular-progress circle { fill: none; stroke-width: 10; stroke-linecap: round; cx: 60; cy: 60; r: 50; }
-        .circle-bar { stroke: var(--forest); stroke-dasharray: 314.15; stroke-dashoffset: 314.15; transition: stroke-dashoffset 1s ease; }
+        .circle-bg { stroke: #eee; }
+        .circle-bar { stroke: var(--forest); stroke-dasharray: 314.15; stroke-dashoffset: 314.15; transition: stroke-dashoffset 0.8s ease; }
         .percentage-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-weight: 800; font-size: 1.2rem; color: #333; }
 
-        /* TABLE */
+        /* HISTORY TABLE */
         .history-table-wrapper { width: 100%; overflow-x: auto; border-radius: 10px; border: 1px solid #f1f5f9; }
         .history-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; min-width: 450px; }
         .history-table th { text-align: left; padding: 12px; background: #f8fafc; color: #64748b; font-size: 10px; text-transform: uppercase; border-bottom: 2px solid #eee; }
@@ -68,6 +66,12 @@
 
         .btn-action { width: 100%; color: white; border: none; padding: 16px; border-radius: 50px; font-weight: 700; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .btn-save { background: var(--forest); margin-top: 25px; height: 55px; }
+
+        @media (max-width: 600px) {
+            .portal-title { display: none; }
+            .header-left { border-right: none; }
+            .calc-row { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
@@ -103,8 +107,11 @@
                 <img src="logo.png" class="header-logo">
                 <div class="school-branding"><span class="school-name-main">PARAMOUNT</span><span class="school-name-sub">SCHOOL</span></div>
             </div>
-            <div class="header-right"><div id="liveClock" class="live-clock">--:--:--</div><div class="sign-out" onclick="location.reload()">SIGN OUT</div></div>
             <div class="portal-title">FEE PORTAL</div>
+            <div class="header-right">
+                <div id="liveClock" class="live-clock">--:--:--</div>
+                <div class="sign-out" onclick="location.reload()"><i class="fas fa-sign-out-alt"></i> SIGN OUT</div>
+            </div>
         </div>
     </header>
 
@@ -114,20 +121,24 @@
             <h3><i class="fas fa-file-invoice-dollar"></i> Update Records</h3>
             <label>Class</label><select id="feeClass" onchange="populateStudents()"></select>
             <label>Student Name</label><select id="feeStudent" onchange="fetchExistingFeeData()"><option value="">-- Select Student --</option></select>
+            
             <div class="calc-row">
                 <div><label>Total Fee</label><input type="number" id="totalFee" oninput="calculateRealTime()"></div>
                 <div><label>Paying Now</label><input type="number" id="payingAmount" oninput="calculateRealTime()"></div>
             </div>
+
             <div class="due-box"><span>BALANCE DUE</span><br><strong id="dueDisplay">₹ 0</strong></div>
+
             <div class="chart-container">
                 <div class="circular-progress">
                     <svg viewBox="0 0 120 120">
-                        <circle style="stroke:#eee; fill:none;" cx="60" cy="60" r="50"></circle>
+                        <circle class="circle-bg" cx="60" cy="60" r="50"></circle>
                         <circle id="progressCircle" class="circle-bar" cx="60" cy="60" r="50"></circle>
                     </svg>
                     <div id="percentText" class="percentage-text">0%</div>
                 </div>
             </div>
+
             <label>Date</label><input type="date" id="payDate">
             <button class="btn-action btn-save" onclick="saveFee()">Update Records <i class="fas fa-save"></i></button>
         </div>
