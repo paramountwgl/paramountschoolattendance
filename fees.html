@@ -27,59 +27,29 @@
 
         /* --- HEADER --- */
         header { 
-            background: var(--forest); 
-            color: white; 
-            padding: 15px 5%; 
-            border-bottom: 4px solid var(--gold); 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            position: sticky; top: 0; z-index: 50;
+            background: var(--forest); color: white; padding: 15px 5%; border-bottom: 4px solid var(--gold); 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15); position: sticky; top: 0; z-index: 50;
         }
-        .header-content { 
-            display: flex; 
-            align-items: center; 
-            justify-content: center;
-            max-width: 1400px; 
-            margin: 0 auto; 
-            gap: 20px;
-        }
-        .header-left { 
-            display: flex; 
-            align-items: center; 
-            gap: 15px; 
-        }
+        .header-content { display: flex; align-items: center; justify-content: center; max-width: 1400px; margin: 0 auto; gap: 20px; }
+        .header-left { display: flex; align-items: center; gap: 15px; }
         .header-logo { height: 60px; width: auto; }
         .school-branding { display: flex; flex-direction: column; line-height: 1.1; }
         .school-name-main { font-family: 'Montserrat', sans-serif; font-size: 1.5rem; font-weight: 800; letter-spacing: 1px; }
         .school-name-sub { font-family: 'Montserrat', sans-serif; font-size: 0.7rem; color: white; font-weight: 600; text-transform: uppercase; }
-        
-        .divider-line {
-            width: 2px;
-            height: 40px;
-            background-color: rgba(255,255,255,0.3);
-            margin: 0 5px;
-        }
-
-        .portal-label { 
-            font-family: 'Montserrat', sans-serif; 
-            font-size: 1.5rem; 
-            font-weight: 800; 
-            text-transform: uppercase; 
-            color: white;
-            white-space: nowrap;
-        }
+        .divider-line { width: 2px; height: 40px; background-color: rgba(255,255,255,0.3); margin: 0 5px; }
+        .portal-label { font-family: 'Montserrat', sans-serif; font-size: 1.5rem; font-weight: 800; text-transform: uppercase; color: white; white-space: nowrap; }
 
         /* --- MAIN FORM --- */
         .container { max-width: 650px; margin: 20px auto; padding: 0 15px; }
         .card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); border-top: 8px solid var(--forest); margin-bottom: 25px; }
         h3 { color: var(--forest); margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; display: flex; align-items: center; gap: 8px; font-size: 1.1rem; }
         label { display: block; font-size: 10px; font-weight: 900; color: #777; margin: 12px 0 5px; text-transform: uppercase; }
-        select, input { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #eee; font-size: 16px; outline: none; background: #fafafa; height: 50px; }
+        select, input { width: 100%; padding: 12px; border-radius: 10px; border: 2px solid #eee; font-size: 16px; outline: none; background: #fafafa; height: 50px; }
         
         .calc-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .due-box { background: #fff5f5; border: 1px solid #ffcdd2; padding: 15px; border-radius: 15px; text-align: center; margin-top: 20px; }
         .due-box strong { font-size: 24px; color: var(--danger); }
         
-        /* GAUGE */
         .chart-container { display: flex; flex-direction: column; align-items: center; margin-top: 25px; background: #f9f9f9; padding: 20px; border-radius: 15px; border: 1px solid #eee; }
         .circular-progress { position: relative; width: 120px; height: 120px; }
         .circular-progress svg { width: 120px; height: 120px; transform: rotate(-90deg); }
@@ -91,12 +61,13 @@
         .btn-action { color: white; border: none; padding: 16px; border-radius: 50px; font-weight: 700; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; flex: 1; text-transform: uppercase; font-size: 13px; }
         .btn-save { background: var(--forest); }
         .btn-wipe { background: var(--danger); }
-        .btn-receipt { background: var(--sky); width: 100%; margin-top: 10px; opacity: 0.5; }
+        .btn-receipt { background: var(--sky); width: 100%; margin-top: 10px; }
 
-        .history-table-wrapper { width: 100%; overflow-x: auto; border-radius: 10px; border: 1px solid #f1f5f9; }
+        .history-table-wrapper { width: 100%; overflow-x: auto; border-radius: 10px; border: 1px solid #f1f5f9; margin-top: 10px; }
         .history-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; min-width: 450px; }
         .history-table th { text-align: left; padding: 12px; background: #f8fafc; color: #64748b; font-size: 10px; text-transform: uppercase; border-bottom: 2px solid #eee; }
         .history-table td { padding: 12px 10px; border-bottom: 1px solid #f1f5f9; font-weight: 600; color: #334155; }
+        .amt-cell { color: var(--forest); font-weight: 800; }
 
         @media (max-width: 768px) {
             header { padding: 10px 2%; }
@@ -228,9 +199,11 @@
         const n = document.getElementById('staffName').value, p = document.getElementById('staffPass').value;
         if(p === authorized[n]) {
             activeTeacher = n;
+            // CRITICAL FIX: Ensure display changes correctly
             document.getElementById('feeLoginScreen').style.display = 'none';
             document.getElementById('feeApp').style.display = 'block';
-            document.getElementById('staffDisplay').innerText = "Logged in: " + n;
+            document.getElementById('staffDisplay').innerText = "Active User: " + n;
+            Swal.fire({ title: 'Welcome', icon: 'success', timer: 1000, showConfirmButton: false });
         } else { Swal.fire('Error', 'Invalid credentials', 'error'); }
     }
 
@@ -259,7 +232,11 @@
             document.getElementById('totalFee').value = totalV;
             document.getElementById('historyTableBody').innerHTML = rows;
             document.getElementById('historyCard').style.display = 'block';
-        } else { document.getElementById('totalFee').value = ""; document.getElementById('historyCard').style.display = 'none'; }
+        } else { 
+            document.getElementById('totalFee').value = ""; 
+            document.getElementById('historyCard').style.display = 'none'; 
+            document.getElementById('historyTableBody').innerHTML = "";
+        }
         calculateRealTime();
     }
 
@@ -279,29 +256,30 @@
         const stamp = new Date().toLocaleDateString() + ", " + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
         lastReceiptData = { n, c, p, t, d, activeTeacher };
         db.ref(`fee_records/${c}/${n}`).push({ total: t, paid: p, recordedBy: activeTeacher, date: d, timestamp: stamp }).then(() => {
-            Swal.fire('Saved', '', 'success'); document.getElementById('payingAmount').value = ''; 
-            document.getElementById('receiptBtn').style.opacity = '1';
+            Swal.fire('Saved', '', 'success'); 
+            document.getElementById('payingAmount').value = ''; 
             fetchExistingFeeData();
         });
     }
 
     function generateReceipt() {
-        if(!lastReceiptData) return;
+        if(!lastReceiptData) return Swal.fire('No Data', 'Update a record first to print.', 'info');
         const { n, c, p, d, activeTeacher } = lastReceiptData;
         const recId = "REC-" + Date.now().toString().slice(-6);
         const win = window.open('', '', 'height=800,width=700');
         win.document.write(`
         <html>
         <head>
-            <title>Receipt - ${n}</title>
+            <title>Fee Receipt - ${n}</title>
             <style>
-                body { font-family: 'Segoe UI', sans-serif; padding: 40px; color: #333; }
-                .receipt-container { border: 2px solid #006633; padding: 30px; position: relative; background: #fff; }
+                body { font-family: 'Segoe UI', sans-serif; padding: 40px; color: #333; position: relative; }
+                .receipt-container { border: 2px solid #006633; padding: 30px; position: relative; background: #fff; overflow: hidden; }
                 .watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-30deg); opacity: 0.05; width: 350px; z-index: 0; }
                 .header { text-align: center; border-bottom: 3px solid #006633; padding-bottom: 20px; margin-bottom: 30px; position: relative; z-index: 1; }
                 .school-name { font-size: 28px; font-weight: 800; color: #006633; margin: 0; }
-                .meta-info { display: flex; justify-content: space-between; margin-bottom: 30px; font-size: 14px; position: relative; z-index: 1; }
-                table { width: 100%; border-collapse: collapse; margin-bottom: 40px; position: relative; z-index: 1; }
+                .receipt-label { background: #006633; color: white; padding: 5px 20px; border-radius: 50px; display: inline-block; margin-top: 15px; font-weight: 800; }
+                .meta-info { display: flex; justify-content: space-between; margin-bottom: 30px; font-size: 14px; z-index: 1; }
+                table { width: 100%; border-collapse: collapse; margin-bottom: 40px; z-index: 1; }
                 th { background: #f4f4f4; padding: 12px; text-align: left; border: 1px solid #ddd; }
                 td { padding: 15px 12px; border: 1px solid #ddd; font-weight: 600; }
                 .stamp { border: 3px solid #e53935; color: #e53935; padding: 10px 20px; border-radius: 10px; font-weight: 900; transform: rotate(-15deg); display: inline-block; font-size: 24px; opacity: 0.8; }
@@ -313,7 +291,7 @@
                 <div class="header">
                     <img src="logo.png" style="height: 70px; margin-bottom: 10px;">
                     <div class="school-name">PARAMOUNT SCHOOL</div>
-                    <div style="font-weight:800; color:white; background:#006633; display:inline-block; padding:5px 20px; border-radius:20px; margin-top:10px;">FEE RECEIPT</div>
+                    <div class="receipt-label">OFFICIAL FEE RECEIPT</div>
                 </div>
                 <div class="meta-info">
                     <div><strong>Receipt No:</strong> ${recId}<br><strong>Date:</strong> ${d}</div>
@@ -321,9 +299,7 @@
                 </div>
                 <table>
                     <thead><tr><th>Description</th><th style="text-align: right;">Amount Paid</th></tr></thead>
-                    <tbody>
-                        <tr><td>School Tuition Fee Payment</td><td style="text-align: right;">₹ ${p}</td></tr>
-                    </tbody>
+                    <tbody><tr><td>School Tuition Fee Payment</td><td style="text-align: right;">₹ ${p}</td></tr></tbody>
                 </table>
                 <div style="display:flex; justify-content: space-between; align-items: flex-end;">
                     <div class="stamp">PAID</div>
@@ -333,7 +309,7 @@
                     </div>
                 </div>
             </div>
-            <script>window.onload = function() { window.print(); window.close(); }</script>
+            <script>window.onload = function() { window.print(); window.close(); }
         </body>
         </html>`);
         win.document.close();
@@ -347,7 +323,7 @@
             db.ref(`fee_records/${c}/${n}`).remove().then(() => {
                 Swal.fire('Deleted', '', 'success'); fetchExistingFeeData();
             });
-        }
+        } else if(pass) { Swal.fire('Denied', 'Incorrect Password', 'error'); }
     }
 
     document.getElementById('payDate').valueAsDate = new Date();
