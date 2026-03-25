@@ -25,32 +25,48 @@
         .auth-links { margin-top: 20px; display: flex; flex-direction: column; gap: 8px; }
         .auth-links a { color: #999; font-size: 12px; font-weight: bold; text-decoration: underline; cursor: pointer; }
 
-        /* --- HEADER --- */
+        /* --- UPDATED PREMIUM HEADER WITH TIME & SIGNOUT --- */
         header { 
-            background: var(--forest); color: white; padding: 15px 5%; border-bottom: 4px solid var(--gold); 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15); position: sticky; top: 0; z-index: 50;
+            background: var(--forest); 
+            color: white; 
+            padding: 12px 3%; 
+            border-bottom: 4px solid var(--gold); 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            position: sticky; top: 0; z-index: 50;
         }
-        .header-content { display: flex; align-items: center; justify-content: center; max-width: 1400px; margin: 0 auto; gap: 20px; }
-        .header-left { display: flex; align-items: center; gap: 15px; }
-        .header-logo { height: 60px; width: auto; }
+        .header-content { 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            max-width: 1400px; 
+            margin: 0 auto; 
+        }
+        .brand-group { display: flex; align-items: center; gap: 15px; }
+        .header-logo { height: 55px; width: auto; }
         .school-branding { display: flex; flex-direction: column; line-height: 1.1; }
-        .school-name-main { font-family: 'Montserrat', sans-serif; font-size: 1.5rem; font-weight: 800; letter-spacing: 1px; }
-        .school-name-sub { font-family: 'Montserrat', sans-serif; font-size: 0.7rem; color: white; font-weight: 600; text-transform: uppercase; }
-        .divider-line { width: 2px; height: 40px; background-color: rgba(255,255,255,0.3); margin: 0 5px; }
-        .portal-label { font-family: 'Montserrat', sans-serif; font-size: 1.5rem; font-weight: 800; text-transform: uppercase; color: white; white-space: nowrap; }
+        .school-name-main { font-family: 'Montserrat', sans-serif; font-size: 1.3rem; font-weight: 800; letter-spacing: 1px; }
+        .school-name-sub { font-family: 'Montserrat', sans-serif; font-size: 0.65rem; color: white; font-weight: 600; text-transform: uppercase; }
+        
+        .divider-line { width: 2px; height: 35px; background-color: rgba(255,255,255,0.3); margin: 0 10px; }
+        .portal-label { font-family: 'Montserrat', sans-serif; font-size: 1.3rem; font-weight: 800; text-transform: uppercase; white-space: nowrap; }
+
+        .nav-tools { display: flex; align-items: center; gap: 20px; }
+        .live-clock { font-family: 'Montserrat', sans-serif; font-weight: 800; color: var(--gold); font-size: 13px; letter-spacing: 0.5px; }
+        .btn-signout { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 8px 15px; border-radius: 8px; font-size: 11px; font-weight: 800; text-transform: uppercase; cursor: pointer; transition: 0.3s; }
+        .btn-signout:hover { background: var(--danger); border-color: var(--danger); }
 
         /* --- MAIN FORM --- */
-        .container { max-width: 650px; margin: 20px auto; padding: 0 15px; }
+        .container { max-width: 650px; margin: 25px auto; padding: 0 15px; }
         .card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); border-top: 8px solid var(--forest); margin-bottom: 25px; }
         h3 { color: var(--forest); margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; display: flex; align-items: center; gap: 8px; font-size: 1.1rem; }
         label { display: block; font-size: 10px; font-weight: 900; color: #777; margin: 12px 0 5px; text-transform: uppercase; }
-        select, input { width: 100%; padding: 12px; border-radius: 10px; border: 2px solid #eee; font-size: 16px; outline: none; background: #fafafa; height: 50px; }
+        select, input { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #eee; font-size: 16px; outline: none; background: #fafafa; height: 50px; }
         
         .calc-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .due-box { background: #fff5f5; border: 1px solid #ffcdd2; padding: 15px; border-radius: 15px; text-align: center; margin-top: 20px; }
         .due-box strong { font-size: 24px; color: var(--danger); }
         
-        .chart-container { display: flex; flex-direction: column; align-items: center; margin-top: 25px; background: #f9f9f9; padding: 20px; border-radius: 15px; border: 1px solid #eee; }
+        .chart-container { display: flex; flex-direction: column; align-items: center; margin-top: 25px; padding: 20px; background: #f9f9f9; border-radius: 15px; border: 1px solid #eee; }
         .circular-progress { position: relative; width: 120px; height: 120px; }
         .circular-progress svg { width: 120px; height: 120px; transform: rotate(-90deg); }
         .circular-progress circle { fill: none; stroke-width: 10; stroke-linecap: round; cx: 60; cy: 60; r: 50; }
@@ -67,16 +83,19 @@
         .history-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; min-width: 450px; }
         .history-table th { text-align: left; padding: 12px; background: #f8fafc; color: #64748b; font-size: 10px; text-transform: uppercase; border-bottom: 2px solid #eee; }
         .history-table td { padding: 12px 10px; border-bottom: 1px solid #f1f5f9; font-weight: 600; color: #334155; }
-        .amt-cell { color: var(--forest); font-weight: 800; }
 
-        @media (max-width: 768px) {
-            header { padding: 10px 2%; }
-            .header-content { gap: 10px; }
-            .header-logo { height: 50px; }
-            .school-name-main { font-size: 1.1rem; }
-            .school-name-sub { font-size: 0.55rem; }
-            .portal-label { font-size: 1.1rem; }
-            .divider-line { height: 30px; }
+        @media (max-width: 850px) {
+            .nav-tools { gap: 10px; }
+            .live-clock { font-size: 11px; }
+            .school-name-sub, .divider-line { display: none; }
+        }
+
+        @media (max-width: 600px) {
+            .brand-group { flex-direction: row; }
+            .school-name-main { font-size: 1rem; }
+            .portal-label { font-size: 1rem; }
+            .nav-tools { flex-direction: column; align-items: flex-end; gap: 2px; }
+            .btn-signout { padding: 4px 8px; font-size: 9px; }
             .calc-row { grid-template-columns: 1fr; }
         }
     </style>
@@ -101,7 +120,7 @@
         <input type="password" id="staffPass" class="auth-input" placeholder="Password" onkeypress="if(event.key === 'Enter') unlockFees()">
         <div class="auth-buttons">
             <button onclick="unlockFees()" class="btn-unlock">Unlock Portal <i class="fas fa-unlock"></i></button>
-            <button onclick="window.location.href='index.html'" class="btn-return">Return to Portal</button>
+            <button onclick="window.location.href='index.html'" class="btn-return">Return to Dashboard</button>
         </div>
         <div class="auth-links"><a onclick="handleForgotPassword()">Forgot Password?</a></div>
     </div>
@@ -110,26 +129,28 @@
 <div id="feeApp" style="display:none;">
     <header>
         <div class="header-content">
-            <div class="header-left">
-                <img src="logo.png" class="header-logo">
-                <div class="school-branding">
-                    <span class="school-name-main">PARAMOUNT</span>
-                    <span class="school-name-sub">ENGLISH MEDIUM SCHOOL</span>
+            <div class="brand-group">
+                <div class="header-left">
+                    <img src="logo.png" class="header-logo">
+                    <div class="school-branding">
+                        <span class="school-name-main">PARAMOUNT</span>
+                        <span class="school-name-sub">ENGLISH MEDIUM SCHOOL</span>
+                    </div>
                 </div>
+                <div class="divider-line"></div>
+                <div class="portal-label">FEE PORTAL</div>
             </div>
-            <div class="divider-line"></div>
-            <div class="portal-label">FEE PORTAL</div>
+            
+            <div class="nav-tools">
+                <div id="liveClock" class="live-clock">00:00:00</div>
+                <button class="btn-signout" onclick="location.reload()"><i class="fas fa-sign-out-alt"></i> Exit</button>
+            </div>
         </div>
     </header>
 
     <div class="container">
-        <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-            <div id="liveClock" style="font-weight: 800; color: #666; font-size: 12px;">--:--:--</div>
-            <a href="javascript:void(0)" onclick="location.reload()" style="color:var(--danger); font-weight:800; font-size:10px; text-decoration:none;"><i class="fas fa-power-off"></i> LOG OUT</a>
-        </div>
-
         <div class="card">
-            <div id="staffDisplay" style="text-align:center; font-weight:bold; color:var(--forest); background:#e8f5e9; padding:10px; border-radius:12px; margin-bottom:15px; font-size:12px;"></div>
+            <div id="staffDisplay" style="text-align:center; font-weight:800; color:var(--forest); background:#e8f5e9; padding:10px; border-radius:12px; margin-bottom:15px; font-size:12px;"></div>
             <h3><i class="fas fa-file-invoice-dollar"></i> Update Records</h3>
             
             <label>Class</label><select id="feeClass" onchange="populateStudents()"></select>
@@ -176,7 +197,7 @@
 <script>
     function updateClock() {
         const now = new Date();
-        document.getElementById('liveClock').innerText = now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit', hour12:true});
+        document.getElementById('liveClock').innerText = now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:true});
     }
     setInterval(updateClock, 1000); updateClock();
 
@@ -199,11 +220,10 @@
         const n = document.getElementById('staffName').value, p = document.getElementById('staffPass').value;
         if(p === authorized[n]) {
             activeTeacher = n;
-            // CRITICAL FIX: Ensure display changes correctly
             document.getElementById('feeLoginScreen').style.display = 'none';
             document.getElementById('feeApp').style.display = 'block';
-            document.getElementById('staffDisplay').innerText = "Active User: " + n;
-            Swal.fire({ title: 'Welcome', icon: 'success', timer: 1000, showConfirmButton: false });
+            document.getElementById('staffDisplay').innerText = "AUTHORIZED USER: " + n;
+            Swal.fire({ title: 'Access Granted', icon: 'success', timer: 1000, showConfirmButton: false });
         } else { Swal.fire('Error', 'Invalid credentials', 'error'); }
     }
 
@@ -316,12 +336,14 @@
     }
 
     async function clearStudentData() {
-        const c = document.getElementById('feeClass').value, n = document.getElementById('feeStudent').value;
+        const c = document.getElementById('feeClass').value;
+        const n = document.getElementById('feeStudent').value;
         if (!n) return Swal.fire('Error', 'Select student', 'warning');
         const { value: pass } = await Swal.fire({ title: 'Auth Required', text: 'Enter password to clear history', input: 'password' });
         if (pass === authorized[activeTeacher]) {
             db.ref(`fee_records/${c}/${n}`).remove().then(() => {
-                Swal.fire('Deleted', '', 'success'); fetchExistingFeeData();
+                Swal.fire('Deleted', 'History cleared.', 'success'); 
+                fetchExistingFeeData();
             });
         } else if(pass) { Swal.fire('Denied', 'Incorrect Password', 'error'); }
     }
