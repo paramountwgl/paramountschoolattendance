@@ -13,43 +13,54 @@
         body { font-family: 'Segoe UI', sans-serif; background: #eef2f1; margin: 0; padding-bottom: 100px; overflow-x: hidden; }
         
         header { background: var(--forest); color: white; padding: 20px 15px; border-bottom: 4px solid var(--gold); }
-        .header-content { display: flex; align-items: center; justify-content: center; gap: 20px; max-width: 1200px; margin: 0 auto; }
-        .header-logo { height: 60px; }
+        .header-content { display: flex; flex-direction: column; align-items: center; gap: 10px; max-width: 1200px; margin: 0 auto; text-align: center; }
+        .header-logo { height: 60px; width: auto; }
         .school-text { display: flex; flex-direction: column; line-height: 1.1; }
-        .school-name-main { font-family: 'Montserrat', sans-serif; font-size: 1.4rem; font-weight: 800; }
+        .school-name-main { font-family: 'Montserrat', sans-serif; font-size: 1.4rem; font-weight: 800; letter-spacing: 1px; }
         .school-name-sub { font-family: 'Montserrat', sans-serif; font-size: 0.7rem; color: var(--gold); font-weight: 700; text-transform: uppercase; }
-        .page-brand { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 1.5rem; border-left: 2px solid rgba(255,255,255,0.3); padding-left: 20px; }
+        .divider-v { width: 2px; height: 35px; background: rgba(255,255,255,0.3); display: none; }
+        .page-brand { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 1.2rem; color: white; text-transform: uppercase; margin-top: 5px; }
 
-        .container { width: 100%; max-width: 1000px; margin: 15px auto; padding: 0 10px; }
+        .container { width: 100%; max-width: 900px; margin: 15px auto; padding: 0 10px; }
         .card { background: white; padding: 20px; border-radius: 25px; box-shadow: 0 10px 40px rgba(0,0,0,0.06); margin-bottom: 20px; border-top: 5px solid var(--gold); }
         h3 { color: var(--forest); text-align: center; font-size: 1.1rem; text-transform: uppercase; margin-bottom: 20px; font-weight: 800; }
 
+        .setup-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
         label { display: block; font-size: 10px; font-weight: 900; color: #777; margin-bottom: 5px; text-transform: uppercase; }
-        select { width: 100%; padding: 14px; border-radius: 12px; border: 2px solid #eee; background: #fafafa; font-weight: 700; outline: none; }
+        select, .search-input { width: 100%; padding: 14px; border-radius: 12px; border: 2px solid #eee; background: #fafafa; font-weight: 700; outline: none; }
+        
+        /* SEARCH FILTER STYLING */
+        #searchBox { display: none; margin-bottom: 20px; }
+        .search-input { border: 2px solid var(--forest); background: white; }
 
         .student-mark-card { background: white; border: 1px solid #eee; border-radius: 20px; padding: 15px; margin-bottom: 15px; }
         .student-name { font-weight: 800; color: var(--forest); font-size: 1rem; display: block; margin-bottom: 15px; border-bottom: 1px solid #f1f1f1; padding-bottom: 8px; }
         
-        /* DYNAMIC MARKS GRID */
-        .marks-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; }
-        .subject-box { background: #f9fcf9; padding: 10px; border-radius: 12px; border: 1px solid #f0f0f0; }
-        .split-inputs { display: flex; gap: 5px; }
+        .marks-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+        .subject-box { background: #f9fcf9; padding: 8px; border-radius: 12px; border: 1px solid #f0f0f0; text-align: center; }
+        .subject-box label { font-size: 9px; margin-bottom: 5px; color: #555; }
+        
+        /* SPLIT INPUTS FOR GRADE 6-8 */
+        .split-inputs { display: flex; gap: 4px; }
         .split-inputs div { flex: 1; }
-        .marks-grid input { width: 100%; text-align: center; padding: 8px 2px; font-weight: 800; border-radius: 8px; border: 2px solid #ddd; font-size: 15px; outline: none; }
-        .marks-grid input:focus { border-color: var(--forest); }
+        .split-inputs label { font-size: 7px; margin-bottom: 2px; }
 
-        .stats-bar { display: flex; justify-content: space-between; margin-top: 15px; padding: 12px; background: #f1f8f4; border-radius: 12px; font-size: 11px; font-weight: 800; color: var(--forest); }
-        .audit-footer { font-size: 9px; color: #999; font-style: italic; margin-top: 10px; display: none; padding-top: 8px; border-top: 1px dashed #eee; }
+        .subject-box input { width: 100%; text-align: center; padding: 10px 2px; font-weight: 800; border-radius: 8px; border: 2px solid #ddd; font-size: 16px; outline: none; }
 
-        .btn-fetch { background: var(--forest); color: white; border: none; border-radius: 12px; padding: 15px; font-weight: 800; width: 100%; margin-top: 15px; cursor: pointer; text-transform: uppercase; }
+        .stats-bar { display: flex; justify-content: space-between; margin-top: 15px; padding: 12px; background: #f1f8f4; border-radius: 12px; font-size: 10px; font-weight: 800; color: var(--forest); }
+        .audit-footer { font-size: 9px; color: #999; font-style: italic; margin-top: 10px; text-align: left; padding-top: 8px; border-top: 1px dashed #eee; display: none; }
+
+        .btn-fetch { background: var(--forest); color: white; border: none; border-radius: 12px; padding: 15px; font-weight: 800; width: 100%; margin-top: 15px; cursor: pointer; text-transform: uppercase; font-size: 11px; }
         .action-row { display: none; gap: 10px; margin-top: 20px; }
-        .btn-save { flex: 2; background: var(--premium-gradient); color: white; border: none; padding: 18px; border-radius: 50px; font-weight: 800; cursor: pointer; text-transform: uppercase; box-shadow: 0 5px 15px rgba(0,102,51,0.2); }
-        .btn-delete { flex: 1; background: white; color: var(--danger); border: 2px solid var(--danger); padding: 18px; border-radius: 50px; font-weight: 800; cursor: pointer; text-transform: uppercase; }
+        .btn-save { flex: 2; background: var(--premium-gradient); color: white; border: none; padding: 18px; border-radius: 50px; font-weight: 800; cursor: pointer; text-transform: uppercase; font-size: 12px; box-shadow: 0 5px 15px rgba(0,102,51,0.2); }
+        .btn-delete { flex: 1; background: white; color: var(--danger); border: 2px solid var(--danger); padding: 18px; border-radius: 50px; font-weight: 800; cursor: pointer; text-transform: uppercase; font-size: 12px; }
 
-        @media (max-width: 768px) {
-            .header-content { flex-direction: column; }
-            .page-brand { border-left: none; padding-left: 0; }
-            .marks-grid { grid-template-columns: repeat(2, 1fr); }
+        @media (min-width: 768px) {
+            .header-content { flex-direction: row; justify-content: center; gap: 20px; text-align: left; }
+            .divider-v { display: block; }
+            .setup-grid { grid-template-columns: 1fr 1fr; }
+            .marks-grid { grid-template-columns: repeat(6, 1fr); }
+            .page-brand { margin-top: 0; font-size: 1.5rem; }
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -63,6 +74,7 @@
             <span class="school-name-main">PARAMOUNT</span>
             <span class="school-name-sub">ENGLISH MEDIUM SCHOOL</span>
         </div>
+        <div class="divider-v"></div>
         <div class="page-brand">PROGRESS PORTAL</div>
     </div>
 </header>
@@ -93,7 +105,7 @@
 
     <div class="card" id="selectionCard" style="display:none;">
         <h3><i class="fas fa-edit"></i> Marksheet Manager</h3>
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
+        <div class="setup-grid">
             <div><label>Class</label><select id="examClass" onchange="loadStudentMarksheet()">
                 <option value="">-- Select Class --</option>
                 <option value="Pre-KG">Pre-KG</option><option value="KG-1">KG-1</option><option value="KG-2">KG-2</option>
@@ -111,11 +123,19 @@
         </button>
     </div>
 
+    <div id="searchBox">
+        <input type="text" class="search-input" id="studentSearch" placeholder="🔍 Search student name..." onkeyup="filterStudents()">
+    </div>
+
     <div id="marksList"></div>
     
     <div class="action-row" id="actionRow">
-        <button class="btn-save" onclick="saveAllMarks()">Save All Records <i class="fas fa-cloud-upload-alt"></i></button>
+        <button id="saveAllBtn" class="btn-save" onclick="saveAllMarks()">Save All Records <i class="fas fa-cloud-upload-alt"></i></button>
         <button class="btn-delete" onclick="deleteAllMarks()">Wipe Records <i class="fas fa-trash-alt"></i></button>
+    </div>
+
+    <div style="text-align:center; margin-top:20px;">
+        <a href="index.html" style="color:#666; font-size:12px; text-decoration:none; font-weight:700;"><i class="fas fa-arrow-left"></i> BACK TO DASHBOARD</a>
     </div>
 </div>
 
@@ -135,8 +155,16 @@
         const name = document.getElementById('teacherSelect').value;
         if(!name) return;
         const { value: pw } = await Swal.fire({ title: `Staff Login`, text: `Enter password for ${name}`, input: 'password', showCancelButton: true, confirmButtonColor: '#006633' });
-        if(pw === registry[name]) { authenticatedTeacher = name; document.getElementById('selectionCard').style.display = 'block'; Swal.fire('Verified', `Welcome ${name}`, 'success'); } 
+        if(pw === registry[name]) { authenticatedTeacher = name; document.getElementById('selectionCard').style.display = 'block'; } 
         else if(pw) { Swal.fire('Error', 'Incorrect Password', 'error'); document.getElementById('teacherSelect').value = ""; }
+    }
+
+    function filterStudents() {
+        const query = document.getElementById('studentSearch').value.toLowerCase();
+        document.querySelectorAll('.student-mark-card').forEach(card => {
+            const name = card.getAttribute('data-student').toLowerCase();
+            card.style.display = name.includes(query) ? "block" : "none";
+        });
     }
 
     function loadStudentMarksheet() {
@@ -145,6 +173,7 @@
         const list = document.getElementById('marksList');
         if(!cls || !authenticatedTeacher) return;
 
+        document.getElementById('searchBox').style.display = "block";
         let subjects = ["TEL", "HIN", "ENG", "MAT", "SOC"];
         if (["Grade-6", "Grade-7", "Grade-8"].includes(cls)) subjects.push("PHY", "BIO", "IIT");
         else if (cls === "Grade-5") subjects.push("SCI", "IIT");
@@ -164,11 +193,11 @@
                             <label>${sub}</label>
                             ${isGrade6to8 ? `
                                 <div class="split-inputs">
-                                    <div><label style="font-size:7px">EXT</label><input type="number" class="sub-input ext" data-sub="${sub}" value="0" max="${isFA?40:80}" oninput="calculateStats(this)"></div>
-                                    <div><label style="font-size:7px">INT</label><input type="number" class="sub-input int" data-sub="${sub}" value="0" max="${isFA?10:20}" oninput="calculateStats(this)"></div>
+                                    <div><label>EXT</label><input type="number" class="sub-input ext" data-sub="${sub}" value="0" oninput="validateInput(this, ${isFA?40:80})"></div>
+                                    <div><label>INT</label><input type="number" class="sub-input int" data-sub="${sub}" value="0" oninput="validateInput(this, ${isFA?10:20})"></div>
                                 </div>
                             ` : `
-                                <input type="number" class="sub-input total-inp" data-sub="${sub}" value="0" max="${isFA?50:100}" oninput="calculateStats(this)">
+                                <input type="number" class="sub-input total-inp" data-sub="${sub}" value="0" oninput="validateInput(this, ${isFA?50:100})">
                             `}
                         </div>`).join('')}
                 </div>
@@ -182,6 +211,13 @@
         });
         list.innerHTML = html;
         document.getElementById('actionRow').style.display = 'flex';
+    }
+
+    function validateInput(input, max) {
+        let val = parseInt(input.value) || 0;
+        if (val > max) input.value = max;
+        if (val < 0) input.value = 0;
+        calculateStats(input);
     }
 
     function calculateStats(input) {
@@ -199,16 +235,15 @@
                 const ext = parseInt(box.querySelector('.ext').value) || 0;
                 const int = parseInt(box.querySelector('.int').value) || 0;
                 totalObtained += (ext + int);
-                totalMax += isFA ? 50 : 100;
+                totalMax += (isFA ? 50 : 100);
             } else {
                 totalObtained += parseInt(box.querySelector('.total-inp').value) || 0;
-                totalMax += isFA ? 50 : 100;
+                totalMax += (isFA ? 50 : 100);
             }
         });
 
         const perc = totalMax > 0 ? ((totalObtained / totalMax) * 100).toFixed(1) : 0;
         const roundPerc = Math.round(perc);
-
         let grade = "F";
         if(roundPerc >= 91) grade = "A1"; else if(roundPerc >= 81) grade = "A2"; else if(roundPerc >= 71) grade = "B1";
         else if(roundPerc >= 61) grade = "B2"; else if(roundPerc >= 51) grade = "C1"; else if(roundPerc >= 35) grade = "D";
@@ -223,7 +258,6 @@
         const exam = document.getElementById('examType').value;
         if(!cls || !exam) return;
         Swal.fire({ title: 'Fetching...', didOpen: () => Swal.showLoading() });
-
         db.ref(`progress_cards/${cls}/${exam}`).once('value', (snap) => {
             const data = snap.val() || {};
             Swal.close();
@@ -241,14 +275,13 @@
                         }
                     });
                     calculateStats(card.querySelector('input'));
+                    const audit = document.getElementById(`audit-${studentId}`);
                     if(data[name].updatedBy) {
-                        const audit = document.getElementById(`audit-${studentId}`);
                         audit.innerHTML = `Last updated by: <b>${data[name].updatedBy}</b> on <b>${data[name].updatedAt}</b>`;
                         audit.style.display = "block";
                     }
                 }
             });
-            Swal.fire('Loaded', 'Marks fetched from cloud.', 'success');
         });
     }
 
@@ -256,45 +289,34 @@
         const cls = document.getElementById('examClass').value;
         const exam = document.getElementById('examType').value;
         const isGrade6to8 = ["Grade-6", "Grade-7", "Grade-8"].includes(cls);
-        const timeStamp = new Date().toLocaleString();
         const updates = {};
+        const now = new Date();
+        const timeStamp = now.toLocaleDateString('en-GB') + " " + now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
         document.querySelectorAll('.student-mark-card').forEach(card => {
             const name = card.getAttribute('data-student');
             const studentMarks = {};
             card.querySelectorAll('.subject-box').forEach(box => {
                 const subName = box.querySelector('input').getAttribute('data-sub');
-                if (isGrade6to8) {
-                    studentMarks[subName] = { 
-                        ext: box.querySelector('.ext').value, 
-                        int: box.querySelector('.int').value 
-                    };
-                } else {
-                    studentMarks[subName] = box.querySelector('.total-inp').value;
-                }
+                if (isGrade6to8) studentMarks[subName] = { ext: box.querySelector('.ext').value, int: box.querySelector('.int').value };
+                else studentMarks[subName] = box.querySelector('.total-inp').value;
             });
-
             updates[`progress_cards/${cls}/${exam}/${name}`] = {
-                marks: studentMarks,
-                total: card.querySelector('.res-total').innerText,
-                percentage: card.querySelector('.res-perc').innerText,
-                grade: card.querySelector('.res-grade').innerText,
-                updatedBy: authenticatedTeacher,
-                updatedAt: timeStamp
+                marks: studentMarks, total: card.querySelector('.res-total').innerText,
+                percentage: card.querySelector('.res-perc').innerText, grade: card.querySelector('.res-grade').innerText,
+                updatedBy: authenticatedTeacher, updatedAt: timeStamp
             };
         });
-
-        Swal.fire({ title: 'Syncing...', didOpen: () => Swal.showLoading() });
-        db.ref().update(updates).then(() => Swal.fire('Saved!', 'Database updated.', 'success'));
+        db.ref().update(updates).then(() => Swal.fire('Saved!', 'Records Synced.', 'success'));
     }
 
     async function deleteAllMarks() {
         const cls = document.getElementById('examClass').value;
         const exam = document.getElementById('examType').value;
-        const res = await Swal.fire({ title: 'Are you sure?', text: `Delete ALL marks for ${cls} ${exam}?`, icon: 'warning', showCancelButton: true });
+        const res = await Swal.fire({ title: 'Delete?', text: `Wipe all marks for ${cls} ${exam}?`, icon: 'warning', showCancelButton: true });
         if (res.isConfirmed) {
             db.ref(`progress_cards/${cls}/${exam}`).remove().then(() => {
-                Swal.fire('Deleted', 'Class records cleared.', 'success');
+                Swal.fire('Deleted', 'Class cleared.', 'success');
                 loadStudentMarksheet();
             });
         }
