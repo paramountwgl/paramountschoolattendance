@@ -44,18 +44,25 @@
         h3 { color: var(--forest); margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; display: flex; align-items: center; gap: 8px; font-size: 1.1rem; }
         label { display: block; font-size: 10px; font-weight: 900; color: #777; margin: 12px 0 5px; text-transform: uppercase; }
         select, input { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #eee; font-size: 16px; outline: none; background: #fafafa; height: 50px; }
+        
         .calc-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .due-box { background: #fff5f5; border: 1px solid #ffcdd2; padding: 15px; border-radius: 15px; text-align: center; margin-top: 20px; }
         .due-box strong { font-size: 24px; color: var(--danger); }
         
-        /* CIRCULAR PROGRESS */
-        .chart-container { display: flex; flex-direction: column; align-items: center; margin-top: 25px; padding: 20px; background: #f9f9f9; border-radius: 15px; border: 1px solid #eee; }
+        /* GAUGE */
+        .chart-container { display: flex; flex-direction: column; align-items: center; margin-top: 25px; background: #f9f9f9; padding: 20px; border-radius: 15px; border: 1px solid #eee; }
         .circular-progress { position: relative; width: 120px; height: 120px; }
         .circular-progress svg { width: 120px; height: 120px; transform: rotate(-90deg); }
         .circular-progress circle { fill: none; stroke-width: 10; stroke-linecap: round; cx: 60; cy: 60; r: 50; }
-        .circle-bg { stroke: #eee; }
-        .circle-bar { stroke: var(--forest); stroke-dasharray: 314.15; stroke-dashoffset: 314.15; transition: stroke-dashoffset 0.8s ease; }
+        .circle-bar { stroke: var(--forest); stroke-dasharray: 314.15; stroke-dashoffset: 314.15; transition: stroke-dashoffset 1s ease; }
         .percentage-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-weight: 800; font-size: 1.2rem; color: #333; }
+
+        /* BUTTONS ROW */
+        .action-flex { display: flex; gap: 10px; margin-top: 25px; }
+        .btn-action { color: white; border: none; padding: 16px; border-radius: 50px; font-weight: 700; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; flex: 1; }
+        .btn-save { background: var(--forest); }
+        .btn-wipe { background: var(--danger); }
+        .btn-receipt { background: var(--sky); width: 100%; margin-top: 10px; opacity: 0.5; }
 
         /* HISTORY TABLE */
         .history-table-wrapper { width: 100%; overflow-x: auto; border-radius: 10px; border: 1px solid #f1f5f9; }
@@ -63,9 +70,6 @@
         .history-table th { text-align: left; padding: 12px; background: #f8fafc; color: #64748b; font-size: 10px; text-transform: uppercase; border-bottom: 2px solid #eee; }
         .history-table td { padding: 12px 10px; border-bottom: 1px solid #f1f5f9; font-weight: 600; color: #334155; }
         .amt-cell { color: var(--forest); font-weight: 800; }
-
-        .btn-action { width: 100%; color: white; border: none; padding: 16px; border-radius: 50px; font-weight: 700; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .btn-save { background: var(--forest); margin-top: 25px; height: 55px; }
 
         @media (max-width: 600px) {
             .portal-title { display: none; }
@@ -119,6 +123,7 @@
         <div class="card">
             <div id="staffDisplay" style="text-align:center; font-weight:bold; color:var(--forest); background:#e8f5e9; padding:10px; border-radius:12px; margin-bottom:15px; font-size:12px;"></div>
             <h3><i class="fas fa-file-invoice-dollar"></i> Update Records</h3>
+            
             <label>Class</label><select id="feeClass" onchange="populateStudents()"></select>
             <label>Student Name</label><select id="feeStudent" onchange="fetchExistingFeeData()"><option value="">-- Select Student --</option></select>
             
@@ -132,7 +137,7 @@
             <div class="chart-container">
                 <div class="circular-progress">
                     <svg viewBox="0 0 120 120">
-                        <circle class="circle-bg" cx="60" cy="60" r="50"></circle>
+                        <circle style="stroke:#eee; fill:none;" cx="60" cy="60" r="50"></circle>
                         <circle id="progressCircle" class="circle-bar" cx="60" cy="60" r="50"></circle>
                     </svg>
                     <div id="percentText" class="percentage-text">0%</div>
@@ -140,7 +145,12 @@
             </div>
 
             <label>Date</label><input type="date" id="payDate">
-            <button class="btn-action btn-save" onclick="saveFee()">Update Records <i class="fas fa-save"></i></button>
+            
+            <div class="action-flex">
+                <button class="btn-action btn-save" onclick="saveFee()">Update <i class="fas fa-save"></i></button>
+                <button class="btn-action btn-wipe" onclick="clearStudentData()">Wipe <i class="fas fa-trash-alt"></i></button>
+            </div>
+            <button id="receiptBtn" class="btn-action btn-receipt" onclick="generateReceipt()">Generate Receipt <i class="fas fa-print"></i></button>
         </div>
 
         <div class="card history-card" id="historyCard" style="display:none;">
@@ -168,7 +178,7 @@
 
     const authorized = { "Mr. Ahmad": "Ahmad@123", "Ms. Roqiya": "Roqiya@123", "Ms. Jyothi": "Jyothi@123" };
     const recoveryPins = { "Mr. Ahmad": "Ahmad@07", "Ms. Roqiya": "Roqiya@07", "Ms. Jyothi": "Jyothi@07" };
-    let activeTeacher = "", studentLifetimePaid = 0;
+    let activeTeacher = "", studentLifetimePaid = 0, lastReceiptData = null;
 
     async function handleForgotPassword() {
         const sel = document.getElementById('staffName').value;
@@ -230,9 +240,34 @@
         const c = document.getElementById('feeClass').value, n = document.getElementById('feeStudent').value, t = document.getElementById('totalFee').value, p = document.getElementById('payingAmount').value, d = document.getElementById('payDate').value;
         if(!n || !p) return Swal.fire('Error', 'Missing Data', 'warning');
         const stamp = new Date().toLocaleDateString() + ", " + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+        lastReceiptData = { n, c, p, t, d, activeTeacher };
         db.ref(`fee_records/${c}/${n}`).push({ total: t, paid: p, recordedBy: activeTeacher, date: d, timestamp: stamp }).then(() => {
-            Swal.fire('Saved', '', 'success'); document.getElementById('payingAmount').value = ''; fetchExistingFeeData();
+            Swal.fire('Saved', '', 'success'); document.getElementById('payingAmount').value = ''; 
+            document.getElementById('receiptBtn').style.opacity = '1';
+            fetchExistingFeeData();
         });
+    }
+
+    function generateReceipt() {
+        if(!lastReceiptData) return;
+        const { n, c, p, d, activeTeacher } = lastReceiptData;
+        const win = window.open('', '', 'height=600,width=400');
+        win.document.write(`<html><body style="padding:20px; font-family:sans-serif; text-align:center;">
+            <img src="logo.png" style="height:60px;"><br><h2>PARAMOUNT SCHOOL</h2><hr>
+            <p>Student: ${n} (${c})</p><p>Date: ${d}</p><p style="font-size:20px; color:green;">Paid: ₹ ${p}</p>
+            <hr><p>By: ${activeTeacher}</p></body></html>`);
+        win.document.close(); win.print();
+    }
+
+    async function clearStudentData() {
+        const c = document.getElementById('feeClass').value, n = document.getElementById('feeStudent').value;
+        if (!n) return Swal.fire('Error', 'Select student', 'warning');
+        const { value: pass } = await Swal.fire({ title: 'Auth Required', text: 'Enter password to clear history', input: 'password' });
+        if (pass === authorized[activeTeacher]) {
+            db.ref(`fee_records/${c}/${n}`).remove().then(() => {
+                Swal.fire('Deleted', '', 'success'); fetchExistingFeeData();
+            });
+        }
     }
 
     document.getElementById('payDate').valueAsDate = new Date();
