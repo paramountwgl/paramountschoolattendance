@@ -12,6 +12,14 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: 'Segoe UI', sans-serif; background: #eef2f1; margin: 0; padding-bottom: 100px; overflow-x: hidden; }
         
+        /* PREMIUM LOGIN BACKGROUND */
+        #authCard { 
+            background: linear-gradient(rgba(0, 102, 51, 0.85), rgba(0, 77, 38, 0.9)), url('school-bg.jpg'); 
+            background-size: cover; background-position: center; color: white; border-top: none; padding: 40px 25px; border-radius: 25px;
+        }
+        #authCard h3 { color: var(--gold); }
+        #authCard label { color: rgba(255,255,255,0.8); }
+
         header { background: var(--forest); color: white; padding: 20px 15px; border-bottom: 4px solid var(--gold); }
         .header-content { display: flex; flex-direction: column; align-items: center; gap: 10px; max-width: 1200px; margin: 0 auto; text-align: center; }
         .header-logo { height: 60px; width: auto; }
@@ -32,7 +40,7 @@
         #searchBox { display: none; margin-bottom: 20px; }
         .search-input { border: 2px solid var(--forest); background: white; }
 
-        .student-mark-card { background: white; border: 1px solid #eee; border-radius: 20px; padding: 15px; margin-bottom: 15px; }
+        .student-mark-card { background: white; border: 1px solid #eee; border-radius: 20px; padding: 15px; margin-bottom: 15px; transition: 0.3s; }
         .student-name { font-weight: 800; color: var(--forest); font-size: 1rem; display: block; margin-bottom: 15px; border-bottom: 1px solid #f1f1f1; padding-bottom: 8px; }
         
         .marks-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
@@ -43,7 +51,10 @@
         .split-inputs div { flex: 1; }
         .split-inputs label { font-size: 7px; margin-bottom: 2px; }
 
-        .subject-box input { width: 100%; text-align: center; padding: 10px 2px; font-weight: 800; border-radius: 8px; border: 2px solid #ddd; font-size: 16px; outline: none; }
+        .subject-box input { 
+            width: 100%; text-align: center; padding: 10px 2px; font-weight: 800; border-radius: 8px; 
+            border: 2px solid #ddd; font-size: 16px; outline: none; background: white; 
+        }
 
         .stats-bar { display: flex; justify-content: space-between; margin-top: 15px; padding: 12px; background: #f1f8f4; border-radius: 12px; font-size: 10px; font-weight: 800; color: var(--forest); }
         .audit-footer { font-size: 9px; color: #999; font-style: italic; margin-top: 10px; text-align: left; padding-top: 8px; border-top: 1px dashed #eee; display: none; }
@@ -63,7 +74,9 @@
     </style>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
-<body autocomplete="off"> <header>
+<body autocomplete="off">
+
+<header>
     <div class="header-content">
         <img src="logo.png" class="header-logo" alt="Logo">
         <div class="school-text">
@@ -81,8 +94,7 @@
         <label>Select Teacher Name</label>
         <input type="text" style="display:none">
         <input type="password" style="display:none">
-        
-        <select id="teacherSelect" onchange="verifyStaff()" autocomplete="new-password">
+        <select id="teacherSelect" onchange="verifyStaff()" autocomplete="new-password" style="background: white;">
             <option value="">-- Choose Name --</option>
             <option value="Mr. Shaik Ahmad">Mr. Shaik Ahmad</option>
             <option value="Ms. Riha">Ms. Riha (IIT)</option>
@@ -123,14 +135,14 @@
     </div>
 
     <div id="searchBox">
-        <input type="text" class="search-input" id="studentSearch" placeholder="🔍 Search student name..." onkeyup="filterStudents()">
+        <input type="text" class="search-input" id="studentSearch" placeholder="🔍 Find student by name..." onkeyup="filterStudents()">
     </div>
 
     <div id="marksList"></div>
     
     <div class="action-row" id="actionRow">
         <button id="saveAllBtn" class="btn-save" onclick="saveAllMarks()">Save All Records <i class="fas fa-cloud-upload-alt"></i></button>
-        <button class="btn-delete" onclick="deleteAllMarks()">Wipe Records <i class="fas fa-trash-alt"></i></button>
+        <button class="btn-delete" onclick="deleteAllMarks()">Wipe Class <i class="fas fa-trash-alt"></i></button>
     </div>
 
     <div style="text-align:center; margin-top:20px;">
@@ -153,30 +165,10 @@
     async function verifyStaff() {
         const name = document.getElementById('teacherSelect').value;
         if(!name) return;
-        
-        // Clearing field to prevent ghost values
         document.getElementById('teacherSelect').blur();
-
-        const { value: pw } = await Swal.fire({ 
-            title: `Staff Login`, 
-            text: `Enter password for ${name}`, 
-            input: 'password', 
-            inputAttributes: { autocomplete: 'new-password' }, // Direct instruction to browser
-            showCancelButton: true, 
-            confirmButtonColor: '#006633' 
-        });
-
-        if(pw === registry[name]) { 
-            authenticatedTeacher = name; 
-            document.getElementById('selectionCard').style.display = 'block'; 
-            Swal.fire('Verified', `Welcome ${name}`, 'success'); 
-        } 
-        else if(pw) { 
-            Swal.fire('Error', 'Incorrect Password', 'error'); 
-            document.getElementById('teacherSelect').value = ""; 
-        } else {
-            document.getElementById('teacherSelect').value = "";
-        }
+        const { value: pw } = await Swal.fire({ title: `Staff Login`, text: `Enter password for ${name}`, input: 'password', inputAttributes: { autocomplete: 'new-password' }, showCancelButton: true, confirmButtonColor: '#006633' });
+        if(pw === registry[name]) { authenticatedTeacher = name; document.getElementById('selectionCard').style.display = 'block'; Swal.fire('Verified', `Welcome ${name}`, 'success'); } 
+        else { Swal.fire('Error', 'Incorrect Password', 'error'); document.getElementById('teacherSelect').value = ""; }
     }
 
     function filterStudents() {
@@ -208,18 +200,19 @@
             html += `<div class="student-mark-card" data-student="${name}">
                 <span class="student-name">${index + 1}. ${name}</span>
                 <div class="marks-grid">
-                    ${subjects.map(sub => `
-                        <div class="subject-box">
-                            <label>${sub}</label>
-                            ${isGrade6to8 ? `
-                                <div class="split-inputs">
-                                    <div><label>EXT</label><input type="number" class="sub-input ext" data-sub="${sub}" value="0" oninput="validateInput(this, ${isFA?40:80})"></div>
-                                    <div><label>INT</label><input type="number" class="sub-input int" data-sub="${sub}" value="0" oninput="validateInput(this, ${isFA?10:20})"></div>
-                                </div>
-                            ` : `
-                                <input type="number" class="sub-input total-inp" data-sub="${sub}" value="0" oninput="validateInput(this, ${isFA?50:100})">
-                            `}
-                        </div>`).join('')}
+                    ${subjects.map(sub => {
+                        if(sub === "IIT") {
+                            return `<div class="subject-box"><label>IIT (50)</label><input type="text" placeholder="-" class="sub-input total-inp" data-sub="IIT" oninput="validateInput(this, 50)"></div>`;
+                        }
+                        if(isGrade6to8) {
+                            return `<div class="subject-box"><label>${sub}</label><div class="split-inputs">
+                                <div><label>EXT</label><input type="text" placeholder="-" class="sub-input ext" data-sub="${sub}" oninput="validateInput(this, ${isFA?40:80})"></div>
+                                <div><label>INT</label><input type="text" placeholder="-" class="sub-input int" data-sub="${sub}" oninput="validateInput(this, ${isFA?10:20})"></div>
+                            </div></div>`;
+                        } else {
+                            return `<div class="subject-box"><label>${sub}</label><input type="text" placeholder="-" class="sub-input total-inp" data-sub="${sub}" oninput="validateInput(this, ${isFA?50:100})"></div>`;
+                        }
+                    }).join('')}
                 </div>
                 <div class="stats-bar">
                     <span>TOTAL: <span class="res-total">0</span></span>
@@ -234,7 +227,8 @@
     }
 
     function validateInput(input, max) {
-        let val = parseInt(input.value) || 0;
+        if(input.value === "") { calculateStats(input); return; }
+        let val = parseInt(input.value);
         if (val > max) input.value = max;
         if (val < 0) input.value = 0;
         calculateStats(input);
@@ -242,16 +236,19 @@
 
     function calculateStats(input) {
         const card = input.closest('.student-mark-card');
-        const cls = document.getElementById('examClass').value;
         const exam = document.getElementById('examType').value;
+        const cls = document.getElementById('examClass').value;
         const isFA = exam.startsWith("FA");
         const isGrade6to8 = ["Grade-6", "Grade-7", "Grade-8"].includes(cls);
 
-        let totalObtained = 0;
-        let totalMax = 0;
+        let totalObtained = 0, totalMax = 0;
 
         card.querySelectorAll('.subject-box').forEach(box => {
-            if (isGrade6to8) {
+            const subLabel = box.querySelector('label').innerText;
+            if(subLabel.includes("IIT")) {
+                totalObtained += parseInt(box.querySelector('input').value) || 0;
+                totalMax += 50;
+            } else if (isGrade6to8) {
                 const ext = parseInt(box.querySelector('.ext').value) || 0;
                 const int = parseInt(box.querySelector('.int').value) || 0;
                 totalObtained += (ext + int);
@@ -277,7 +274,7 @@
         const cls = document.getElementById('examClass').value;
         const exam = document.getElementById('examType').value;
         if(!cls || !exam) return;
-        Swal.fire({ title: 'Syncing with Server...', didOpen: () => Swal.showLoading() });
+        Swal.fire({ title: 'Establishing Cloud Sync...', didOpen: () => Swal.showLoading() });
         db.ref(`progress_cards/${cls}/${exam}`).once('value', (snap) => {
             const data = snap.val() || {};
             Swal.close();
@@ -288,16 +285,16 @@
                     Object.keys(data[name].marks).forEach(sub => {
                         const mData = data[name].marks[sub];
                         if (typeof mData === 'object') {
-                            if(card.querySelector(`.ext[data-sub="${sub}"]`)) card.querySelector(`.ext[data-sub="${sub}"]`).value = mData.ext || 0;
-                            if(card.querySelector(`.int[data-sub="${sub}"]`)) card.querySelector(`.int[data-sub="${sub}"]`).value = mData.int || 0;
+                            if(card.querySelector(`.ext[data-sub="${sub}"]`)) card.querySelector(`.ext[data-sub="${sub}"]`).value = mData.ext || "";
+                            if(card.querySelector(`.int[data-sub="${sub}"]`)) card.querySelector(`.int[data-sub="${sub}"]`).value = mData.int || "";
                         } else {
-                            if(card.querySelector(`.total-inp[data-sub="${sub}"]`)) card.querySelector(`.total-inp[data-sub="${sub}"]`).value = mData || 0;
+                            if(card.querySelector(`.total-inp[data-sub="${sub}"]`)) card.querySelector(`.total-inp[data-sub="${sub}"]`).value = mData || "";
                         }
                     });
                     calculateStats(card.querySelector('input'));
                     const audit = document.getElementById(`audit-${studentId}`);
                     if(data[name].updatedBy) {
-                        audit.innerHTML = `Last modified: <b>${data[name].updatedBy}</b> on <b>${data[name].updatedAt}</b>`;
+                        audit.innerHTML = `Last updated: <b>${data[name].updatedBy}</b> on <b>${data[name].updatedAt}</b>`;
                         audit.style.display = "block";
                     }
                 }
@@ -310,15 +307,17 @@
         const exam = document.getElementById('examType').value;
         const isGrade6to8 = ["Grade-6", "Grade-7", "Grade-8"].includes(cls);
         const updates = {};
-        const timeStamp = new Date().toLocaleString('en-GB');
+        const timeStamp = new Date().toLocaleString();
 
         document.querySelectorAll('.student-mark-card').forEach(card => {
             const name = card.getAttribute('data-student');
             const studentMarks = {};
             card.querySelectorAll('.subject-box').forEach(box => {
-                const subName = box.querySelector('input').getAttribute('data-sub');
-                if (isGrade6to8) studentMarks[subName] = { ext: box.querySelector('.ext').value, int: box.querySelector('.int').value };
-                else studentMarks[subName] = box.querySelector('.total-inp').value;
+                const subInp = box.querySelector('input');
+                const subName = subInp.getAttribute('data-sub');
+                if (subName === "IIT") { studentMarks[subName] = subInp.value || 0; }
+                else if (isGrade6to8) { studentMarks[subName] = { ext: box.querySelector('.ext').value || 0, int: box.querySelector('.int').value || 0 }; }
+                else { studentMarks[subName] = box.querySelector('.total-inp').value || 0; }
             });
             updates[`progress_cards/${cls}/${exam}/${name}`] = {
                 marks: studentMarks, total: card.querySelector('.res-total').innerText,
@@ -326,16 +325,16 @@
                 updatedBy: authenticatedTeacher, updatedAt: timeStamp
             };
         });
-        db.ref().update(updates).then(() => Swal.fire('Saved!', 'Cloud Sync Complete.', 'success'));
+        db.ref().update(updates).then(() => Swal.fire('Synced!', 'Records safely stored.', 'success'));
     }
 
     async function deleteAllMarks() {
         const cls = document.getElementById('examClass').value;
         const exam = document.getElementById('examType').value;
-        const res = await Swal.fire({ title: 'Permanent Wipe?', text: `Delete ALL marks for ${cls} ${exam}? This cannot be undone.`, icon: 'warning', showCancelButton: true });
+        const res = await Swal.fire({ title: 'Danger Zone', text: `Delete ALL marks for ${cls} ${exam}?`, icon: 'warning', showCancelButton: true });
         if (res.isConfirmed) {
             db.ref(`progress_cards/${cls}/${exam}`).remove().then(() => {
-                Swal.fire('Wiped', 'Database cleared.', 'success');
+                Swal.fire('Wiped', 'Data cleared.', 'success');
                 loadStudentMarksheet();
             });
         }
