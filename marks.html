@@ -12,13 +12,20 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: 'Segoe UI', sans-serif; background: #eef2f1; margin: 0; padding-bottom: 100px; overflow-x: hidden; }
         
-        /* PREMIUM LOGIN BACKGROUND */
-        #authCard { 
-            background: linear-gradient(rgba(0, 102, 51, 0.85), rgba(0, 77, 38, 0.9)), url('school-bg.jpg'); 
-            background-size: cover; background-position: center; color: white; border-top: none; padding: 40px 25px; border-radius: 25px;
+        /* PREMIUM LOGIN SECTION WITH BACKGROUND */
+        .auth-container {
+            background: linear-gradient(rgba(0, 50, 25, 0.7), rgba(0, 50, 25, 0.7)), url('https://images.unsplash.com/photo-1523050853064-185e6b7ce248?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            border-radius: 25px;
+            padding: 40px 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.1);
         }
-        #authCard h3 { color: var(--gold); }
-        #authCard label { color: rgba(255,255,255,0.8); }
+        .auth-container h3 { color: var(--gold) !important; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); margin-top: 0; }
+        .auth-container label { color: white !important; font-weight: 800; opacity: 0.9; }
 
         header { background: var(--forest); color: white; padding: 20px 15px; border-bottom: 4px solid var(--gold); }
         .header-content { display: flex; flex-direction: column; align-items: center; gap: 10px; max-width: 1200px; margin: 0 auto; text-align: center; }
@@ -40,7 +47,7 @@
         #searchBox { display: none; margin-bottom: 20px; }
         .search-input { border: 2px solid var(--forest); background: white; }
 
-        .student-mark-card { background: white; border: 1px solid #eee; border-radius: 20px; padding: 15px; margin-bottom: 15px; transition: 0.3s; }
+        .student-mark-card { background: white; border: 1px solid #eee; border-radius: 20px; padding: 15px; margin-bottom: 15px; }
         .student-name { font-weight: 800; color: var(--forest); font-size: 1rem; display: block; margin-bottom: 15px; border-bottom: 1px solid #f1f1f1; padding-bottom: 8px; }
         
         .marks-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
@@ -51,10 +58,7 @@
         .split-inputs div { flex: 1; }
         .split-inputs label { font-size: 7px; margin-bottom: 2px; }
 
-        .subject-box input { 
-            width: 100%; text-align: center; padding: 10px 2px; font-weight: 800; border-radius: 8px; 
-            border: 2px solid #ddd; font-size: 16px; outline: none; background: white; 
-        }
+        .subject-box input { width: 100%; text-align: center; padding: 10px 2px; font-weight: 800; border-radius: 8px; border: 2px solid #ddd; font-size: 16px; outline: none; background: white; }
 
         .stats-bar { display: flex; justify-content: space-between; margin-top: 15px; padding: 12px; background: #f1f8f4; border-radius: 12px; font-size: 10px; font-weight: 800; color: var(--forest); }
         .audit-footer { font-size: 9px; color: #999; font-style: italic; margin-top: 10px; text-align: left; padding-top: 8px; border-top: 1px dashed #eee; display: none; }
@@ -89,29 +93,29 @@
 </header>
 
 <div class="container">
-    <div class="card" id="authCard">
-        <h3><i class="fas fa-user-shield"></i> Staff Access</h3>
-        <label>Select Teacher Name</label>
-        <input type="text" style="display:none">
-        <input type="password" style="display:none">
-        <select id="teacherSelect" onchange="verifyStaff()" autocomplete="new-password" style="background: white;">
-            <option value="">-- Choose Name --</option>
-            <option value="Mr. Shaik Ahmad">Mr. Shaik Ahmad</option>
-            <option value="Ms. Riha">Ms. Riha (IIT)</option>
-            <option value="Ms. Raniya Zainab">Ms. Raniya Zainab (Physics)</option>
-            <option value="Ms. Roqiya Begum">Ms. Roqiya Begum</option>
-            <option value="Ms. G.Rajitha">Ms. G.Rajitha</option>
-            <option value="Ms. Ameena Tabassum">Ms. Ameena Tabassum</option>
-            <option value="Ms. Shaik Shabana">Ms. Shaik Shabana</option>
-            <option value="Ms. B.Ravali">Ms. B.Ravali</option>
-            <option value="Ms. L.Kalyani">Ms. L.Kalyani</option>
-            <option value="Ms. J.Alaya Sree">Ms. J.Alaya Sree</option>
-            <option value="Ms. S.Sujatha">Ms. S.Sujatha</option>
-            <option value="Ms. J.Prathibha">Ms. J.Prathibha</option>
-            <option value="Ms. P.Shailaja">Ms. P.Shailaja</option>
-            <option value="Ms. A.Jhansi Rani">Ms. A.Jhansi Rani</option>
-            <option value="Ms. S. Neelima">Ms. S. Neelima</option>
-        </select>
+    <div class="auth-container" id="authCard">
+        <h3><i class="fas fa-user-shield"></i> Teacher Access</h3>
+        <div style="max-width:300px; margin:0 auto;">
+            <label>Identify Yourself</label>
+            <select id="teacherSelect" onchange="verifyStaff()" style="margin-top:10px; background: white; border: none; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                <option value="">-- Select Your Name --</option>
+                <option value="Mr. Shaik Ahmad">Mr. Shaik Ahmad</option>
+                <option value="Ms. Riha">Ms. Riha (IIT)</option>
+                <option value="Ms. Raniya Zainab">Ms. Raniya Zainab (Physics)</option>
+                <option value="Ms. Roqiya Begum">Ms. Roqiya Begum</option>
+                <option value="Ms. G.Rajitha">Ms. G.Rajitha</option>
+                <option value="Ms. Ameena Tabassum">Ms. Ameena Tabassum</option>
+                <option value="Ms. Shaik Shabana">Ms. Shaik Shabana</option>
+                <option value="Ms. B.Ravali">Ms. B.Ravali</option>
+                <option value="Ms. L.Kalyani">Ms. L.Kalyani</option>
+                <option value="Ms. J.Alaya Sree">Ms. J.Alaya Sree</option>
+                <option value="Ms. S.Sujatha">Ms. S.Sujatha</option>
+                <option value="Ms. J.Prathibha">Ms. J.Prathibha</option>
+                <option value="Ms. P.Shailaja">Ms. P.Shailaja</option>
+                <option value="Ms. A.Jhansi Rani">Ms. A.Jhansi Rani</option>
+                <option value="Ms. S. Neelima">Ms. S. Neelima</option>
+            </select>
+        </div>
     </div>
 
     <div class="card" id="selectionCard" style="display:none;">
@@ -130,19 +134,19 @@
             </select></div>
         </div>
         <button class="btn-fetch" onclick="fetchExistingData()">
-            <i class="fas fa-sync-alt"></i> Load / Modify Existing Marks
+            <i class="fas fa-sync-alt"></i> Load / Sync Records
         </button>
     </div>
 
     <div id="searchBox">
-        <input type="text" class="search-input" id="studentSearch" placeholder="🔍 Find student by name..." onkeyup="filterStudents()">
+        <input type="text" class="search-input" id="studentSearch" placeholder="🔍 Search student name..." onkeyup="filterStudents()">
     </div>
 
     <div id="marksList"></div>
     
     <div class="action-row" id="actionRow">
         <button id="saveAllBtn" class="btn-save" onclick="saveAllMarks()">Save All Records <i class="fas fa-cloud-upload-alt"></i></button>
-        <button class="btn-delete" onclick="deleteAllMarks()">Wipe Class <i class="fas fa-trash-alt"></i></button>
+        <button class="btn-delete" onclick="deleteAllMarks()">Clear Data <i class="fas fa-trash-alt"></i></button>
     </div>
 
     <div style="text-align:center; margin-top:20px;">
@@ -166,8 +170,8 @@
         const name = document.getElementById('teacherSelect').value;
         if(!name) return;
         document.getElementById('teacherSelect').blur();
-        const { value: pw } = await Swal.fire({ title: `Staff Login`, text: `Enter password for ${name}`, input: 'password', inputAttributes: { autocomplete: 'new-password' }, showCancelButton: true, confirmButtonColor: '#006633' });
-        if(pw === registry[name]) { authenticatedTeacher = name; document.getElementById('selectionCard').style.display = 'block'; Swal.fire('Verified', `Welcome ${name}`, 'success'); } 
+        const { value: pw } = await Swal.fire({ title: `Verification`, text: `Enter password for ${name}`, input: 'password', showCancelButton: true, confirmButtonColor: '#006633' });
+        if(pw === registry[name]) { authenticatedTeacher = name; document.getElementById('selectionCard').style.display = 'block'; document.getElementById('authCard').style.display = 'none'; Swal.fire('Logged In', `Welcome ${name}`, 'success'); } 
         else { Swal.fire('Error', 'Incorrect Password', 'error'); document.getElementById('teacherSelect').value = ""; }
     }
 
@@ -244,8 +248,8 @@
         let totalObtained = 0, totalMax = 0;
 
         card.querySelectorAll('.subject-box').forEach(box => {
-            const subLabel = box.querySelector('label').innerText;
-            if(subLabel.includes("IIT")) {
+            const subName = box.querySelector('input').getAttribute('data-sub');
+            if(subName === "IIT") {
                 totalObtained += parseInt(box.querySelector('input').value) || 0;
                 totalMax += 50;
             } else if (isGrade6to8) {
@@ -274,7 +278,7 @@
         const cls = document.getElementById('examClass').value;
         const exam = document.getElementById('examType').value;
         if(!cls || !exam) return;
-        Swal.fire({ title: 'Establishing Cloud Sync...', didOpen: () => Swal.showLoading() });
+        Swal.fire({ title: 'Syncing...', didOpen: () => Swal.showLoading() });
         db.ref(`progress_cards/${cls}/${exam}`).once('value', (snap) => {
             const data = snap.val() || {};
             Swal.close();
@@ -325,16 +329,16 @@
                 updatedBy: authenticatedTeacher, updatedAt: timeStamp
             };
         });
-        db.ref().update(updates).then(() => Swal.fire('Synced!', 'Records safely stored.', 'success'));
+        db.ref().update(updates).then(() => Swal.fire('Saved', 'Records updated successfully.', 'success'));
     }
 
     async function deleteAllMarks() {
         const cls = document.getElementById('examClass').value;
         const exam = document.getElementById('examType').value;
-        const res = await Swal.fire({ title: 'Danger Zone', text: `Delete ALL marks for ${cls} ${exam}?`, icon: 'warning', showCancelButton: true });
+        const res = await Swal.fire({ title: 'Are you sure?', text: `This will wipe all marks for ${cls} ${exam}.`, icon: 'warning', showCancelButton: true });
         if (res.isConfirmed) {
             db.ref(`progress_cards/${cls}/${exam}`).remove().then(() => {
-                Swal.fire('Wiped', 'Data cleared.', 'success');
+                Swal.fire('Deleted', 'Database cleared.', 'success');
                 loadStudentMarksheet();
             });
         }
