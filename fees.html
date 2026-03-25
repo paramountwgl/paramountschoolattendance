@@ -21,34 +21,24 @@
         .auth-input:focus { border-color: var(--forest); }
         .auth-buttons { display: flex; flex-direction: column; gap: 12px; margin-top: 10px; }
         .btn-unlock { background: linear-gradient(135deg, var(--forest), #004d26); color: white; padding: 15px; border-radius: 50px; font-weight: bold; border: 2px solid var(--gold); cursor: pointer; width: 100%; height: 55px; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.3s; }
-        .btn-return { background: #f1f5f9; color: #475569; padding: 12px; border-radius: 50px; font-weight: 700; border: 1px solid #e2e8f0; cursor: pointer; font-size: 0.8rem; text-transform: uppercase; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .auth-links { margin-top: 20px; display: flex; flex-direction: column; gap: 8px; }
-        .auth-links a { color: #999; font-size: 12px; font-weight: bold; text-decoration: underline; cursor: pointer; }
 
-        /* --- UPDATED HEADER CSS --- */
+        /* --- HEADER --- */
         header { 
             background: var(--forest); color: white; padding: 10px 3%; border-bottom: 4px solid var(--gold); 
             box-shadow: 0 4px 12px rgba(0,0,0,0.15); position: sticky; top: 0; z-index: 50;
         }
-        .header-content { 
-            display: flex; align-items: center; justify-content: space-between; 
-            max-width: 1400px; margin: 0 auto; 
-        }
+        .header-content { display: flex; align-items: center; justify-content: space-between; max-width: 1400px; margin: 0 auto; }
         .brand-group { display: flex; align-items: center; gap: 15px; }
-        
-        /* LOGO AND NAME SIDE-BY-SIDE */
         .header-left { display: flex; align-items: center; gap: 12px; }
         .header-logo { height: 55px; width: auto; }
         .school-branding { display: flex; flex-direction: column; line-height: 1.1; }
         .school-name-main { font-family: 'Montserrat', sans-serif; font-size: 1.4rem; font-weight: 800; letter-spacing: 1px; color: white; }
-        .school-name-sub { font-family: 'Montserrat', sans-serif; font-size: 0.7rem; color: white; font-weight: 600; text-transform: uppercase; opacity: 0.9; }
-        
+        .school-name-sub { font-family: 'Montserrat', sans-serif; font-size: 0.7rem; color: white; font-weight: 600; text-transform: uppercase; }
         .divider-line { width: 2px; height: 35px; background-color: rgba(255,255,255,0.3); margin: 0 5px; }
         .portal-label { font-family: 'Montserrat', sans-serif; font-size: 1.4rem; font-weight: 800; text-transform: uppercase; color: white; white-space: nowrap; }
-
         .nav-tools { display: flex; align-items: center; gap: 15px; }
         .live-clock { font-family: 'Montserrat', sans-serif; font-weight: 800; color: var(--gold); font-size: 13px; }
-        .btn-signout { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 6px 12px; border-radius: 6px; font-size: 10px; font-weight: 800; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; gap: 5px; }
+        .btn-signout { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 6px 12px; border-radius: 6px; font-size: 10px; font-weight: 800; text-transform: uppercase; cursor: pointer; }
 
         /* --- DASHBOARD --- */
         .container { max-width: 650px; margin: 25px auto; padding: 0 15px; }
@@ -59,17 +49,46 @@
         .calc-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .due-box { background: #fff5f5; border: 1px solid #ffcdd2; padding: 15px; border-radius: 15px; text-align: center; margin-top: 20px; }
         .due-box strong { font-size: 24px; color: var(--danger); }
+
+        /* --- FIXED GAUGE STYLING --- */
+        .chart-container { display: flex; flex-direction: column; align-items: center; margin-top: 25px; background: #f9f9f9; padding: 20px; border-radius: 15px; border: 1px solid #eee; position: relative; }
+        .circular-progress { position: relative; width: 120px; height: 120px; display: flex; align-items: center; justify-content: center; }
+        .circular-progress svg { width: 120px; height: 120px; transform: rotate(-90deg); overflow: visible; }
+        .circular-progress circle { fill: none; stroke-width: 10; cx: 60; cy: 60; r: 50; }
+        .circle-bg { stroke: #eee; }
+        .circle-bar { 
+            stroke: var(--forest); 
+            stroke-dasharray: 314.15; 
+            stroke-dashoffset: 314.15; 
+            stroke-linecap: round;
+            transition: stroke-dashoffset 0.8s ease; 
+        }
+        .percentage-text { 
+            position: absolute; 
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800; 
+            font-size: 1.3rem; 
+            color: #333; 
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
         .action-flex { display: flex; gap: 10px; margin-top: 25px; }
         .btn-action { color: white; border: none; padding: 16px; border-radius: 50px; font-weight: 700; cursor: pointer; flex: 1; text-transform: uppercase; font-size: 13px; }
         .btn-save { background: var(--forest); }
         .btn-wipe { background: var(--danger); }
         .btn-receipt { background: var(--sky); width: 100%; margin-top: 10px; }
 
+        .history-table-wrapper { width: 100%; overflow-x: auto; border-radius: 10px; border: 1px solid #f1f5f9; margin-top: 10px; }
+        .history-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; min-width: 450px; }
+        .history-table th { text-align: left; padding: 12px; background: #f8fafc; color: #64748b; font-size: 10px; text-transform: uppercase; }
+        .history-table td { padding: 12px 10px; border-bottom: 1px solid #f1f5f9; font-weight: 600; }
+
         @media (max-width: 768px) {
             .school-name-sub, .divider-line { display: none; }
-            .school-name-main, .portal-label { font-size: 1rem; }
+            .school-name-main, .portal-label { font-size: 1.1rem; }
             .nav-tools { flex-direction: column; gap: 2px; align-items: flex-end; }
-            .live-clock { font-size: 11px; }
             .calc-row { grid-template-columns: 1fr; }
         }
     </style>
@@ -94,9 +113,8 @@
         <input type="password" id="staffPass" class="auth-input" placeholder="Password" onkeypress="if(event.key === 'Enter') unlockFees()">
         <div class="auth-buttons">
             <button onclick="unlockFees()" class="btn-unlock">Unlock Portal <i class="fas fa-unlock"></i></button>
-            <button onclick="window.location.href='index.html'" class="btn-return">Return to Dashboard</button>
+            <button onclick="window.location.href='index.html'" class="btn-return" style="margin-top:10px; width:100%; border:none; background:#eee; cursor:pointer; padding:10px; border-radius:50px; font-weight:700;">Return to Dashboard</button>
         </div>
-        <div class="auth-links"><a onclick="handleForgotPassword()">Forgot Password?</a></div>
     </div>
 </div>
 
@@ -117,7 +135,7 @@
             
             <div class="nav-tools">
                 <div id="liveClock" class="live-clock">00:00:00</div>
-                <button class="btn-signout" onclick="location.reload()"><i class="fas fa-sign-out-alt"></i> EXIT</button>
+                <button class="btn-signout" onclick="location.reload()">EXIT</button>
             </div>
         </div>
     </header>
@@ -140,10 +158,10 @@
             <div class="chart-container">
                 <div class="circular-progress">
                     <svg viewBox="0 0 120 120">
-                        <circle style="stroke:#eee; fill:none;" cx="60" cy="60" r="50"></circle>
-                        <circle id="progressCircle" class="circle-bar" cx="60" cy="60" r="50" style="stroke: var(--forest); stroke-dasharray: 314.15; stroke-dashoffset: 314.15; transition: 0.8s;"></circle>
+                        <circle class="circle-bg" cx="60" cy="60" r="50"></circle>
+                        <circle id="progressCircle" class="circle-bar" cx="60" cy="60" r="50"></circle>
                     </svg>
-                    <div id="percentText" class="percentage-text" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-weight: 800; font-size: 1.2rem;">0%</div>
+                    <div id="percentText" class="percentage-text">0%</div>
                 </div>
             </div>
 
@@ -158,18 +176,12 @@
 
         <div class="card history-card" id="historyCard" style="display:none;">
             <h3><i class="fas fa-list-ul"></i> Payment History</h3>
-            <div class="history-table-wrapper">
-                <table class="history-table">
-                    <thead><tr><th>Date</th><th>Amount</th><th>Faculty</th><th>Time</th></tr></thead>
-                    <tbody id="historyTableBody"></tbody>
-                </table>
-            </div>
+            <div class="history-table-wrapper"><table class="history-table"><thead><tr><th>Date</th><th>Amount</th><th>Faculty</th><th>Time</th></tr></thead><tbody id="historyTableBody"></tbody></table></div>
         </div>
     </div>
 </div>
 
 <script>
-    // Logic from your working Firebase setup
     function updateClock() {
         const now = new Date();
         document.getElementById('liveClock').innerText = now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:true});
@@ -181,15 +193,7 @@
     const db = firebase.database();
 
     const authorized = { "Mr. Ahmad": "Ahmad@123", "Ms. Roqiya": "Roqiya@123", "Ms. Jyothi": "Jyothi@123" };
-    const recoveryPins = { "Mr. Ahmad": "Ahmad@07", "Ms. Roqiya": "Roqiya@07", "Ms. Jyothi": "Jyothi@07" };
     let activeTeacher = "", studentLifetimePaid = 0, lastReceiptData = null;
-
-    async function handleForgotPassword() {
-        const sel = document.getElementById('staffName').value;
-        if (!sel) return Swal.fire('Error', 'Select name first.', 'warning');
-        const { value: pin } = await Swal.fire({ title: 'PIN', input: 'password', inputPlaceholder: 'Enter Recovery PIN' });
-        if (pin === recoveryPins[sel]) Swal.fire('Success', `Password: ${authorized[sel]}`, 'success');
-    }
 
     function unlockFees() {
         const n = document.getElementById('staffName').value, p = document.getElementById('staffPass').value;
@@ -198,7 +202,6 @@
             document.getElementById('feeLoginScreen').style.display = 'none';
             document.getElementById('feeApp').style.display = 'block';
             document.getElementById('staffDisplay').innerText = "AUTHORIZED USER: " + n;
-            Swal.fire({ title: 'Access Granted', icon: 'success', timer: 1000, showConfirmButton: false });
         } else { Swal.fire('Error', 'Invalid credentials', 'error'); }
     }
 
@@ -227,7 +230,10 @@
             document.getElementById('totalFee').value = totalV;
             document.getElementById('historyTableBody').innerHTML = rows;
             document.getElementById('historyCard').style.display = 'block';
-        } else { document.getElementById('totalFee').value = ""; document.getElementById('historyCard').style.display = 'none'; }
+        } else { 
+            document.getElementById('totalFee').value = ""; 
+            document.getElementById('historyCard').style.display = 'none'; 
+        }
         calculateRealTime();
     }
 
@@ -256,29 +262,14 @@
         const { n, c, p, d, activeTeacher } = lastReceiptData;
         const recId = "REC-" + Date.now().toString().slice(-6);
         const win = window.open('', '', 'height=800,width=700');
-        win.document.write(`
-        <html>
-        <head><style>body { font-family: sans-serif; padding: 40px; text-align: center; } .receipt-box { border: 2px solid #006633; padding: 20px; }</style></head>
-        <body>
-            <div class="receipt-box">
-                <img src="logo.png" style="height:60px;"><br>
-                <h2>PARAMOUNT SCHOOL</h2>
-                <hr>
-                <p><strong>Receipt No:</strong> ${recId} | <strong>Date:</strong> ${d}</p>
-                <p><strong>Student:</strong> ${n} (${c})</p>
-                <h3 style="color:#006633;">Paid Amount: ₹ ${p}</h3>
-                <hr>
-                <p>Authorized Signature: ${activeTeacher}</p>
-            </div>
-            <script>window.onload = function() { window.print(); window.close(); }
-        </body></html>`);
+        win.document.write(`<html><head><style>body { font-family: sans-serif; padding: 40px; text-align: center; } .receipt-box { border: 2px solid #006633; padding: 20px; }</style></head><body><div class="receipt-box"><img src="logo.png" style="height:60px;"><br><h2>PARAMOUNT SCHOOL</h2><hr><p>Receipt No: ${recId} | Date: ${d}</p><p>Student: ${n} (${c})</p><h3>Paid Amount: ₹ ${p}</h3><hr><p>Authorized Signature: ${activeTeacher}</p></div><script>window.onload = function() { window.print(); window.close(); }<\/script></body></html>`);
         win.document.close();
     }
 
     async function clearStudentData() {
         const c = document.getElementById('feeClass').value, n = document.getElementById('feeStudent').value;
         if (!n) return Swal.fire('Error', 'Select student', 'warning');
-        const { value: pass } = await Swal.fire({ title: 'Auth Required', text: 'Enter password to wipe data', input: 'password' });
+        const { value: pass } = await Swal.fire({ title: 'Auth Required', text: 'Enter password to clear history', input: 'password' });
         if (pass === authorized[activeTeacher]) {
             db.ref(`fee_records/${c}/${n}`).remove().then(() => {
                 Swal.fire('Deleted', '', 'success'); fetchExistingFeeData();
