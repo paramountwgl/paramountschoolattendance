@@ -25,18 +25,48 @@
         .auth-links { margin-top: 20px; display: flex; flex-direction: column; gap: 8px; }
         .auth-links a { color: #999; font-size: 12px; font-weight: bold; text-decoration: underline; cursor: pointer; }
 
-        /* --- HEADER (RESTORED ORIGINAL) --- */
-        header { background: var(--forest); color: white; padding: 15px 5%; box-shadow: 0 4px 12px rgba(0,0,0,0.15); position: sticky; top: 0; z-index: 50; border-bottom: 4px solid var(--gold); }
-        .header-content { display: flex; align-items: center; max-width: 1400px; margin: 0 auto; width: 100%; }
-        .header-left { display: flex; align-items: center; gap: 10px; padding-right: 15px; border-right: 2px solid rgba(255,255,255,0.3); }
-        .header-logo { height: 45px; }
+        /* --- HEADER --- */
+        header { 
+            background: var(--forest); 
+            color: white; 
+            padding: 15px 5%; 
+            border-bottom: 4px solid var(--gold); 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            position: sticky; top: 0; z-index: 50;
+        }
+        .header-content { 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            max-width: 1400px; 
+            margin: 0 auto; 
+            gap: 20px;
+        }
+        .header-left { 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+        }
+        .header-logo { height: 60px; width: auto; }
         .school-branding { display: flex; flex-direction: column; line-height: 1.1; }
-        .school-name-main { font-family: 'Montserrat', sans-serif; font-size: 1.1rem; font-weight: 800; letter-spacing: 0.5px; }
-        .school-name-sub { font-family: 'Montserrat', sans-serif; font-size: 0.6rem; color: var(--gold); font-weight: 700; text-transform: uppercase; }
-        .portal-title { padding-left: 15px; font-family: 'Montserrat', sans-serif; font-size: 1.2rem; font-weight: 800; text-transform: uppercase; flex-grow: 1; }
-        .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
-        .live-clock { font-family: 'Montserrat', sans-serif; font-size: 0.7rem; font-weight: 700; color: white; background: rgba(0,0,0,0.2); padding: 4px 10px; border-radius: 5px; }
-        .sign-out { color: #ffcccc; font-size: 0.65rem; text-decoration: none; font-weight: 800; text-transform: uppercase; display: flex; align-items: center; gap: 4px; cursor: pointer; }
+        .school-name-main { font-family: 'Montserrat', sans-serif; font-size: 1.5rem; font-weight: 800; letter-spacing: 1px; }
+        .school-name-sub { font-family: 'Montserrat', sans-serif; font-size: 0.7rem; color: white; font-weight: 600; text-transform: uppercase; }
+        
+        .divider-line {
+            width: 2px;
+            height: 40px;
+            background-color: rgba(255,255,255,0.3);
+            margin: 0 5px;
+        }
+
+        .portal-label { 
+            font-family: 'Montserrat', sans-serif; 
+            font-size: 1.5rem; 
+            font-weight: 800; 
+            text-transform: uppercase; 
+            color: white;
+            white-space: nowrap;
+        }
 
         /* --- MAIN FORM --- */
         .container { max-width: 650px; margin: 20px auto; padding: 0 15px; }
@@ -57,23 +87,25 @@
         .circle-bar { stroke: var(--forest); stroke-dasharray: 314.15; stroke-dashoffset: 314.15; transition: stroke-dashoffset 1s ease; }
         .percentage-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-weight: 800; font-size: 1.2rem; color: #333; }
 
-        /* BUTTONS ROW */
         .action-flex { display: flex; gap: 10px; margin-top: 25px; }
-        .btn-action { color: white; border: none; padding: 16px; border-radius: 50px; font-weight: 700; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; flex: 1; }
+        .btn-action { color: white; border: none; padding: 16px; border-radius: 50px; font-weight: 700; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; flex: 1; text-transform: uppercase; font-size: 13px; }
         .btn-save { background: var(--forest); }
         .btn-wipe { background: var(--danger); }
         .btn-receipt { background: var(--sky); width: 100%; margin-top: 10px; opacity: 0.5; }
 
-        /* HISTORY TABLE */
         .history-table-wrapper { width: 100%; overflow-x: auto; border-radius: 10px; border: 1px solid #f1f5f9; }
         .history-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; min-width: 450px; }
         .history-table th { text-align: left; padding: 12px; background: #f8fafc; color: #64748b; font-size: 10px; text-transform: uppercase; border-bottom: 2px solid #eee; }
         .history-table td { padding: 12px 10px; border-bottom: 1px solid #f1f5f9; font-weight: 600; color: #334155; }
-        .amt-cell { color: var(--forest); font-weight: 800; }
 
-        @media (max-width: 600px) {
-            .portal-title { display: none; }
-            .header-left { border-right: none; }
+        @media (max-width: 768px) {
+            header { padding: 10px 2%; }
+            .header-content { gap: 10px; }
+            .header-logo { height: 50px; }
+            .school-name-main { font-size: 1.1rem; }
+            .school-name-sub { font-size: 0.55rem; }
+            .portal-label { font-size: 1.1rem; }
+            .divider-line { height: 30px; }
             .calc-row { grid-template-columns: 1fr; }
         }
     </style>
@@ -109,17 +141,22 @@
         <div class="header-content">
             <div class="header-left">
                 <img src="logo.png" class="header-logo">
-                <div class="school-branding"><span class="school-name-main">PARAMOUNT</span><span class="school-name-sub">SCHOOL</span></div>
+                <div class="school-branding">
+                    <span class="school-name-main">PARAMOUNT</span>
+                    <span class="school-name-sub">ENGLISH MEDIUM SCHOOL</span>
+                </div>
             </div>
-            <div class="portal-title">FEE PORTAL</div>
-            <div class="header-right">
-                <div id="liveClock" class="live-clock">--:--:--</div>
-                <div class="sign-out" onclick="location.reload()"><i class="fas fa-sign-out-alt"></i> SIGN OUT</div>
-            </div>
+            <div class="divider-line"></div>
+            <div class="portal-label">FEE PORTAL</div>
         </div>
     </header>
 
     <div class="container">
+        <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <div id="liveClock" style="font-weight: 800; color: #666; font-size: 12px;">--:--:--</div>
+            <a href="javascript:void(0)" onclick="location.reload()" style="color:var(--danger); font-weight:800; font-size:10px; text-decoration:none;"><i class="fas fa-power-off"></i> LOG OUT</a>
+        </div>
+
         <div class="card">
             <div id="staffDisplay" style="text-align:center; font-weight:bold; color:var(--forest); background:#e8f5e9; padding:10px; border-radius:12px; margin-bottom:15px; font-size:12px;"></div>
             <h3><i class="fas fa-file-invoice-dollar"></i> Update Records</h3>
@@ -251,12 +288,55 @@
     function generateReceipt() {
         if(!lastReceiptData) return;
         const { n, c, p, d, activeTeacher } = lastReceiptData;
-        const win = window.open('', '', 'height=600,width=400');
-        win.document.write(`<html><body style="padding:20px; font-family:sans-serif; text-align:center;">
-            <img src="logo.png" style="height:60px;"><br><h2>PARAMOUNT SCHOOL</h2><hr>
-            <p>Student: ${n} (${c})</p><p>Date: ${d}</p><p style="font-size:20px; color:green;">Paid: ₹ ${p}</p>
-            <hr><p>By: ${activeTeacher}</p></body></html>`);
-        win.document.close(); win.print();
+        const recId = "REC-" + Date.now().toString().slice(-6);
+        const win = window.open('', '', 'height=800,width=700');
+        win.document.write(`
+        <html>
+        <head>
+            <title>Receipt - ${n}</title>
+            <style>
+                body { font-family: 'Segoe UI', sans-serif; padding: 40px; color: #333; }
+                .receipt-container { border: 2px solid #006633; padding: 30px; position: relative; background: #fff; }
+                .watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-30deg); opacity: 0.05; width: 350px; z-index: 0; }
+                .header { text-align: center; border-bottom: 3px solid #006633; padding-bottom: 20px; margin-bottom: 30px; position: relative; z-index: 1; }
+                .school-name { font-size: 28px; font-weight: 800; color: #006633; margin: 0; }
+                .meta-info { display: flex; justify-content: space-between; margin-bottom: 30px; font-size: 14px; position: relative; z-index: 1; }
+                table { width: 100%; border-collapse: collapse; margin-bottom: 40px; position: relative; z-index: 1; }
+                th { background: #f4f4f4; padding: 12px; text-align: left; border: 1px solid #ddd; }
+                td { padding: 15px 12px; border: 1px solid #ddd; font-weight: 600; }
+                .stamp { border: 3px solid #e53935; color: #e53935; padding: 10px 20px; border-radius: 10px; font-weight: 900; transform: rotate(-15deg); display: inline-block; font-size: 24px; opacity: 0.8; }
+            </style>
+        </head>
+        <body>
+            <div class="receipt-container">
+                <img src="logo.png" class="watermark">
+                <div class="header">
+                    <img src="logo.png" style="height: 70px; margin-bottom: 10px;">
+                    <div class="school-name">PARAMOUNT SCHOOL</div>
+                    <div style="font-weight:800; color:white; background:#006633; display:inline-block; padding:5px 20px; border-radius:20px; margin-top:10px;">FEE RECEIPT</div>
+                </div>
+                <div class="meta-info">
+                    <div><strong>Receipt No:</strong> ${recId}<br><strong>Date:</strong> ${d}</div>
+                    <div style="text-align: right;"><strong>Student:</strong> ${n}<br><strong>Class:</strong> ${c}</div>
+                </div>
+                <table>
+                    <thead><tr><th>Description</th><th style="text-align: right;">Amount Paid</th></tr></thead>
+                    <tbody>
+                        <tr><td>School Tuition Fee Payment</td><td style="text-align: right;">₹ ${p}</td></tr>
+                    </tbody>
+                </table>
+                <div style="display:flex; justify-content: space-between; align-items: flex-end;">
+                    <div class="stamp">PAID</div>
+                    <div style="text-align:center;">
+                        <p style="font-size:12px; margin-bottom:40px;">Received by: ${activeTeacher}</p>
+                        <div style="border-top:1px solid #333; width:150px; padding-top:10px; font-size:12px; font-weight:700;">OFFICE SIGNATURE</div>
+                    </div>
+                </div>
+            </div>
+            <script>window.onload = function() { window.print(); window.close(); }</script>
+        </body>
+        </html>`);
+        win.document.close();
     }
 
     async function clearStudentData() {
