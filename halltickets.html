@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="icon" type="image/png" href="logo.png">
     <style>
-        :root { --forest: #006633; --gold: #ffd700; --danger: #c62828; --light: #f4f7f6; --dark-green: #004d26; }
+        :root { --forest: #006633; --gold: #ffd700; --danger: #c62828; --light: #f4f7f6; --dark-green: #004d26; --sky: #0288d1; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; } 
         body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; padding-bottom: 50px; }
 
@@ -62,6 +62,7 @@
         .btn-action { color: white; border: none; padding: 16px; border-radius: 50px; font-weight: 700; cursor: pointer; text-transform: uppercase; font-size: 13px; width: 100%; margin-top: 10px; transition: 0.3s; }
         .btn-save { background: var(--forest); }
         .btn-wipe { background: linear-gradient(135deg, #e53935, #b71c1c); border: 2px solid white; margin-top: 10px; }
+        .btn-post { background: linear-gradient(135deg, var(--sky), #01579b); border: 2px solid white; margin-top: 10px; }
         .btn-print { background: var(--gold); color: var(--forest); margin-top: 20px; }
 
         .audit-footer { font-size: 10px; color: #888; text-align: center; margin-top: 15px; padding-top: 10px; border-top: 1px dashed #ddd; display: none; }
@@ -155,6 +156,8 @@
                 <label style="font-size:10px; font-weight:900; color:#777;">SELECT CLASS TO PRINT</label>
                 <select id="feeClass" onchange="generateClassHallTickets()"></select>
                 <div id="hallTickets" style="margin-top:15px;"></div>
+                
+                <button id="postBtn" style="display:none;" class="btn-action btn-post" onclick="postToStudentPortal()">Post to Student Portal <i class="fas fa-cloud-upload-alt"></i></button>
                 <button id="printBtn" style="display:none;" class="btn-action btn-print" onclick="printAllClassTickets()">Print All Class Tickets <i class="fas fa-print"></i></button>
             </div>
         </div>
@@ -207,7 +210,6 @@
         const cls = document.getElementById('setupClassSelect').value, exam = document.getElementById('examSelect').value, grid = document.getElementById('dynamicSubjectGrid');
         grid.innerHTML = ""; if(!cls) return;
         
-        // REMOVED IIT FROM ALL LISTS
         let subjects = ["TEL", "HIN", "ENG", "MAT", "SOC"];
         if (["Grade-6", "Grade-7", "Grade-8"].includes(cls)) subjects.push("PHY", "CHE", "BIO");
         else subjects.push("SCI");
@@ -267,6 +269,31 @@
         }
     }
 
+    // NEW FUNCTION: POST TO STUDENT PORTAL
+    async function postToStudentPortal() {
+        const cls = document.getElementById('feeClass').value;
+        const exam = document.getElementById('examSelect').value;
+        if(!cls) return;
+
+        const result = await Swal.fire({
+            title: 'Publish Hall Tickets?',
+            text: `Allow students of ${cls} to download ${exam} tickets?`,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, Publish'
+        });
+
+        if (result.isConfirmed) {
+            await db.ref(`portal_settings/halltickets_live/${cls}`).set({
+                exam: exam,
+                status: "Live",
+                publishedBy: activeTeacher,
+                date: new Date().toLocaleDateString()
+            });
+            Swal.fire('Published!', 'Tickets are now visible on student portal.', 'success');
+        }
+    }
+
     const rollData = { "Hanish Macharla": "1472070", "Arjun Vihaar Illandula": "1478225", "Thanu sree Allakunta": "1469391", "Aadhya Gangaraboina": "1459555", "Aadhya Sri Oggula": "1459560", "Aadhyasri Shivagoni": "1474500", "Afraha Begum": "1460680", "Aliya Sultana": "1472299", "Anvika Bandi": "1459683", "Aradana Devara konda": "1459620", "Devansh Bandi": "1459605", "Hanvitha Mulkalapelli": "1472069", "Harsha Vardhan Seenapelli": "1472723", "Hiranya Bandi": "1459658", "Jashritha Boina": "1478248", "Konreddy Shreyanvi": "1481135", "Kriyansh Sammeta": "1459568", "Mohammed Mohiuddin Sayyad": "1459652", "Nethra Narkurthi": "1459636", "Reeyansh Bandi": "1463720", "Rishi Myakala": "1459582", "Rudransh Bandi": "1459607", "Rudransh Bandi_1": "1459604", "Sanvika Bandi": "1459625", "Shanvith Khatha": "1472074", "Shishira Jalagam": "1469395", "Shiva Sai Mekala": "1456748", "Shreyansh Gangaraboina": "1459572", "Sreeja Thalla": "1459643", "Srikrithini Myakala": "1459603", "Srivatsav Vanam": "1472536", "Sriyansh Mekala": "1456743", "Thanvika Lakka": "1473500", "Thrilokansh Vudari": "1463724", "Ujjwal Checkka": "1459694", "Vaishnavi Lakka": "1474815", "Vedansh Myakala": "1460690", "Vishnu Priya Molugu": "1478250", "Vyshnav Tej Boina": "1413563", "Yafiah Mohammad": "1459577" };
 
     async function generateClassHallTickets() {
@@ -286,6 +313,7 @@
         });
         document.getElementById('hallTickets').innerHTML = html;
         document.getElementById('printBtn').style.display = 'block';
+        document.getElementById('postBtn').style.display = 'block';
         Swal.close();
     }
 
