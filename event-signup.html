@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Registration | Paramount School</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Segoe+UI:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root { --forest: #004d26; --gold: #ffd700; --light: #f4f7f6; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; padding: 20px; }
+        .reg-card { max-width: 500px; margin: 20px auto; background: white; padding: 30px; border-radius: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.05); border-top: 8px solid var(--forest); }
+        .header { text-align: center; margin-bottom: 25px; }
+        .header img { height: 60px; margin-bottom: 10px; }
+        h2 { color: var(--forest); font-family: 'Montserrat'; margin: 0; font-size: 1.4rem; text-transform: uppercase; }
+        
+        .input-group { margin-bottom: 15px; }
+        label { display: block; font-size: 11px; font-weight: 800; text-transform: uppercase; color: #888; margin-bottom: 6px; }
+        input, select { width: 100%; padding: 14px; border-radius: 12px; border: 2px solid #eee; font-size: 14px; outline: none; box-sizing: border-box; }
+        input:focus, select:focus { border-color: var(--forest); background: #f9fdfa; }
+        
+        .btn-reg { width: 100%; background: var(--forest); color: white; padding: 16px; border-radius: 50px; border: none; font-weight: 800; cursor: pointer; text-transform: uppercase; margin-top: 10px; transition: 0.3s; }
+        .btn-reg:hover { background: #002b15; transform: translateY(-2px); }
+    </style>
+</head>
+<body>
+
+<div class="reg-card">
+    <div class="header">
+        <img src="logo.png">
+        <h2>Event Registration</h2>
+        <p style="font-size: 12px; color: #666; font-weight: 600;">Participate & Excel</p>
+    </div>
+
+    <div class="input-group">
+        <label>Select Event</label>
+        <select id="eventSelector">
+            <option value="">-- Choose Upcoming Event --</option>
+            </select>
+    </div>
+
+    <div class="input-group">
+        <label>Full Name</label>
+        <input type="text" id="sName" placeholder="Enter student name">
+    </div>
+
+    <div class="input-group">
+        <label>Class & Section</label>
+        <select id="sClass">
+            <option value="Pre-KG">Pre-KG</option><option value="KG-1">KG-1</option>
+            <option value="KG-2">KG-2</option><option value="Grade-1">Grade-1</option>
+            <option value="Grade-2">Grade-2</option><option value="Grade-3">Grade-3</option>
+            <option value="Grade-4">Grade-4</option><option value="Grade-5">Grade-5</option>
+            <option value="Grade-6">Grade-6</option><option value="Grade-7">Grade-7</option>
+            <option value="Grade-8">Grade-8</option>
+        </select>
+    </div>
+
+    <div class="input-group">
+        <label>Roll Number</label>
+        <input type="number" id="sRoll" placeholder="e.g. 1472070">
+    </div>
+
+    <div class="input-group">
+        <label>Parent Contact Number</label>
+        <input type="tel" id="sPhone" placeholder="Enter phone number">
+    </div>
+
+    <button class="btn-reg" onclick="registerStudent()">Submit Entry <i class="fas fa-paper-plane"></i></button>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    const firebaseConfig = { apiKey: "AIzaSyDRYk9KOK-ga0c88dnYMsAoifW2NJTd_Y8", databaseURL: "https://paramount-school-d55bc-default-rtdb.firebaseio.com", projectId: "paramount-school-d55bc" };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    // 1. Load active events from your existing 'school_events' node
+    db.ref('school_events').on('value', snap => {
+        const selector = document.getElementById('eventSelector');
+        selector.innerHTML = '<option value="">-- Choose Upcoming Event --</option>';
+        snap.forEach(child => {
+            const ev = child.val();
+            selector.innerHTML += `<option value="${ev.name}">${ev.name}</option>`;
+        });
+    });
+
+    function registerStudent() {
+        const event = document.getElementById('eventSelector').value;
+        const name = document.getElementById('sName').value;
+        const cls = document.getElementById('sClass').value;
+        const roll = document.getElementById('sRoll').value;
+        const phone = document.getElementById('sPhone').value;
+
+        if(!event || !name || !roll || !phone) {
+            return Swal.fire('Missing Info', 'Please fill all fields', 'warning');
+        }
+
+        const entry = { name, cls, roll, phone, time: new Date().toLocaleString() };
+
+        // 2. Save registration under the specific event name
+        db.ref(`event_registrations/${event}/${roll}`).set(entry).then(() => {
+            Swal.fire('Registered!', `Success! You are now signed up for ${event}.`, 'success');
+            // Clear fields
+            document.getElementById('sName').value = '';
+            document.getElementById('sRoll').value = '';
+            document.getElementById('sPhone').value = '';
+        });
+    }
+</script>
+</body>
+</html>
