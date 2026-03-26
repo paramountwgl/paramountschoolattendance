@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Hall Ticket Portal | Paramount School</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Segoe+UI:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="logo.png">
+    <style>
+        :root { --forest: #006633; --gold: #ffd700; --danger: #c62828; --light: #f4f7f6; --dark-green: #004d26; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; } 
+        body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; padding-bottom: 50px; }
+
+        /* --- LOGIN SCREEN --- */
+        .overlay-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--light); z-index: 1000; display: flex; justify-content: center; align-items: center; padding: 15px; }
+        .auth-box { background: white; padding: 40px 25px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); width: 100%; max-width: 420px; border-bottom: 5px solid var(--forest); text-align: center; }
+        .auth-logo { height: 75px; margin-bottom: 10px; }
+        .auth-branding-text h2 { margin: 5px 0 0; font-family: 'Montserrat', sans-serif; font-size: 1.6rem; font-weight: 800; color: var(--forest); }
+        .auth-input { width: 100%; padding: 12px; border-radius: 10px; border: 2px solid #eee; margin-bottom: 15px; text-align: center; font-size: 16px; height: 50px; outline: none; transition: 0.3s; }
+        
+        .btn-premium-unlock { background: linear-gradient(135deg, var(--forest), #004d26); color: white; padding: 15px; border-radius: 50px; font-weight: 800; border: 2px solid var(--gold); cursor: pointer; width: 100%; height: 55px; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; margin-top: 15px; text-transform: uppercase; font-size: 14px; }
+        .btn-premium-unlock:hover { transform: scale(1.02); box-shadow: 0 5px 15px rgba(0,102,51,0.3); }
+
+        /* --- PREMIUM HEADER --- */
+        header { background: var(--forest); color: white; padding: 12px 4%; border-bottom: 4px solid var(--gold); box-shadow: 0 4px 12px rgba(0,0,0,0.15); position: sticky; top: 0; z-index: 100; }
+        .header-content { display: flex; align-items: center; justify-content: space-between; max-width: 1400px; margin: 0 auto; width: 100%; }
+        .brand-group { display: flex; align-items: center; flex-wrap: nowrap; } 
+        .header-left { display: flex; align-items: center; gap: 12px; }
+        .header-logo { height: 55px; width: auto; flex-shrink: 0; }
+        .school-branding { display: flex; flex-direction: column; line-height: 1.1; flex-shrink: 0; }
+        .school-name-main { font-family: 'Montserrat', sans-serif; font-size: 1.4rem; font-weight: 800; letter-spacing: 0.5px; color: white; }
+        .school-name-sub { font-family: 'Montserrat', sans-serif; font-size: 0.65rem; color: white; font-weight: 600; text-transform: uppercase; opacity: 0.9; }
+        .divider-line { width: 2px; height: 35px; background-color: rgba(255,255,255,0.3); margin: 0 15px; flex-shrink: 0; }
+        .portal-label { font-family: 'Montserrat', sans-serif; font-size: 1.4rem; font-weight: 800; text-transform: uppercase; color: white; white-space: nowrap; flex-shrink: 0; }
+
+        .nav-tools { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
+        .live-clock { font-family: 'Montserrat', sans-serif; font-weight: 800; color: var(--gold); font-size: 13px; text-transform: uppercase; }
+        .btn-exit { background: rgba(255,255,255,0.1); border: 1.5px solid white; color: white; padding: 5px 18px; border-radius: 50px; font-size: 10px; font-weight: 800; text-transform: uppercase; cursor: pointer; transition: 0.3s all ease; display: flex; align-items: center; gap: 8px; }
+
+        /* --- SUB-NAVIGATION --- */
+        .sub-nav { display: flex; gap: 10px; max-width: 650px; margin: 15px auto 0; padding: 0 15px; }
+        .nav-link { flex: 1; text-align: center; background: white; padding: 12px; border-radius: 50px; font-weight: 700; text-transform: uppercase; font-size: 11px; color: #666; text-decoration: none; border: 1px solid #f1f5f9; box-shadow: 0 2px 6px rgba(0,0,0,0.03); transition: 0.3s; }
+        .nav-link.standout { background: var(--gold); color: var(--forest); border-color: var(--gold); }
+        .nav-link.active { background: var(--forest); color: white; }
+
+        /* --- DASHBOARD --- */
+        .container { max-width: 650px; margin: 25px auto; padding: 0 15px; }
+        .card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); border-top: 8px solid var(--gold); margin-bottom: 25px; }
+        h3 { color: var(--forest); margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; display: flex; align-items: center; gap: 10px; font-size: 1.1rem; }
+        
+        .tab-box { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        .tab-btn { flex: 1; padding: 10px; border-radius: 50px; border: 1px solid #ddd; background: #fafafa; color: #777; font-weight: 700; cursor: pointer; text-transform: uppercase; font-size: 10px; }
+        .tab-btn.active { border-color: var(--forest); color: var(--forest); }
+
+        .search-wrap { position: relative; margin-bottom: 15px; }
+        .search-wrap i { position: absolute; left: 15px; top: 18px; color: #aaa; }
+        .search-wrap input { padding-left: 40px; border: 2px solid #e8f5e9; }
+
+        .ht-card { background: white; padding: 12px; border-radius: 12px; border: 1px solid #eee; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .ht-name { font-weight: 800; color: var(--forest); font-size: 13px; }
+        
+        select, input { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #eee; font-size: 15px; margin-bottom: 10px; outline: none; background: #fafafa; }
+        .btn-action { color: white; border: none; padding: 16px; border-radius: 50px; font-weight: 700; cursor: pointer; text-transform: uppercase; font-size: 13px; width: 100%; margin-top: 10px; transition: 0.3s; }
+        .btn-save { background: var(--forest); }
+        .btn-print { background: var(--gold); color: var(--forest); margin-top: 20px; }
+
+        @media (max-width: 768px) {
+            .school-name-sub, .divider-line { display: none; }
+            .school-name-main, .portal-label { font-size: 0.9rem; }
+            .header-logo { height: 40px; }
+        }
+    </style>
+</head>
+<body>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+<div id="hallLoginScreen" class="overlay-screen">
+    <div class="auth-box">
+        <img src="logo.png" class="auth-logo">
+        <div class="auth-branding-text"><h2>PARAMOUNT</h2><p style="color:var(--gold); font-weight:800; font-size:11px; text-transform:uppercase;">Hall Ticket Access</p></div>
+        <select id="staffName" class="auth-input" style="margin-top:20px;">
+            <option value="">-- Select Staff --</option>
+            <option value="Mr. Ahmad">Mr. Ahmad</option>
+            <option value="Ms. Roqiya">Ms. Roqiya</option>
+            <option value="Ms. Jyothi">Ms. Jyothi</option>
+        </select>
+        <input type="password" id="staffPass" class="auth-input" placeholder="Password" onkeypress="if(event.key === 'Enter') unlockPortal()">
+        <button onclick="unlockPortal()" class="btn-premium-unlock">Unlock Portal <i class="fas fa-unlock"></i></button>
+        <button onclick="window.location.href='index.html'" style="margin-top:12px; width:100%; border:none; background:#f1f5f9; color:#475569; padding:12px; border-radius:50px; font-weight:700; cursor:pointer; font-size:0.8rem; text-transform:uppercase;">Return to Dashboard</button>
+    </div>
+</div>
+
+<div id="hallApp" style="display:none;">
+    <header>
+        <div class="header-content">
+            <div class="brand-group">
+                <div class="header-left">
+                    <img src="logo.png" class="header-logo">
+                    <div class="school-branding">
+                        <span class="school-name-main">PARAMOUNT</span>
+                        <span class="school-name-sub">ENGLISH MEDIUM SCHOOL</span>
+                    </div>
+                </div>
+                <div class="divider-line"></div>
+                <div class="portal-label">HALL TICKETS</div>
+            </div>
+            <div class="nav-tools">
+                <div id="liveClock" class="live-clock">00:00:00 AM</div>
+                <button class="btn-exit" onclick="location.reload()"><i class="fas fa-sign-out-alt"></i> Exit</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="sub-nav">
+        <a href="fees.html" class="nav-link standout"><i class="fas fa-money-bill-wave"></i> Fee Records</a>
+        <a href="halltickets.html" class="nav-link active"><i class="fas fa-id-card"></i> Hall Tickets</a>
+    </div>
+
+    <div class="container">
+        <div id="teacherDisplay" style="text-align:center; font-weight:800; color:var(--forest); background:#e8f5e9; padding:10px; border-radius:12px; margin-bottom:15px; font-size:12px;"></div>
+        
+        <div class="card">
+            <h3><i class="fas fa-calendar-check"></i> Hall Ticket Manager</h3>
+            <div class="tab-box">
+                <button class="tab-btn active" id="btn-setup" onclick="switchView('setup')">1. Setup Class Dates</button>
+                <button class="tab-btn" id="btn-gen" onclick="switchView('generate')">2. Generate Tickets</button>
+            </div>
+
+            <div id="setupView">
+                <label style="font-size:10px; font-weight:900; color:#777;">SELECT CLASS TO SCHEDULE</label>
+                <select id="setupClassSelect" onchange="loadClassSchedule()"></select>
+                
+                <label style="font-size:10px; font-weight:900; color:#777;">EXAM TYPE</label>
+                <select id="examSelect" onchange="loadClassSchedule()">
+                    <option value="Formatative Assesment-1, 2023 - 2024">Formative Assessment-1</option>
+                    <option value="Formatative Assesment-2, 2023 - 2024">Formative Assessment-2</option>
+                    <option value="FORMATATIVE ASSESMENT-3, 2023 - 2024">Formative Assessment-3</option>
+                    <option value="SUMMATATIVE ASSESMENT-1, 2023 - 2024">Summative Assessment-1</option>
+                    <option value="SUMMATATIVE ASSESMENT-2, 2023 - 2024">Summative Assessment-2</option>
+                </select>
+
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:15px;">
+                    <div><label style="font-size:9px;">TELUGU</label><input type="text" id="date-TEL" placeholder="Date & Time"></div>
+                    <div><label style="font-size:9px;">HINDI</label><input type="text" id="date-HIN" placeholder="Date & Time"></div>
+                    <div><label style="font-size:9px;">ENGLISH</label><input type="text" id="date-ENG" placeholder="Date & Time"></div>
+                    <div><label style="font-size:9px;">MATHS</label><input type="text" id="date-MAT" placeholder="Date & Time"></div>
+                    <div><label style="font-size:9px;">SCIENCE</label><input type="text" id="date-SCI" placeholder="Date & Time"></div>
+                    <div><label style="font-size:9px;">SOCIAL</label><input type="text" id="date-SOC" placeholder="Date & Time"></div>
+                </div>
+                <button class="btn-action btn-save" onclick="saveClassExamDates()">Save Class Schedule <i class="fas fa-save"></i></button>
+            </div>
+
+            <div id="generateView" style="display:none;">
+                <label style="font-size:10px; font-weight:900; color:#777;">SELECT CLASS TO PRINT</label>
+                <select id="feeClass" onchange="generateClassHallTickets()"></select>
+                
+                <div id="searchWrap" class="search-wrap" style="display:none;">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="htSearch" placeholder="Search student name..." onkeyup="filterHT()">
+                </div>
+
+                <div id="hallTickets"></div>
+                <button id="printBtn" style="display:none;" class="btn-action btn-print" onclick="printAllClassTickets()">Print All Class Tickets <i class="fas fa-print"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function updateClock() {
+        const now = new Date();
+        document.getElementById('liveClock').innerText = now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:true}).toUpperCase();
+    }
+    setInterval(updateClock, 1000); updateClock();
+
+    const firebaseConfig = { apiKey: "AIzaSyDRYk9KOK-ga0c88dnYMsAoifW2NJTd_Y8", databaseURL: "https://paramount-school-d55bc-default-rtdb.firebaseio.com", projectId: "paramount-school-d55bc" };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    const authorized = { "Mr. Ahmad": "Ahmad@123", "Ms. Roqiya": "Roqiya@123", "Ms. Jyothi": "Jyothi@123" };
+    let activeTeacher = "", ticketsToPrint = [];
+
+    function unlockPortal() {
+        const n = document.getElementById('staffName').value, p = document.getElementById('staffPass').value;
+        if(p === authorized[n]) {
+            activeTeacher = n;
+            document.getElementById('hallLoginScreen').style.display = 'none';
+            document.getElementById('hallApp').style.display = 'block';
+            document.getElementById('teacherDisplay').innerText = "AUTHORIZED: " + n;
+            
+            const classOptions = '<option value="">-- Choose Class --</option>' + Object.keys(studentData).map(c => `<option value="${c}">${c}</option>`).join('');
+            document.getElementById('setupClassSelect').innerHTML = classOptions;
+            document.getElementById('feeClass').innerHTML = classOptions;
+        } else { Swal.fire('Error', 'Invalid credentials', 'error'); }
+    }
+
+    function switchView(view) {
+        document.getElementById('setupView').style.display = (view === 'setup') ? 'block' : 'none';
+        document.getElementById('generateView').style.display = (view === 'generate') ? 'block' : 'none';
+        document.getElementById('btn-setup').classList.toggle('active', view === 'setup');
+        document.getElementById('btn-gen').classList.toggle('active', view === 'generate');
+    }
+
+    async function loadClassSchedule() {
+        const cls = document.getElementById('setupClassSelect').value;
+        const exam = document.getElementById('examSelect').value;
+        const subs = ["TEL", "HIN", "ENG", "MAT", "SCI", "SOC"];
+        
+        subs.forEach(s => document.getElementById(`date-${s}`).value = ""); // Clear inputs
+        if(!cls) return;
+
+        const snap = await db.ref(`class_schedules/${cls}/${exam}`).once('value');
+        const data = snap.val();
+        if(data) subs.forEach(s => document.getElementById(`date-${s}`).value = data[s] || "");
+    }
+
+    async function saveClassExamDates() {
+        const cls = document.getElementById('setupClassSelect').value;
+        const exam = document.getElementById('examSelect').value;
+        if(!cls) return Swal.fire('Error', 'Select a class first', 'warning');
+
+        const schedule = {};
+        ["TEL", "HIN", "ENG", "MAT", "SCI", "SOC"].forEach(sub => schedule[sub] = document.getElementById(`date-${sub}`).value);
+        
+        await db.ref(`class_schedules/${cls}/${exam}`).update(schedule);
+        Swal.fire('Saved', `Schedule updated for ${cls} - ${exam.split(',')[0]}`, 'success');
+    }
+
+    async function generateClassHallTickets() {
+        const cls = document.getElementById('feeClass').value, exam = document.getElementById('examSelect').value;
+        if(!cls) return;
+
+        Swal.fire({ title: 'Syncing Class Data...', didOpen: () => Swal.showLoading() });
+        const schedSnap = await db.ref(`class_schedules/${cls}/${exam}`).once('value'), schedule = schedSnap.val() || {};
+        const feeSnap = await db.ref(`fee_records/${cls}`).once('value'), feeData = feeSnap.val();
+        
+        ticketsToPrint = []; let html = "";
+        studentData[cls].forEach((name, index) => {
+            let tFee = 0, tPaid = 0;
+            if(feeData && feeData[name]) Object.values(feeData[name]).forEach(r => { tFee = r.total; tPaid += parseFloat(r.paid || 0); });
+            const ticket = { name, cls, regNo: 1000 + index, exam, schedule, due: (tFee - tPaid) };
+            ticketsToPrint.push(ticket);
+            html += `<div class="ht-card" data-student="${name}"><span><b>${name}</b></span><button onclick="printIndividualTicket(${index})" style="padding:5px 12px; border-radius:5px; border:1px solid #ccc; font-size:10px; cursor:pointer; font-weight:800;">PRINT</button></div>`;
+        });
+        document.getElementById('hallTickets').innerHTML = html;
+        document.getElementById('printBtn').style.display = 'block';
+        document.getElementById('searchWrap').style.display = 'block';
+        Swal.close();
+    }
+
+    function filterHT() {
+        const q = document.getElementById('htSearch').value.toLowerCase();
+        document.querySelectorAll('.ht-card').forEach(c => {
+            c.style.display = c.getAttribute('data-student').toLowerCase().includes(q) ? 'flex' : 'none';
+        });
+    }
+
+    function printIndividualTicket(idx) { printTickets([ticketsToPrint[idx]]); }
+    function printAllClassTickets() { printTickets(ticketsToPrint); }
+
+    function printTickets(list) {
+        const logoOrigin = window.location.origin + "/logo.png";
+        const win = window.open('', '', 'height=800,width=1000');
+        win.document.write('<html><head><style>body{font-family:sans-serif;padding:20px; color:#333;} *{-webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;} .ticket{border:3px solid #333; padding:25px; margin-bottom:50px; page-break-after:always; border-radius:15px; position:relative;} .header{display:flex; justify-content:space-between; align-items:center; border-bottom:3px solid #333; padding-bottom:10px; margin-bottom:15px;} .tbl{width:100%; border-collapse:collapse; margin-top:20px;} .tbl th, .tbl td{border:1px solid #333; padding:12px; text-align:center; font-weight:bold; font-size:12px;}</style></head><body>');
+        
+        list.forEach(t => {
+            win.document.write(`
+                <div class="ticket">
+                    <div class="header">
+                        <div style="display:flex; align-items:center; gap:15px;">
+                            <img src="${logoOrigin}" style="height:70px;" onerror="this.src='logo.png'">
+                            <div><h1 style="margin:0; font-size:26px;">PARAMOUNT SCHOOL</h1><p style="margin:0; font-weight:800; color:#555;">${t.exam}</p></div>
+                        </div>
+                        <div style="width:90px; height:110px; border:2px dashed #999; text-align:center; font-size:9px; display:flex; align-items:center; justify-content:center;">STUDENT PHOTO</div>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; font-size:14px; margin-bottom:20px;">
+                        <div><b>Student Name:</b> ${t.name.toUpperCase()}<br><b>Class:</b> ${t.cls}</div>
+                        <div style="text-align:right;"><b>Reg No:</b> ${t.regNo}<br><b style="color:red;">Fee Due: ₹ ${t.due}</b></div>
+                    </div>
+                    <table class="tbl">
+                        <thead><tr><th>Subject(s)</th><th>TEL</th><th>HIN</th><th>ENG</th><th>MAT</th><th>SCI</th><th>SOC</th></tr></thead>
+                        <tbody>
+                            <tr><td style="text-align:left; background:#f4f4f4;">Date & Time</td><td>${t.schedule.TEL||'-'}</td><td>${t.schedule.HIN||'-'}</td><td>${t.schedule.ENG||'-'}</td><td>${t.schedule.MAT||'-'}</td><td>${t.schedule.SCI||'-'}</td><td>${t.schedule.SOC||'-'}</td></tr>
+                            <tr style="height:45px;"><td style="text-align:left; background:#f4f4f4;">Invigilator Sign</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                        </tbody>
+                    </table>
+                    <div style="margin-top:60px; display:flex; justify-content:space-between; font-size:11px; font-weight:bold; text-transform:uppercase;">
+                        <div style="border-top:1px solid #333; width:220px; text-align:center; padding-top:5px;">Class Teacher Signature</div>
+                        <div style="border-top:1px solid #333; width:220px; text-align:center; padding-top:5px;">Correspondent Signature</div>
+                    </div>
+                    <div style="margin-top:30px; font-size:10px; border-top:1px dashed #ccc; padding-top:10px; color:#555;">
+                        <b>Instructions:</b> 1. Hall ticket is mandatory for entry. 2. Students with due fees exceeding ₹5000 are not permitted.
+                    </div>
+                </div>`);
+        });
+        win.document.write('</body></html>');
+        win.document.close();
+        setTimeout(() => { win.print(); win.close(); }, 600);
+    }
+
+    const studentData = { "Pre-KG": ["Hanish Macharla", "Arjun Vihaar Illandula", "Thanu sree Allakunta", "Aadhya Gangaraboina", "Aadhya Sri Oggula", "Aadhyasri Shivagoni", "Afraha Begum", "Aliya Sultana", "Anvika Bandi", "Aradana Devara konda", "Devansh Bandi", "Hanvitha Mulkalapelli", "Harsha Vardhan Seenapelli", "Hiranya Bandi", "Jashritha Boina", "Konreddy Shreyanvi", "Kriyansh Sammeta", "Mohammed Mohiuddin Sayyad", "Nethra Narkurthi", "Reeyansh Bandi", "Rishi Myakala", "Rudransh Bandi", "Sanvika Bandi", "Shanvith Khatha", "Shishira Jalagam", "Shiva Sai Mekala", "Shree Rudhraveer Chevvu", "Shreyansh Gangaraboina", "Sreeja Thalla", "Srikrithini Myakala", "Srivatsav Vanam", "Sriyansh Mekala", "Thanvika Lakka", "Thrilokansh Vudari", "Ujjwal Checkka", "Vaishnavi Lakka", "Vedansh Myakala", "Vishnu Priya Molugu", "Vyshnav Tej Boina", "Yafiah Mohammad"], "KG-1": ["Aadhya Sri Amaravadi", "Aditya Manda", "Aadhya Jella", "Advaita Gauri Bandi", "Aizah Amna Shaik", "Akshara Singaram", "Bhahuveer Raj Somishetti", "Gayathri Erroju", "Hanvika Mulkalapelli", "Manvith Kondoju", "Sayyad Vajeed", "Mekala Manu sri", "Oliva Grace Vallapu", "Rithwik Oggula", "Rithwika Kandagatla", "Srimahi Chevvu", "Thanvesh Thalla", "Trishul Nanduri", "Yoganshika Nanduri", "Yusra Mohammad", "Zainul Abideen Syed"], "KG-2": ["Deekshanth Sammeta", "Hanshith Erroju", "Harika Bandi", "Himarsha Naini", "Karthik Vallepu", "Kruthika Bandi", "Rajavardhan Gampala", "Roshan Kaitha", "Sri Anshu Ayaan Lyadala", "Srihansh Bandi", "Srikshitha Guduri", "Varshith Gonela", "Adyasri Makala", "Anvik Boini", "Anvith Pokanati", "Awais Ur Rehman Mohammad", "Dakshu Pothuganti", "Hansith Reddy Katukuri", "Harshith Pokanati", "Jella Aditya", "Krishank Nallabothula", "Kundana Katkuri", "Munukuntla Revanth Rudhra", "Niraja Nethri Siluveru", "Pranav Mattepelli", "Sreenith Yadav Naini", "Uvan Reddy Dasari", "Zayan Mohammad", "Zoya Mohammed"], "Grade-1": ["Dheeraj Gattu", "Preetham Sannayala", "Shiva nandu Gonela", "Shrayan Nuthanakanti", "Sriyanksha Mandala", "Advitha Garige", "Harika Bandi", "Himansi Kondoju", "Izhaan Rahamath Syed", "Jaisurya Myakala", "Khadeeja Fathima", "Manaswini Dandugula", "Manusri Bandi", "Rithwik krishna Amaravadi", "Rohan Bandi", "Shiva Junnu", "Shivanandh Bandi", "Sridha Thalla", "Srinika Chengelly", "Sriyanshi Oggula", "Vishwak Checkka"], "Grade-2": ["Aliza Manha Shaik", "Dhruvan Reddy Katukuri", "Druthika Enugala", "Manaswini Bandi", "Rakshith Macharla", "Sathwika Katkuri", "Shalini Uppala", "Chandu Devarakonda", "Gnaneshwar Pokanati", "Hasnain Syed", "Koushik Siluveru", "Senen Desabattula", "Shivarajan Pothuganti"], "Grade-3": ["Nagavelly Manikanta", "Mirja Ismail", "Bandi Aryan", "Dandugula Mahesh Babu", "Bandi Tejasri", "Bandi Harshavardhan", "Gampala Vyshnavi", "Gampala Laxmi", "Garige Harshith", "Katkuri Hanish", "Katukuri Manideep", "MD Abdul Quddus", "Muppa Sathwik Patel", "Nuthanakanti Sansita", "Pasarakonda Ritwin", "Pinninti Rakshith Rao", "Rayi Sriman Adithya"], "Grade-4": ["Abdul Saqib Mohammad", "Anudeep Chintha", "Bhavan Bandi", "Harshavardhan Gonela", "Jayadev Chiluveru", "Mahaboob Syed", "Nandith Reddy Enugala", "Sai Charan Goud Mandala", "Sai Prasanna Keerthi", "Ajmeri Shaik", "Akshith Chiluveru", "Jayasri Myakala", "Rahul Kanjarla", "Saketh Devarakonda"], "Grade-5": ["Adya Reddy Vangala", "Kowshik Patel Muppa", "Siri Singaram", "Srikar Mandala", "Abdus Salaam MD", "Akshith Ram Kalvacharla", "Jaffar Anas Shaik", "Khaja Azeemuddin Mohammed", "Nihan Mohammed", "Saif Shaik", "Saketh Renukuntla", "Sreeja Dasari", "Vidhaatri Sahani"], "Grade-6": ["Abdul Razzak Mohammad", "Anudeepthi Chintha", "Saketh Ranaveni", "Shiva Sri Katukuri", "Aklees Shaik", "Akshya Kalvacharla", "Prince Katkuri"], "Grade-7": ["Manikanta Sannayala", "Sreeyan Reddy Karra", "Jayadhithya Chiluveru"], "Grade-8": ["Sathwika Nagavelly", "Vyshnavi Uppala", "Akshaya Gampala", "Ganesh Oggula", "Gayathri Renukuntla", "Khaja Sadeemuddin Mohammed"] };
+</script>
+</body>
+</html>
