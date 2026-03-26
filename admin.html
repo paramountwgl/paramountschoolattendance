@@ -38,10 +38,11 @@
         .card { background: white; padding: 15px; border-radius: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); margin-bottom: 20px; border-top: 6px solid var(--forest); }
         h3 { color: var(--forest); margin: 0 0 15px; font-size: 1.1rem; border-bottom: 1px solid #eee; padding-bottom: 10px; display: flex; align-items: center; gap: 8px; }
         
-        /* NEW NAVIGATION STYLING */
-        .nav-card { cursor: pointer; background: #fff; border-radius: 15px; padding: 20px; text-align: center; border: 2px solid #eee; transition: 0.3s; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: center; gap: 15px; }
+        /* NAVIGATION STYLING */
+        .nav-card { cursor: pointer; background: #fff; border-radius: 15px; padding: 20px; text-align: center; border: 2px solid #eee; transition: 0.3s; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: space-between; gap: 15px; }
         .nav-card:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); border-color: var(--gold); }
-        .nav-card i { font-size: 1.8rem; color: var(--forest); }
+        .nav-inner { display: flex; align-items: center; gap: 15px; }
+        .nav-card i.main-icon { font-size: 1.8rem; color: var(--forest); width: 40px; }
         .nav-card h4 { margin: 0; color: #333; font-family: 'Montserrat'; font-size: 1.2rem; }
 
         .filter-row { display: flex; gap: 8px; align-items: center; margin-top: 10px; width: 100%; }
@@ -108,8 +109,18 @@
     <div class="container">
         
         <div class="nav-card" onclick="window.location.href='360view.html'">
-            <i class="fas fa-sync-alt"></i>
-            <h4>Student 360° View Portal</h4>
+            <div class="nav-inner">
+                <i class="fas fa-sync-alt main-icon"></i>
+                <h4>Student 360° View Portal</h4>
+            </div>
+            <i class="fas fa-chevron-right" style="font-size: 1rem; color: #ccc;"></i>
+        </div>
+
+        <div class="nav-card" onclick="window.location.href='event-manager.html'">
+            <div class="nav-inner">
+                <i class="fas fa-calendar-alt main-icon" style="color: #b8860b;"></i>
+                <h4>Manage Events & Countdown</h4>
+            </div>
             <i class="fas fa-chevron-right" style="font-size: 1rem; color: #ccc;"></i>
         </div>
 
