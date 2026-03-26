@@ -98,14 +98,14 @@
     <div class="auth-box">
         <img src="logo.png" style="height:75px; margin-bottom:10px;">
         <div class="auth-branding-text"><h2>PARAMOUNT</h2><p style="color:var(--gold); font-weight:800; font-size:11px; text-transform:uppercase;">Fee Entry Access</p></div>
-        <select id="staffName" style="margin-top:20px; width:100%; padding:12px; border-radius:10px;">
+        <select id="staffName" class="auth-input" style="margin-top:20px; width:100%; padding:12px; border-radius:10px;">
             <option value="">-- Select Staff --</option>
             <option value="Mr. Ahmad">Mr. Ahmad</option>
             <option value="Ms. Roqiya">Ms. Roqiya</option>
             <option value="Ms. Jyothi">Ms. Jyothi</option>
         </select>
         <input type="password" id="staffPass" placeholder="Password" style="margin-top:10px; width:100%; padding:12px; border-radius:10px; border:1px solid #eee;" onkeypress="if(event.key === 'Enter') unlockFees()">
-        <button onclick="unlockFees()" class="btn-action btn-save" style="width:100%; margin-top:10px;">Unlock Portal <i class="fas fa-unlock"></i></button>
+        <button onclick="unlockFees()" class="btn-unlock">Unlock Portal <i class="fas fa-unlock"></i></button>
         <button onclick="window.location.href='index.html'" style="margin-top:12px; width:100%; border:none; background:#f1f5f9; color:#475569; padding:12px; border-radius:50px; font-weight:700; cursor:pointer; font-size:0.8rem; text-transform:uppercase;">Return to Dashboard</button>
         <div style="margin-top:20px;"><a onclick="handleForgotPassword()" style="color:#999; font-size:12px; text-decoration:underline; cursor:pointer; font-weight:bold;">Forgot Password?</a></div>
     </div>
@@ -232,7 +232,6 @@
             document.getElementById('totalFee').value = totalV;
             document.getElementById('historyTableBody').innerHTML = rows;
             document.getElementById('historyCard').style.display = 'block';
-            // UPDATE AUDIT TRAIL UNDER BAR
             document.getElementById('lastFaculty').innerText = lastFac;
             document.getElementById('lastTime').innerText = lastTime;
             document.getElementById('auditTrail').style.display = 'block';
@@ -271,8 +270,32 @@
         if(!lastReceiptData) return;
         const { n, c, p, d, activeTeacher } = lastReceiptData;
         const recId = "REC-" + Date.now().toString().slice(-6);
+        const logoPath = window.location.origin + "/logo.png";
         const win = window.open('', '', 'height=800,width=700');
-        win.document.write(`<html><head><style>body { font-family: sans-serif; padding: 40px; text-align: center; } .receipt-box { border: 2px solid #006633; padding: 20px; }</style></head><body><div class="receipt-box"><h2>PARAMOUNT SCHOOL</h2><hr><p>Receipt No: ${recId} | Date: ${d}</p><p>Student: ${n} (${c})</p><h3>Paid Amount: ₹ ${p}</h3><hr><p>Signature: ${activeTeacher}</p></div><script>window.onload = function() { window.print(); window.close(); }<\/script></body></html>`);
+        win.document.write(`
+        <html>
+        <head>
+            <style>
+                body { font-family: sans-serif; padding: 40px; text-align: center; } 
+                .receipt-box { border: 2px solid #006633; padding: 20px; }
+                * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+                .logo { height: 70px; margin-bottom: 10px; }
+            </style>
+        </head>
+        <body>
+            <div class="receipt-box">
+                <img src="${logoPath}" class="logo" onerror="this.src='logo.png'">
+                <h2>PARAMOUNT SCHOOL</h2>
+                <hr>
+                <p>Receipt No: ${recId} | Date: ${d}</p>
+                <p>Student: ${n} (${c})</p>
+                <h3>Paid Amount: ₹ ${p}</h3>
+                <hr>
+                <p>Signature: ${activeTeacher}</p>
+            </div>
+            <script>window.onload = function() { setTimeout(() => { window.print(); window.close(); }, 500); }<\/script>
+        </body>
+        </html>`);
         win.document.close();
     }
 
