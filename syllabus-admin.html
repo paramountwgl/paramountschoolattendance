@@ -3,98 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Syllabus Bulk Editor | Paramount School</title>
+    <title>Secure Syllabus Editor | Paramount School</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Segoe+UI:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-     <link rel="icon" type="image/png" href="logo.png">
+    <link rel="icon" type="image/png" href="logo.png">
     <style>
         :root { --forest: #006633; --gold: #ffd700; --light: #f4f7f6; --white: #ffffff; --danger: #d32f2f; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; padding: 20px; }
         
+        /* --- SECURITY OVERLAY STYLES --- */
+        #securityOverlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--forest); display: flex; align-items: center; justify-content: center;
+            z-index: 9999; transition: 0.5s;
+        }
+        .login-card {
+            background: white; padding: 40px; border-radius: 25px; box-shadow: 0 15px 50px rgba(0,0,0,0.3);
+            width: 100%; max-width: 400px; text-align: center; border-bottom: 8px solid var(--gold);
+        }
+        .login-card h2 { font-family: 'Montserrat'; color: var(--forest); font-weight: 800; margin-bottom: 20px; }
+        .login-card select, .login-card input {
+            width: 100%; padding: 15px; margin: 10px 0; border-radius: 12px; border: 2px solid #eee;
+            font-size: 16px; outline: none; box-sizing: border-box;
+        }
+
+        /* --- MAIN CONTENT (Hidden by default) --- */
+        #mainContent { display: none; }
+
         .admin-container { max-width: 1000px; margin: auto; background: var(--white); padding: 30px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); border-top: 10px solid var(--forest); }
-        
         .header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 2px solid #eee; padding-bottom: 15px; }
         h2 { color: var(--forest); font-family: 'Montserrat'; margin: 0; font-size: 1.5rem; }
-        
         .selection-bar { display: flex; gap: 20px; background: #f0f4f2; padding: 20px; border-radius: 12px; margin-bottom: 25px; align-items: flex-end; }
         .input-box { flex: 1; }
         label { display: block; font-weight: 700; font-size: 11px; color: #444; margin-bottom: 8px; text-transform: uppercase; }
         select { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-weight: 600; outline: none; background: white; cursor: pointer; }
-
         .syllabus-table { width: 100%; border-collapse: collapse; margin-top: 10px; background: white; }
         .syllabus-table th { background: var(--forest); color: white; padding: 15px; text-align: left; font-family: 'Montserrat'; font-size: 13px; text-transform: uppercase; }
         .syllabus-table td { padding: 12px; border: 1px solid #eee; vertical-align: top; }
-        
         .subject-col { width: 25%; background: #fdfdfd; font-weight: 800; color: #333; font-size: 14px; border-right: 3px solid var(--gold) !important; vertical-align: middle !important; }
-        
         textarea { width: 100%; height: 75px; padding: 10px; border: 1px solid #ccc; border-radius: 6px; resize: none; font-family: inherit; font-size: 14px; transition: 0.3s; display: block; }
         textarea:focus { border-color: var(--forest); background: #f9fffb; outline: none; }
-
         .action-area { display: flex; gap: 15px; margin-top: 30px; }
-
         .btn-save-all { background: var(--forest); color: white; border: none; padding: 20px; flex: 2; border-radius: 50px; font-weight: 800; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; text-transform: uppercase; }
         .btn-save-all:hover { background: #004d26; transform: scale(1.01); }
-
         .btn-wipe { background: #333; color: white; border: 2px solid var(--danger); padding: 20px; flex: 1; border-radius: 50px; font-weight: 800; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; text-transform: uppercase; }
-        .btn-wipe:hover { background: var(--danger); color: white; }
-        
+        .btn-wipe:hover { background: var(--danger); }
         .status-tag { font-size: 10px; color: #777; margin-top: 4px; display: block; font-weight: bold; }
     </style>
 </head>
 <body>
 
-<div class="admin-container">
-    <div class="header-flex">
-        <h2><i class="fas fa-book-open"></i> Exam Syllabus Editor</h2>
-        <a href="index.html" style="text-decoration:none; color:var(--forest); font-weight:700;"><i class="fas fa-arrow-left"></i> Dashboard</a>
+<div id="securityOverlay">
+    <div class="login-card">
+        <img src="logo.png" style="height: 60px; margin-bottom: 10px;">
+        <h2>Staff Access</h2>
+        <select id="staffUser">
+            <option value="">-- Select Teacher --</option>
+            <option value="Mr. Shaik Ahmad">Mr. Shaik Ahmad</option>
+            <option value="Ms. Riha">Ms. Riha</option>
+            <option value="Ms. Raniya Zainab">Ms. Raniya Zainab</option>
+            <option value="Ms. Roqiya Begum">Ms. Roqiya Begum</option>
+            <option value="Ms. G.Rajitha">Ms. G.Rajitha</option>
+            <option value="Ms. Ameena Tabassum">Ms. Ameena Tabassum</option>
+            <option value="Ms. Shaik Shabana">Ms. Shaik Shabana</option>
+            <option value="Ms. B.Ravali">Ms. B.Ravali</option>
+            <option value="Ms. L.Kalyani">Ms. L.Kalyani</option>
+            <option value="Ms. J.Alaya Sree">Ms. J.Alaya Sree</option>
+            <option value="Ms. S.Sujatha">Ms. S.Sujatha</option>
+            <option value="Ms. J.Prathibha">Ms. J.Prathibha</option>
+            <option value="Ms. P.Shailaja">Ms. P.Shailaja</option>
+            <option value="Ms. A.Jhansi Rani">Ms. A.Jhansi Rani</option>
+            <option value="Ms. S. Neelima">Ms. S. Neelima</option>
+        </select>
+        <input type="password" id="staffPass" placeholder="Enter Access Password">
+        <button class="btn-save-all" onclick="authenticateStaff()" style="margin-top: 15px;">Unlock Editor</button>
+        <p style="font-size: 12px; color: #777; margin-top: 15px;">Unauthorized access is prohibited.</p>
     </div>
+</div>
 
-    <div class="selection-bar">
-        <div class="input-box">
-            <label>1. Select Class</label>
-            <select id="sylClass" onchange="renderTableAndLoadData()">
-                <option value="Pre-KG">Pre-KG</option>
-                <option value="KG-1">KG-1</option>
-                <option value="KG-2">KG-2</option>
-                <option value="Grade-1">Grade-1</option>
-                <option value="Grade-2">Grade-2</option>
-                <option value="Grade-3">Grade-3</option>
-                <option value="Grade-4">Grade-4</option>
-                <option value="Grade-5">Grade-5</option>
-                <option value="Grade-6">Grade-6</option>
-                <option value="Grade-7">Grade-7</option>
-                <option value="Grade-8">Grade-8</option>
-            </select>
+<div id="mainContent">
+    <div class="admin-container">
+        <div class="header-flex">
+            <h2><i class="fas fa-book-open"></i> Exam Syllabus Editor</h2>
+            <a href="index.html" style="text-decoration:none; color:var(--forest); font-weight:700;"><i class="fas fa-arrow-left"></i> Dashboard</a>
         </div>
-        <div class="input-box">
-            <label>2. Select Examination</label>
-            <select id="sylExam" onchange="renderTableAndLoadData()">
-                <option value="Unit Test-1">Unit Test-1</option>
-                <option value="Unit Test-2">Unit Test-2</option>
-                <option value="Quarterly">Quarterly</option>
-                <option value="Half-Yearly">Half-Yearly</option>
-                <option value="Annual">Annual</option>
-            </select>
+
+        <div class="selection-bar">
+            <div class="input-box">
+                <label>1. Select Class</label>
+                <select id="sylClass" onchange="renderTableAndLoadData()">
+                    <option value="Pre-KG">Pre-KG</option><option value="KG-1">KG-1</option>
+                    <option value="KG-2">KG-2</option><option value="Grade-1">Grade-1</option>
+                    <option value="Grade-2">Grade-2</option><option value="Grade-3">Grade-3</option>
+                    <option value="Grade-4">Grade-4</option><option value="Grade-5">Grade-5</option>
+                    <option value="Grade-6">Grade-6</option><option value="Grade-7">Grade-7</option>
+                    <option value="Grade-8">Grade-8</option>
+                </select>
+            </div>
+            <div class="input-box">
+                <label>2. Select Examination</label>
+                <select id="sylExam" onchange="renderTableAndLoadData()">
+                    <option value="Unit Test-1">Unit Test-1</option><option value="Unit Test-2">Unit Test-2</option>
+                    <option value="Quarterly">Quarterly</option><option value="Half-Yearly">Half-Yearly</option>
+                    <option value="Annual">Annual</option>
+                </select>
+            </div>
         </div>
-    </div>
 
-    <table class="syllabus-table">
-        <thead>
-            <tr>
-                <th>Subject Name</th>
-                <th>Syllabus Content</th>
-            </tr>
-        </thead>
-        <tbody id="syllabusRows"></tbody>
-    </table>
+        <table class="syllabus-table">
+            <thead>
+                <tr><th>Subject Name</th><th>Syllabus Content</th></tr>
+            </thead>
+            <tbody id="syllabusRows"></tbody>
+        </table>
 
-    <div class="action-area">
-        <button class="btn-save-all" onclick="saveSyllabusBulk()">
-            <i class="fas fa-check-double"></i> PUBLISH SYLLABUS
-        </button>
-        <button class="btn-wipe" onclick="wipeClassData()">
-            <i class="fas fa-trash-alt"></i> WIPE PREMIUM
-        </button>
+        <div class="action-area">
+            <button class="btn-save-all" onclick="saveSyllabusBulk()"><i class="fas fa-check-double"></i> PUBLISH SYLLABUS</button>
+            <button class="btn-wipe" onclick="wipeClassData()"><i class="fas fa-trash-alt"></i> WIPE PREMIUM</button>
+        </div>
     </div>
 </div>
 
@@ -111,6 +137,27 @@
     if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
     const db = firebase.database();
 
+    // Security Registry
+    const registry = {
+        "Mr. Shaik Ahmad": "Ahmad@123", "Ms. Roqiya Begum": "Roqiya@123", "Ms. G.Rajitha": "Rajitha@123",
+        "Ms. Ameena Tabassum": "Ameena@123", "Ms. Shaik Shabana": "Shabana@123", "Ms. B.Ravali": "Ravali@123",
+        "Ms. L.Kalyani": "Kalyani@123", "Ms. J.Alaya Sree": "Alaya@123", "Ms. S.Sujatha": "Sujatha@123",
+        "Ms. J.Prathibha": "Prathibha@123", "Ms. P.Shailaja": "Phailaja@123", "Ms. A.Jhansi Rani": "Jhansi@123", 
+        "Ms. S. Neelima": "Neelima@123", "Ms. Riha": "Riha@123", "Ms. Raniya Zainab": "Raniya@123"
+    };
+
+    function authenticateStaff() {
+        const user = document.getElementById('staffUser').value;
+        const pass = document.getElementById('staffPass').value;
+        if(registry[user] === pass) {
+            document.getElementById('securityOverlay').style.display = 'none';
+            document.getElementById('mainContent').style.display = 'block';
+            renderTableAndLoadData();
+        } else {
+            Swal.fire('Error', 'Incorrect Password!', 'error');
+        }
+    }
+
     const primaryGroup = ["Telugu", "Hindi", "English", "Mathematics", "EVS/Science", "Social Studies", "Computer", "GK"];
     const middleGroup = ["Telugu", "Hindi", "English", "Mathematics", "Physics", "Biology", "Social Studies", "Computer"];
 
@@ -124,7 +171,6 @@
     };
 
     let currentSubjects = [];
-
     function getSafeId(name) { return "syl_" + name.replace(/[^a-zA-Z0-9]/g, '_'); }
 
     async function renderTableAndLoadData() {
@@ -132,84 +178,49 @@
         const exam = document.getElementById('sylExam').value;
         const tbody = document.getElementById('syllabusRows');
         currentSubjects = classSubjectGroups[cls] || primaryGroup;
-        
         tbody.innerHTML = "";
         currentSubjects.forEach(subject => {
             const safeId = getSafeId(subject);
-            tbody.innerHTML += `
-                <tr>
-                    <td class="subject-col">${subject}</td>
-                    <td>
-                        <textarea id="${safeId}" placeholder="Enter topics..."></textarea>
-                        <span class="status-tag" id="status_${safeId}">Checking...</span>
-                    </td>
-                </tr>`;
+            tbody.innerHTML += `<tr><td class="subject-col">${subject}</td><td><textarea id="${safeId}"></textarea><span class="status-tag" id="status_${safeId}"></span></td></tr>`;
         });
-
-        try {
-            const snap = await db.ref(`class_syllabus/${cls}/${exam}`).once('value');
-            const data = snap.val() || {};
-            currentSubjects.forEach(subject => {
-                const safeId = getSafeId(subject);
-                const content = data[subject] || "";
-                document.getElementById(safeId).value = content;
-                const tag = document.getElementById(`status_${safeId}`);
-                tag.innerHTML = content ? `<i class="fas fa-check-circle"></i> Live` : `Empty`;
-                tag.style.color = content ? "#006633" : "#888";
-            });
-        } catch (e) { console.error(e); }
+        const snap = await db.ref(`class_syllabus/${cls}/${exam}`).once('value');
+        const data = snap.val() || {};
+        currentSubjects.forEach(subject => {
+            const safeId = getSafeId(subject);
+            const content = data[subject] || "";
+            document.getElementById(safeId).value = content;
+            const tag = document.getElementById(`status_${safeId}`);
+            tag.innerHTML = content ? `<i class="fas fa-check-circle"></i> Live` : `Empty`;
+            tag.style.color = content ? "#006633" : "#888";
+        });
     }
 
     async function saveSyllabusBulk() {
         const cls = document.getElementById('sylClass').value;
         const exam = document.getElementById('sylExam').value;
-        Swal.fire({ title: 'Publishing...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
-
+        Swal.fire({ title: 'Publishing...', didOpen: () => Swal.showLoading() });
         const payload = { lastUpdated: new Date().toLocaleString() };
-        currentSubjects.forEach(subject => {
-            payload[subject] = document.getElementById(getSafeId(subject)).value.trim();
-        });
-
-        try {
-            await db.ref(`class_syllabus/${cls}/${exam}`).update(payload);
-            Swal.fire({ icon: 'success', title: 'Published!', timer: 1500, showConfirmButton: false });
-            renderTableAndLoadData();
-        } catch (e) { Swal.fire('Error', 'Failed to save', 'error'); }
+        currentSubjects.forEach(subject => payload[subject] = document.getElementById(getSafeId(subject)).value.trim());
+        await db.ref(`class_syllabus/${cls}/${exam}`).update(payload);
+        Swal.fire({ icon: 'success', title: 'Published!', timer: 1500, showConfirmButton: false });
+        renderTableAndLoadData();
     }
 
-    // --- NEW WIPE FUNCTION ---
     async function wipeClassData() {
         const cls = document.getElementById('sylClass').value;
         const exam = document.getElementById('sylExam').value;
-
         const { value: confirmWord } = await Swal.fire({
-            title: 'Wipe Class Syllabus?',
-            html: `You are about to delete <b>ALL subjects</b> for <b>${cls} - ${exam}</b>.<br><br>Type <b style="color:red;">DELETE</b> to confirm:`,
-            input: 'text',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d32f2f',
-            confirmButtonText: 'Yes, Wipe Data',
-            inputValidator: (value) => {
-                if (!value || value.toUpperCase() !== 'DELETE') {
-                    return 'You must type DELETE to continue!';
-                }
-            }
+            title: 'Wipe Class Data?',
+            html: `Type <b style="color:red;">DELETE</b> to confirm:`,
+            input: 'text', icon: 'warning', showCancelButton: true,
+            inputValidator: (v) => v.toUpperCase() !== 'DELETE' && 'Type DELETE to continue!'
         });
-
         if (confirmWord) {
-            Swal.fire({ title: 'Wiping Data...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
-            try {
-                await db.ref(`class_syllabus/${cls}/${exam}`).remove();
-                Swal.fire('Deleted!', 'Class syllabus has been cleared.', 'success');
-                renderTableAndLoadData(); // Clear the textareas
-            } catch (e) {
-                Swal.fire('Error', 'Delete failed.', 'error');
-            }
+            await db.ref(`class_syllabus/${cls}/${exam}`).remove();
+            Swal.fire('Deleted!', 'Data cleared.', 'success');
+            renderTableAndLoadData();
         }
     }
-
-    renderTableAndLoadData();
 </script>
 </body>
 </html>
