@@ -133,8 +133,10 @@
                     <option value="Formative Assessment-1">Formative Assessment-1</option>
                     <option value="Formative Assessment-2">Formative Assessment-2</option>
                     <option value="Formative Assessment-3">Formative Assessment-3</option>
+                    <option value="Formative Assessment-4">Formative Assessment-4</option>
                     <option value="Summative Assessment-1">Summative Assessment-1</option>
                     <option value="Summative Assessment-2">Summative Assessment-2</option>
+                    <option value="End-Term">End-Term</option>
                 </select>
 
                 <div id="dynamicSubjectGrid" class="subject-grid"></div>
@@ -165,7 +167,6 @@
     const authorized = { "Mr. Ahmad": "Ahmad@123", "Ms. Roqiya": "Roqiya@123", "Ms. Jyothi": "Jyothi@123" };
     let activeTeacher = "", ticketsToPrint = [];
 
-    // --- TIME GENERATOR ---
     const timeOptions = ["-"];
     for(let h=9; h<=17; h++) {
         let period = h >= 12 ? "PM" : "AM";
@@ -227,7 +228,7 @@
     async function generateClassHallTickets() {
         const cls = document.getElementById('feeClass').value, exam = document.getElementById('examSelect').value;
         if(!cls) return;
-        Swal.fire({ title: 'Syncing...', didOpen: () => Swal.showLoading() });
+        Swal.fire({ title: 'Syncing Data...', didOpen: () => Swal.showLoading() });
         const schedSnap = await db.ref(`class_schedules/${cls}/${exam}`).once('value'), schedule = schedSnap.val() || {};
         const feeSnap = await db.ref(`fee_records/${cls}`).once('value'), feeData = feeSnap.val();
         ticketsToPrint = []; let html = "";
@@ -250,11 +251,11 @@
     function printTickets(list) {
         const logoOrigin = window.location.origin + "/logo.png";
         const win = window.open('', '', 'height=800,width=1000');
-        win.document.write('<html><head><style>body{font-family:sans-serif;padding:0;margin:0;color:#333;} *{-webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;} .page{width:210mm; height:297mm; padding:8mm; box-sizing:border-box; page-break-after:always;} .ticket{width:100%; height:132mm; border:2px solid #333; padding:15px; box-sizing:border-box; border-radius:15px; position:relative; margin-bottom:5mm;} .divider{border-top:2px dashed #999; width:100%; margin:4mm 0;} .header{display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #333; padding-bottom:10px; margin-bottom:10px;} .tbl{width:100%; border-collapse:collapse; margin-top:10px;} .tbl th, .tbl td{border:1px solid #333; padding:6px; text-align:center; font-weight:bold; font-size:10px; line-height: 1.2;}</style></head><body>');
+        win.document.write('<html><head><style>body{font-family:sans-serif;padding:0;margin:0;color:#333;} *{-webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;} .page{width:210mm; height:297mm; padding:8mm; box-sizing:border-box; page-break-after:always;} .ticket{width:100%; border:2px solid #333; padding:15px; box-sizing:border-box; border-radius:15px; position:relative; margin-bottom:10mm;} .header{display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #333; padding-bottom:10px; margin-bottom:10px;} .tbl{width:100%; border-collapse:collapse; margin-top:10px;} .tbl th, .tbl td{border:1px solid #333; padding:6px; text-align:center; font-weight:bold; font-size:10px; line-height: 1.2;} .exam-type{background:black; color:white; padding:3px 15px; display:inline-block; font-size:10px; font-weight:800; border-radius:3px; text-transform:uppercase; margin-top:5px;}</style></head><body>');
         
         for (let i = 0; i < list.length; i += 2) {
             win.document.write('<div class="page">');
-            [list[i], list[i+1]].forEach((t, idx) => {
+            [list[i], list[i+1]].forEach((t) => {
                 if(!t) return;
                 const subs = Object.keys(t.schedule);
                 win.document.write(`
@@ -262,7 +263,7 @@
                     <div class="header">
                         <div style="display:flex; align-items:center; gap:10px;">
                             <img src="${logoOrigin}" style="height:50px;" onerror="this.src='logo.png'">
-                            <div><h1 style="margin:0; font-size:18px;">PARAMOUNT SCHOOL</h1><p style="margin:0; font-weight:800; font-size:9px;">${t.exam}</p></div>
+                            <div><h1 style="margin:0; font-size:18px;">PARAMOUNT SCHOOL</h1><div class="exam-type">${t.exam}</div></div>
                         </div>
                         <div style="width:80px; height:100px; border:1px solid #333; display:flex; align-items:center; justify-content:center; overflow:hidden;">
                             <img src="Student images/${t.roll}.png" style="width:100%; height:100%; object-fit:cover;" onerror="this.innerHTML='PHOTO'">
@@ -285,7 +286,7 @@
                             <tr style="height:35px;"><td style="text-align:left; background:#f4f4f4;">Sign</td>${subs.map(s=>`<td></td>`).join('')}</tr>
                         </tbody>
                     </table>
-                    <div style="margin-top:35px; display:flex; justify-content:space-between; font-size:9px; font-weight:bold; text-transform:uppercase;">
+                    <div style="margin-top:40px; display:flex; justify-content:space-between; font-size:9px; font-weight:bold; text-transform:uppercase;">
                         <div style="border-top:1px solid #333; width:170px; text-align:center; padding-top:4px;">Class Teacher Signature</div>
                         <div style="border-top:1px solid #333; width:170px; text-align:center; padding-top:4px;">Correspondent Signature</div>
                     </div>
@@ -293,7 +294,6 @@
                         <b>Note:</b> Mandatory hall ticket. Restricted entry if due exceeds ₹5000.
                     </div>
                 </div>`);
-                if(idx === 0 && list[i+1]) win.document.write('<div class="divider"></div>');
             });
             win.document.write('</div>');
         }
