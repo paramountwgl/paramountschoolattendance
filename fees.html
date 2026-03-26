@@ -12,73 +12,91 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; } 
         body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; padding-bottom: 50px; }
 
-        /* --- THE PERFECT HEADER (SAME FOR BOTH VIEWS) --- */
+        /* --- HEADER (Desktop Optimized) --- */
         header { 
-            background: var(--forest); color: white; padding: 10px 15px; border-bottom: 4px solid var(--gold); 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15); position: sticky; top: 0; z-index: 50;
+            background: var(--forest); color: white; padding: 12px 5%; border-bottom: 4px solid var(--gold); 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15); position: sticky; top: 0; z-index: 100;
         }
         .header-content { 
             display: flex; align-items: center; justify-content: space-between; 
             max-width: 1400px; margin: 0 auto; width: 100%;
         }
-        .brand-group { display: flex; align-items: center; flex-shrink: 1; min-width: 0; }
+        .brand-group { display: flex; align-items: center; gap: 15px; }
+        .header-logo { height: 60px; width: auto; flex-shrink: 0; }
+        .school-branding { display: flex; flex-direction: column; line-height: 1.2; }
+        .school-name-main { font-family: 'Montserrat', sans-serif; font-size: 1.6rem; font-weight: 800; letter-spacing: 1px; }
+        .school-name-sub { font-family: 'Montserrat', sans-serif; font-size: 0.75rem; color: white; font-weight: 600; text-transform: uppercase; }
         
-        .header-left { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
-        .header-logo { height: 50px; width: auto; }
-        .school-branding { display: flex; flex-direction: column; line-height: 1.1; flex-shrink: 0; }
-        .school-name-main { font-family: 'Montserrat', sans-serif; font-size: 1.1rem; font-weight: 800; letter-spacing: 0.5px; color: white; }
-        .school-name-sub { font-family: 'Montserrat', sans-serif; font-size: 0.6rem; color: white; font-weight: 600; text-transform: uppercase; }
-        
-        .divider-line { width: 2px; height: 30px; background-color: rgba(255,255,255,0.3); margin: 0 10px; flex-shrink: 0; }
-        .portal-label { 
-            font-family: 'Montserrat', sans-serif; font-size: 1.1rem; font-weight: 800; 
-            text-transform: uppercase; color: white; white-space: nowrap; flex-shrink: 0;
-        }
+        .divider-line { width: 2px; height: 45px; background-color: rgba(255,255,255,0.3); margin: 0 10px; }
+        .portal-label { font-family: 'Montserrat', sans-serif; font-size: 1.6rem; font-weight: 800; text-transform: uppercase; white-space: nowrap; }
 
-        .nav-tools { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; flex-shrink: 0; }
-        .live-clock { font-family: 'Montserrat', sans-serif; font-weight: 800; color: var(--gold); font-size: 11px; text-transform: uppercase; }
+        .nav-tools { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+        .live-clock { font-family: 'Montserrat', sans-serif; font-weight: 800; color: var(--gold); font-size: 14px; }
         .btn-signout { 
-            background: rgba(255,255,255,0.15); border: 1.2px solid white; color: white; 
-            padding: 3px 12px; border-radius: 50px; font-size: 9px; font-weight: 800; 
-            text-transform: uppercase; cursor: pointer;
+            background: rgba(255,255,255,0.1); border: 1.5px solid white; color: white; 
+            padding: 5px 15px; border-radius: 5px; font-size: 10px; font-weight: 800; 
+            text-transform: uppercase; cursor: pointer; transition: 0.3s;
+        }
+        .btn-signout:hover { background: white; color: var(--forest); }
+
+        /* --- MOBILE RESPONSIVENESS --- */
+        @media (max-width: 992px) {
+            .school-name-main, .portal-label { font-size: 1.2rem; }
+            .header-logo { height: 50px; }
+        }
+        @media (max-width: 768px) {
+            header { padding: 10px 15px; }
+            .divider-line { height: 30px; margin: 0 8px; }
+            .school-name-sub { display: none; }
+            .school-name-main, .portal-label { font-size: 1rem; }
+            .header-logo { height: 40px; }
+            .live-clock { font-size: 11px; }
         }
 
-        /* --- MOBILE SPECIFIC FIXES --- */
-        @media (max-width: 480px) {
-            header { padding: 8px 10px; }
-            .header-logo { height: 35px; }
-            .school-name-main { font-size: 0.8rem; }
-            .portal-label { font-size: 0.8rem; }
-            .divider-line { margin: 0 6px; height: 20px; }
-            .school-name-sub { display: none; } /* Hide sub-text only on very small phones to keep everything on one line */
-            .nav-tools { gap: 1px; }
-            .live-clock { font-size: 9px; }
-        }
-
-        /* --- FORM & DASHBOARD --- */
+        /* --- FORM & GAUGE --- */
         .container { max-width: 650px; margin: 25px auto; padding: 0 15px; }
         .card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); border-top: 8px solid var(--forest); margin-bottom: 25px; }
-        h3 { color: var(--forest); margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; display: flex; align-items: center; gap: 8px; font-size: 1.1rem; }
         
-        .due-box { background: #fff5f5; border: 1px solid #ffcdd2; padding: 15px; border-radius: 15px; text-align: center; margin-top: 20px; }
+        /* Pulse Animation */
+        .due-box { background: #fff5f5; border: 1px solid #ffcdd2; padding: 15px; border-radius: 15px; text-align: center; margin-top: 20px; transition: 0.3s; }
+        .due-box.high-due { animation: pulseDanger 1.5s infinite; border-color: var(--danger); }
         .due-box strong { font-size: 24px; color: var(--danger); }
-        
+        @keyframes pulseDanger {
+            0% { box-shadow: 0 0 0 0 rgba(198, 40, 40, 0.4); }
+            70% { box-shadow: 0 0 0 15px rgba(198, 40, 40, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(198, 40, 40, 0); }
+        }
+
+        /* Fixed Gauge Layout */
         .chart-container { display: flex; flex-direction: column; align-items: center; margin-top: 25px; background: #f9f9f9; padding: 20px; border-radius: 15px; border: 1px solid #eee; position: relative; }
         .circular-progress { position: relative; width: 120px; height: 120px; display: flex; align-items: center; justify-content: center; }
         .circular-progress svg { width: 120px; height: 120px; transform: rotate(-90deg); }
         .circle-bg { fill: none; stroke: #eee; stroke-width: 10; cx: 60; cy: 60; r: 50; }
-        .circle-bar { fill: none; stroke: var(--forest); stroke-width: 10; cx: 60; cy: 60; r: 50; stroke-dasharray: 314.15; stroke-dashoffset: 314.15; transition: 0.8s; stroke-linecap: round; }
+        .circle-bar { 
+            fill: none; stroke: var(--forest); stroke-width: 10; cx: 60; cy: 60; r: 50;
+            stroke-dasharray: 314.15; stroke-dashoffset: 314.15; stroke-linecap: round;
+            transition: stroke-dashoffset 0.8s ease; 
+        }
         .percentage-text { position: absolute; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 1.3rem; color: #333; top: 50%; left: 50%; transform: translate(-50%, -50%); }
 
+        /* Buttons and Inputs */
         select, input { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #eee; font-size: 16px; margin-bottom: 10px; outline: none; background: #fafafa; }
         .calc-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .action-flex { display: flex; gap: 10px; margin-top: 25px; }
-        .btn-action { color: white; border: none; padding: 16px; border-radius: 50px; font-weight: 700; cursor: pointer; flex: 1; text-transform: uppercase; font-size: 13px; }
+        .btn-action { color: white; border: none; padding: 16px; border-radius: 50px; font-weight: 700; cursor: pointer; flex: 1; text-transform: uppercase; font-size: 13px; transition: 0.3s; }
         .btn-save { background: var(--forest); }
         .btn-wipe { background: var(--danger); }
         .btn-receipt { background: var(--sky); width: 100%; margin-top: 10px; }
 
-        @media (max-width: 600px) { .calc-row { grid-template-columns: 1fr; } }
+        /* History Table */
+        .history-table-wrapper { width: 100%; overflow-x: auto; border-radius: 10px; border: 1px solid #f1f5f9; margin-top: 10px; }
+        .history-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; min-width: 500px; }
+        .history-table th { text-align: left; padding: 12px; background: #f8fafc; color: #64748b; font-size: 10px; text-transform: uppercase; border-bottom: 2px solid #eee; }
+        .history-table td { padding: 12px 10px; border-bottom: 1px solid #f1f5f9; font-weight: 600; }
+
+        /* --- LOGIN SCREEN --- */
+        .overlay-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--light); z-index: 1000; display: flex; justify-content: center; align-items: center; padding: 15px; }
+        .auth-box { background: white; padding: 40px 25px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); width: 100%; max-width: 420px; border-bottom: 5px solid var(--forest); text-align: center; }
     </style>
 </head>
 <body>
@@ -89,17 +107,18 @@
 
 <div id="feeLoginScreen" class="overlay-screen">
     <div class="auth-box">
-        <img src="logo.png" style="height:70px; margin-bottom:10px;">
+        <img src="logo.png" style="height:75px; margin-bottom:10px;">
         <div class="auth-branding-text"><h2>PARAMOUNT</h2><p style="color:var(--gold); font-weight:800; font-size:11px; text-transform:uppercase;">Fee Entry Access</p></div>
-        <select id="staffName" style="margin-top:20px; width:100%; padding:12px; border-radius:10px;">
+        <select id="staffName" style="margin-top:20px;">
             <option value="">-- Select Staff --</option>
             <option value="Mr. Ahmad">Mr. Ahmad</option>
             <option value="Ms. Roqiya">Ms. Roqiya</option>
             <option value="Ms. Jyothi">Ms. Jyothi</option>
         </select>
-        <input type="password" id="staffPass" placeholder="Password" style="margin-top:10px;" onkeypress="if(event.key === 'Enter') unlockFees()">
+        <input type="password" id="staffPass" placeholder="Password" onkeypress="if(event.key === 'Enter') unlockFees()">
         <button onclick="unlockFees()" class="btn-action btn-save" style="width:100%; margin-top:10px;">Unlock Portal</button>
-        <a href="index.html" class="btn-return">Return to Dashboard</a>
+        <button onclick="window.location.href='index.html'" style="margin-top:12px; width:100%; border:none; background:#f1f5f9; color:#475569; padding:12px; border-radius:50px; font-weight:700; cursor:pointer; font-size:0.8rem; text-transform:uppercase;">Return to Dashboard</button>
+        <div style="margin-top:20px;"><a onclick="handleForgotPassword()" style="color:#999; font-size:12px; text-decoration:underline; cursor:pointer; font-weight:bold;">Forgot Password?</a></div>
     </div>
 </div>
 
@@ -108,10 +127,10 @@
         <div class="header-content">
             <div class="brand-group">
                 <div class="header-left">
-                    <img src="logo.png" class="header-logo" alt="Logo">
+                    <img src="logo.png" class="header-logo">
                     <div class="school-branding">
                         <span class="school-name-main">PARAMOUNT</span>
-                        <span class="school-name-sub">SCHOOL</span>
+                        <span class="school-name-sub">ENGLISH MEDIUM SCHOOL</span>
                     </div>
                 </div>
                 <div class="divider-line"></div>
@@ -126,8 +145,8 @@
     </header>
 
     <div class="container">
+        <div id="staffDisplay" style="text-align:center; font-weight:800; color:var(--forest); background:#e8f5e9; padding:10px; border-radius:12px; margin-bottom:15px; font-size:12px;"></div>
         <div class="card">
-            <div id="staffDisplay" style="text-align:center; font-weight:800; color:var(--forest); background:#e8f5e9; padding:10px; border-radius:12px; margin-bottom:15px; font-size:12px;"></div>
             <h3><i class="fas fa-file-invoice-dollar"></i> Update Records</h3>
             
             <label style="font-size:10px; font-weight:900; color:#777;">CLASS</label>
@@ -171,7 +190,6 @@
 </div>
 
 <script>
-    // Logic remains identical to ensure full student list and AM/PM Uppercase works
     function updateClock() {
         const now = new Date();
         document.getElementById('liveClock').innerText = now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:true}).toUpperCase();
@@ -181,8 +199,17 @@
     const firebaseConfig = { apiKey: "AIzaSyDRYk9KOK-ga0c88dnYMsAoifW2NJTd_Y8", databaseURL: "https://paramount-school-d55bc-default-rtdb.firebaseio.com", projectId: "paramount-school-d55bc" };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
+
     const authorized = { "Mr. Ahmad": "Ahmad@123", "Ms. Roqiya": "Roqiya@123", "Ms. Jyothi": "Jyothi@123" };
+    const recoveryPins = { "Mr. Ahmad": "Ahmad@07", "Ms. Roqiya": "Roqiya@07", "Ms. Jyothi": "Jyothi@07" };
     let activeTeacher = "", studentLifetimePaid = 0, lastReceiptData = null;
+
+    async function handleForgotPassword() {
+        const sel = document.getElementById('staffName').value;
+        if (!sel) return Swal.fire('Error', 'Select staff name first.', 'warning');
+        const { value: pin } = await Swal.fire({ title: 'Recovery', text: `Enter Recovery PIN for ${sel}`, input: 'password' });
+        if (pin === recoveryPins[sel]) Swal.fire('Success', `Password is: ${authorized[sel]}`, 'success');
+    }
 
     function unlockFees() {
         const n = document.getElementById('staffName').value, p = document.getElementById('staffPass').value;
@@ -190,7 +217,7 @@
             activeTeacher = n;
             document.getElementById('feeLoginScreen').style.display = 'none';
             document.getElementById('feeApp').style.display = 'block';
-            document.getElementById('staffDisplay').innerText = "AUTHORIZED: " + n;
+            document.getElementById('staffDisplay').innerText = "LOGGED IN: " + n;
         } else { Swal.fire('Error', 'Invalid credentials', 'error'); }
     }
 
@@ -213,8 +240,8 @@
         if(data) {
             Object.keys(data).forEach(k => {
                 const r = data[k]; studentLifetimePaid += parseFloat(r.paid || 0); totalV = r.total;
-                let t = r.timestamp && r.timestamp.includes(',') ? r.timestamp.split(',')[1].trim().toUpperCase() : "N/A";
-                rows += `<tr><td>${r.date}</td><td style="color:var(--forest); font-weight:800;">₹ ${r.paid}</td><td>${r.recordedBy}</td><td>${t}</td></tr>`;
+                let tStr = r.timestamp ? r.timestamp.split(',')[1].trim().toUpperCase() : "N/A";
+                rows += `<tr><td>${r.date}</td><td style="color:var(--forest); font-weight:800;">₹ ${r.paid}</td><td>${r.recordedBy}</td><td>${tStr}</td></tr>`;
             });
             document.getElementById('totalFee').value = totalV;
             document.getElementById('historyTableBody').innerHTML = rows;
@@ -229,6 +256,8 @@
         const t = parseFloat(document.getElementById('totalFee').value) || 0, pNow = parseFloat(document.getElementById('payingAmount').value) || 0;
         const combined = studentLifetimePaid + pNow, due = t - combined;
         document.getElementById('dueDisplay').innerText = "₹ " + (due < 0 ? 0 : due);
+        const dueBox = document.getElementById('dueBox');
+        if (due > 10000) { dueBox.classList.add('high-due'); } else { dueBox.classList.remove('high-due'); }
         let pct = (t > 0) ? (combined / t) * 100 : 0;
         if(pct > 100) pct = 100;
         document.getElementById('progressCircle').style.strokeDashoffset = 314.15 - (314.15 * pct / 100);
@@ -242,7 +271,9 @@
         const stamp = new Date().toLocaleDateString() + ", " + timePart;
         lastReceiptData = { n, c, p, t, d, activeTeacher };
         db.ref(`fee_records/${c}/${n}`).push({ total: t, paid: p, recordedBy: activeTeacher, date: d, timestamp: stamp }).then(() => {
-            Swal.fire('Saved', 'Record Updated', 'success'); document.getElementById('payingAmount').value = ''; fetchExistingFeeData();
+            Swal.fire('Saved', 'Record Updated', 'success'); 
+            document.getElementById('payingAmount').value = ''; 
+            fetchExistingFeeData();
         });
     }
 
