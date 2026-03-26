@@ -35,6 +35,7 @@
         
         .event-item { display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 15px; border-radius: 15px; margin-bottom: 10px; border: 1px solid #f0f0f0; }
         .ev-details b { color: var(--forest); font-size: 14px; display: block; }
+        .ev-details i { color: #555; font-size: 12px; font-style: normal; display: block; margin-bottom: 4px; }
         .ev-details small { color: #888; font-weight: 600; }
         
         .action-btns { display: flex; gap: 8px; }
@@ -72,6 +73,11 @@
         <label>Event Name</label>
         <input type="text" id="evName" placeholder="e.g. Annual Day Celebration">
     </div>
+
+    <div class="input-group">
+        <label>Event Description (Sub-text)</label>
+        <input type="text" id="evDesc" placeholder="e.g. Stay focused and prepared!">
+    </div>
     
     <div class="input-group">
         <label>Event Date & Time</label>
@@ -99,27 +105,21 @@
 
     function authenticate() {
         const pass = document.getElementById('adminPassInput').value;
-        
-        // YOUR EXCLUSIVE PASSWORD
         if(pass === "Ahmad@07") {
             document.getElementById('authOverlay').style.display = 'none';
             document.getElementById('mainPanel').style.display = 'block';
         } else {
-            Swal.fire({
-                icon: 'error',
-                title: 'Access Denied',
-                text: 'Incorrect admin password.',
-                confirmButtonColor: '#004d26'
-            });
+            Swal.fire({ icon: 'error', title: 'Access Denied', text: 'Incorrect admin password.', confirmButtonColor: '#004d26' });
         }
     }
 
     function saveEvent() {
         const name = document.getElementById('evName').value;
+        const desc = document.getElementById('evDesc').value; // Added desc
         const date = document.getElementById('evDate').value;
-        if(!name || !date) return Swal.fire('Error', 'Please fill in both fields.', 'warning');
+        if(!name || !date) return Swal.fire('Error', 'Please fill in Name and Date.', 'warning');
 
-        db.ref('school_events').push({ name, date }).then(() => {
+        db.ref('school_events').push({ name, desc, date }).then(() => {
             Swal.fire({ icon: 'success', title: 'Event Published', timer: 1500, showConfirmButton: false });
             resetForm();
         });
@@ -132,23 +132,28 @@
         
         snap.forEach(child => {
             const ev = child.val();
+            // Handle cases where older events might not have a desc
+            const description = ev.desc || "No description provided";
+            
             container.innerHTML += `
                 <div class="event-item">
                     <div class="ev-details">
                         <b>${ev.name}</b>
+                        <i>${description}</i>
                         <small>${ev.date.replace('T', ' @ ')}</small>
                     </div>
                     <div class="action-btns">
-                        <button class="btn-edit" onclick="prepareEdit('${child.key}', '${ev.name}', '${ev.date}')"><i class="fas fa-pencil-alt"></i></button>
+                        <button class="btn-edit" onclick="prepareEdit('${child.key}', \`${ev.name}\`, '${ev.date}', \`${description}\`)"><i class="fas fa-pencil-alt"></i></button>
                         <button class="btn-del" onclick="confirmDelete('${child.key}')"><i class="fas fa-trash-alt"></i></button>
                     </div>
                 </div>`;
         });
     });
 
-    function prepareEdit(key, name, date) {
+    function prepareEdit(key, name, date, desc) {
         document.getElementById('editKey').value = key;
         document.getElementById('evName').value = name;
+        document.getElementById('evDesc').value = (desc === "No description provided") ? "" : desc;
         document.getElementById('evDate').value = date;
         document.getElementById('btnSave').style.display = 'none';
         document.getElementById('btnUpdate').style.display = 'block';
@@ -159,8 +164,10 @@
     function updateExistingEvent() {
         const key = document.getElementById('editKey').value;
         const name = document.getElementById('evName').value;
+        const desc = document.getElementById('evDesc').value; // Added desc
         const date = document.getElementById('evDate').value;
-        db.ref('school_events/' + key).update({ name, date }).then(() => {
+        
+        db.ref('school_events/' + key).update({ name, desc, date }).then(() => {
             Swal.fire({ icon: 'success', title: 'Updated Successfully', timer: 1500, showConfirmButton: false });
             resetForm();
         });
@@ -176,6 +183,7 @@
     function resetForm() {
         document.getElementById('editKey').value = '';
         document.getElementById('evName').value = '';
+        document.getElementById('evDesc').value = ''; // Added reset for desc
         document.getElementById('evDate').value = '';
         document.getElementById('btnSave').style.display = 'block';
         document.getElementById('btnUpdate').style.display = 'none';
