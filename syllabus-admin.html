@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Syllabus Bulk Editor | Paramount School</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Segoe+UI:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root { --forest: #006633; --gold: #ffd700; --light: #f4f7f6; --white: #ffffff; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; padding: 20px; }
+        
+        .admin-container { max-width: 1000px; margin: auto; background: var(--white); padding: 30px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); border-top: 10px solid var(--forest); }
+        
+        .header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 2px solid #eee; padding-bottom: 15px; }
+        h2 { color: var(--forest); font-family: 'Montserrat'; margin: 0; font-size: 1.5rem; }
+        
+        .selection-bar { display: flex; gap: 20px; background: #f0f4f2; padding: 20px; border-radius: 12px; margin-bottom: 25px; align-items: flex-end; }
+        .input-box { flex: 1; }
+        label { display: block; font-weight: 700; font-size: 11px; color: #444; margin-bottom: 8px; text-transform: uppercase; }
+        select { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-weight: 600; outline: none; background: white; cursor: pointer; }
+
+        .syllabus-table { width: 100%; border-collapse: collapse; margin-top: 10px; background: white; }
+        .syllabus-table th { background: var(--forest); color: white; padding: 15px; text-align: left; font-family: 'Montserrat'; font-size: 13px; text-transform: uppercase; }
+        .syllabus-table td { padding: 12px; border: 1px solid #eee; vertical-align: top; }
+        
+        .subject-col { width: 25%; background: #fdfdfd; font-weight: 800; color: #333; font-size: 14px; border-right: 3px solid var(--gold) !important; vertical-align: middle !important; }
+        
+        textarea { width: 100%; height: 75px; padding: 10px; border: 1px solid #ccc; border-radius: 6px; resize: none; font-family: inherit; font-size: 14px; transition: 0.3s; display: block; }
+        textarea:focus { border-color: var(--forest); background: #f9fffb; outline: none; }
+
+        .btn-save-all { background: var(--forest); color: white; border: none; padding: 20px; width: 100%; border-radius: 50px; font-weight: 800; font-size: 18px; cursor: pointer; margin-top: 30px; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; }
+        .btn-save-all:hover { background: #004d26; box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+        
+        .status-tag { font-size: 10px; color: #777; margin-top: 4px; display: block; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="admin-container">
+    <div class="header-flex">
+        <h2><i class="fas fa-book-open"></i> Exam Syllabus Editor</h2>
+        <a href="teacher-portal.html" style="text-decoration:none; color:var(--forest); font-weight:700;"><i class="fas fa-arrow-left"></i> Dashboard</a>
+    </div>
+
+    <div class="selection-bar">
+        <div class="input-box">
+            <label>1. Select Class</label>
+            <select id="sylClass" onchange="renderTableAndLoadData()">
+                <option value="Pre-KG">Pre-KG</option>
+                <option value="KG-1">KG-1</option>
+                <option value="KG-2">KG-2</option>
+                <option value="Grade-1">Grade-1</option>
+                <option value="Grade-2">Grade-2</option>
+                <option value="Grade-3">Grade-3</option>
+                <option value="Grade-4">Grade-4</option>
+                <option value="Grade-5">Grade-5</option>
+                <option value="Grade-6">Grade-6</option>
+                <option value="Grade-7">Grade-7</option>
+                <option value="Grade-8">Grade-8</option>
+            </select>
+        </div>
+        <div class="input-box">
+            <label>2. Select Examination</label>
+            <select id="sylExam" onchange="renderTableAndLoadData()">
+                <option value="Unit Test-1">Unit Test-1</option>
+                <option value="Quarterly">Quarterly</option>
+                <option value="Half-Yearly">Half-Yearly</option>
+                <option value="Annual">Annual</option>
+            </select>
+        </div>
+    </div>
+
+    <table class="syllabus-table">
+        <thead>
+            <tr>
+                <th>Subject Name</th>
+                <th>Syllabus Content</th>
+            </tr>
+        </thead>
+        <tbody id="syllabusRows"></tbody>
+    </table>
+
+    <button class="btn-save-all" onclick="saveSyllabusBulk()">
+        <i class="fas fa-check-double"></i> PUBLISH SYLLABUS TO PORTAL
+    </button>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    const firebaseConfig = { 
+        apiKey: "AIzaSyDRYk9KOK-ga0c88dnYMsAoifW2NJTd_Y8", 
+        databaseURL: "https://paramount-school-d55bc-default-rtdb.firebaseio.com", 
+        projectId: "paramount-school-d55bc" 
+    };
+    if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+    const db = firebase.database();
+
+    // --- SUBJECT ORDER AS REQUESTED ---
+    // Telugu, Hindi, English, Maths, [Physics/Biology or EVS], Social Studies
+    
+    const primaryGroup = ["Telugu", "Hindi", "English", "Mathematics", "EVS/Science", "Social Studies", "Computer", "GK"];
+    const middleGroup = ["Telugu", "Hindi", "English", "Mathematics", "Physics", "Biology", "Social Studies", "Computer"];
+
+    const classSubjectGroups = {
+        "Pre-KG": ["Rhymes", "English Oral", "English Written", "Maths Oral", "Maths Written", "Conversation", "Drawing"],
+        "KG-1": ["Telugu", "Hindi", "English", "Mathematics", "EVS", "Rhymes"],
+        "KG-2": ["Telugu", "Hindi", "English", "Mathematics", "EVS", "GK"],
+        "Grade-1": primaryGroup,
+        "Grade-2": primaryGroup,
+        "Grade-3": primaryGroup,
+        "Grade-4": primaryGroup,
+        "Grade-5": primaryGroup,
+        "Grade-6": middleGroup, 
+        "Grade-7": middleGroup, 
+        "Grade-8": middleGroup  
+    };
+
+    let currentSubjects = [];
+
+    async function renderTableAndLoadData() {
+        const cls = document.getElementById('sylClass').value;
+        const exam = document.getElementById('sylExam').value;
+        const tbody = document.getElementById('syllabusRows');
+        
+        currentSubjects = classSubjectGroups[cls] || primaryGroup;
+        
+        tbody.innerHTML = "";
+        currentSubjects.forEach(subject => {
+            const safeId = "syl_" + subject.replace(/[/ ]/g, '_');
+            tbody.innerHTML += `
+                <tr>
+                    <td class="subject-col">${subject}</td>
+                    <td>
+                        <textarea id="${safeId}" placeholder="Enter syllabus topics..."></textarea>
+                        <span class="status-tag" id="status_${safeId}">Verifying...</span>
+                    </td>
+                </tr>`;
+        });
+
+        try {
+            const snap = await db.ref(`class_syllabus/${cls}/${exam}`).once('value');
+            const data = snap.val() || {};
+
+            currentSubjects.forEach(subject => {
+                const safeId = "syl_" + subject.replace(/[/ ]/g, '_');
+                const content = data[subject] || "";
+                document.getElementById(safeId).value = content;
+                
+                const statusTag = document.getElementById(`status_${safeId}`);
+                statusTag.innerHTML = content ? `<i class="fas fa-check-circle"></i> Live on Portal` : `Not Entered`;
+                statusTag.style.color = content ? "#006633" : "#888";
+            });
+        } catch (e) { console.error(e); }
+    }
+
+    async function saveSyllabusBulk() {
+        const cls = document.getElementById('sylClass').value;
+        const exam = document.getElementById('sylExam').value;
+        const payload = { 
+            lastUpdated: new Date().toLocaleString(),
+            serverTime: firebase.database.ServerValue.TIMESTAMP
+        };
+
+        currentSubjects.forEach(subject => {
+            const safeId = "syl_" + subject.replace(/[/ ]/g, '_');
+            payload[subject] = document.getElementById(safeId).value.trim();
+        });
+
+        try {
+            Swal.fire({ title: 'Saving Syllabus...', didOpen: () => Swal.showLoading() });
+            await db.ref(`class_syllabus/${cls}/${exam}`).set(payload);
+            Swal.fire('Success', `Syllabus for ${cls} - ${exam} is now available for students!`, 'success');
+            renderTableAndLoadData();
+        } catch (e) { Swal.fire('Error', 'Update failed. Check connection.', 'error'); }
+    }
+
+    // Startup
+    renderTableAndLoadData();
+</script>
+</body>
+</html>
