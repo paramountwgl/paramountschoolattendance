@@ -19,7 +19,15 @@
         
         /* MAIN PANEL */
         .admin-card { max-width: 550px; margin: 40px auto; background: white; padding: 30px; border-radius: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.05); border-top: 8px solid var(--forest); }
-        h2 { color: var(--forest); font-family: 'Montserrat'; text-align: center; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1px; }
+        
+        /* BRANDING SECTION */
+        .school-header-row { display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #eee; }
+        .school-logo-img { height: 50px; width: auto; }
+        .school-text-box { display: flex; flex-direction: column; line-height: 1.1; }
+        .school-name-main { font-family: 'Montserrat'; font-size: 1.1rem; font-weight: 800; color: var(--forest); letter-spacing: 0.5px; }
+        .school-name-sub { font-size: 0.7rem; color: #b8860b; font-weight: 700; text-transform: uppercase; }
+
+        h2 { color: var(--forest); font-family: 'Montserrat'; text-align: center; margin: 10px 0 25px; text-transform: uppercase; letter-spacing: 1px; font-size: 1.2rem; }
         
         .input-group { margin-bottom: 15px; }
         label { display: block; font-size: 11px; font-weight: 800; text-transform: uppercase; color: #888; margin-bottom: 6px; margin-left: 5px; }
@@ -51,9 +59,7 @@
         <img src="logo.png" style="height:70px; margin-bottom:15px;">
         <h2 style="font-size:18px; margin-bottom:5px;">ADMIN ACCESS</h2>
         <p style="font-size:10px; color:#999; margin-bottom:25px; font-weight:700;">EVENT MANAGER BY SHAIK AHMAD</p>
-        
         <input type="password" id="adminPassInput" class="auth-input" placeholder="Enter Private Password">
-        
         <button class="btn-action" style="background:var(--gold); color:var(--forest);" onclick="authenticate()">UNLOCK PANEL <i class="fas fa-lock-open"></i></button>
         <br><br>
         <a href="index.html" style="text-decoration:none; color:#bbb; font-size:11px; font-weight:bold;">Return to Portal</a>
@@ -63,6 +69,14 @@
 <div class="admin-card" id="mainPanel" style="display:none;">
     <div style="text-align: right; margin-bottom: 10px;">
         <button onclick="location.reload()" style="background:none; border:none; color:var(--danger); font-weight:800; font-size:11px; cursor:pointer;"><i class="fas fa-sign-out-alt"></i> LOCK PANEL</button>
+    </div>
+
+    <div class="school-header-row">
+        <img src="logo.png" class="school-logo-img">
+        <div class="school-text-box">
+            <span class="school-name-main">PARAMOUNT</span>
+            <span class="school-name-sub">English Medium School</span>
+        </div>
     </div>
 
     <h2><i class="fas fa-stopwatch"></i> Countdown Manager</h2>
@@ -115,7 +129,7 @@
 
     function saveEvent() {
         const name = document.getElementById('evName').value;
-        const desc = document.getElementById('evDesc').value; // Added desc
+        const desc = document.getElementById('evDesc').value;
         const date = document.getElementById('evDate').value;
         if(!name || !date) return Swal.fire('Error', 'Please fill in Name and Date.', 'warning');
 
@@ -132,7 +146,6 @@
         
         snap.forEach(child => {
             const ev = child.val();
-            // Handle cases where older events might not have a desc
             const description = ev.desc || "No description provided";
             
             container.innerHTML += `
@@ -164,7 +177,7 @@
     function updateExistingEvent() {
         const key = document.getElementById('editKey').value;
         const name = document.getElementById('evName').value;
-        const desc = document.getElementById('evDesc').value; // Added desc
+        const desc = document.getElementById('evDesc').value;
         const date = document.getElementById('evDate').value;
         
         db.ref('school_events/' + key).update({ name, desc, date }).then(() => {
@@ -183,7 +196,7 @@
     function resetForm() {
         document.getElementById('editKey').value = '';
         document.getElementById('evName').value = '';
-        document.getElementById('evDesc').value = ''; // Added reset for desc
+        document.getElementById('evDesc').value = '';
         document.getElementById('evDate').value = '';
         document.getElementById('btnSave').style.display = 'block';
         document.getElementById('btnUpdate').style.display = 'none';
