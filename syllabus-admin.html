@@ -2,79 +2,65 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Syllabus Portal | Paramount School</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Segoe+UI:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="icon" type="image/png" href="logo.png">
     <style>
         :root { --forest: #004d26; --gold: #ffd700; --light: #f4f7f6; --danger: #d32f2f; }
-        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f1; margin: 0; min-height: 100vh; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f1; margin: 0; min-height: 100vh; overflow-x: hidden; }
 
         /* --- FIXED HEADER STYLES --- */
-        header { background: var(--forest); color: white; padding: 12px 3%; box-shadow: 0 4px 15px rgba(0,0,0,0.15); width: 100%; box-sizing: border-box; }
-        .header-content { display: flex; align-items: center; justify-content: center; gap: 15px; max-width: 1400px; margin: 0 auto; }
-        .header-logo { height: 60px; width: auto; flex-shrink: 0; display: block; }
+        header { background: var(--forest); color: white; padding: 12px 3%; box-shadow: 0 4px 15px rgba(0,0,0,0.15); width: 100%; }
+        .header-content { display: flex; align-items: center; justify-content: center; gap: 12px; max-width: 1400px; margin: 0 auto; }
+        .header-logo { height: clamp(45px, 8vw, 60px); width: auto; flex-shrink: 0; display: block; }
         .school-text { display: flex; flex-direction: column; line-height: 1.1; text-align: left; }
-        .school-name-main { font-family: 'Montserrat', sans-serif; font-size: 22px; font-weight: 800; letter-spacing: 1px; margin: 0; }
-        .school-name-sub { font-family: 'Montserrat', sans-serif; font-size: 10px; color: var(--gold); font-weight: 700; text-transform: uppercase; margin: 0; }
+        .school-name-main { font-family: 'Montserrat', sans-serif; font-size: clamp(1rem, 4.5vw, 1.8rem); font-weight: 800; letter-spacing: 1px; margin: 0; }
+        .school-name-sub { font-family: 'Montserrat', sans-serif; font-size: clamp(0.5rem, 2vw, 0.8rem); color: var(--gold); font-weight: 700; text-transform: uppercase; margin: 0; }
         
-        .portal-divider { text-align: center; margin: 25px auto; max-width: 1000px; position: relative; height: 20px; }
+        .portal-divider { text-align: center; margin: 20px auto; max-width: 1000px; position: relative; height: 20px; width: 90%; }
         .portal-divider hr { border: none; border-top: 2px solid #ccc; margin-top: 10px; }
-        .portal-divider span { position: absolute; top: 0; left: 50%; transform: translateX(-50%); background: #f0f2f1; padding: 0 20px; color: var(--forest); font-family: 'Montserrat'; font-weight: 800; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; }
+        .portal-divider span { position: absolute; top: 0; left: 50%; transform: translateX(-50%); background: #f0f2f1; padding: 0 15px; color: var(--forest); font-family: 'Montserrat'; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; white-space: nowrap; }
 
-        /* --- AUTH CARD STYLES (EXACT MATCH TO SCREENSHOT) --- */
-        #securityOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f0f2f1; display: flex; align-items: center; justify-content: center; z-index: 10000; }
-        .auth-card { 
-            background: white; width: 90%; max-width: 420px; padding: 45px 35px; 
-            border-radius: 30px; box-shadow: 0 15px 40px rgba(0,0,0,0.1); 
-            text-align: center; border-bottom: 8px solid var(--forest);
-        }
-        .auth-card img { height: 80px; width: auto; margin-bottom: 20px; }
-        .auth-card h1 { font-family: 'Montserrat'; font-weight: 800; font-size: 24px; color: #000; margin: 0 0 8px; letter-spacing: 1px; }
-        .auth-card .sub-tag { font-family: 'Montserrat'; font-weight: 700; font-size: 11px; color: var(--gold); letter-spacing: 1.5px; margin-bottom: 30px; text-transform: uppercase; }
-
-        .auth-input { 
-            width: 100%; padding: 14px 18px; margin-bottom: 15px; border-radius: 12px; 
-            border: 1px solid #e0e0e0; background: #fafafa; font-size: 15px; outline: none; 
-            box-sizing: border-box; color: #333;
-        }
-
-        .btn-unlock { 
-            width: 100%; background: var(--forest); color: white; padding: 16px; 
-            border-radius: 50px; border: none; font-family: 'Montserrat'; font-weight: 800; 
-            font-size: 15px; cursor: pointer; text-transform: uppercase; margin-top: 15px;
-            display: flex; align-items: center; justify-content: center; gap: 10px;
-            transition: 0.3s;
-        }
-        .btn-unlock:hover { background: #00361a; }
-
-        .btn-return { 
-            width: 100%; background: #f1f4f7; color: #445a64; padding: 14px; 
-            border-radius: 50px; border: none; font-family: 'Montserrat'; font-weight: 700; 
-            font-size: 12px; cursor: pointer; text-transform: uppercase; margin-top: 12px; 
-            text-decoration: none; display: block; box-sizing: border-box;
-        }
-
-        .forgot-link { color: #888; font-size: 11px; text-decoration: underline; margin-top: 25px; display: block; font-weight: 600; cursor: pointer; }
+        /* --- AUTH CARD STYLES --- */
+        #securityOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f0f2f1; display: flex; align-items: center; justify-content: center; z-index: 10000; padding: 15px; }
+        .auth-card { background: white; width: 100%; max-width: 400px; padding: clamp(25px, 8vw, 45px) 25px; border-radius: 25px; box-shadow: 0 15px 40px rgba(0,0,0,0.1); text-align: center; border-bottom: 8px solid var(--forest); }
+        .auth-input { width: 100%; padding: 14px; margin-bottom: 12px; border-radius: 12px; border: 1px solid #e0e0e0; background: #fafafa; font-size: 16px; outline: none; }
+        .btn-unlock { width: 100%; background: var(--forest); color: white; padding: 16px; border-radius: 50px; border: none; font-family: 'Montserrat'; font-weight: 800; font-size: 14px; cursor: pointer; text-transform: uppercase; margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .btn-return { width: 100%; background: #f1f4f7; color: #445a64; padding: 14px; border-radius: 50px; border: none; font-family: 'Montserrat'; font-weight: 700; font-size: 12px; text-decoration: none; display: block; margin-top: 10px; }
 
         /* --- MAIN EDITOR CONTENT --- */
-        #mainContent { display: none; width: 100%; padding: 0 20px 40px; box-sizing: border-box; }
-        .admin-container { max-width: 1000px; margin: auto; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); border-top: 8px solid var(--forest); }
-        .header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 2px solid #eee; padding-bottom: 15px; }
-        .audit-info-bar { background: #fffdf0; padding: 10px 20px; border-radius: 10px; border-left: 5px solid var(--gold); margin-bottom: 20px; font-size: 12px; color: #555; display: flex; justify-content: space-between; align-items: center; }
-        .selection-bar { display: flex; gap: 20px; background: #f0f4f2; padding: 20px; border-radius: 12px; margin-bottom: 25px; align-items: flex-end; }
-        .input-box { flex: 1; }
-        .input-box label { display: block; font-weight: 700; font-size: 11px; color: #444; margin-bottom: 8px; text-transform: uppercase; text-align: left;}
-        select { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-weight: 600; outline: none; background: white; }
-        .syllabus-table { width: 100%; border-collapse: collapse; margin-top: 10px; background: white; }
-        .syllabus-table th { background: var(--forest); color: white; padding: 15px; text-align: left; font-size: 13px; text-transform: uppercase; }
-        .syllabus-table td { padding: 12px; border: 1px solid #eee; vertical-align: top; }
-        .subject-col { width: 25%; background: #fdfdfd; font-weight: 800; color: #333; font-size: 14px; border-right: 3px solid var(--gold) !important; }
-        textarea { width: 100%; height: 75px; padding: 10px; border: 1px solid #ccc; border-radius: 6px; resize: none; font-family: inherit; font-size: 14px; box-sizing: border-box;}
-        .action-area { display: flex; gap: 15px; margin-top: 30px; }
-        .btn-publish { background: var(--forest); color: white; border: none; padding: 18px; flex: 2; border-radius: 50px; font-weight: 800; cursor: pointer; text-transform: uppercase; transition: 0.3s; }
-        .btn-wipe { background: #333; color: white; border: 2px solid var(--danger); padding: 18px; flex: 1; border-radius: 50px; font-weight: 800; cursor: pointer; text-transform: uppercase; }
+        #mainContent { display: none; width: 100%; padding: 0 10px 40px; }
+        .admin-container { max-width: 1000px; margin: auto; background: white; padding: clamp(15px, 4vw, 30px); border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.05); border-top: 8px solid var(--forest); }
+        .header-flex { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; margin-bottom: 20px; gap: 10px; border-bottom: 2px solid #eee; padding-bottom: 15px; }
+        
+        .audit-info-bar { background: #fffdf0; padding: 12px; border-radius: 10px; border-left: 5px solid var(--gold); margin-bottom: 20px; font-size: 11px; color: #555; display: flex; flex-direction: column; gap: 5px; }
+        @media (min-width: 600px) { .audit-info-bar { flex-direction: row; justify-content: space-between; font-size: 12px; } }
+
+        .selection-bar { display: flex; flex-direction: column; gap: 15px; background: #f0f4f2; padding: 15px; border-radius: 12px; margin-bottom: 20px; }
+        @media (min-width: 600px) { .selection-bar { flex-direction: row; align-items: flex-end; padding: 20px; } }
+
+        .input-box { flex: 1; width: 100%; }
+        .input-box label { display: block; font-weight: 800; font-size: 10px; color: #444; margin-bottom: 6px; text-transform: uppercase; }
+        select { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-weight: 600; outline: none; background: white; font-size: 14px; }
+        
+        .syllabus-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        .syllabus-table th { background: var(--forest); color: white; padding: 12px; text-align: left; font-size: 12px; text-transform: uppercase; }
+        .syllabus-table td { padding: 10px; border: 1px solid #eee; vertical-align: top; }
+        
+        .subject-col { width: 30%; background: #fdfdfd; font-weight: 800; color: #333; font-size: 13px; border-right: 3px solid var(--gold) !important; vertical-align: middle !important; }
+        @media (max-width: 600px) { .subject-col { width: 40%; font-size: 11px; } }
+
+        textarea { width: 100%; height: 80px; padding: 10px; border: 1px solid #ccc; border-radius: 8px; resize: vertical; font-family: inherit; font-size: 14px; }
+        
+        .action-area { display: flex; flex-direction: column; gap: 12px; margin-top: 25px; }
+        @media (min-width: 600px) { .action-area { flex-direction: row; gap: 15px; } }
+
+        .btn-publish { background: var(--forest); color: white; border: none; padding: 18px; flex: 2; border-radius: 50px; font-weight: 800; cursor: pointer; text-transform: uppercase; }
+        .btn-wipe { background: #333; color: white; border: 2px solid var(--danger); padding: 18px; flex: 1; border-radius: 50px; font-weight: 800; cursor: pointer; text-transform: uppercase; font-size: 12px; }
+        
         .status-tag { font-size: 10px; color: #777; margin-top: 4px; display: block; font-weight: bold; }
     </style>
 </head>
@@ -82,10 +68,9 @@
 
 <div id="securityOverlay">
     <div class="auth-card">
-        <img src="logo.png">
-        <h1>PARAMOUNT SCHOOL</h1>
-        <div class="sub-tag">SYLLABUS ENTRY ACCESS</div>
-
+        <img src="logo.png" style="height:70px; margin-bottom:10px;">
+        <h1 style="font-family:'Montserrat'; font-weight:800; font-size:24px; color:#000; margin:0 0 8px;">PARAMOUNT SCHOOL</h1>
+        <div style="font-family:'Montserrat'; font-weight:700; font-size:11px; color:var(--gold); letter-spacing:1.5px; margin-bottom:25px; text-transform:uppercase;">SYLLABUS ENTRY ACCESS</div>
         <select id="staffUser" class="auth-input">
             <option value="">-- Select Staff --</option>
             <option value="Mr. Shaik Ahmad">Mr. Shaik Ahmad</option>
@@ -104,16 +89,9 @@
             <option value="Ms. A.Jhansi Rani">Ms. A.Jhansi Rani</option>
             <option value="Ms. S. Neelima">Ms. S. Neelima</option>
         </select>
-
         <input type="password" id="staffPass" class="auth-input" placeholder="Password">
-
-        <button class="btn-unlock" onclick="authenticateStaff()">
-            UNLOCK PORTAL <i class="fas fa-lock"></i>
-        </button>
-
+        <button class="btn-unlock" onclick="authenticateStaff()">UNLOCK PORTAL <i class="fas fa-lock"></i></button>
         <a href="index.html" class="btn-return">RETURN TO DASHBOARD</a>
-
-        <div class="forgot-link">Forgot Password?</div>
     </div>
 </div>
 
@@ -135,18 +113,18 @@
 
     <div class="admin-container">
         <div class="header-flex">
-            <h2 style="color:var(--forest); font-family: Montserrat; margin:0;"><i class="fas fa-book-open"></i> Exam Content Editor</h2>
-            <a href="index.html" style="text-decoration:none; color:var(--forest); font-weight:700;"><i class="fas fa-arrow-left"></i> Portal Home</a>
+            <h2 style="color:var(--forest); font-family: Montserrat; margin:0; font-size:18px;"><i class="fas fa-book-open"></i> Exam Syllabus Editor</h2>
+            <a href="index.html" style="text-decoration:none; color:var(--forest); font-weight:700; font-size:13px;"><i class="fas fa-arrow-left"></i> Home</a>
         </div>
 
         <div class="audit-info-bar" id="auditBar" style="display:none;">
-            <span><i class="fas fa-user-edit"></i> Last Updated By: <b id="lastFaculty">---</b></span>
-            <span><i class="fas fa-clock"></i> Time: <b id="lastTime">---</b></span>
+            <span><i class="fas fa-user-edit"></i> Faculty: <b id="lastFaculty">---</b></span>
+            <span><i class="fas fa-clock"></i> Updated: <b id="lastTime">---</b></span>
         </div>
 
         <div class="selection-bar">
             <div class="input-box">
-                <label>1. Select Class</label>
+                <label>1. Class</label>
                 <select id="sylClass" onchange="renderTableAndLoadData()">
                     <option value="Pre-KG">Pre-KG</option><option value="KG-1">KG-1</option>
                     <option value="KG-2">KG-2</option><option value="Grade-1">Grade-1</option>
@@ -157,23 +135,24 @@
                 </select>
             </div>
             <div class="input-box">
-                <label>2. Select Examination</label>
+                <label>2. Examination</label>
                 <select id="sylExam" onchange="renderTableAndLoadData()">
-                    <option value="Unit Test-1">Unit Test-1</option><option value="Unit Test-2">Unit Test-2</option>
-                    <option value="Quarterly">Quarterly</option><option value="Half-Yearly">Half-Yearly</option>
-                    <option value="Annual">Annual</option>
+                    <option value="Formative Assessment-1">Formative Assessment-1</option> <option value="Formative Assessment-2">Formative Assessment-2</option>
+                     <option value="Formative Assessment-3">Formative Assessment-3</option> <option value="Formative Assessment-4">Formative Assessment-4</option>
+                    <option value="SA-1(Quarterly)">SA-1(Quarterly)</option><option value="SA-2(Half-Yearly)">SA-2(Half-Yearly)</option>
+                    <option value="END-TERM(Annual)">END-TERM(Annual)</option>
                 </select>
             </div>
         </div>
 
         <table class="syllabus-table">
-            <thead><tr><th>Subject Name</th><th>Syllabus Content</th></tr></thead>
+            <thead><tr><th>Subject</th><th>Content</th></tr></thead>
             <tbody id="syllabusRows"></tbody>
         </table>
 
         <div class="action-area">
-            <button class="btn-publish" onclick="saveSyllabusBulk()"><i class="fas fa-cloud-upload-alt"></i> PUBLISH SYLLABUS</button>
-            <button class="btn-wipe" onclick="wipeClassData()"><i class="fas fa-trash-alt"></i> WIPE PREMIUM</button>
+            <button class="btn-publish" onclick="saveSyllabusBulk()"><i class="fas fa-cloud-upload-alt"></i> PUBLISH</button>
+            <button class="btn-wipe" onclick="wipeClassData()"><i class="fas fa-trash-alt"></i> WIPE DATA</button>
         </div>
     </div>
 </div>
@@ -188,6 +167,8 @@
     const db = firebase.database();
 
     let activeFaculty = "";
+    let activePassword = ""; // Stores password used at login
+
     const registry = {
         "Mr. Shaik Ahmad": "Ahmad@123", "Ms. Roqiya Begum": "Roqiya@123", "Ms. G.Rajitha": "Rajitha@123",
         "Ms. Ameena Tabassum": "Ameena@123", "Ms. Shaik Shabana": "Shabana@123", "Ms. B.Ravali": "Ravali@123",
@@ -201,11 +182,12 @@
         const pass = document.getElementById('staffPass').value;
         if(registry[user] === pass) {
             activeFaculty = user;
+            activePassword = pass; // Capture password for verification later
             document.getElementById('securityOverlay').style.display = 'none';
             document.getElementById('mainContent').style.display = 'block';
             renderTableAndLoadData();
         } else {
-            Swal.fire('Access Denied', 'Incorrect password.', 'error');
+            Swal.fire('Error', 'Incorrect password.', 'error');
         }
     }
 
@@ -271,22 +253,51 @@
         subjects.forEach(subject => payload[subject] = document.getElementById(getSafeId(subject)).value.trim());
 
         await db.ref(`class_syllabus/${cls}/${exam}`).update(payload);
-        Swal.fire({ icon: 'success', title: 'Success!', text: 'Syllabus Updated.', timer: 1500, showConfirmButton: false });
+        Swal.fire({ icon: 'success', title: 'Published!', timer: 1500, showConfirmButton: false });
         renderTableAndLoadData();
     }
 
+    // --- SECURE WIPE FUNCTION ---
     async function wipeClassData() {
         const cls = document.getElementById('sylClass').value;
         const exam = document.getElementById('sylExam').value;
-        const { value: confirm } = await Swal.fire({
-            title: 'Wipe Data?', html: 'Type <b style="color:red">DELETE</b> to confirm:',
-            input: 'text', icon: 'warning', showCancelButton: true,
-            inputValidator: (v) => v.toUpperCase() !== 'DELETE' && 'Type DELETE!'
+
+        // Step 1: Confirmation
+        const result = await Swal.fire({
+            title: 'Wipe All Data?',
+            text: `This will permanently delete the syllabus for ${cls} - ${exam}.`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d32f2f',
+            confirmButtonText: 'Continue'
         });
-        if (confirm) {
-            await db.ref(`class_syllabus/${cls}/${exam}`).remove();
-            Swal.fire('Deleted!', 'Data Wiped.', 'success');
-            renderTableAndLoadData();
+
+        if (result.isConfirmed) {
+            // Step 2: Password Verification
+            const { value: verifyPass } = await Swal.fire({
+                title: 'Security Verification',
+                text: `Enter password for ${activeFaculty} to authorize deletion:`,
+                input: 'password',
+                inputPlaceholder: 'Enter your password',
+                showCancelButton: true,
+                confirmButtonColor: '#d32f2f',
+                confirmButtonText: 'Wipe Now',
+                inputValidator: (value) => {
+                    if (!value) return 'Password is required!';
+                    if (value !== activePassword) return 'Incorrect Password! Delete aborted.';
+                }
+            });
+
+            if (verifyPass === activePassword) {
+                Swal.fire({ title: 'Deleting...', didOpen: () => Swal.showLoading() });
+                try {
+                    await db.ref(`class_syllabus/${cls}/${exam}`).remove();
+                    Swal.fire('Deleted!', 'Syllabus wiped successfully.', 'success');
+                    renderTableAndLoadData();
+                } catch (e) {
+                    Swal.fire('Error', 'Delete failed.', 'error');
+                }
+            }
         }
     }
 </script>
