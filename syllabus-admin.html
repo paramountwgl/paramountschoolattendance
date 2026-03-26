@@ -3,49 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Syllabus Entry Access | Paramount School</title>
+    <title>Syllabus Portal | Paramount School</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Segoe+UI:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="icon" type="image/png" href="logo.png">
     <style>
         :root { --forest: #004d26; --gold: #ffd700; --light: #f4f7f6; --danger: #d32f2f; }
-        body { font-family: 'Segoe UI', sans-serif; background: #e0e5e2; margin: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+        body { font-family: 'Segoe UI', sans-serif; background: #e0e5e2; margin: 0; min-height: 100vh; }
 
-        /* --- AUTH CARD STYLES (MATCHING SCREENSHOT) --- */
-        #securityOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f0f2f1; display: flex; align-items: center; justify-content: center; z-index: 10000; }
+        /* --- HEADER STYLES --- */
+        header { background: var(--forest); color: white; padding: 15px 3%; box-shadow: 0 4px 15px rgba(0,0,0,0.15); margin-bottom: 20px; }
+        .header-content { display: flex; align-items: center; justify-content: center; gap: 15px; max-width: 1400px; margin: 0 auto; width: 100%; }
+        .header-logo { height: clamp(45px, 10vw, 65px); width: auto; flex-shrink: 0; }
+        .school-text { display: flex; flex-direction: column; line-height: 1.1; text-align: left; }
+        .school-name-main { font-family: 'Montserrat', sans-serif; font-size: clamp(1.1rem, 5vw, 1.8rem); font-weight: 800; letter-spacing: 1px; }
+        .school-name-sub { font-family: 'Montserrat', sans-serif; font-size: clamp(0.6rem, 2.5vw, 0.8rem); color: var(--gold); font-weight: 700; text-transform: uppercase; }
         
-        .auth-card { 
-            background: white; width: 90%; max-width: 420px; padding: 40px 30px; 
-            border-radius: 30px; box-shadow: 0 15px 40px rgba(0,0,0,0.1); 
-            text-align: center; border-bottom: 8px solid var(--forest);
-        }
+        .portal-divider { text-align: center; margin: 20px auto; max-width: 1000px; position: relative; }
+        .portal-divider hr { border: none; border-top: 2px solid #ccc; }
+        .portal-divider span { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #e0e5e2; padding: 0 15px; color: var(--forest); font-family: 'Montserrat'; font-weight: 800; font-size: 14px; text-transform: uppercase; letter-spacing: 2px; }
 
-        .auth-logo { height: 75px; width: auto; margin-bottom: 15px; }
-        .school-name { font-family: 'Montserrat'; font-weight: 800; font-size: 22px; color: #000; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
-        .access-title { font-family: 'Montserrat'; font-weight: 700; font-size: 11px; color: var(--gold); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 25px; }
+        /* --- AUTH CARD STYLES --- */
+        #securityOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f0f2f1; display: flex; align-items: center; justify-content: center; z-index: 10000; }
+        .auth-card { background: white; width: 90%; max-width: 420px; padding: 40px 30px; border-radius: 30px; box-shadow: 0 15px 40px rgba(0,0,0,0.1); text-align: center; border-bottom: 8px solid var(--forest); }
+        .auth-input { width: 100%; padding: 14px; margin-bottom: 15px; border-radius: 12px; border: 1px solid #e0e0e0; background: #fafafa; font-size: 15px; outline: none; box-sizing: border-box; }
+        .btn-unlock { width: 100%; background: var(--forest); color: white; padding: 15px; border-radius: 50px; border: none; font-family: 'Montserrat'; font-weight: 800; font-size: 14px; cursor: pointer; text-transform: uppercase; margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .btn-return { width: 100%; background: #f1f4f7; color: #445a64; padding: 12px; border-radius: 50px; border: none; font-family: 'Montserrat'; font-weight: 700; font-size: 12px; cursor: pointer; text-transform: uppercase; margin-top: 10px; text-decoration: none; display: block; }
 
-        .auth-input { 
-            width: 100%; padding: 14px; margin-bottom: 15px; border-radius: 12px; 
-            border: 1px solid #e0e0e0; background: #fafafa; font-size: 15px; outline: none; box-sizing: border-box;
-        }
-
-        .btn-unlock { 
-            width: 100%; background: var(--forest); color: white; padding: 15px; 
-            border-radius: 50px; border: none; font-family: 'Montserrat'; font-weight: 800; 
-            font-size: 14px; cursor: pointer; text-transform: uppercase; margin-top: 10px;
-            display: flex; align-items: center; justify-content: center; gap: 10px;
-        }
-        .btn-return { 
-            width: 100%; background: #f1f4f7; color: #445a64; padding: 12px; 
-            border-radius: 50px; border: none; font-family: 'Montserrat'; font-weight: 700; 
-            font-size: 12px; cursor: pointer; text-transform: uppercase; margin-top: 10px; text-decoration: none; display: block;
-        }
-        .forgot-link { color: #888; font-size: 11px; text-decoration: underline; margin-top: 20px; display: block; font-weight: 600; cursor: pointer; }
-
-        /* --- MAIN EDITOR CONTENT (HIDDEN BY DEFAULT) --- */
-        #mainContent { display: none; width: 100%; padding: 20px; }
-        .admin-container { max-width: 1000px; margin: auto; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); border-top: 10px solid var(--forest); }
+        /* --- MAIN EDITOR CONTENT --- */
+        #mainContent { display: none; width: 100%; padding: 0 20px 40px; }
+        .admin-container { max-width: 1000px; margin: auto; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); border-top: 8px solid var(--forest); }
         .header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 2px solid #eee; padding-bottom: 15px; }
+        .audit-info-bar { background: #fffdf0; padding: 10px 20px; border-radius: 10px; border-left: 5px solid var(--gold); margin-bottom: 20px; font-size: 12px; color: #555; display: flex; justify-content: space-between; align-items: center; }
         .selection-bar { display: flex; gap: 20px; background: #f0f4f2; padding: 20px; border-radius: 12px; margin-bottom: 25px; align-items: flex-end; }
         .input-box { flex: 1; }
         .input-box label { display: block; font-weight: 700; font-size: 11px; color: #444; margin-bottom: 8px; text-transform: uppercase; text-align: left;}
@@ -56,8 +45,8 @@
         .subject-col { width: 25%; background: #fdfdfd; font-weight: 800; color: #333; font-size: 14px; border-right: 3px solid var(--gold) !important; }
         textarea { width: 100%; height: 75px; padding: 10px; border: 1px solid #ccc; border-radius: 6px; resize: none; font-family: inherit; font-size: 14px; box-sizing: border-box;}
         .action-area { display: flex; gap: 15px; margin-top: 30px; }
-        .btn-publish { background: var(--forest); color: white; border: none; padding: 18px; flex: 2; border-radius: 50px; font-weight: 800; cursor: pointer; }
-        .btn-wipe { background: #333; color: white; border: 2px solid var(--danger); padding: 18px; flex: 1; border-radius: 50px; font-weight: 800; cursor: pointer; }
+        .btn-publish { background: var(--forest); color: white; border: none; padding: 18px; flex: 2; border-radius: 50px; font-weight: 800; cursor: pointer; text-transform: uppercase; transition: 0.3s; }
+        .btn-wipe { background: #333; color: white; border: 2px solid var(--danger); padding: 18px; flex: 1; border-radius: 50px; font-weight: 800; cursor: pointer; text-transform: uppercase; }
         .status-tag { font-size: 10px; color: #777; margin-top: 4px; display: block; font-weight: bold; }
     </style>
 </head>
@@ -68,7 +57,6 @@
         <img src="logo.png" class="auth-logo">
         <div class="school-name">PARAMOUNT</div>
         <div class="access-title">SYLLABUS ENTRY ACCESS</div>
-
         <select id="staffUser" class="auth-input">
             <option value="">-- Select Staff --</option>
             <option value="Mr. Shaik Ahmad">Mr. Shaik Ahmad</option>
@@ -87,24 +75,37 @@
             <option value="Ms. A.Jhansi Rani">Ms. A.Jhansi Rani</option>
             <option value="Ms. S. Neelima">Ms. S. Neelima</option>
         </select>
-
         <input type="password" id="staffPass" class="auth-input" placeholder="Password">
-
-        <button class="btn-unlock" onclick="authenticateStaff()">
-            UNLOCK PORTAL <i class="fas fa-lock"></i>
-        </button>
-
+        <button class="btn-unlock" onclick="authenticateStaff()">UNLOCK PORTAL <i class="fas fa-lock"></i></button>
         <a href="index.html" class="btn-return">RETURN TO DASHBOARD</a>
-
-        <div class="forgot-link">Forgot Password?</div>
     </div>
 </div>
 
 <div id="mainContent">
+    <header>
+        <div class="header-content">
+            <img src="logo.png" class="header-logo" alt="Logo">
+            <div class="school-text">
+                <span class="school-name-main">PARAMOUNT</span>
+                <span class="school-name-sub">ENGLISH MEDIUM SCHOOL</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="portal-divider">
+        <hr>
+        <span>SYLLABUS PORTAL</span>
+    </div>
+
     <div class="admin-container">
         <div class="header-flex">
-            <h2 style="color:var(--forest); font-family: Montserrat;"><i class="fas fa-book-open"></i> Exam Syllabus Editor</h2>
-            <a href="index.html" style="text-decoration:none; color:var(--forest); font-weight:700;"><i class="fas fa-arrow-left"></i> Dashboard</a>
+            <h2 style="color:var(--forest); font-family: Montserrat; margin:0;"><i class="fas fa-book-open"></i> Exam Content Editor</h2>
+            <a href="index.html" style="text-decoration:none; color:var(--forest); font-weight:700;"><i class="fas fa-arrow-left"></i> Portal Home</a>
+        </div>
+
+        <div class="audit-info-bar" id="auditBar" style="display:none;">
+            <span><i class="fas fa-user-edit"></i> Last Updated By: <b id="lastFaculty">---</b></span>
+            <span><i class="fas fa-clock"></i> Time: <b id="lastTime">---</b></span>
         </div>
 
         <div class="selection-bar">
@@ -130,9 +131,7 @@
         </div>
 
         <table class="syllabus-table">
-            <thead>
-                <tr><th>Subject Name</th><th>Syllabus Content</th></tr>
-            </thead>
+            <thead><tr><th>Subject Name</th><th>Syllabus Content</th></tr></thead>
             <tbody id="syllabusRows"></tbody>
         </table>
 
@@ -148,14 +147,11 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-    const firebaseConfig = { 
-        apiKey: "AIzaSyDRYk9KOK-ga0c88dnYMsAoifW2NJTd_Y8", 
-        databaseURL: "https://paramount-school-d55bc-default-rtdb.firebaseio.com", 
-        projectId: "paramount-school-d55bc" 
-    };
+    const firebaseConfig = { apiKey: "AIzaSyDRYk9KOK-ga0c88dnYMsAoifW2NJTd_Y8", databaseURL: "https://paramount-school-d55bc-default-rtdb.firebaseio.com", projectId: "paramount-school-d55bc" };
     if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
     const db = firebase.database();
 
+    let activeFaculty = "";
     const registry = {
         "Mr. Shaik Ahmad": "Ahmad@123", "Ms. Roqiya Begum": "Roqiya@123", "Ms. G.Rajitha": "Rajitha@123",
         "Ms. Ameena Tabassum": "Ameena@123", "Ms. Shaik Shabana": "Shabana@123", "Ms. B.Ravali": "Ravali@123",
@@ -168,27 +164,30 @@
         const user = document.getElementById('staffUser').value;
         const pass = document.getElementById('staffPass').value;
         if(registry[user] === pass) {
+            activeFaculty = user;
             document.getElementById('securityOverlay').style.display = 'none';
             document.getElementById('mainContent').style.display = 'block';
             renderTableAndLoadData();
         } else {
-            Swal.fire('Access Denied', 'Incorrect password for selected staff.', 'error');
+            Swal.fire('Access Denied', 'Incorrect password.', 'error');
         }
     }
 
     const primaryGroup = ["Telugu", "Hindi", "English", "Mathematics", "EVS/Science", "Social Studies", "Computer", "GK"];
     const middleGroup = ["Telugu", "Hindi", "English", "Mathematics", "Physics", "Biology", "Social Studies", "Computer"];
-
-    const classSubjectGroups = {
-        "Pre-KG": ["Rhymes", "English Oral", "English Written", "Maths Oral", "Maths Written", "Conversation", "Drawing"],
-        "KG-1": ["Telugu", "Hindi", "English", "Mathematics", "EVS", "Rhymes"],
-        "KG-2": ["Telugu", "Hindi", "English", "Mathematics", "EVS", "GK"],
-        "Grade-1": primaryGroup, "Grade-2": primaryGroup, "Grade-3": primaryGroup,
-        "Grade-4": primaryGroup, "Grade-5": primaryGroup, "Grade-6": middleGroup, 
-        "Grade-7": middleGroup, "Grade-8": middleGroup  
-    };
+    const classSubjectGroups = { "Pre-KG": ["Rhymes", "English Oral", "English Written", "Maths Oral", "Maths Written", "Conversation", "Drawing"], "KG-1": ["Telugu", "Hindi", "English", "Mathematics", "EVS", "Rhymes"], "KG-2": ["Telugu", "Hindi", "English", "Mathematics", "EVS", "GK"], "Grade-1": primaryGroup, "Grade-2": primaryGroup, "Grade-3": primaryGroup, "Grade-4": primaryGroup, "Grade-5": primaryGroup, "Grade-6": middleGroup, "Grade-7": middleGroup, "Grade-8": middleGroup };
 
     function getSafeId(name) { return "syl_" + name.replace(/[^a-zA-Z0-9]/g, '_'); }
+
+    function getFormattedTimestamp() {
+        const now = new Date();
+        let hours = now.getHours();
+        const minutes = now.getMinutes().toString().padStart(2, '0');
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12 || 12;
+        const date = now.toLocaleDateString('en-GB'); 
+        return `${date} | ${hours}:${minutes} ${ampm}`;
+    }
 
     async function renderTableAndLoadData() {
         const cls = document.getElementById('sylClass').value;
@@ -204,6 +203,15 @@
 
         const snap = await db.ref(`class_syllabus/${cls}/${exam}`).once('value');
         const data = snap.val() || {};
+        
+        if(data.lastUpdatedBy) {
+            document.getElementById('auditBar').style.display = 'flex';
+            document.getElementById('lastFaculty').innerText = data.lastUpdatedBy;
+            document.getElementById('lastTime').innerText = data.lastUpdatedTime;
+        } else {
+            document.getElementById('auditBar').style.display = 'none';
+        }
+
         subjects.forEach(subject => {
             const safeId = getSafeId(subject);
             const content = data[subject] || "";
@@ -218,11 +226,16 @@
         const cls = document.getElementById('sylClass').value;
         const exam = document.getElementById('sylExam').value;
         Swal.fire({ title: 'Publishing...', didOpen: () => Swal.showLoading() });
-        const payload = { lastUpdated: new Date().toLocaleString() };
+
+        const payload = { 
+            lastUpdatedTime: getFormattedTimestamp(),
+            lastUpdatedBy: activeFaculty 
+        };
         let subjects = classSubjectGroups[cls] || primaryGroup;
         subjects.forEach(subject => payload[subject] = document.getElementById(getSafeId(subject)).value.trim());
+
         await db.ref(`class_syllabus/${cls}/${exam}`).update(payload);
-        Swal.fire({ icon: 'success', title: 'Success!', text: 'Syllabus Published Live.', timer: 1500, showConfirmButton: false });
+        Swal.fire({ icon: 'success', title: 'Success!', text: 'Syllabus Updated.', timer: 1500, showConfirmButton: false });
         renderTableAndLoadData();
     }
 
