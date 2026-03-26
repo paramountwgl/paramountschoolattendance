@@ -65,6 +65,7 @@
             <label>2. Select Examination</label>
             <select id="sylExam" onchange="renderTableAndLoadData()">
                 <option value="Unit Test-1">Unit Test-1</option>
+                <option value="Unit Test-2">Unit Test-2</option>
                 <option value="Quarterly">Quarterly</option>
                 <option value="Half-Yearly">Half-Yearly</option>
                 <option value="Annual">Annual</option>
@@ -100,9 +101,6 @@
     if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
     const db = firebase.database();
 
-    // --- SUBJECT ORDER AS REQUESTED ---
-    // Telugu, Hindi, English, Maths, [Physics/Biology or EVS], Social Studies
-    
     const primaryGroup = ["Telugu", "Hindi", "English", "Mathematics", "EVS/Science", "Social Studies", "Computer", "GK"];
     const middleGroup = ["Telugu", "Hindi", "English", "Mathematics", "Physics", "Biology", "Social Studies", "Computer"];
 
@@ -122,6 +120,11 @@
 
     let currentSubjects = [];
 
+    // Helper to generate consistent IDs
+    function getSafeId(name) {
+        return "syl_" + name.replace(/[^a-zA-Z0-9]/g, '_');
+    }
+
     async function renderTableAndLoadData() {
         const cls = document.getElementById('sylClass').value;
         const exam = document.getElementById('sylExam').value;
@@ -129,54 +132,83 @@
         
         currentSubjects = classSubjectGroups[cls] || primaryGroup;
         
+        // 1. Build the rows first
         tbody.innerHTML = "";
         currentSubjects.forEach(subject => {
-            const safeId = "syl_" + subject.replace(/[/ ]/g, '_');
+            const safeId = getSafeId(subject);
             tbody.innerHTML += `
                 <tr>
                     <td class="subject-col">${subject}</td>
                     <td>
-                        <textarea id="${safeId}" placeholder="Enter syllabus topics..."></textarea>
-                        <span class="status-tag" id="status_${safeId}">Verifying...</span>
+                        <textarea id="${safeId}" placeholder="Enter topics for ${subject}..."></textarea>
+                        <span class="status-tag" id="status_${safeId}">Checking storage...</span>
                     </td>
                 </tr>`;
         });
 
+        // 2. Fetch data after building UI
         try {
             const snap = await db.ref(`class_syllabus/${cls}/${exam}`).once('value');
             const data = snap.val() || {};
 
             currentSubjects.forEach(subject => {
-                const safeId = "syl_" + subject.replace(/[/ ]/g, '_');
+                const safeId = getSafeId(subject);
                 const content = data[subject] || "";
-                document.getElementById(safeId).value = content;
-                
+                const element = document.getElementById(safeId);
                 const statusTag = document.getElementById(`status_${safeId}`);
-                statusTag.innerHTML = content ? `<i class="fas fa-check-circle"></i> Live on Portal` : `Not Entered`;
-                statusTag.style.color = content ? "#006633" : "#888";
+                
+                if (element) {
+                    element.value = content;
+                    statusTag.innerHTML = content ? `<i class="fas fa-check-circle"></i> Live on Portal` : `Not Entered`;
+                    statusTag.style.color = content ? "#006633" : "#888";
+                }
             });
-        } catch (e) { console.error(e); }
+        } catch (e) { console.error("Load Error:", e); }
     }
 
     async function saveSyllabusBulk() {
         const cls = document.getElementById('sylClass').value;
         const exam = document.getElementById('sylExam').value;
+        
+        // Show loading immediately
+        Swal.fire({ 
+            title: 'Saving Syllabus...', 
+            text: 'Please do not close this window',
+            allowOutsideClick: false,
+            didOpen: () => Swal.showLoading() 
+        });
+
         const payload = { 
             lastUpdated: new Date().toLocaleString(),
             serverTime: firebase.database.ServerValue.TIMESTAMP
         };
 
+        // Collect data from each textarea
         currentSubjects.forEach(subject => {
-            const safeId = "syl_" + subject.replace(/[/ ]/g, '_');
-            payload[subject] = document.getElementById(safeId).value.trim();
+            const safeId = getSafeId(subject);
+            const val = document.getElementById(safeId).value.trim();
+            payload[subject] = val; // Use actual subject name as key
         });
 
         try {
-            Swal.fire({ title: 'Saving Syllabus...', didOpen: () => Swal.showLoading() });
-            await db.ref(`class_syllabus/${cls}/${exam}`).set(payload);
-            Swal.fire('Success', `Syllabus for ${cls} - ${exam} is now available for students!`, 'success');
+            // Save to Firebase
+            await db.ref(`class_syllabus/${cls}/${exam}`).update(payload);
+            
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: `Syllabus for ${cls} - ${exam} has been published.`,
+                timer: 2000,
+                showConfirmButton: false
+            });
+
+            // Re-render to refresh the "Live on Portal" tags
             renderTableAndLoadData();
-        } catch (e) { Swal.fire('Error', 'Update failed. Check connection.', 'error'); }
+            
+        } catch (e) { 
+            console.error("Save Error:", e);
+            Swal.fire('Error', 'Update failed. Please check your internet connection.', 'error'); 
+        }
     }
 
     // Startup
