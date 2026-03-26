@@ -50,7 +50,6 @@
         .tab-btn { flex: 1; padding: 10px; border-radius: 50px; border: 1px solid #ddd; background: #fafafa; color: #777; font-weight: 700; cursor: pointer; text-transform: uppercase; font-size: 10px; }
         .tab-btn.active { border-color: var(--forest); color: var(--forest); }
 
-        /* SCHEDULING GRID */
         .subject-grid { display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 15px; }
         .sched-box { background: #fbfbfb; padding: 12px; border-radius: 12px; border: 1px solid #eee; display: flex; flex-direction: column; gap: 8px; }
         .sched-box label { font-weight: 800; font-size: 11px; color: var(--forest); margin: 0; }
@@ -166,11 +165,11 @@
     const authorized = { "Mr. Ahmad": "Ahmad@123", "Ms. Roqiya": "Roqiya@123", "Ms. Jyothi": "Jyothi@123" };
     let activeTeacher = "", ticketsToPrint = [];
 
-    // --- TIME GENERATOR (9:00 AM to 5:00 PM) ---
+    // --- TIME GENERATOR ---
     const timeOptions = ["-"];
     for(let h=9; h<=17; h++) {
         let period = h >= 12 ? "PM" : "AM";
-        let hr = h > 12 ? h-12 : h;
+        let hr = h > 12 ? h-12 : (h === 0 ? 12 : h);
         timeOptions.push(`${hr}:00 ${period}`);
         if(h < 17) timeOptions.push(`${hr}:30 ${period}`);
     }
@@ -223,21 +222,26 @@
         Swal.fire('Saved', `Schedule updated for ${cls}`, 'success');
     }
 
+    const rollData = { "Hanish Macharla": "1472070", "Arjun Vihaar Illandula": "1478225", "Thanu sree Allakunta": "1469391", "Aadhya Gangaraboina": "1459555", "Aadhya Sri Oggula": "1459560", "Aadhyasri Shivagoni": "1474500", "Afraha Begum": "1460680", "Aliya Sultana": "1472299", "Anvika Bandi": "1459683", "Aradana Devara konda": "1459620", "Devansh Bandi": "1459605", "Hanvitha Mulkalapelli": "1472069", "Harsha Vardhan Seenapelli": "1472723", "Hiranya Bandi": "1459658", "Jashritha Boina": "1478248", "Konreddy Shreyanvi": "1481135", "Kriyansh Sammeta": "1459568", "Mohammed Mohiuddin Sayyad": "1459652", "Nethra Narkurthi": "1459636", "Reeyansh Bandi": "1463720", "Rishi Myakala": "1459582", "Rudransh Bandi": "1459607", "Rudransh Bandi_1": "1459604", "Sanvika Bandi": "1459625", "Shanvith Khatha": "1472074", "Shishira Jalagam": "1469395", "Shiva Sai Mekala": "1456748", "Shree Rudhraveer Chevvu": "1459687", "Shreyansh Gangaraboina": "1459572", "Sreeja Thalla": "1459643", "Srikrithini Myakala": "1459603", "Srivatsav Vanam": "1472536", "Sriyansh Mekala": "1456743", "Thanvika Lakka": "1473500", "Thrilokansh Vudari": "1463724", "Ujjwal Checkka": "1459694", "Vaishnavi Lakka": "1474815", "Vedansh Myakala": "1460690", "Vishnu Priya Molugu": "1478250", "Vyshnav Tej Boina": "1413563", "Yafiah Mohammad": "1459577" };
+
     async function generateClassHallTickets() {
         const cls = document.getElementById('feeClass').value, exam = document.getElementById('examSelect').value;
         if(!cls) return;
+        Swal.fire({ title: 'Syncing...', didOpen: () => Swal.showLoading() });
         const schedSnap = await db.ref(`class_schedules/${cls}/${exam}`).once('value'), schedule = schedSnap.val() || {};
         const feeSnap = await db.ref(`fee_records/${cls}`).once('value'), feeData = feeSnap.val();
         ticketsToPrint = []; let html = "";
         (studentData[cls] || []).forEach((name, index) => {
             let tFee = 0, tPaid = 0;
             if(feeData && feeData[name]) Object.values(feeData[name]).forEach(r => { tFee = r.total; tPaid += parseFloat(r.paid || 0); });
-            const ticket = { name, cls, regNo: 1000 + index, exam, schedule, due: (tFee - tPaid) };
+            const roll = rollData[name] || "logo";
+            const ticket = { name, cls, roll, regNo: 1000 + index, exam, schedule, due: (tFee - tPaid) };
             ticketsToPrint.push(ticket);
             html += `<div class="ht-card"><span><b>${name}</b></span><button onclick="printIndividualTicket(${index})" style="padding:5px 12px; border-radius:5px; border:1px solid #ccc; font-size:10px; cursor:pointer; font-weight:800;">PRINT</button></div>`;
         });
         document.getElementById('hallTickets').innerHTML = html;
         document.getElementById('printBtn').style.display = 'block';
+        Swal.close();
     }
 
     function printIndividualTicket(idx) { printTickets([ticketsToPrint[idx]]); }
@@ -246,7 +250,7 @@
     function printTickets(list) {
         const logoOrigin = window.location.origin + "/logo.png";
         const win = window.open('', '', 'height=800,width=1000');
-        win.document.write('<html><head><style>body{font-family:sans-serif;padding:0;margin:0;color:#333;} *{-webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;} .page{width:210mm; height:297mm; padding:10mm; box-sizing:border-box; page-break-after:always;} .ticket{width:100%; height:132mm; border:2px solid #333; padding:15px; box-sizing:border-box; border-radius:15px; position:relative; margin-bottom:5mm;} .divider{border-top:1px dashed #999; width:100%; margin:2mm 0;} .header{display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #333; padding-bottom:10px; margin-bottom:10px;} .tbl{width:100%; border-collapse:collapse; margin-top:10px;} .tbl th, .tbl td{border:1px solid #333; padding:6px; text-align:center; font-weight:bold; font-size:10px;}</style></head><body>');
+        win.document.write('<html><head><style>body{font-family:sans-serif;padding:0;margin:0;color:#333;} *{-webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;} .page{width:210mm; height:297mm; padding:8mm; box-sizing:border-box; page-break-after:always;} .ticket{width:100%; height:132mm; border:2px solid #333; padding:15px; box-sizing:border-box; border-radius:15px; position:relative; margin-bottom:5mm;} .divider{border-top:2px dashed #999; width:100%; margin:4mm 0;} .header{display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #333; padding-bottom:10px; margin-bottom:10px;} .tbl{width:100%; border-collapse:collapse; margin-top:10px;} .tbl th, .tbl td{border:1px solid #333; padding:6px; text-align:center; font-weight:bold; font-size:10px; line-height: 1.2;}</style></head><body>');
         
         for (let i = 0; i < list.length; i += 2) {
             win.document.write('<div class="page">');
@@ -260,7 +264,9 @@
                             <img src="${logoOrigin}" style="height:50px;" onerror="this.src='logo.png'">
                             <div><h1 style="margin:0; font-size:18px;">PARAMOUNT SCHOOL</h1><p style="margin:0; font-weight:800; font-size:9px;">${t.exam}</p></div>
                         </div>
-                        <div style="width:80px; height:100px; border:1px solid #333; display:flex; align-items:center; justify-content:center; font-size:8px;">PHOTO</div>
+                        <div style="width:80px; height:100px; border:1px solid #333; display:flex; align-items:center; justify-content:center; overflow:hidden;">
+                            <img src="Student images/${t.roll}.png" style="width:100%; height:100%; object-fit:cover;" onerror="this.innerHTML='PHOTO'">
+                        </div>
                     </div>
                     <div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:8px;">
                         <div><b>Name:</b> ${t.name.toUpperCase()}<br><b>Class:</b> ${t.cls}</div>
@@ -271,7 +277,10 @@
                         <tbody>
                             <tr><td style="text-align:left; background:#f4f4f4;">Date/Time</td>${subs.map(s=>{ 
                                 let val = t.schedule[s] || "-";
-                                return `<td>${val.split('-').reverse().join('/')}</td>`; 
+                                if(val === "-") return `<td>-</td>`;
+                                let parts = val.split(" @ ");
+                                let d = parts[0].split('-').reverse().join('/');
+                                return `<td>${d}<br>${parts[1]}</td>`; 
                             }).join('')}</tr>
                             <tr style="height:35px;"><td style="text-align:left; background:#f4f4f4;">Sign</td>${subs.map(s=>`<td></td>`).join('')}</tr>
                         </tbody>
@@ -290,7 +299,7 @@
         }
         win.document.write('</body></html>');
         win.document.close();
-        setTimeout(() => { win.print(); win.close(); }, 700);
+        setTimeout(() => { win.print(); win.close(); }, 800);
     }
 
     const studentData = { "Pre-KG": ["Hanish Macharla", "Arjun Vihaar Illandula", "Thanu sree Allakunta", "Aadhya Gangaraboina", "Aadhya Sri Oggula", "Aadhyasri Shivagoni", "Afraha Begum", "Aliya Sultana", "Anvika Bandi", "Aradana Devara konda", "Devansh Bandi", "Hanvitha Mulkalapelli", "Harsha Vardhan Seenapelli", "Hiranya Bandi", "Jashritha Boina", "Konreddy Shreyanvi", "Kriyansh Sammeta", "Mohammed Mohiuddin Sayyad", "Nethra Narkurthi", "Reeyansh Bandi", "Rishi Myakala", "Rudransh Bandi", "Sanvika Bandi", "Shanvith Khatha", "Shishira Jalagam", "Shiva Sai Mekala", "Shree Rudhraveer Chevvu", "Shreyansh Gangaraboina", "Sreeja Thalla", "Srikrithini Myakala", "Srivatsav Vanam", "Sriyansh Mekala", "Thanvika Lakka", "Thrilokansh Vudari", "Ujjwal Checkka", "Vaishnavi Lakka", "Vedansh Myakala", "Vishnu Priya Molugu", "Vyshnav Tej Boina", "Yafiah Mohammad"], "KG-1": ["Aadhya Sri Amaravadi", "Aditya Manda", "Aadhya Jella", "Advaita Gauri Bandi", "Aizah Amna Shaik", "Akshara Singaram", "Bhahuveer Raj Somishetti", "Gayathri Erroju", "Hanvika Mulkalapelli", "Manvith Kondoju", "Sayyad Vajeed", "Mekala Manu sri", "Oliva Grace Vallapu", "Rithwik Oggula", "Rithwika Kandagatla", "Srimahi Chevvu", "Thanvesh Thalla", "Trishul Nanduri", "Yoganshika Nanduri", "Yusra Mohammad", "Zainul Abideen Syed"], "KG-2": ["Deekshanth Sammeta", "Hanshith Erroju", "Harika Bandi", "Himarsha Naini", "Karthik Vallepu", "Kruthika Bandi", "Rajavardhan Gampala", "Roshan Kaitha", "Sri Anshu Ayaan Lyadala", "Srihansh Bandi", "Srikshitha Guduri", "Varshith Gonela", "Adyasri Makala", "Anvik Boini", "Anvith Pokanati", "Awais Ur Rehman Mohammad", "Dakshu Pothuganti", "Hansith Reddy Katukuri", "Harshith Pokanati", "Jella Aditya", "Krishank Nallabothula", "Kundana Katkuri", "Munukuntla Revanth Rudhra", "Niraja Nethri Siluveru", "Pranav Mattepelli", "Sreenith Yadav Naini", "Uvan Reddy Dasari", "Zayan Mohammad", "Zoya Mohammed"], "Grade-1": ["Dheeraj Gattu", "Preetham Sannayala", "Shiva nandu Gonela", "Shrayan Nuthanakanti", "Sriyanksha Mandala", "Advitha Garige", "Harika Bandi", "Himansi Kondoju", "Izhaan Rahamath Syed", "Jaisurya Myakala", "Khadeeja Fathima", "Manaswini Dandugula", "Manusri Bandi", "Rithwik krishna Amaravadi", "Rohan Bandi", "Shiva Junnu", "Shivanandh Bandi", "Sridha Thalla", "Srinika Chengelly", "Sriyanshi Oggula", "Vishwak Checkka"], "Grade-2": ["Aliza Manha Shaik", "Dhruvan Reddy Katukuri", "Druthika Enugala", "Manaswini Bandi", "Rakshith Macharla", "Sathwika Katkuri", "Shalini Uppala", "Chandu Devarakonda", "Gnaneshwar Pokanati", "Hasnain Syed", "Koushik Siluveru", "Senen Desabattula", "Shivarajan Pothuganti"], "Grade-3": ["Nagavelly Manikanta", "Mirja Ismail", "Bandi Aryan", "Dandugula Mahesh Babu", "Bandi Tejasri", "Bandi Harshavardhan", "Gampala Vyshnavi", "Gampala Laxmi", "Garige Harshith", "Katkuri Hanish", "Katukuri Manideep", "MD Abdul Quddus", "Muppa Sathwik Patel", "Nuthanakanti Sansita", "Pasarakonda Ritwin", "Pinninti Rakshith Rao", "Rayi Sriman Adithya"], "Grade-4": ["Abdul Saqib Mohammad", "Anudeep Chintha", "Bhavan Bandi", "Harshavardhan Gonela", "Jayadev Chiluveru", "Mahaboob Syed", "Nandith Reddy Enugala", "Sai Charan Goud Mandala", "Sai Prasanna Keerthi", "Ajmeri Shaik", "Akshith Chiluveru", "Jayasri Myakala", "Rahul Kanjarla", "Saketh Devarakonda"], "Grade-5": ["Adya Reddy Vangala", "Kowshik Patel Muppa", "Siri Singaram", "Srikar Mandala", "Abdus Salaam MD", "Akshith Ram Kalvacharla", "Jaffar Anas Shaik", "Khaja Azeemuddin Mohammed", "Nihan Mohammed", "Saif Shaik", "Saketh Renukuntla", "Sreeja Dasari", "Vidhaatri Sahani"], "Grade-6": ["Abdul Razzak Mohammad", "Anudeepthi Chintha", "Saketh Ranaveni", "Shiva Sri Katukuri", "Aklees Shaik", "Akshya Kalvacharla", "Prince Katkuri"], "Grade-7": ["Manikanta Sannayala", "Sreeyan Reddy Karra", "Jayadhithya Chiluveru"], "Grade-8": ["Sathwika Nagavelly", "Vyshnavi Uppala", "Akshaya Gampala", "Ganesh Oggula", "Gayathri Renukuntla", "Khaja Sadeemuddin Mohammed"] };
