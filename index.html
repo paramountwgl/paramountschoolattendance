@@ -30,7 +30,7 @@
         /* --- UPDATED PREMIUM NAVIGATION GRID --- */
         .portal-nav-container { 
             display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Dynamic fitting for 5 buttons */
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); 
             gap: 12px; 
             margin: 15px auto; 
             padding: 0 15px; 
@@ -44,6 +44,9 @@
         }
         .btn-premium-nav:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.2); border-color: white; }
         .btn-premium-nav i { font-size: 1.5rem; }
+        
+        /* NEW SYLLABUS BUTTON HIGHLIGHT */
+        .btn-syllabus { background: linear-gradient(135deg, #013220, #006633) !important; }
 
         .container { max-width: 850px; margin: 0 auto; padding: 0 15px; }
         .card { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 20px; border-top: 8px solid var(--forest); }
@@ -67,7 +70,7 @@
         .hw-info-bar { font-size: 11px; color: #555; margin-top: 8px; font-style: italic; padding: 8px; background: #f0f4f2; border-radius: 8px; border-left: 4px solid var(--gold); display: none; }
 
         @media (max-width: 480px) {
-            .portal-nav-container { grid-template-columns: 1fr 1fr; } /* Back to 2x2 + 1 on mobile */
+            .portal-nav-container { grid-template-columns: 1fr 1fr; }
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -94,7 +97,7 @@
 
 <div class="portal-nav-container">
     <a href="admin.html" class="btn-premium-nav"><i class="fas fa-user-shield"></i> Admin Dashboard</a>
-    <a href="Parents Checkbox.html" class="btn-premium-nav"><i class="fas fa-users"></i> Parents Portal</a>
+    <a href="syllabus-admin.html" class="btn-premium-nav btn-syllabus"><i class="fas fa-book-open"></i> Syllabus Manager</a>
     <a href="fees.html" class="btn-premium-nav"><i class="fas fa-file-invoice-dollar"></i> Fee Entry</a>
     <a href="marks.html" class="btn-premium-nav"><i class="fas fa-chart-line"></i> Marks Entry</a>
     <a href="halltickets.html" class="btn-premium-nav"><i class="fas fa-id-card"></i> Hall Tickets</a>
@@ -200,7 +203,6 @@
 
         if(pw === registry[name]) { 
             authenticatedTeacher = name;
-            // SYNC LOGIN FOR HALL TICKET PAGE
             sessionStorage.setItem('activeTeacher', name);
             
             const isPartTime = (name === "Ms. Riha" || name === "Ms. Raniya Zainab");
@@ -233,10 +235,21 @@
         db.ref().update(updates).then(() => Swal.fire('Success', 'Attendance Updated!', 'success'));
     }
 
+    // UPDATED HOMEWORK SUBJECTS TO MATCH YOUR SPLIT REQUEST
     function updateHWSubjects() { 
         const cls = document.getElementById('hwClass').value; 
         const common = ["TELUGU", "HINDI", "ENGLISH", "MATHS", "SOCIAL STUDIES"]; 
-        let subs = (["Grade-6", "Grade-7", "Grade-8"].includes(cls)) ? [...common, "PHYSICS", "CHEMISTRY", "BIOLOGY", "IIT"] : (cls === "Grade-5") ? [...common, "SCIENCE", "IIT"] : [...common, "SCIENCE"];
+        
+        let subs;
+        if (["Grade-6", "Grade-7", "Grade-8"].includes(cls)) {
+            // Added PHYSICS and BIOLOGY for middle school as discussed
+            subs = ["TELUGU", "HINDI", "ENGLISH", "MATHS", "PHYSICS", "BIOLOGY", "SOCIAL STUDIES", "IIT"];
+        } else if (cls === "Grade-5") {
+            subs = [...common, "SCIENCE", "IIT"];
+        } else {
+            subs = [...common, "SCIENCE"];
+        }
+
         document.getElementById('hwSubSelect').innerHTML = subs.map(s => `<option value="${s}">${s}</option>`).join(''); 
         fetchExistingHW(); 
     }
