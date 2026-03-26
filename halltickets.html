@@ -28,7 +28,7 @@
         .header-logo { height: 55px; width: auto; flex-shrink: 0; }
         .school-branding { display: flex; flex-direction: column; line-height: 1.1; flex-shrink: 0; }
         .school-name-main { font-family: 'Montserrat', sans-serif; font-size: 1.4rem; font-weight: 800; letter-spacing: 0.5px; color: white; }
-        .school-name-sub { font-family: 'Montserrat', sans-serif; font-size: 0.65rem; color: white; font-weight: 600; text-transform: uppercase; opacity: 0.9; }
+        .school-name-sub { font-family: 'Montserrat', sans-serif; font-size: 0.65rem; color: var(--gold); font-weight: 700; text-transform: uppercase; opacity: 0.9; }
         .divider-line { width: 2px; height: 35px; background-color: rgba(255,255,255,0.3); margin: 0 15px; flex-shrink: 0; }
         .portal-label { font-family: 'Montserrat', sans-serif; font-size: 1.4rem; font-weight: 800; text-transform: uppercase; color: white; white-space: nowrap; flex-shrink: 0; }
 
@@ -44,17 +44,18 @@
 
         .container { max-width: 650px; margin: 25px auto; padding: 0 15px; }
         .card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); border-top: 8px solid var(--gold); margin-bottom: 25px; }
-        h3 { color: var(--forest); margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; display: flex; align-items: center; gap: 10px; font-size: 1.1rem; }
+        h3 { color: var(--forest); margin: 0 0 20px; font-size: 1.1rem; text-align: center; border-bottom: 1px solid #eee; padding-bottom: 10px; text-transform: uppercase; font-weight: 800; }
         
         .tab-box { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
         .tab-btn { flex: 1; padding: 10px; border-radius: 50px; border: 1px solid #ddd; background: #fafafa; color: #777; font-weight: 700; cursor: pointer; text-transform: uppercase; font-size: 10px; }
         .tab-btn.active { border-color: var(--forest); color: var(--forest); }
 
-        .subject-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 15px; }
-        .sched-box { background: #fbfbfb; padding: 10px; border-radius: 12px; border: 1px solid #eee; }
-        .sched-box label { font-weight: 800; font-size: 10px; color: var(--forest); display: block; margin-bottom: 5px; }
-        .sched-inputs { display: flex; gap: 5px; }
-        .sched-inputs select { flex: 1; padding: 8px; font-size: 11px; margin-bottom: 0; border-radius: 8px; border: 1px solid #ddd; }
+        /* SCHEDULING GRID */
+        .subject-grid { display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 15px; }
+        .sched-box { background: #fbfbfb; padding: 12px; border-radius: 12px; border: 1px solid #eee; display: flex; flex-direction: column; gap: 8px; }
+        .sched-box label { font-weight: 800; font-size: 11px; color: var(--forest); margin: 0; }
+        .sched-inputs { display: flex; gap: 10px; }
+        .sched-inputs input[type="date"], .sched-inputs select { flex: 1; padding: 10px; font-size: 12px; margin-bottom: 0; border-radius: 8px; border: 1px solid #ddd; height: 40px; }
 
         .ht-card { background: white; padding: 12px; border-radius: 12px; border: 1px solid #eee; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
         
@@ -63,11 +64,7 @@
         .btn-save { background: var(--forest); }
         .btn-print { background: var(--gold); color: var(--forest); margin-top: 20px; }
 
-        @media (max-width: 768px) {
-            .school-name-sub, .divider-line { display: none; }
-            .school-name-main, .portal-label { font-size: 0.9rem; }
-            .header-logo { height: 40px; }
-        }
+        @media (min-width: 600px) { .subject-grid { grid-template-columns: 1fr 1fr; } }
     </style>
 </head>
 <body autocomplete="off">
@@ -88,7 +85,7 @@
         </select>
         <input type="password" id="staffPass" class="auth-input" placeholder="Password" onkeypress="if(event.key === 'Enter') unlockPortal()">
         <button onclick="unlockPortal()" class="btn-premium-unlock">Unlock Portal <i class="fas fa-unlock"></i></button>
-        <button onclick="window.location.href='index.html'" style="margin-top:12px; width:100%; border:none; background:#f1f5f9; color:#475569; padding:12px; border-radius:50px; font-weight:700; cursor:pointer; font-size:0.8rem; text-transform:uppercase;">Return to Dashboard</button>
+        <button onclick="window.location.href='teacher.html'" style="margin-top:12px; width:100%; border:none; background:#f1f5f9; color:#475569; padding:12px; border-radius:50px; font-weight:700; cursor:pointer; font-size:0.8rem; text-transform:uppercase;">Return to Dashboard</button>
     </div>
 </div>
 
@@ -122,7 +119,7 @@
         <div id="teacherDisplay" style="text-align:center; font-weight:800; color:var(--forest); background:#e8f5e9; padding:10px; border-radius:12px; margin-bottom:15px; font-size:12px;"></div>
         
         <div class="card">
-            <h3><i class="fas fa-calendar-check"></i> Hall Ticket Manager</h3>
+            <h3><i class="fas fa-calendar-check"></i> Schedule Manager</h3>
             <div class="tab-box">
                 <button class="tab-btn active" id="btn-setup" onclick="switchView('setup')">1. Setup Dates</button>
                 <button class="tab-btn" id="btn-gen" onclick="switchView('generate')">2. Generate Tickets</button>
@@ -131,6 +128,7 @@
             <div id="setupView">
                 <label style="font-size:10px; font-weight:900; color:#777;">SELECT CLASS</label>
                 <select id="setupClassSelect" onchange="renderSubjectSchedule()"></select>
+                
                 <label style="font-size:10px; font-weight:900; color:#777;">EXAM TYPE</label>
                 <select id="examSelect" onchange="renderSubjectSchedule()">
                     <option value="Formative Assessment-1">Formative Assessment-1</option>
@@ -139,6 +137,7 @@
                     <option value="Summative Assessment-1">Summative Assessment-1</option>
                     <option value="Summative Assessment-2">Summative Assessment-2</option>
                 </select>
+
                 <div id="dynamicSubjectGrid" class="subject-grid"></div>
                 <button class="btn-action btn-save" onclick="saveClassExamDates()">Save Class Schedule <i class="fas fa-save"></i></button>
             </div>
@@ -167,6 +166,15 @@
     const authorized = { "Mr. Ahmad": "Ahmad@123", "Ms. Roqiya": "Roqiya@123", "Ms. Jyothi": "Jyothi@123" };
     let activeTeacher = "", ticketsToPrint = [];
 
+    // --- TIME GENERATOR (9:00 AM to 5:00 PM) ---
+    const timeOptions = ["-"];
+    for(let h=9; h<=17; h++) {
+        let period = h >= 12 ? "PM" : "AM";
+        let hr = h > 12 ? h-12 : h;
+        timeOptions.push(`${hr}:00 ${period}`);
+        if(h < 17) timeOptions.push(`${hr}:30 ${period}`);
+    }
+
     function unlockPortal() {
         const n = document.getElementById('staffName').value, p = document.getElementById('staffPass').value;
         if(p === authorized[n]) {
@@ -187,54 +195,49 @@
         document.getElementById('btn-gen').classList.toggle('active', view === 'generate');
     }
 
-    const dateOptions = ["-", "01 Aug", "02 Aug", "03 Aug", "04 Aug", "05 Aug", "06 Aug", "07 Aug", "08 Aug", "09 Aug", "10 Aug", "11 Aug", "12 Aug", "13 Aug", "14 Aug", "15 Aug"];
-    const timeOptions = ["-", "09:30 AM", "10:00 AM", "11:00 AM", "12:00 PM", "01:30 PM", "02:00 PM", "02:30 PM"];
-
     async function renderSubjectSchedule() {
         const cls = document.getElementById('setupClassSelect').value, exam = document.getElementById('examSelect').value, grid = document.getElementById('dynamicSubjectGrid');
         grid.innerHTML = ""; if(!cls) return;
         let subjects = ["TEL", "HIN", "ENG", "MAT", "SOC"];
         if (["Grade-6", "Grade-7", "Grade-8"].includes(cls)) subjects.push("PHY", "CHE", "BIO", "IIT");
         else if (cls === "Grade-5") subjects.push("SCI", "IIT"); else subjects.push("SCI");
+
         const snap = await db.ref(`class_schedules/${cls}/${exam}`).once('value'), data = snap.val() || {};
         subjects.forEach(sub => {
-            const savedVal = data[sub] || "- -", [savedDate, savedTime] = savedVal.includes(" @ ") ? savedVal.split(" @ ") : ["-", "-"];
-            grid.innerHTML += `<div class="sched-box" data-sub="${sub}"><label>${sub}</label><div class="sched-inputs"><select class="date-sel">${dateOptions.map(d => `<option value="${d}" ${d==savedDate?'selected':''}>${d}</option>`).join('')}</select><select class="time-sel">${timeOptions.map(t => `<option value="${t}" ${t==savedTime?'selected':''}>${t}</option>`).join('')}</select></div></div>`;
+            const savedVal = data[sub] || "";
+            let savedDate = "", savedTime = "-";
+            if(savedVal.includes(" @ ")) { [savedDate, savedTime] = savedVal.split(" @ "); }
+            grid.innerHTML += `<div class="sched-box" data-sub="${sub}"><label>${sub}</label><div class="sched-inputs"><input type="date" class="date-inp" value="${savedDate}"><select class="time-sel">${timeOptions.map(t => `<option value="${t}" ${t==savedTime?'selected':''}>${t}</option>`).join('')}</select></div></div>`;
         });
     }
 
     async function saveClassExamDates() {
         const cls = document.getElementById('setupClassSelect').value, exam = document.getElementById('examSelect').value;
-        if(!cls) return Swal.fire('Error', 'Select a class', 'warning');
+        if(!cls) return;
         const schedule = {};
         document.querySelectorAll('.sched-box').forEach(box => {
-            const sub = box.getAttribute('data-sub'), d = box.querySelector('.date-sel').value, t = box.querySelector('.time-sel').value;
-            schedule[sub] = (d === "-" || t === "-") ? "-" : `${d} @ ${t}`;
+            const sub = box.getAttribute('data-sub'), d = box.querySelector('.date-inp').value, t = box.querySelector('.time-sel').value;
+            schedule[sub] = (d === "" || t === "-") ? "-" : `${d} @ ${t}`;
         });
         await db.ref(`class_schedules/${cls}/${exam}`).update(schedule);
         Swal.fire('Saved', `Schedule updated for ${cls}`, 'success');
     }
 
-    const rollData = { "Hanish Macharla": "1472070", "Arjun Vihaar Illandula": "1478225", "Thanu sree Allakunta": "1469391", "Aadhya Gangaraboina": "1459555", "Aadhya Sri Oggula": "1459560", "Aadhyasri Shivagoni": "1474500", "Afraha Begum": "1460680", "Aliya Sultana": "1472299", "Anvika Bandi": "1459683", "Aradana Devara konda": "1459620", "Devansh Bandi": "1459605", "Hanvitha Mulkalapelli": "1472069", "Harsha Vardhan Seenapelli": "1472723", "Hiranya Bandi": "1459658", "Jashritha Boina": "1478248", "Konreddy Shreyanvi": "1481135", "Kriyansh Sammeta": "1459568", "Mohammed Mohiuddin Sayyad": "1459652", "Nethra Narkurthi": "1459636", "Reeyansh Bandi": "1463720", "Rishi Myakala": "1459582", "Rudransh Bandi": "1459607", "Rudransh Bandi_1": "1459604", "Sanvika Bandi": "1459625", "Shanvith Khatha": "1472074", "Shishira Jalagam": "1469395", "Shiva Sai Mekala": "1456748", "Shree Rudhraveer Chevvu": "1459687", "Shreyansh Gangaraboina": "1459572", "Sreeja Thalla": "1459643", "Srikrithini Myakala": "1459603", "Srivatsav Vanam": "1472536", "Sriyansh Mekala": "1456743", "Thanvika Lakka": "1473500", "Thrilokansh Vudari": "1463724", "Ujjwal Checkka": "1459694", "Vaishnavi Lakka": "1474815", "Vedansh Myakala": "1460690", "Vishnu Priya Molugu": "1478250", "Vyshnav Tej Boina": "1413563", "Yafiah Mohammad": "1459577" };
-
     async function generateClassHallTickets() {
         const cls = document.getElementById('feeClass').value, exam = document.getElementById('examSelect').value;
         if(!cls) return;
-        Swal.fire({ title: 'Syncing...', didOpen: () => Swal.showLoading() });
         const schedSnap = await db.ref(`class_schedules/${cls}/${exam}`).once('value'), schedule = schedSnap.val() || {};
         const feeSnap = await db.ref(`fee_records/${cls}`).once('value'), feeData = feeSnap.val();
         ticketsToPrint = []; let html = "";
-        studentData[cls].forEach((name, index) => {
+        (studentData[cls] || []).forEach((name, index) => {
             let tFee = 0, tPaid = 0;
             if(feeData && feeData[name]) Object.values(feeData[name]).forEach(r => { tFee = r.total; tPaid += parseFloat(r.paid || 0); });
-            const roll = rollData[name] || "logo";
-            const ticket = { name, cls, roll, regNo: 1000 + index, exam, schedule, due: (tFee - tPaid) };
+            const ticket = { name, cls, regNo: 1000 + index, exam, schedule, due: (tFee - tPaid) };
             ticketsToPrint.push(ticket);
             html += `<div class="ht-card"><span><b>${name}</b></span><button onclick="printIndividualTicket(${index})" style="padding:5px 12px; border-radius:5px; border:1px solid #ccc; font-size:10px; cursor:pointer; font-weight:800;">PRINT</button></div>`;
         });
         document.getElementById('hallTickets').innerHTML = html;
         document.getElementById('printBtn').style.display = 'block';
-        Swal.close();
     }
 
     function printIndividualTicket(idx) { printTickets([ticketsToPrint[idx]]); }
@@ -243,7 +246,7 @@
     function printTickets(list) {
         const logoOrigin = window.location.origin + "/logo.png";
         const win = window.open('', '', 'height=800,width=1000');
-        win.document.write('<html><head><style>body{font-family:sans-serif;padding:0;margin:0;color:#333;} *{-webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;} .page{width:210mm; height:297mm; padding:10mm; box-sizing:border-box; page-break-after:always;} .ticket{width:100%; height:135mm; border:2px solid #333; padding:15px; box-sizing:border-box; border-radius:15px; position:relative; margin-bottom:5mm;} .divider{border-top:2px dashed #999; width:100%; margin:5mm 0;} .header{display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #333; padding-bottom:10px; margin-bottom:10px;} .tbl{width:100%; border-collapse:collapse; margin-top:10px;} .tbl th, .tbl td{border:1px solid #333; padding:8px; text-align:center; font-weight:bold; font-size:11px;}</style></head><body>');
+        win.document.write('<html><head><style>body{font-family:sans-serif;padding:0;margin:0;color:#333;} *{-webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;} .page{width:210mm; height:297mm; padding:10mm; box-sizing:border-box; page-break-after:always;} .ticket{width:100%; height:132mm; border:2px solid #333; padding:15px; box-sizing:border-box; border-radius:15px; position:relative; margin-bottom:5mm;} .divider{border-top:1px dashed #999; width:100%; margin:2mm 0;} .header{display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #333; padding-bottom:10px; margin-bottom:10px;} .tbl{width:100%; border-collapse:collapse; margin-top:10px;} .tbl th, .tbl td{border:1px solid #333; padding:6px; text-align:center; font-weight:bold; font-size:10px;}</style></head><body>');
         
         for (let i = 0; i < list.length; i += 2) {
             win.document.write('<div class="page">');
@@ -254,28 +257,31 @@
                 <div class="ticket">
                     <div class="header">
                         <div style="display:flex; align-items:center; gap:10px;">
-                            <img src="${logoOrigin}" style="height:55px;" onerror="this.src='logo.png'">
-                            <div><h1 style="margin:0; font-size:20px;">PARAMOUNT SCHOOL</h1><p style="margin:0; font-weight:800; font-size:10px; color:#555;">${t.exam}</p></div>
+                            <img src="${logoOrigin}" style="height:50px;" onerror="this.src='logo.png'">
+                            <div><h1 style="margin:0; font-size:18px;">PARAMOUNT SCHOOL</h1><p style="margin:0; font-weight:800; font-size:9px;">${t.exam}</p></div>
                         </div>
-                        <div style="width:85px; height:105px; border:1px solid #333; overflow:hidden;"><img src="Student images/${t.roll}.png" style="width:100%; height:100%; object-fit:cover;" onerror="this.src='logo.png'"></div>
+                        <div style="width:80px; height:100px; border:1px solid #333; display:flex; align-items:center; justify-content:center; font-size:8px;">PHOTO</div>
                     </div>
-                    <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:10px;">
-                        <div><b>Student:</b> ${t.name.toUpperCase()}<br><b>Class:</b> ${t.cls}</div>
+                    <div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:8px;">
+                        <div><b>Name:</b> ${t.name.toUpperCase()}<br><b>Class:</b> ${t.cls}</div>
                         <div style="text-align:right;"><b>Reg No:</b> ${t.regNo}<br><b style="color:red;">Fee Due: ₹ ${t.due}</b></div>
                     </div>
                     <table class="tbl">
                         <thead><tr><th>Subject</th>${subs.map(s=>`<th>${s}</th>`).join('')}</tr></thead>
                         <tbody>
-                            <tr><td style="text-align:left; background:#f4f4f4;">Date/Time</td>${subs.map(s=>`<td>${t.schedule[s]}</td>`).join('')}</tr>
-                            <tr style="height:35px;"><td style="text-align:left; background:#f4f4f4;">Invigilator Sign</td>${subs.map(s=>`<td></td>`).join('')}</tr>
+                            <tr><td style="text-align:left; background:#f4f4f4;">Date/Time</td>${subs.map(s=>{ 
+                                let val = t.schedule[s] || "-";
+                                return `<td>${val.split('-').reverse().join('/')}</td>`; 
+                            }).join('')}</tr>
+                            <tr style="height:35px;"><td style="text-align:left; background:#f4f4f4;">Sign</td>${subs.map(s=>`<td></td>`).join('')}</tr>
                         </tbody>
                     </table>
-                    <div style="margin-top:40px; display:flex; justify-content:space-between; font-size:10px; font-weight:bold; text-transform:uppercase;">
-                        <div style="border-top:1px solid #333; width:180px; text-align:center; padding-top:4px;">Class Teacher Signature</div>
-                        <div style="border-top:1px solid #333; width:180px; text-align:center; padding-top:4px;">Correspondent Signature</div>
+                    <div style="margin-top:35px; display:flex; justify-content:space-between; font-size:9px; font-weight:bold; text-transform:uppercase;">
+                        <div style="border-top:1px solid #333; width:170px; text-align:center; padding-top:4px;">Class Teacher Signature</div>
+                        <div style="border-top:1px solid #333; width:170px; text-align:center; padding-top:4px;">Correspondent Signature</div>
                     </div>
-                    <div style="margin-top:15px; font-size:9px; border-top:1px dashed #ccc; padding-top:8px;">
-                        <b>Instructions:</b> 1. Hall ticket is mandatory. 2. Restricted entry if due exceeds ₹5000.
+                    <div style="margin-top:10px; font-size:8px; border-top:1px dashed #ccc; padding-top:5px;">
+                        <b>Note:</b> Mandatory hall ticket. Restricted entry if due exceeds ₹5000.
                     </div>
                 </div>`);
                 if(idx === 0 && list[i+1]) win.document.write('<div class="divider"></div>');
