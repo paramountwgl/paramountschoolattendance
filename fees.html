@@ -46,7 +46,7 @@
             .live-clock { font-size: 10px; }
         }
 
-        /* --- DASHBOARD --- */
+        /* --- DASHBOARD CARDS --- */
         .container { max-width: 650px; margin: 25px auto; padding: 0 15px; }
         .card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); border-top: 8px solid var(--forest); margin-bottom: 25px; }
         h3 { color: var(--forest); margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; display: flex; align-items: center; gap: 8px; font-size: 1.1rem; }
@@ -56,6 +56,7 @@
         .due-box strong { font-size: 24px; color: var(--danger); }
         @keyframes pulseDanger { 0% { box-shadow: 0 0 0 0 rgba(198, 40, 40, 0.4); } 70% { box-shadow: 0 0 0 15px rgba(198, 40, 40, 0); } 100% { box-shadow: 0 0 0 0 rgba(198, 40, 40, 0); } }
 
+        /* GAUGE & AUDIT TRAIL */
         .chart-container { display: flex; flex-direction: column; align-items: center; margin-top: 25px; background: #f9f9f9; padding: 25px; border-radius: 15px; border: 1px solid #eee; position: relative; }
         .circular-progress { position: relative; width: 120px; height: 120px; display: flex; align-items: center; justify-content: center; }
         .circular-progress svg { width: 120px; height: 120px; transform: rotate(-90deg); }
@@ -79,8 +80,49 @@
         .history-table th { text-align: left; padding: 12px; background: #f8fafc; color: #64748b; font-size: 10px; text-transform: uppercase; }
         .history-table td { padding: 12px 10px; border-bottom: 1px solid #f1f5f9; font-weight: 600; color: #334155; }
         
+        /* --- LOGIN SCREEN (RESTORED STYLES) --- */
         .overlay-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--light); z-index: 1000; display: flex; justify-content: center; align-items: center; padding: 15px; }
         .auth-box { background: white; padding: 40px 25px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); width: 100%; max-width: 420px; border-bottom: 5px solid var(--forest); text-align: center; }
+        
+        .btn-premium-unlock { 
+            background: linear-gradient(135deg, var(--forest), #004d26); 
+            color: white; 
+            padding: 15px; 
+            border-radius: 50px; 
+            font-weight: 800; 
+            border: 2px solid var(--gold); 
+            cursor: pointer; 
+            width: 100%; 
+            height: 55px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 10px; 
+            transition: 0.3s; 
+            margin-top: 15px;
+            text-transform: uppercase;
+            font-size: 14px;
+        }
+        .btn-premium-unlock:hover { transform: scale(1.02); box-shadow: 0 5px 15px rgba(0,102,51,0.3); }
+
+        .btn-dashboard-return { 
+            background: #f1f5f9; 
+            color: #475569; 
+            padding: 12px; 
+            border-radius: 50px; 
+            font-weight: 700; 
+            border: 1px solid #e2e8f0; 
+            cursor: pointer; 
+            font-size: 0.8rem; 
+            text-transform: uppercase; 
+            text-decoration: none; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 8px; 
+            margin-top: 12px; 
+            width: 100%; 
+        }
 
         @media (max-width: 600px) { .calc-row { grid-template-columns: 1fr; } }
     </style>
@@ -95,15 +137,15 @@
     <div class="auth-box">
         <img src="logo.png" style="height:75px; margin-bottom:10px;">
         <div class="auth-branding-text"><h2>PARAMOUNT</h2><p style="color:var(--gold); font-weight:800; font-size:11px; text-transform:uppercase;">Fee Entry Access</p></div>
-        <select id="staffName" class="auth-input" style="margin-top:20px; width:100%; padding:12px; border-radius:10px;">
+        <select id="staffName" class="auth-input" style="margin-top:20px;">
             <option value="">-- Select Staff --</option>
             <option value="Mr. Ahmad">Mr. Ahmad</option>
             <option value="Ms. Roqiya">Ms. Roqiya</option>
             <option value="Ms. Jyothi">Ms. Jyothi</option>
         </select>
-        <input type="password" id="staffPass" placeholder="Password" style="margin-top:10px; width:100%; padding:12px; border-radius:10px; border:1px solid #eee;" onkeypress="if(event.key === 'Enter') unlockFees()">
-        <button onclick="unlockFees()" class="btn-unlock">Unlock Portal <i class="fas fa-unlock"></i></button>
-        <button onclick="window.location.href='index.html'" style="margin-top:12px; width:100%; border:none; background:#f1f5f9; color:#475569; padding:12px; border-radius:50px; font-weight:700; cursor:pointer; font-size:0.8rem; text-transform:uppercase;">Return to Dashboard</button>
+        <input type="password" id="staffPass" class="auth-input" placeholder="Password" onkeypress="if(event.key === 'Enter') unlockFees()">
+        <button onclick="unlockFees()" class="btn-premium-unlock">Unlock Portal <i class="fas fa-unlock"></i></button>
+        <button onclick="window.location.href='index.html'" class="btn-dashboard-return">Return to Dashboard</button>
         <div style="margin-top:20px;"><a onclick="handleForgotPassword()" style="color:#999; font-size:12px; text-decoration:underline; cursor:pointer; font-weight:bold;">Forgot Password?</a></div>
     </div>
 </div>
@@ -122,6 +164,7 @@
                 <div class="divider-line"></div>
                 <div class="portal-label">FEE PORTAL</div>
             </div>
+            
             <div class="nav-tools">
                 <div id="liveClock" class="live-clock">00:00:00</div>
                 <button class="btn-signout" onclick="location.reload()"><i class="fas fa-sign-out-alt"></i> Exit</button>
@@ -155,12 +198,14 @@
 
             <label style="font-size:10px; font-weight:900; color:#777; margin-top:15px; display:block;">PAYMENT DATE</label>
             <input type="date" id="payDate">
+            
             <div class="action-flex">
                 <button class="btn-action btn-save" onclick="saveFee()">Update <i class="fas fa-save"></i></button>
                 <button class="btn-action btn-wipe" onclick="clearStudentData()">Wipe <i class="fas fa-trash-alt"></i></button>
             </div>
             <button id="receiptBtn" class="btn-action btn-receipt" onclick="generateReceipt()">Generate Receipt <i class="fas fa-print"></i></button>
         </div>
+
         <div class="card history-card" id="historyCard" style="display:none;">
             <h3><i class="fas fa-list-ul"></i> Payment History</h3>
             <div class="history-table-wrapper"><table class="history-table"><thead><tr><th>Date</th><th>Amount</th><th>Faculty</th><th>Time</th></tr></thead><tbody id="historyTableBody"></tbody></table></div>
@@ -218,9 +263,7 @@
         studentLifetimePaid = 0; let totalV = "", rows = "", lastFac = "---", lastTime = "---";
         if(data) {
             Object.keys(data).forEach(k => {
-                const r = data[k]; 
-                studentLifetimePaid += parseFloat(r.paid || 0); 
-                totalV = r.total;
+                const r = data[k]; studentLifetimePaid += parseFloat(r.paid || 0); totalV = r.total;
                 let tStr = r.timestamp ? r.timestamp.split(',')[1].trim().toUpperCase() : "N/A";
                 lastFac = r.recordedBy || "Unknown";
                 lastTime = tStr;
@@ -233,9 +276,7 @@
             document.getElementById('lastTime').innerText = lastTime;
             document.getElementById('auditTrail').style.display = 'block';
         } else { 
-            document.getElementById('totalFee').value = ""; 
-            document.getElementById('historyCard').style.display = 'none'; 
-            document.getElementById('auditTrail').style.display = 'none';
+            document.getElementById('totalFee').value = ""; document.getElementById('historyCard').style.display = 'none'; document.getElementById('auditTrail').style.display = 'none';
         }
         calculateRealTime();
     }
@@ -269,30 +310,7 @@
         const recId = "REC-" + Date.now().toString().slice(-6);
         const logoPath = window.location.origin + "/logo.png";
         const win = window.open('', '', 'height=800,width=700');
-        win.document.write(`
-        <html>
-        <head>
-            <style>
-                body { font-family: sans-serif; padding: 40px; text-align: center; } 
-                .receipt-box { border: 2px solid #006633; padding: 20px; }
-                * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-                .logo { height: 70px; margin-bottom: 10px; }
-            </style>
-        </head>
-        <body>
-            <div class="receipt-box">
-                <img src="${logoPath}" class="logo" onerror="this.src='logo.png'">
-                <h2>PARAMOUNT SCHOOL</h2>
-                <hr>
-                <p>Receipt No: ${recId} | Date: ${d}</p>
-                <p>Student: ${n} (${c})</p>
-                <h3>Paid Amount: ₹ ${p}</h3>
-                <hr>
-                <p>Signature: ${activeTeacher}</p>
-            </div>
-            <script>window.onload = function() { setTimeout(() => { window.print(); window.close(); }, 500); }<\/script>
-        </body>
-        </html>`);
+        win.document.write(`<html><head><style>body { font-family: sans-serif; padding: 40px; text-align: center; } .receipt-box { border: 2px solid #006633; padding: 20px; } * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }</style></head><body><div class="receipt-box"><img src="${logoPath}" style="height:70px; margin-bottom:10px;" onerror="this.src='logo.png'"><h2>PARAMOUNT SCHOOL</h2><hr><p>Receipt No: ${recId} | Date: ${d}</p><p>Student: ${n} (${c})</p><h3>Paid Amount: ₹ ${p}</h3><hr><p>Signature: ${activeTeacher}</p></div><script>window.onload = function() { setTimeout(() => { window.print(); window.close(); }, 500); }<\/script></body></html>`);
         win.document.close();
     }
 
