@@ -27,7 +27,7 @@
         }
         @keyframes breathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }
 
-        /* --- UPDATED PREMIUM NAVIGATION GRID --- */
+        /* --- PREMIUM NAVIGATION GRID --- */
         .portal-nav-container { 
             display: grid; 
             grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); 
@@ -44,9 +44,6 @@
         }
         .btn-premium-nav:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.2); border-color: white; }
         .btn-premium-nav i { font-size: 1.5rem; }
-        
-        /* NEW SYLLABUS BUTTON HIGHLIGHT */
-        .btn-syllabus { background: linear-gradient(135deg, #013220, #006633) !important; }
 
         .container { max-width: 850px; margin: 0 auto; padding: 0 15px; }
         .card { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 20px; border-top: 8px solid var(--forest); }
@@ -97,7 +94,8 @@
 
 <div class="portal-nav-container">
     <a href="admin.html" class="btn-premium-nav"><i class="fas fa-user-shield"></i> Admin Dashboard</a>
-    <a href="syllabus-admin.html" class="btn-premium-nav btn-syllabus"><i class="fas fa-book-open"></i> Syllabus Manager</a>
+    <a href="Parents Checkbox.html" class="btn-premium-nav"><i class="fas fa-users"></i> Parents Portal</a>
+    <a href="syllabus-admin.html" class="btn-premium-nav" style="background: linear-gradient(135deg, #013220, #006633);"><i class="fas fa-book-open"></i> Syllabus Manager</a>
     <a href="fees.html" class="btn-premium-nav"><i class="fas fa-file-invoice-dollar"></i> Fee Entry</a>
     <a href="marks.html" class="btn-premium-nav"><i class="fas fa-chart-line"></i> Marks Entry</a>
     <a href="halltickets.html" class="btn-premium-nav"><i class="fas fa-id-card"></i> Hall Tickets</a>
@@ -235,14 +233,12 @@
         db.ref().update(updates).then(() => Swal.fire('Success', 'Attendance Updated!', 'success'));
     }
 
-    // UPDATED HOMEWORK SUBJECTS TO MATCH YOUR SPLIT REQUEST
     function updateHWSubjects() { 
         const cls = document.getElementById('hwClass').value; 
         const common = ["TELUGU", "HINDI", "ENGLISH", "MATHS", "SOCIAL STUDIES"]; 
         
         let subs;
         if (["Grade-6", "Grade-7", "Grade-8"].includes(cls)) {
-            // Added PHYSICS and BIOLOGY for middle school as discussed
             subs = ["TELUGU", "HINDI", "ENGLISH", "MATHS", "PHYSICS", "BIOLOGY", "SOCIAL STUDIES", "IIT"];
         } else if (cls === "Grade-5") {
             subs = [...common, "SCIENCE", "IIT"];
