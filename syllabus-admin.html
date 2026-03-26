@@ -3,62 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Secure Syllabus Editor | Paramount School</title>
+    <title>Syllabus Entry Access | Paramount School</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Segoe+UI:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="icon" type="image/png" href="logo.png">
     <style>
-        :root { --forest: #006633; --gold: #ffd700; --light: #f4f7f6; --white: #ffffff; --danger: #d32f2f; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; padding: 20px; }
+        :root { --forest: #004d26; --gold: #ffd700; --light: #f4f7f6; --danger: #d32f2f; }
+        body { font-family: 'Segoe UI', sans-serif; background: #e0e5e2; margin: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+
+        /* --- AUTH CARD STYLES (MATCHING SCREENSHOT) --- */
+        #securityOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f0f2f1; display: flex; align-items: center; justify-content: center; z-index: 10000; }
         
-        /* --- SECURITY OVERLAY STYLES --- */
-        #securityOverlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--forest); display: flex; align-items: center; justify-content: center;
-            z-index: 9999; transition: 0.5s;
-        }
-        .login-card {
-            background: white; padding: 40px; border-radius: 25px; box-shadow: 0 15px 50px rgba(0,0,0,0.3);
-            width: 100%; max-width: 400px; text-align: center; border-bottom: 8px solid var(--gold);
-        }
-        .login-card h2 { font-family: 'Montserrat'; color: var(--forest); font-weight: 800; margin-bottom: 20px; }
-        .login-card select, .login-card input {
-            width: 100%; padding: 15px; margin: 10px 0; border-radius: 12px; border: 2px solid #eee;
-            font-size: 16px; outline: none; box-sizing: border-box;
+        .auth-card { 
+            background: white; width: 90%; max-width: 420px; padding: 40px 30px; 
+            border-radius: 30px; box-shadow: 0 15px 40px rgba(0,0,0,0.1); 
+            text-align: center; border-bottom: 8px solid var(--forest);
         }
 
-        /* --- MAIN CONTENT (Hidden by default) --- */
-        #mainContent { display: none; }
+        .auth-logo { height: 75px; width: auto; margin-bottom: 15px; }
+        .school-name { font-family: 'Montserrat'; font-weight: 800; font-size: 22px; color: #000; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
+        .access-title { font-family: 'Montserrat'; font-weight: 700; font-size: 11px; color: var(--gold); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 25px; }
 
-        .admin-container { max-width: 1000px; margin: auto; background: var(--white); padding: 30px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); border-top: 10px solid var(--forest); }
+        .auth-input { 
+            width: 100%; padding: 14px; margin-bottom: 15px; border-radius: 12px; 
+            border: 1px solid #e0e0e0; background: #fafafa; font-size: 15px; outline: none; box-sizing: border-box;
+        }
+
+        .btn-unlock { 
+            width: 100%; background: var(--forest); color: white; padding: 15px; 
+            border-radius: 50px; border: none; font-family: 'Montserrat'; font-weight: 800; 
+            font-size: 14px; cursor: pointer; text-transform: uppercase; margin-top: 10px;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+        .btn-return { 
+            width: 100%; background: #f1f4f7; color: #445a64; padding: 12px; 
+            border-radius: 50px; border: none; font-family: 'Montserrat'; font-weight: 700; 
+            font-size: 12px; cursor: pointer; text-transform: uppercase; margin-top: 10px; text-decoration: none; display: block;
+        }
+        .forgot-link { color: #888; font-size: 11px; text-decoration: underline; margin-top: 20px; display: block; font-weight: 600; cursor: pointer; }
+
+        /* --- MAIN EDITOR CONTENT (HIDDEN BY DEFAULT) --- */
+        #mainContent { display: none; width: 100%; padding: 20px; }
+        .admin-container { max-width: 1000px; margin: auto; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); border-top: 10px solid var(--forest); }
         .header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 2px solid #eee; padding-bottom: 15px; }
-        h2 { color: var(--forest); font-family: 'Montserrat'; margin: 0; font-size: 1.5rem; }
         .selection-bar { display: flex; gap: 20px; background: #f0f4f2; padding: 20px; border-radius: 12px; margin-bottom: 25px; align-items: flex-end; }
         .input-box { flex: 1; }
-        label { display: block; font-weight: 700; font-size: 11px; color: #444; margin-bottom: 8px; text-transform: uppercase; }
-        select { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-weight: 600; outline: none; background: white; cursor: pointer; }
+        .input-box label { display: block; font-weight: 700; font-size: 11px; color: #444; margin-bottom: 8px; text-transform: uppercase; text-align: left;}
+        select { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-weight: 600; outline: none; background: white; }
         .syllabus-table { width: 100%; border-collapse: collapse; margin-top: 10px; background: white; }
-        .syllabus-table th { background: var(--forest); color: white; padding: 15px; text-align: left; font-family: 'Montserrat'; font-size: 13px; text-transform: uppercase; }
+        .syllabus-table th { background: var(--forest); color: white; padding: 15px; text-align: left; font-size: 13px; text-transform: uppercase; }
         .syllabus-table td { padding: 12px; border: 1px solid #eee; vertical-align: top; }
-        .subject-col { width: 25%; background: #fdfdfd; font-weight: 800; color: #333; font-size: 14px; border-right: 3px solid var(--gold) !important; vertical-align: middle !important; }
-        textarea { width: 100%; height: 75px; padding: 10px; border: 1px solid #ccc; border-radius: 6px; resize: none; font-family: inherit; font-size: 14px; transition: 0.3s; display: block; }
-        textarea:focus { border-color: var(--forest); background: #f9fffb; outline: none; }
+        .subject-col { width: 25%; background: #fdfdfd; font-weight: 800; color: #333; font-size: 14px; border-right: 3px solid var(--gold) !important; }
+        textarea { width: 100%; height: 75px; padding: 10px; border: 1px solid #ccc; border-radius: 6px; resize: none; font-family: inherit; font-size: 14px; box-sizing: border-box;}
         .action-area { display: flex; gap: 15px; margin-top: 30px; }
-        .btn-save-all { background: var(--forest); color: white; border: none; padding: 20px; flex: 2; border-radius: 50px; font-weight: 800; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; text-transform: uppercase; }
-        .btn-save-all:hover { background: #004d26; transform: scale(1.01); }
-        .btn-wipe { background: #333; color: white; border: 2px solid var(--danger); padding: 20px; flex: 1; border-radius: 50px; font-weight: 800; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; text-transform: uppercase; }
-        .btn-wipe:hover { background: var(--danger); }
+        .btn-publish { background: var(--forest); color: white; border: none; padding: 18px; flex: 2; border-radius: 50px; font-weight: 800; cursor: pointer; }
+        .btn-wipe { background: #333; color: white; border: 2px solid var(--danger); padding: 18px; flex: 1; border-radius: 50px; font-weight: 800; cursor: pointer; }
         .status-tag { font-size: 10px; color: #777; margin-top: 4px; display: block; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div id="securityOverlay">
-    <div class="login-card">
-        <img src="logo.png" style="height: 60px; margin-bottom: 10px;">
-        <h2>Staff Access</h2>
-        <select id="staffUser">
-            <option value="">-- Select Teacher --</option>
+    <div class="auth-card">
+        <img src="logo.png" class="auth-logo">
+        <div class="school-name">PARAMOUNT</div>
+        <div class="access-title">SYLLABUS ENTRY ACCESS</div>
+
+        <select id="staffUser" class="auth-input">
+            <option value="">-- Select Staff --</option>
             <option value="Mr. Shaik Ahmad">Mr. Shaik Ahmad</option>
             <option value="Ms. Riha">Ms. Riha</option>
             <option value="Ms. Raniya Zainab">Ms. Raniya Zainab</option>
@@ -75,16 +87,23 @@
             <option value="Ms. A.Jhansi Rani">Ms. A.Jhansi Rani</option>
             <option value="Ms. S. Neelima">Ms. S. Neelima</option>
         </select>
-        <input type="password" id="staffPass" placeholder="Enter Access Password">
-        <button class="btn-save-all" onclick="authenticateStaff()" style="margin-top: 15px;">Unlock Editor</button>
-        <p style="font-size: 12px; color: #777; margin-top: 15px;">Unauthorized access is prohibited.</p>
+
+        <input type="password" id="staffPass" class="auth-input" placeholder="Password">
+
+        <button class="btn-unlock" onclick="authenticateStaff()">
+            UNLOCK PORTAL <i class="fas fa-lock"></i>
+        </button>
+
+        <a href="index.html" class="btn-return">RETURN TO DASHBOARD</a>
+
+        <div class="forgot-link">Forgot Password?</div>
     </div>
 </div>
 
 <div id="mainContent">
     <div class="admin-container">
         <div class="header-flex">
-            <h2><i class="fas fa-book-open"></i> Exam Syllabus Editor</h2>
+            <h2 style="color:var(--forest); font-family: Montserrat;"><i class="fas fa-book-open"></i> Exam Syllabus Editor</h2>
             <a href="index.html" style="text-decoration:none; color:var(--forest); font-weight:700;"><i class="fas fa-arrow-left"></i> Dashboard</a>
         </div>
 
@@ -118,7 +137,7 @@
         </table>
 
         <div class="action-area">
-            <button class="btn-save-all" onclick="saveSyllabusBulk()"><i class="fas fa-check-double"></i> PUBLISH SYLLABUS</button>
+            <button class="btn-publish" onclick="saveSyllabusBulk()"><i class="fas fa-cloud-upload-alt"></i> PUBLISH SYLLABUS</button>
             <button class="btn-wipe" onclick="wipeClassData()"><i class="fas fa-trash-alt"></i> WIPE PREMIUM</button>
         </div>
     </div>
@@ -137,7 +156,6 @@
     if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
     const db = firebase.database();
 
-    // Security Registry
     const registry = {
         "Mr. Shaik Ahmad": "Ahmad@123", "Ms. Roqiya Begum": "Roqiya@123", "Ms. G.Rajitha": "Rajitha@123",
         "Ms. Ameena Tabassum": "Ameena@123", "Ms. Shaik Shabana": "Shabana@123", "Ms. B.Ravali": "Ravali@123",
@@ -154,7 +172,7 @@
             document.getElementById('mainContent').style.display = 'block';
             renderTableAndLoadData();
         } else {
-            Swal.fire('Error', 'Incorrect Password!', 'error');
+            Swal.fire('Access Denied', 'Incorrect password for selected staff.', 'error');
         }
     }
 
@@ -170,22 +188,23 @@
         "Grade-7": middleGroup, "Grade-8": middleGroup  
     };
 
-    let currentSubjects = [];
     function getSafeId(name) { return "syl_" + name.replace(/[^a-zA-Z0-9]/g, '_'); }
 
     async function renderTableAndLoadData() {
         const cls = document.getElementById('sylClass').value;
         const exam = document.getElementById('sylExam').value;
         const tbody = document.getElementById('syllabusRows');
-        currentSubjects = classSubjectGroups[cls] || primaryGroup;
+        let subjects = classSubjectGroups[cls] || primaryGroup;
+        
         tbody.innerHTML = "";
-        currentSubjects.forEach(subject => {
+        subjects.forEach(subject => {
             const safeId = getSafeId(subject);
             tbody.innerHTML += `<tr><td class="subject-col">${subject}</td><td><textarea id="${safeId}"></textarea><span class="status-tag" id="status_${safeId}"></span></td></tr>`;
         });
+
         const snap = await db.ref(`class_syllabus/${cls}/${exam}`).once('value');
         const data = snap.val() || {};
-        currentSubjects.forEach(subject => {
+        subjects.forEach(subject => {
             const safeId = getSafeId(subject);
             const content = data[subject] || "";
             document.getElementById(safeId).value = content;
@@ -200,24 +219,24 @@
         const exam = document.getElementById('sylExam').value;
         Swal.fire({ title: 'Publishing...', didOpen: () => Swal.showLoading() });
         const payload = { lastUpdated: new Date().toLocaleString() };
-        currentSubjects.forEach(subject => payload[subject] = document.getElementById(getSafeId(subject)).value.trim());
+        let subjects = classSubjectGroups[cls] || primaryGroup;
+        subjects.forEach(subject => payload[subject] = document.getElementById(getSafeId(subject)).value.trim());
         await db.ref(`class_syllabus/${cls}/${exam}`).update(payload);
-        Swal.fire({ icon: 'success', title: 'Published!', timer: 1500, showConfirmButton: false });
+        Swal.fire({ icon: 'success', title: 'Success!', text: 'Syllabus Published Live.', timer: 1500, showConfirmButton: false });
         renderTableAndLoadData();
     }
 
     async function wipeClassData() {
         const cls = document.getElementById('sylClass').value;
         const exam = document.getElementById('sylExam').value;
-        const { value: confirmWord } = await Swal.fire({
-            title: 'Wipe Class Data?',
-            html: `Type <b style="color:red;">DELETE</b> to confirm:`,
+        const { value: confirm } = await Swal.fire({
+            title: 'Wipe Data?', html: 'Type <b style="color:red">DELETE</b> to confirm:',
             input: 'text', icon: 'warning', showCancelButton: true,
-            inputValidator: (v) => v.toUpperCase() !== 'DELETE' && 'Type DELETE to continue!'
+            inputValidator: (v) => v.toUpperCase() !== 'DELETE' && 'Type DELETE!'
         });
-        if (confirmWord) {
+        if (confirm) {
             await db.ref(`class_syllabus/${cls}/${exam}`).remove();
-            Swal.fire('Deleted!', 'Data cleared.', 'success');
+            Swal.fire('Deleted!', 'Data Wiped.', 'success');
             renderTableAndLoadData();
         }
     }
