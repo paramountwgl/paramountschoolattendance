@@ -170,9 +170,28 @@
         const name = document.getElementById('teacherSelect').value;
         if(!name) return;
         document.getElementById('teacherSelect').blur();
-        const { value: pw } = await Swal.fire({ title: `Verification`, text: `Enter password for ${name}`, input: 'password', showCancelButton: true, confirmButtonColor: '#006633' });
+        
+        // UPDATE: Added autocomplete="new-password" and didOpen clear logic to fix autofill
+        const { value: pw } = await Swal.fire({ 
+            title: `Verification`, 
+            text: `Enter password for ${name}`, 
+            input: 'password', 
+            inputAttributes: {
+                autocomplete: 'new-password'
+            },
+            didOpen: () => {
+                const input = Swal.getInput();
+                if (input) input.value = '';
+            },
+            showCancelButton: true, 
+            confirmButtonColor: '#006633' 
+        });
+
         if(pw === registry[name]) { authenticatedTeacher = name; document.getElementById('selectionCard').style.display = 'block'; document.getElementById('authCard').style.display = 'none'; Swal.fire('Logged In', `Welcome ${name}`, 'success'); } 
-        else { Swal.fire('Error', 'Incorrect Password', 'error'); document.getElementById('teacherSelect').value = ""; }
+        else { 
+            if (pw !== undefined) Swal.fire('Error', 'Incorrect Password', 'error'); 
+            document.getElementById('teacherSelect').value = ""; 
+        }
     }
 
     function filterStudents() {
