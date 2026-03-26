@@ -18,44 +18,38 @@
         .auth-logo { height: 75px; margin-bottom: 10px; }
         .auth-branding-text h2 { margin: 5px 0 0; font-family: 'Montserrat', sans-serif; font-size: 1.6rem; font-weight: 800; color: var(--forest); }
         .auth-input { width: 100%; padding: 12px; border-radius: 10px; border: 2px solid #eee; margin-bottom: 15px; text-align: center; font-size: 16px; height: 50px; outline: none; transition: 0.3s; }
-        
         .btn-unlock { background: linear-gradient(135deg, var(--forest), #004d26); color: white; padding: 15px; border-radius: 50px; font-weight: bold; border: 2px solid var(--gold); cursor: pointer; width: 100%; height: 55px; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.3s; margin-top: 10px; }
         .btn-return { background: #f1f5f9; color: #475569; padding: 12px; border-radius: 50px; font-weight: 700; border: 1px solid #e2e8f0; cursor: pointer; font-size: 0.8rem; text-transform: uppercase; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 12px; width: 100%; text-decoration:none; }
         .auth-links { margin-top: 20px; }
         .auth-links a { color: #999; font-size: 12px; font-weight: bold; text-decoration: underline; cursor: pointer; }
 
-        /* --- HEADER --- */
+        /* --- PERFECT RESPONSIVE HEADER --- */
         header { 
-            background: var(--forest); color: white; padding: 10px 3%; border-bottom: 4px solid var(--gold); 
+            background: var(--forest); color: white; padding: 10px 4%; border-bottom: 4px solid var(--gold); 
             box-shadow: 0 4px 12px rgba(0,0,0,0.15); position: sticky; top: 0; z-index: 50;
         }
-        .header-content { display: flex; align-items: center; justify-content: space-between; max-width: 1400px; margin: 0 auto; }
-        .brand-group { display: flex; align-items: center; gap: 15px; }
-        .header-left { display: flex; align-items: center; gap: 12px; }
-        .header-logo { height: 55px; width: auto; }
-        .school-branding { display: flex; flex-direction: column; line-height: 1.1; }
-        .school-name-main { font-family: 'Montserrat', sans-serif; font-size: 1.4rem; font-weight: 800; letter-spacing: 1px; color: white; }
-        .school-name-sub { font-family: 'Montserrat', sans-serif; font-size: 0.7rem; color: white; font-weight: 600; text-transform: uppercase; }
-        .divider-line { width: 2px; height: 35px; background-color: rgba(255,255,255,0.3); margin: 0 5px; }
-        .portal-label { font-family: 'Montserrat', sans-serif; font-size: 1.4rem; font-weight: 800; text-transform: uppercase; color: white; white-space: nowrap; }
-
-        /* PREMIUM NAV TOOLS */
-        .nav-tools { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; }
-        .live-clock { font-family: 'Montserrat', sans-serif; font-weight: 800; color: var(--gold); font-size: 13px; text-shadow: 1px 1px 2px rgba(0,0,0,0.2); }
-        .btn-signout { 
-            background: rgba(255,255,255,0.1); 
-            border: 1.5px solid white; 
-            color: white; 
-            padding: 5px 18px; 
-            border-radius: 50px; 
-            font-size: 11px; 
-            font-weight: 800; 
-            text-transform: uppercase; 
-            cursor: pointer; 
-            transition: 0.3s all ease;
-            letter-spacing: 0.5px;
+        .header-content { 
+            display: flex; align-items: center; justify-content: space-between; 
+            max-width: 1400px; margin: 0 auto; width: 100%;
         }
-        .btn-signout:hover { background: white; color: var(--forest); transform: scale(1.05); box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .brand-group { display: flex; align-items: center; }
+        .header-left { display: flex; align-items: center; gap: 10px; }
+        .header-logo { height: 50px; width: auto; }
+        .school-branding { display: flex; flex-direction: column; line-height: 1.1; }
+        .school-name-main { font-family: 'Montserrat', sans-serif; font-size: 1.2rem; font-weight: 800; letter-spacing: 0.5px; color: white; }
+        .school-name-sub { font-family: 'Montserrat', sans-serif; font-size: 0.6rem; color: white; font-weight: 600; text-transform: uppercase; }
+        
+        .divider-line { width: 2px; height: 30px; background-color: rgba(255,255,255,0.3); margin: 0 12px; }
+        .portal-label { font-family: 'Montserrat', sans-serif; font-size: 1.2rem; font-weight: 800; text-transform: uppercase; color: white; white-space: nowrap; }
+
+        .nav-tools { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+        .live-clock { font-family: 'Montserrat', sans-serif; font-weight: 800; color: var(--gold); font-size: 12px; text-shadow: 1px 1px 2px rgba(0,0,0,0.2); }
+        .btn-signout { 
+            background: rgba(255,255,255,0.15); border: 1.2px solid white; color: white; 
+            padding: 4px 14px; border-radius: 50px; font-size: 10px; font-weight: 800; 
+            text-transform: uppercase; cursor: pointer; transition: 0.3s;
+        }
+        .btn-signout:hover { background: white; color: var(--forest); }
 
         /* --- DASHBOARD --- */
         .container { max-width: 650px; margin: 20px auto; padding: 0 15px; }
@@ -72,7 +66,6 @@
             100% { box-shadow: 0 0 0 0 rgba(198, 40, 40, 0); }
         }
 
-        /* GAUGE */
         .chart-container { display: flex; flex-direction: column; align-items: center; margin-top: 25px; background: #f9f9f9; padding: 20px; border-radius: 15px; border: 1px solid #eee; position: relative; }
         .circular-progress { position: relative; width: 120px; height: 120px; display: flex; align-items: center; justify-content: center; }
         .circular-progress svg { width: 120px; height: 120px; transform: rotate(-90deg); }
@@ -82,7 +75,7 @@
             stroke-dasharray: 314.15; stroke-dashoffset: 314.15; stroke-linecap: round;
             transition: stroke-dashoffset 0.8s ease; 
         }
-        .percentage-text { position: absolute; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 1.3rem; color: #333; }
+        .percentage-text { position: absolute; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 1.3rem; color: #333; top: 50%; left: 50%; transform: translate(-50%, -50%); }
 
         select, input { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #eee; font-size: 16px; margin-bottom: 10px; outline: none; }
         .calc-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
@@ -97,9 +90,16 @@
         .history-table th { text-align: left; padding: 12px; background: #f8fafc; color: #64748b; font-size: 10px; text-transform: uppercase; }
         .history-table td { padding: 12px 10px; border-bottom: 1px solid #f1f5f9; font-weight: 600; }
 
+        /* --- MOBILE TWEAKS --- */
         @media (max-width: 768px) {
+            header { padding: 8px 3%; }
+            .header-logo { height: 40px; }
+            .school-name-main { font-size: 0.9rem; }
             .school-name-sub, .divider-line { display: none; }
-            .school-name-main, .portal-label { font-size: 1.1rem; }
+            .portal-label { font-size: 0.9rem; }
+            .live-clock { font-size: 10px; }
+            .btn-signout { padding: 3px 10px; font-size: 9px; }
+            .calc-row { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -143,7 +143,7 @@
             
             <div class="nav-tools">
                 <div id="liveClock" class="live-clock">00:00:00</div>
-                <button class="btn-signout" onclick="location.reload()"><i class="fas fa-sign-out-alt"></i> Exit</button>
+                <button class="btn-signout" onclick="location.reload()">Exit</button>
             </div>
         </div>
     </header>
@@ -196,7 +196,6 @@
 <script>
     function updateClock() {
         const now = new Date();
-        // UPDATE: Added .toUpperCase() to Live Clock
         document.getElementById('liveClock').innerText = now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:true}).toUpperCase();
     }
     setInterval(updateClock, 1000); updateClock();
@@ -211,9 +210,9 @@
 
     async function handleForgotPassword() {
         const sel = document.getElementById('staffName').value;
-        if (!sel) return Swal.fire('Error', 'Select staff name first.', 'warning');
+        if (!sel) return Swal.fire('Error', 'Select name first.', 'warning');
         const { value: pin } = await Swal.fire({ title: 'Recovery', text: `Enter Recovery PIN for ${sel}`, input: 'password' });
-        if (pin === recoveryPins[sel]) Swal.fire('Success', `Password is: ${authorized[sel]}`, 'success');
+        if (pin === recoveryPins[sel]) Swal.fire('Success', `Password: ${authorized[sel]}`, 'success');
     }
 
     function unlockFees() {
@@ -244,24 +243,15 @@
         studentLifetimePaid = 0; let totalV = "", rows = "";
         if(data) {
             Object.keys(data).forEach(k => {
-                const r = data[k]; 
-                studentLifetimePaid += parseFloat(r.paid || 0); 
-                totalV = r.total;
-                // UPDATE: Force uppercase display for history timestamps
+                const r = data[k]; studentLifetimePaid += parseFloat(r.paid || 0); totalV = r.total;
                 let timeStr = "N/A";
-                if(r.timestamp && r.timestamp.includes(',')) {
-                    timeStr = r.timestamp.split(',')[1].trim().toUpperCase(); 
-                }
+                if(r.timestamp && r.timestamp.includes(',')) { timeStr = r.timestamp.split(',')[1].trim().toUpperCase(); }
                 rows += `<tr><td>${r.date}</td><td style="color:var(--forest); font-weight:800;">₹ ${r.paid}</td><td>${r.recordedBy}</td><td>${timeStr}</td></tr>`;
             });
             document.getElementById('totalFee').value = totalV;
             document.getElementById('historyTableBody').innerHTML = rows;
             document.getElementById('historyCard').style.display = 'block';
-        } else { 
-            document.getElementById('totalFee').value = ""; 
-            document.getElementById('historyCard').style.display = 'none'; 
-            document.getElementById('historyTableBody').innerHTML = "";
-        }
+        } else { document.getElementById('totalFee').value = ""; document.getElementById('historyCard').style.display = 'none'; document.getElementById('historyTableBody').innerHTML = ""; }
         calculateRealTime();
     }
 
@@ -269,10 +259,8 @@
         const t = parseFloat(document.getElementById('totalFee').value) || 0, pNow = parseFloat(document.getElementById('payingAmount').value) || 0;
         const combined = studentLifetimePaid + pNow, due = t - combined;
         document.getElementById('dueDisplay').innerText = "₹ " + (due < 0 ? 0 : due);
-        
         const dueBox = document.getElementById('dueBox');
         if (due > 10000) { dueBox.classList.add('high-due'); } else { dueBox.classList.remove('high-due'); }
-
         let pct = (t > 0) ? (combined / t) * 100 : 0;
         if(pct > 100) pct = 100;
         document.getElementById('progressCircle').style.strokeDashoffset = 314.15 - (314.15 * pct / 100);
@@ -282,14 +270,11 @@
     function saveFee() {
         const c = document.getElementById('feeClass').value, n = document.getElementById('feeStudent').value, t = document.getElementById('totalFee').value, p = document.getElementById('payingAmount').value, d = document.getElementById('payDate').value;
         if(!n || !p) return Swal.fire('Error', 'Missing Data', 'warning');
-        // UPDATE: Created timestamp with Uppercase AM/PM
         const timePart = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }).toUpperCase();
         const stamp = new Date().toLocaleDateString() + ", " + timePart;
         lastReceiptData = { n, c, p, t, d, activeTeacher };
         db.ref(`fee_records/${c}/${n}`).push({ total: t, paid: p, recordedBy: activeTeacher, date: d, timestamp: stamp }).then(() => {
-            Swal.fire('Saved', 'Record Updated Successfully', 'success'); 
-            document.getElementById('payingAmount').value = ''; 
-            fetchExistingFeeData();
+            Swal.fire('Saved', 'Record Updated Successfully', 'success'); document.getElementById('payingAmount').value = ''; fetchExistingFeeData();
         });
     }
 
@@ -308,8 +293,7 @@
         const { value: pass } = await Swal.fire({ title: 'Auth Required', text: 'Enter password to wipe data', input: 'password' });
         if (pass === authorized[activeTeacher]) {
             db.ref(`fee_records/${c}/${n}`).remove().then(() => {
-                Swal.fire('Deleted', 'Record history has been cleared.', 'success'); 
-                fetchExistingFeeData();
+                Swal.fire('Deleted', 'Record history has been cleared.', 'success'); fetchExistingFeeData();
             });
         }
     }
