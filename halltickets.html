@@ -61,7 +61,11 @@
         select, input { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #eee; font-size: 15px; margin-bottom: 10px; outline: none; background: #fafafa; }
         .btn-action { color: white; border: none; padding: 16px; border-radius: 50px; font-weight: 700; cursor: pointer; text-transform: uppercase; font-size: 13px; width: 100%; margin-top: 10px; transition: 0.3s; }
         .btn-save { background: var(--forest); }
+        .btn-wipe { background: linear-gradient(135deg, #e53935, #b71c1c); border: 2px solid white; margin-top: 10px; }
         .btn-print { background: var(--gold); color: var(--forest); margin-top: 20px; }
+
+        .audit-footer { font-size: 10px; color: #888; text-align: center; margin-top: 15px; padding-top: 10px; border-top: 1px dashed #ddd; display: none; }
+        .audit-footer b { color: var(--forest); }
 
         @media (min-width: 600px) { .subject-grid { grid-template-columns: 1fr 1fr; } }
     </style>
@@ -76,7 +80,7 @@
     <div class="auth-box">
         <img src="logo.png" class="auth-logo">
         <div class="auth-branding-text"><h2>PARAMOUNT SCHOOL</h2><p style="color:var(--gold); font-weight:800; font-size:11px; text-transform:uppercase;">Hall Ticket Access</p></div>
-        <select id="staffName" class="auth-input" style="margin-top:20px;">
+        <select id="staffName" class="auth-input">
             <option value="">-- Select Staff --</option>
             <option value="Mr. Ahmad">Mr. Ahmad</option>
             <option value="Ms. Roqiya">Ms. Roqiya</option>
@@ -140,7 +144,11 @@
                 </select>
 
                 <div id="dynamicSubjectGrid" class="subject-grid"></div>
+                
+                <div id="setupAudit" class="audit-footer">Last updated by <b id="auditFaculty">---</b> at <b id="auditTime">---</b></div>
+
                 <button class="btn-action btn-save" onclick="saveClassExamDates()">Save Class Schedule <i class="fas fa-save"></i></button>
+                <button class="btn-action btn-wipe" onclick="wipeClassSchedule()">Wipe This Class Schedule <i class="fas fa-trash-alt"></i></button>
             </div>
 
             <div id="generateView" style="display:none;">
@@ -203,6 +211,15 @@
         else if (cls === "Grade-5") subjects.push("SCI", "IIT"); else subjects.push("SCI");
 
         const snap = await db.ref(`class_schedules/${cls}/${exam}`).once('value'), data = snap.val() || {};
+        
+        if(data.lastUpdatedBy) {
+            document.getElementById('auditFaculty').innerText = data.lastUpdatedBy;
+            document.getElementById('auditTime').innerText = data.lastUpdatedAt;
+            document.getElementById('setupAudit').style.display = "block";
+        } else {
+            document.getElementById('setupAudit').style.display = "none";
+        }
+
         subjects.forEach(sub => {
             const savedVal = data[sub] || "";
             let savedDate = "", savedTime = "-";
@@ -214,21 +231,46 @@
     async function saveClassExamDates() {
         const cls = document.getElementById('setupClassSelect').value, exam = document.getElementById('examSelect').value;
         if(!cls) return;
-        const schedule = {};
+        const schedule = {
+            lastUpdatedBy: activeTeacher,
+            lastUpdatedAt: new Date().toLocaleString([], {hour12: true}).toUpperCase()
+        };
         document.querySelectorAll('.sched-box').forEach(box => {
             const sub = box.getAttribute('data-sub'), d = box.querySelector('.date-inp').value, t = box.querySelector('.time-sel').value;
             schedule[sub] = (d === "" || t === "-") ? "-" : `${d} @ ${t}`;
         });
         await db.ref(`class_schedules/${cls}/${exam}`).update(schedule);
         Swal.fire('Saved', `Schedule updated for ${cls}`, 'success');
+        renderSubjectSchedule();
     }
 
-    const rollData = { "Hanish Macharla": "1472070", "Arjun Vihaar Illandula": "1478225", "Thanu sree Allakunta": "1469391", "Aadhya Gangaraboina": "1459555", "Aadhya Sri Oggula": "1459560", "Aadhyasri Shivagoni": "1474500", "Afraha Begum": "1460680", "Aliya Sultana": "1472299", "Anvika Bandi": "1459683", "Aradana Devara konda": "1459620", "Devansh Bandi": "1459605", "Hanvitha Mulkalapelli": "1472069", "Harsha Vardhan Seenapelli": "1472723", "Hiranya Bandi": "1459658", "Jashritha Boina": "1478248", "Konreddy Shreyanvi": "1481135", "Kriyansh Sammeta": "1459568", "Mohammed Mohiuddin Sayyad": "1459652", "Nethra Narkurthi": "1459636", "Reeyansh Bandi": "1463720", "Rishi Myakala": "1459582", "Rudransh Bandi": "1459607", "Rudransh Bandi_1": "1459604", "Sanvika Bandi": "1459625", "Shanvith Khatha": "1472074", "Shishira Jalagam": "1469395", "Shiva Sai Mekala": "1456748", "Shree Rudhraveer Chevvu": "1459687", "Shreyansh Gangaraboina": "1459572", "Sreeja Thalla": "1459643", "Srikrithini Myakala": "1459603", "Srivatsav Vanam": "1472536", "Sriyansh Mekala": "1456743", "Thanvika Lakka": "1473500", "Thrilokansh Vudari": "1463724", "Ujjwal Checkka": "1459694", "Vaishnavi Lakka": "1474815", "Vedansh Myakala": "1460690", "Vishnu Priya Molugu": "1478250", "Vyshnav Tej Boina": "1413563", "Yafiah Mohammad": "1459577" };
+    async function wipeClassSchedule() {
+        const cls = document.getElementById('setupClassSelect').value, exam = document.getElementById('examSelect').value;
+        if(!cls) return Swal.fire('Error', 'Select a class first', 'warning');
+
+        const { value: password } = await Swal.fire({
+            title: 'Confirm Wipe',
+            text: `This will delete the ${exam} schedule for ${cls}. Enter password:`,
+            input: 'password',
+            showCancelButton: true,
+            confirmButtonColor: '#d33'
+        });
+
+        if (password === authorized[activeTeacher]) {
+            await db.ref(`class_schedules/${cls}/${exam}`).remove();
+            Swal.fire('Deleted', `${cls} - ${exam} schedule wiped.`, 'success');
+            renderSubjectSchedule();
+        } else if (password !== undefined) {
+            Swal.fire('Error', 'Invalid Password', 'error');
+        }
+    }
+
+    const rollData = { "Hanish Macharla": "1472070", "Arjun Vihaar Illandula": "1478225", "Thanu sree Allakunta": "1469391", "Aadhya Gangaraboina": "1459555", "Aadhya Sri Oggula": "1459560", "Aadhyasri Shivagoni": "1474500", "Afraha Begum": "1460680", "Aliya Sultana": "1472299", "Anvika Bandi": "1459683", "Aradana Devara konda": "1459620", "Devansh Bandi": "1459605", "Hanvitha Mulkalapelli": "1472069", "Harsha Vardhan Seenapelli": "1472723", "Hiranya Bandi": "1459658", "Jashritha Boina": "1478248", "Konreddy Shreyanvi": "1481135", "Kriyansh Sammeta": "1459568", "Mohammed Mohiuddin Sayyad": "1459652", "Nethra Narkurthi": "1459636", "Reeyansh Bandi": "1463720", "Rishi Myakala": "1459582", "Rudransh Bandi": "1459607", "Rudransh Bandi_1": "1459604", "Sanvika Bandi": "1459625", "Shanvith Khatha": "1472074", "Shishira Jalagam": "1469395", "Shiva Sai Mekala": "1456748", "Shreyansh Gangaraboina": "1459572", "Sreeja Thalla": "1459643", "Srikrithini Myakala": "1459603", "Srivatsav Vanam": "1472536", "Sriyansh Mekala": "1456743", "Thanvika Lakka": "1473500", "Thrilokansh Vudari": "1463724", "Ujjwal Checkka": "1459694", "Vaishnavi Lakka": "1474815", "Vedansh Myakala": "1460690", "Vishnu Priya Molugu": "1478250", "Vyshnav Tej Boina": "1413563", "Yafiah Mohammad": "1459577" };
 
     async function generateClassHallTickets() {
         const cls = document.getElementById('feeClass').value, exam = document.getElementById('examSelect').value;
         if(!cls) return;
-        Swal.fire({ title: 'Syncing Data...', didOpen: () => Swal.showLoading() });
+        Swal.fire({ title: 'Processing...', didOpen: () => Swal.showLoading() });
         const schedSnap = await db.ref(`class_schedules/${cls}/${exam}`).once('value'), schedule = schedSnap.val() || {};
         const feeSnap = await db.ref(`fee_records/${cls}`).once('value'), feeData = feeSnap.val();
         ticketsToPrint = []; let html = "";
@@ -251,13 +293,13 @@
     function printTickets(list) {
         const logoOrigin = window.location.origin + "/logo.png";
         const win = window.open('', '', 'height=800,width=1000');
-        win.document.write('<html><head><style>body{font-family:sans-serif;padding:0;margin:0;color:#333;} *{-webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;} .page{width:210mm; height:297mm; padding:8mm; box-sizing:border-box; page-break-after:always;} .ticket{width:100%; border:2px solid #333; padding:15px; box-sizing:border-box; border-radius:15px; position:relative; margin-bottom:10mm;} .header{display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #333; padding-bottom:10px; margin-bottom:10px;} .tbl{width:100%; border-collapse:collapse; margin-top:10px;} .tbl th, .tbl td{border:1px solid #333; padding:6px; text-align:center; font-weight:bold; font-size:10px; line-height: 1.2;} .exam-type{background:black; color:white; padding:3px 15px; display:inline-block; font-size:10px; font-weight:800; border-radius:3px; text-transform:uppercase; margin-top:5px;}</style></head><body>');
+        win.document.write('<html><head><style>body{font-family:sans-serif;padding:0;margin:0;color:#333;} *{-webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;} .page{width:210mm; height:297mm; padding:8mm; box-sizing:border-box; page-break-after:always;} .ticket{width:100%; min-height:95mm; height:auto; border:2px solid #333; padding:15px; box-sizing:border-box; border-radius:15px; position:relative; margin-bottom:10mm;} .header{display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #333; padding-bottom:10px; margin-bottom:10px;} .tbl{width:100%; border-collapse:collapse; margin-top:10px;} .tbl th, .tbl td{border:1px solid #333; padding:6px; text-align:center; font-weight:bold; font-size:10px; line-height: 1.2;} .exam-type{background:black; color:white; padding:3px 15px; display:inline-block; font-size:10px; font-weight:800; border-radius:3px; text-transform:uppercase; margin-top:5px;}</style></head><body>');
         
         for (let i = 0; i < list.length; i += 2) {
             win.document.write('<div class="page">');
             [list[i], list[i+1]].forEach((t) => {
                 if(!t) return;
-                const subs = Object.keys(t.schedule);
+                const subs = Object.keys(t.schedule).filter(k => !['lastUpdatedBy', 'lastUpdatedAt'].includes(k));
                 win.document.write(`
                 <div class="ticket">
                     <div class="header">
@@ -302,7 +344,7 @@
         setTimeout(() => { win.print(); win.close(); }, 800);
     }
 
-    const studentData = { "Pre-KG": ["Hanish Macharla", "Arjun Vihaar Illandula", "Thanu sree Allakunta", "Aadhya Gangaraboina", "Aadhya Sri Oggula", "Aadhyasri Shivagoni", "Afraha Begum", "Aliya Sultana", "Anvika Bandi", "Aradana Devara konda", "Devansh Bandi", "Hanvitha Mulkalapelli", "Harsha Vardhan Seenapelli", "Hiranya Bandi", "Jashritha Boina", "Konreddy Shreyanvi", "Kriyansh Sammeta", "Mohammed Mohiuddin Sayyad", "Nethra Narkurthi", "Reeyansh Bandi", "Rishi Myakala", "Rudransh Bandi", "Sanvika Bandi", "Shanvith Khatha", "Shishira Jalagam", "Shiva Sai Mekala", "Shree Rudhraveer Chevvu", "Shreyansh Gangaraboina", "Sreeja Thalla", "Srikrithini Myakala", "Srivatsav Vanam", "Sriyansh Mekala", "Thanvika Lakka", "Thrilokansh Vudari", "Ujjwal Checkka", "Vaishnavi Lakka", "Vedansh Myakala", "Vishnu Priya Molugu", "Vyshnav Tej Boina", "Yafiah Mohammad"], "KG-1": ["Aadhya Sri Amaravadi", "Aditya Manda", "Aadhya Jella", "Advaita Gauri Bandi", "Aizah Amna Shaik", "Akshara Singaram", "Bhahuveer Raj Somishetti", "Gayathri Erroju", "Hanvika Mulkalapelli", "Manvith Kondoju", "Sayyad Vajeed", "Mekala Manu sri", "Oliva Grace Vallapu", "Rithwik Oggula", "Rithwika Kandagatla", "Srimahi Chevvu", "Thanvesh Thalla", "Trishul Nanduri", "Yoganshika Nanduri", "Yusra Mohammad", "Zainul Abideen Syed"], "KG-2": ["Deekshanth Sammeta", "Hanshith Erroju", "Harika Bandi", "Himarsha Naini", "Karthik Vallepu", "Kruthika Bandi", "Rajavardhan Gampala", "Roshan Kaitha", "Sri Anshu Ayaan Lyadala", "Srihansh Bandi", "Srikshitha Guduri", "Varshith Gonela", "Adyasri Makala", "Anvik Boini", "Anvith Pokanati", "Awais Ur Rehman Mohammad", "Dakshu Pothuganti", "Hansith Reddy Katukuri", "Harshith Pokanati", "Jella Aditya", "Krishank Nallabothula", "Kundana Katkuri", "Munukuntla Revanth Rudhra", "Niraja Nethri Siluveru", "Pranav Mattepelli", "Sreenith Yadav Naini", "Uvan Reddy Dasari", "Zayan Mohammad", "Zoya Mohammed"], "Grade-1": ["Dheeraj Gattu", "Preetham Sannayala", "Shiva nandu Gonela", "Shrayan Nuthanakanti", "Sriyanksha Mandala", "Advitha Garige", "Harika Bandi", "Himansi Kondoju", "Izhaan Rahamath Syed", "Jaisurya Myakala", "Khadeeja Fathima", "Manaswini Dandugula", "Manusri Bandi", "Rithwik krishna Amaravadi", "Rohan Bandi", "Shiva Junnu", "Shivanandh Bandi", "Sridha Thalla", "Srinika Chengelly", "Sriyanshi Oggula", "Vishwak Checkka"], "Grade-2": ["Aliza Manha Shaik", "Dhruvan Reddy Katukuri", "Druthika Enugala", "Manaswini Bandi", "Rakshith Macharla", "Sathwika Katkuri", "Shalini Uppala", "Chandu Devarakonda", "Gnaneshwar Pokanati", "Hasnain Syed", "Koushik Siluveru", "Senen Desabattula", "Shivarajan Pothuganti"], "Grade-3": ["Nagavelly Manikanta", "Mirja Ismail", "Bandi Aryan", "Dandugula Mahesh Babu", "Bandi Tejasri", "Bandi Harshavardhan", "Gampala Vyshnavi", "Gampala Laxmi", "Garige Harshith", "Katkuri Hanish", "Katukuri Manideep", "MD Abdul Quddus", "Muppa Sathwik Patel", "Nuthanakanti Sansita", "Pasarakonda Ritwin", "Pinninti Rakshith Rao", "Rayi Sriman Adithya"], "Grade-4": ["Abdul Saqib Mohammad", "Anudeep Chintha", "Bhavan Bandi", "Harshavardhan Gonela", "Jayadev Chiluveru", "Mahaboob Syed", "Nandith Reddy Enugala", "Sai Charan Goud Mandala", "Sai Prasanna Keerthi", "Ajmeri Shaik", "Akshith Chiluveru", "Jayasri Myakala", "Rahul Kanjarla", "Saketh Devarakonda"], "Grade-5": ["Adya Reddy Vangala", "Kowshik Patel Muppa", "Siri Singaram", "Srikar Mandala", "Abdus Salaam MD", "Akshith Ram Kalvacharla", "Jaffar Anas Shaik", "Khaja Azeemuddin Mohammed", "Nihan Mohammed", "Saif Shaik", "Saketh Renukuntla", "Sreeja Dasari", "Vidhaatri Sahani"], "Grade-6": ["Abdul Razzak Mohammad", "Anudeepthi Chintha", "Saketh Ranaveni", "Shiva Sri Katukuri", "Aklees Shaik", "Akshya Kalvacharla", "Prince Katkuri"], "Grade-7": ["Manikanta Sannayala", "Sreeyan Reddy Karra", "Jayadhithya Chiluveru"], "Grade-8": ["Sathwika Nagavelly", "Vyshnavi Uppala", "Akshaya Gampala", "Ganesh Oggula", "Gayathri Renukuntla", "Khaja Sadeemuddin Mohammed"] };
+    const studentData = { "Pre-KG": ["Hanish Macharla", "Arjun Vihaar Illandula", "Thanu sree Allakunta", "Aadhya Gangaraboina", "Aadhya Sri Oggula", "Aadhyasri Shivagoni", "Afraha Begum", "Aliya Sultana", "Anvika Bandi", "Aradana Devara konda", "Devansh Bandi", "Hanvitha Mulkalapelli", "Harsha Vardhan Seenapelli", "Hiranya Bandi", "Jashritha Boina", "Konreddy Shreyanvi", "Kriyansh Sammeta", "Mohammed Mohiuddin Sayyad", "Nethra Narkurthi", "Reeyansh Bandi", "Rishi Myakala", "Rudransh Bandi", "Sanvika Bandi", "Shanvith Khatha", "Shishira Jalagam", "Shiva Sai Mekala", "Shreyansh Gangaraboina", "Sreeja Thalla", "Srikrithini Myakala", "Srivatsav Vanam", "Sriyansh Mekala", "Thanvika Lakka", "Thrilokansh Vudari", "Ujjwal Checkka", "Vaishnavi Lakka", "Vedansh Myakala", "Vishnu Priya Molugu", "Vyshnav Tej Boina", "Yafiah Mohammad"], "KG-1": ["Aadhya Sri Amaravadi", "Aditya Manda", "Aadhya Jella", "Advaita Gauri Bandi", "Aizah Amna Shaik", "Akshara Singaram", "Bhahuveer Raj Somishetti", "Gayathri Erroju", "Hanvika Mulkalapelli", "Manvith Kondoju", "Sayyad Vajeed", "Mekala Manu sri", "Oliva Grace Vallapu", "Rithwik Oggula", "Rithwika Kandagatla", "Srimahi Chevvu", "Thanvesh Thalla", "Trishul Nanduri", "Yoganshika Nanduri", "Yusra Mohammad", "Zainul Abideen Syed"], "KG-2": ["Deekshanth Sammeta", "Hanshith Erroju", "Harika Bandi", "Himarsha Naini", "Karthik Vallepu", "Kruthika Bandi", "Rajavardhan Gampala", "Roshan Kaitha", "Sri Anshu Ayaan Lyadala", "Srihansh Bandi", "Srikshitha Guduri", "Varshith Gonela", "Adyasri Makala", "Anvik Boini", "Anvith Pokanati", "Awais Ur Rehman Mohammad", "Dakshu Pothuganti", "Hansith Reddy Katukuri", "Harshith Pokanati", "Jella Aditya", "Krishank Nallabothula", "Kundana Katkuri", "Munukuntla Revanth Rudhra", "Niraja Nethri Siluveru", "Pranav Mattepelli", "Sreenith Yadav Naini", "Uvan Reddy Dasari", "Zayan Mohammad", "Zoya Mohammed"], "Grade-1": ["Dheeraj Gattu", "Preetham Sannayala", "Shiva nandu Gonela", "Shrayan Nuthanakanti", "Sriyanksha Mandala", "Advitha Garige", "Harika Bandi", "Himansi Kondoju", "Izhaan Rahamath Syed", "Jaisurya Myakala", "Khadeeja Fathima", "Manaswini Dandugula", "Manusri Bandi", "Rithwik krishna Amaravadi", "Rohan Bandi", "Shiva Junnu", "Shivanandh Bandi", "Sridha Thalla", "Srinika Chengelly", "Sriyanshi Oggula", "Vishwak Checkka"], "Grade-2": ["Aliza Manha Shaik", "Dhruvan Reddy Katukuri", "Druthika Enugala", "Manaswini Bandi", "Rakshith Macharla", "Sathwika Katkuri", "Shalini Uppala", "Chandu Devarakonda", "Gnaneshwar Pokanati", "Hasnain Syed", "Koushik Siluveru", "Senen Desabattula", "Shivarajan Pothuganti"], "Grade-3": ["Nagavelly Manikanta", "Mirja Ismail", "Bandi Aryan", "Dandugula Mahesh Babu", "Bandi Tejasri", "Bandi Harshavardhan", "Gampala Vyshnavi", "Gampala Laxmi", "Garige Harshith", "Katkuri Hanish", "Katukuri Manideep", "MD Abdul Quddus", "Muppa Sathwik Patel", "Nuthanakanti Sansita", "Pasarakonda Ritwin", "Pinninti Rakshith Rao", "Rayi Sriman Adithya"], "Grade-4": ["Abdul Saqib Mohammad", "Anudeep Chintha", "Bhavan Bandi", "Harshavardhan Gonela", "Jayadev Chiluveru", "Mahaboob Syed", "Nandith Reddy Enugala", "Sai Charan Goud Mandala", "Sai Prasanna Keerthi", "Ajmeri Shaik", "Akshith Chiluveru", "Jayasri Myakala", "Rahul Kanjarla", "Saketh Devarakonda"], "Grade-5": ["Adya Reddy Vangala", "Kowshik Patel Muppa", "Siri Singaram", "Srikar Mandala", "Abdus Salaam MD", "Akshith Ram Kalvacharla", "Jaffar Anas Shaik", "Khaja Azeemuddin Mohammed", "Nihan Mohammed", "Saif Shaik", "Saketh Renukuntla", "Sreeja Dasari", "Vidhaatri Sahani"], "Grade-6": ["Abdul Razzak Mohammad", "Anudeepthi Chintha", "Saketh Ranaveni", "Shiva Sri Katukuri", "Aklees Shaik", "Akshya Kalvacharla", "Prince Katkuri"], "Grade-7": ["Manikanta Sannayala", "Sreeyan Reddy Karra", "Jayadhithya Chiluveru"], "Grade-8": ["Sathwika Nagavelly", "Vyshnavi Uppala", "Akshaya Gampala", "Ganesh Oggula", "Gayathri Renukuntla", "Khaja Sadeemuddin Mohammed"] };
 </script>
 </body>
 </html>
