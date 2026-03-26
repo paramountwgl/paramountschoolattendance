@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Private Event Panel | Paramount School</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Segoe+UI:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root { --forest: #004d26; --gold: #ffd700; --light: #f4f7f6; --danger: #d32f2f; --info: #0288d1; }
+        * { box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; min-height: 100vh; }
+        
+        /* PRIVATE LOGIN OVERLAY */
+        #authOverlay { position: fixed; top:0; left:0; width:100%; height:100%; background: var(--forest); display:flex; align-items:center; justify-content:center; z-index:9999; padding: 20px; }
+        .auth-card { background: white; width: 100%; max-width: 350px; padding: 40px 30px; border-radius: 25px; box-shadow: 0 15px 40px rgba(0,0,0,0.3); text-align: center; }
+        .auth-input { width: 100%; padding: 14px; margin-bottom: 12px; border-radius: 12px; border: 1px solid #e0e0e0; background: #fafafa; font-size: 15px; outline: none; text-align: center; }
+        
+        /* MAIN PANEL */
+        .admin-card { max-width: 550px; margin: 40px auto; background: white; padding: 30px; border-radius: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.05); border-top: 8px solid var(--forest); }
+        h2 { color: var(--forest); font-family: 'Montserrat'; text-align: center; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1px; }
+        
+        .input-group { margin-bottom: 15px; }
+        label { display: block; font-size: 11px; font-weight: 800; text-transform: uppercase; color: #888; margin-bottom: 6px; margin-left: 5px; }
+        input { width: 100%; padding: 14px; border-radius: 12px; border: 2px solid #eee; font-size: 14px; outline: none; transition: 0.3s; }
+        input:focus { border-color: var(--forest); background: #f9fdfa; }
+        
+        .btn-action { width: 100%; background: var(--forest); color: white; padding: 16px; border-radius: 50px; border: none; font-weight: 800; cursor: pointer; margin-top: 10px; text-transform: uppercase; transition: 0.3s; }
+        .btn-action:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .btn-update { background: var(--info) !important; display: none; }
+
+        .event-list-container { margin-top: 35px; border-top: 2px dashed #eee; padding-top: 25px; }
+        .list-header { font-family: 'Montserrat'; font-weight: 800; font-size: 12px; color: #555; margin-bottom: 15px; display: block; text-transform: uppercase; }
+        
+        .event-item { display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 15px; border-radius: 15px; margin-bottom: 10px; border: 1px solid #f0f0f0; }
+        .ev-details b { color: var(--forest); font-size: 14px; display: block; }
+        .ev-details small { color: #888; font-weight: 600; }
+        
+        .action-btns { display: flex; gap: 8px; }
+        .action-btns button { border: none; background: #f5f5f5; width: 35px; height: 35px; border-radius: 10px; cursor: pointer; }
+        .btn-edit:hover { background: var(--info); color: white; }
+        .btn-del:hover { background: var(--danger); color: white; }
+    </style>
+</head>
+<body>
+
+<div id="authOverlay">
+    <div class="auth-card">
+        <img src="logo.png" style="height:70px; margin-bottom:15px;">
+        <h2 style="font-size:18px; margin-bottom:5px;">ADMIN ACCESS</h2>
+        <p style="font-size:10px; color:#999; margin-bottom:25px; font-weight:700;">EVENT MANAGER BY SHAIK AHMAD</p>
+        
+        <input type="password" id="adminPassInput" class="auth-input" placeholder="Enter Private Password">
+        
+        <button class="btn-action" style="background:var(--gold); color:var(--forest);" onclick="authenticate()">UNLOCK PANEL <i class="fas fa-lock-open"></i></button>
+        <br><br>
+        <a href="index.html" style="text-decoration:none; color:#bbb; font-size:11px; font-weight:bold;">Return to Portal</a>
+    </div>
+</div>
+
+<div class="admin-card" id="mainPanel" style="display:none;">
+    <div style="text-align: right; margin-bottom: 10px;">
+        <button onclick="location.reload()" style="background:none; border:none; color:var(--danger); font-weight:800; font-size:11px; cursor:pointer;"><i class="fas fa-sign-out-alt"></i> LOCK PANEL</button>
+    </div>
+
+    <h2><i class="fas fa-stopwatch"></i> Countdown Manager</h2>
+    
+    <input type="hidden" id="editKey">
+    
+    <div class="input-group">
+        <label>Event Name</label>
+        <input type="text" id="evName" placeholder="e.g. Annual Day Celebration">
+    </div>
+    
+    <div class="input-group">
+        <label>Event Date & Time</label>
+        <input type="datetime-local" id="evDate">
+    </div>
+    
+    <button id="btnSave" class="btn-action" onclick="saveEvent()">PUBLISH TO STUDENTS <i class="fas fa-bullhorn"></i></button>
+    <button id="btnUpdate" class="btn-action btn-update" onclick="updateExistingEvent()">SAVE CHANGES <i class="fas fa-save"></i></button>
+    <button id="btnCancel" class="btn-action" style="background:#888; display:none;" onclick="resetForm()">CANCEL EDIT</button>
+
+    <div class="event-list-container">
+        <span class="list-header">Live Countdowns</span>
+        <div id="eventList"></div>
+    </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    const firebaseConfig = { apiKey: "AIzaSyDRYk9KOK-ga0c88dnYMsAoifW2NJTd_Y8", databaseURL: "https://paramount-school-d55bc-default-rtdb.firebaseio.com", projectId: "paramount-school-d55bc" };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    function authenticate() {
+        const pass = document.getElementById('adminPassInput').value;
+        
+        // YOUR EXCLUSIVE PASSWORD
+        if(pass === "Ahmad@07") {
+            document.getElementById('authOverlay').style.display = 'none';
+            document.getElementById('mainPanel').style.display = 'block';
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Access Denied',
+                text: 'Incorrect admin password.',
+                confirmButtonColor: '#004d26'
+            });
+        }
+    }
+
+    function saveEvent() {
+        const name = document.getElementById('evName').value;
+        const date = document.getElementById('evDate').value;
+        if(!name || !date) return Swal.fire('Error', 'Please fill in both fields.', 'warning');
+
+        db.ref('school_events').push({ name, date }).then(() => {
+            Swal.fire({ icon: 'success', title: 'Event Published', timer: 1500, showConfirmButton: false });
+            resetForm();
+        });
+    }
+
+    db.ref('school_events').on('value', snap => {
+        const container = document.getElementById('eventList');
+        container.innerHTML = '';
+        if(!snap.exists()) container.innerHTML = '<p style="text-align:center; color:#ccc; font-size:12px;">No active events</p>';
+        
+        snap.forEach(child => {
+            const ev = child.val();
+            container.innerHTML += `
+                <div class="event-item">
+                    <div class="ev-details">
+                        <b>${ev.name}</b>
+                        <small>${ev.date.replace('T', ' @ ')}</small>
+                    </div>
+                    <div class="action-btns">
+                        <button class="btn-edit" onclick="prepareEdit('${child.key}', '${ev.name}', '${ev.date}')"><i class="fas fa-pencil-alt"></i></button>
+                        <button class="btn-del" onclick="confirmDelete('${child.key}')"><i class="fas fa-trash-alt"></i></button>
+                    </div>
+                </div>`;
+        });
+    });
+
+    function prepareEdit(key, name, date) {
+        document.getElementById('editKey').value = key;
+        document.getElementById('evName').value = name;
+        document.getElementById('evDate').value = date;
+        document.getElementById('btnSave').style.display = 'none';
+        document.getElementById('btnUpdate').style.display = 'block';
+        document.getElementById('btnCancel').style.display = 'block';
+        window.scrollTo(0,0);
+    }
+
+    function updateExistingEvent() {
+        const key = document.getElementById('editKey').value;
+        const name = document.getElementById('evName').value;
+        const date = document.getElementById('evDate').value;
+        db.ref('school_events/' + key).update({ name, date }).then(() => {
+            Swal.fire({ icon: 'success', title: 'Updated Successfully', timer: 1500, showConfirmButton: false });
+            resetForm();
+        });
+    }
+
+    async function confirmDelete(key) {
+        const res = await Swal.fire({ title: 'Delete Event?', text: "This removes the countdown for students.", icon: 'warning', showCancelButton: true, confirmButtonColor: '#d32f2f', confirmButtonText: 'Delete' });
+        if (res.isConfirmed) {
+            db.ref('school_events/' + key).remove();
+        }
+    }
+
+    function resetForm() {
+        document.getElementById('editKey').value = '';
+        document.getElementById('evName').value = '';
+        document.getElementById('evDate').value = '';
+        document.getElementById('btnSave').style.display = 'block';
+        document.getElementById('btnUpdate').style.display = 'none';
+        document.getElementById('btnCancel').style.display = 'none';
+    }
+</script>
+</body>
+</html>
