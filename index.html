@@ -27,23 +27,26 @@
         }
         @keyframes breathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }
 
-        /* --- PREMIUM NAVIGATION GRID --- */
+        /* --- UPDATED NAVIGATION GRID FOR SINGLE LINE --- */
         .portal-nav-container { 
             display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); 
-            gap: 12px; 
+            grid-template-columns: repeat(6, 1fr); /* Force 6 columns in one line */
+            gap: 8px; 
             margin: 15px auto; 
-            padding: 0 15px; 
-            max-width: 850px; 
+            padding: 0 10px; 
+            max-width: 950px; 
         }
         .btn-premium-nav { 
-            padding: 18px 10px; border-radius: 15px; text-decoration: none; font-family: 'Montserrat', sans-serif; font-weight: 800;
-            font-size: clamp(10px, 3vw, 12px); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); background: linear-gradient(135deg, #004d26 0%, var(--forest) 100%); color: white; border: 2px solid var(--gold);
-            transition: 0.3s;
+            padding: 12px 5px; border-radius: 12px; text-decoration: none; font-family: 'Montserrat', sans-serif; font-weight: 800;
+            font-size: 9px; /* Smaller font for single line fit */
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); background: linear-gradient(135deg, #004d26 0%, var(--forest) 100%); color: white; border: 1.5px solid var(--gold);
+            transition: 0.2s;
+            text-align: center;
+            min-width: 0; /* Prevents overflow */
         }
-        .btn-premium-nav:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.2); border-color: white; }
-        .btn-premium-nav i { font-size: 1.5rem; }
+        .btn-premium-nav:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0,0,0,0.2); border-color: white; }
+        .btn-premium-nav i { font-size: 1.1rem; }
 
         .container { max-width: 850px; margin: 0 auto; padding: 0 15px; }
         .card { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 20px; border-top: 8px solid var(--forest); }
@@ -66,8 +69,10 @@
         input[type="checkbox"] { width: 24px; height: 24px; accent-color: var(--forest); }
         .hw-info-bar { font-size: 11px; color: #555; margin-top: 8px; font-style: italic; padding: 8px; background: #f0f4f2; border-radius: 8px; border-left: 4px solid var(--gold); display: none; }
 
+        /* Responsive adjustment for very small mobile screens */
         @media (max-width: 480px) {
-            .portal-nav-container { grid-template-columns: 1fr 1fr; }
+            .portal-nav-container { grid-template-columns: repeat(3, 1fr); } /* 2 lines of 3 for mobile readability */
+            .btn-premium-nav { font-size: 8px; }
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -93,12 +98,12 @@
 </div>
 
 <div class="portal-nav-container">
-    <a href="admin.html" class="btn-premium-nav"><i class="fas fa-user-shield"></i> Admin Dashboard</a>
-    <a href="Parents Checkbox.html" class="btn-premium-nav"><i class="fas fa-users"></i> Parents Portal</a>
-    <a href="syllabus-admin.html" class="btn-premium-nav" style="background: linear-gradient(135deg, #013220, #006633);"><i class="fas fa-book-open"></i> Syllabus Manager</a>
+    <a href="admin.html" class="btn-premium-nav"><i class="fas fa-user-shield"></i> Admin</a>
+    <a href="Parents Checkbox.html" class="btn-premium-nav"><i class="fas fa-users"></i> Parents</a>
+    <a href="syllabus-admin.html" class="btn-premium-nav" style="background: linear-gradient(135deg, #013220, #006633);"><i class="fas fa-book-open"></i> Syllabus</a>
     <a href="fees.html" class="btn-premium-nav"><i class="fas fa-file-invoice-dollar"></i> Fee Entry</a>
-    <a href="marks.html" class="btn-premium-nav"><i class="fas fa-chart-line"></i> Marks Entry</a>
-    <a href="halltickets.html" class="btn-premium-nav"><i class="fas fa-id-card"></i> Hall Tickets</a>
+    <a href="marks.html" class="btn-premium-nav"><i class="fas fa-chart-line"></i> Marks</a>
+    <a href="halltickets.html" class="btn-premium-nav"><i class="fas fa-id-card"></i> Hall Ticket</a>
 </div>
 
 <div class="container">
@@ -167,6 +172,7 @@
 </div>
 
 <script>
+    // Existing script logic remains exactly as provided in your prompt
     const firebaseConfig = { apiKey: "AIzaSyDRYk9KOK-ga0c88dnYMsAoifW2NJTd_Y8", databaseURL: "https://paramount-school-d55bc-default-rtdb.firebaseio.com", projectId: "paramount-school-d55bc" };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
