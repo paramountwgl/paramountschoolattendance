@@ -116,7 +116,7 @@
                 return Swal.fire({
                     icon: 'error',
                     title: 'Access Denied',
-                    text: 'You are too far from school. Attendance must be marked on premises.',
+                    text: 'You are too far from school.',
                     confirmButtonColor: '#004d26'
                 });
             }
@@ -130,30 +130,28 @@
                 return Swal.fire({
                     icon: 'error',
                     title: 'Expired QR',
-                    text: 'That QR photo is too old. Scan the live screen in the office.',
+                    text: 'This code is old. Scan the live screen.',
                     confirmButtonColor: '#004d26'
                 });
             }
 
             const dateKey = now.toISOString().split('T')[0];
-            const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
             try {
+                // Master Record for Admin
                 await db.ref(`teacher_attendance/${dateKey}/${teacher}`).set({
-                    name: teacher,
-                    timeIn: timeString,
-                    status: "Present",
-                    date: dateKey,
-                    verification: "QR_AND_GPS_VERIFIED",
-                    timestamp: firebase.database.ServerValue.TIMESTAMP
+                    name: teacher, timeIn: timeString, status: "Present", date: dateKey, verification: "QR_AND_GPS_VERIFIED"
                 });
 
-                // --- UPDATED HISTORY LOGIC ---
+                // Personal Record for Teacher's phone
                 const historyEntry = { date: dateKey, time: timeString };
-                let myHistory = JSON.parse(localStorage.getItem('attendance_history') || "[]");
-                myHistory.unshift(historyEntry); 
-                myHistory = myHistory.slice(0, 7);
-                localStorage.setItem('attendance_history', JSON.stringify(myHistory));
+                const storageKey = `history_${teacher.replace(/\s+/g, '_')}`; 
+                
+                let teacherHistory = JSON.parse(localStorage.getItem(storageKey) || "[]");
+                teacherHistory.unshift(historyEntry); 
+                teacherHistory = teacherHistory.slice(0, 7);
+                localStorage.setItem(storageKey, JSON.stringify(teacherHistory));
 
                 Swal.fire({
                     icon: 'success',
@@ -165,39 +163,36 @@
             } catch (e) {
                 Swal.fire('Error', 'Database failed.', 'error');
             }
-
         }, (err) => {
-            Swal.fire('GPS Required', 'Please enable Location services to sign.', 'error');
+            Swal.fire('GPS Required', 'Enable Location services.', 'error');
         }, { enableHighAccuracy: true });
     }
 
     function showHistory() {
-        let myHistory = JSON.parse(localStorage.getItem('attendance_history') || "[]");
+        const teacher = document.getElementById('teacherName').value;
         
-        if (myHistory.length === 0) {
-            return Swal.fire({
-                title: 'No History',
-                text: 'You haven\'t marked attendance on this phone yet.',
-                icon: 'info',
-                confirmButtonColor: '#004d26'
-            });
+        if(!teacher) {
+            return Swal.fire('Select Name', 'Select your name to see your personal history.', 'info');
         }
 
-        let historyHtml = '<div style="text-align: left; font-family: sans-serif; min-width: 250px;">';
-        myHistory.forEach(entry => {
+        const storageKey = `history_${teacher.replace(/\s+/g, '_')}`;
+        let teacherHistory = JSON.parse(localStorage.getItem(storageKey) || "[]");
+        
+        if (teacherHistory.length === 0) {
+            return Swal.fire('No History', `No records found for ${teacher} on this phone.`, 'info');
+        }
+
+        let historyHtml = `<div style="text-align: left; min-width: 250px;">
+                            <p style="margin-bottom:10px; color:#666;">Last 7 days for: <b>${teacher}</b></p>`;
+        teacherHistory.forEach(entry => {
             historyHtml += `<div style="padding: 12px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;">
-                <strong style="color: #333;">${entry.date}</strong> 
+                <strong>${entry.date}</strong> 
                 <span style="color: #004d26; font-weight: 700; background: #e8f5e9; padding: 4px 8px; border-radius: 8px;">${entry.time}</span>
             </div>`;
         });
         historyHtml += '</div>';
 
-        Swal.fire({
-            title: 'Your Last 7 Days',
-            html: historyHtml,
-            confirmButtonColor: '#004d26',
-            confirmButtonText: 'Done'
-        });
+        Swal.fire({ title: 'My Personal Logs', html: historyHtml, confirmButtonColor: '#004d26' });
     }
 
     function calculateDistance(lat1, lon1, lat2, lon2) {
