@@ -12,10 +12,34 @@
         * { box-sizing: border-box; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; min-height: 100vh; padding-bottom: 50px; }
         
+        /* PRIVATE LOGIN OVERLAY */
         #authOverlay { position: fixed; top:0; left:0; width:100%; height:100%; background: var(--forest); display:flex; align-items:center; justify-content:center; z-index:9999; padding: 20px; }
         .auth-card { background: white; width: 100%; max-width: 350px; padding: 40px 30px; border-radius: 25px; box-shadow: 0 15px 40px rgba(0,0,0,0.3); text-align: center; }
         .auth-input { width: 100%; padding: 14px; margin-bottom: 12px; border-radius: 12px; border: 1px solid #e0e0e0; background: #fafafa; font-size: 15px; outline: none; text-align: center; }
         
+        /* CANCEL & RETURN BUTTON STYLE */
+        .btn-cancel-return {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #888;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            padding: 8px 15px;
+            border-radius: 50px;
+        }
+        .btn-cancel-return:hover {
+            color: var(--danger);
+            background: rgba(211, 47, 47, 0.05);
+            transform: translateX(-3px);
+        }
+        .btn-cancel-return i { font-size: 10px; }
+
+        /* MAIN PANEL */
         .admin-card { max-width: 800px; margin: 40px auto; background: white; padding: 30px; border-radius: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.05); border-top: 8px solid var(--forest); }
         .school-header-row { display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #eee; }
         .school-logo-img { height: 50px; width: auto; }
@@ -45,9 +69,20 @@
 <div id="authOverlay">
     <div class="auth-card">
         <img src="logo.png" style="height:70px; margin-bottom:15px;">
-        <h2>ADMIN ACCESS</h2>
+        <h2 style="font-size:18px; margin-bottom:5px;">ADMIN ACCESS</h2>
+        <p style="font-size:10px; color:#999; margin-bottom:25px; font-weight:700;">EVENT MANAGER BY SHAIK AHMAD</p>
+        
         <input type="password" id="adminPassInput" class="auth-input" placeholder="Enter Private Password">
-        <button class="btn-action" style="background:var(--gold); color:var(--forest);" onclick="authenticate()">UNLOCK PANEL</button>
+        
+        <button class="btn-action" style="background:var(--gold); color:var(--forest); margin-bottom: 15px;" onclick="authenticate()">
+            UNLOCK PANEL <i class="fas fa-lock-open" style="margin-left:8px;"></i>
+        </button>
+
+        <div style="margin-top: 10px; border-top: 1px solid #eee; padding-top: 20px;">
+            <a href="admin.html" class="btn-cancel-return">
+                <i class="fas fa-arrow-left"></i> Cancel & Return to Portal
+            </a>
+        </div>
     </div>
 </div>
 
@@ -127,7 +162,7 @@
         const name = document.getElementById('evName').value;
         const desc = document.getElementById('evDesc').value;
         const date = document.getElementById('evDate').value;
-        const deadline = document.getElementById('regDeadline').value; // Get deadline
+        const deadline = document.getElementById('regDeadline').value;
 
         if(!name || !date || !deadline) return Swal.fire('Error', 'Name, Event Date, and Deadline are required', 'warning');
 
@@ -135,7 +170,7 @@
             name: name, 
             desc: desc, 
             date: date, 
-            regDeadline: deadline // Save deadline to Firebase
+            regDeadline: deadline 
         }).then(() => {
             Swal.fire('Success', 'Event Published Successfully', 'success');
             setTimeout(() => location.reload(), 1500);
