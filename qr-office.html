@@ -27,29 +27,39 @@
         const qrContainer = document.getElementById("qrcode");
         const qrcode = new QRCode(qrContainer, { width: 300, height: 300 });
 
-        // CHANGE THIS to your actual live website URL
-        const BASE_URL = " https://paramountwgl.github.io/paramountschoolattendance/mark-attendance.html";
+        // YOUR ACTUAL GITHUB LINK
+        const BASE_URL = "https://paramountwgl.github.io/paramountschoolattendance/mark-attendance.html";
 
         function updateQR() {
             const now = new Date();
-            // Create a token that changes every 60 seconds
-            const timeToken = btoa(now.toISOString().substring(0, 16)); 
-            const finalURL = `${BASE_URL}?auth=${timeToken}`;
+            const timeBlock = Math.floor(now.getTime() / 60000); // Changes every 60,000ms
+            
+            // Generate a unique token for this specific minute
+            const timeToken = btoa("PARAMOUNT_" + timeBlock); 
+            
+            // Adding '&v=' forces the QR pixels to move/change pattern
+            const finalURL = `${BASE_URL}?auth=${timeToken}&v=${timeBlock}`;
             
             qrcode.makeCode(finalURL);
-            console.log("New Secure Link:", finalURL);
+            console.log("QR Rotated. Current Token:", timeToken);
         }
 
+        // Timer logic
         let timeLeft = 60;
         setInterval(() => {
             timeLeft--;
-            document.getElementById('pBar').style.width = (timeLeft / 60 * 100) + "%";
+            const progressBar = document.getElementById('pBar');
+            if (progressBar) {
+                progressBar.style.width = (timeLeft / 60 * 100) + "%";
+            }
+            
             if(timeLeft <= 0) {
                 updateQR();
                 timeLeft = 60;
             }
         }, 1000);
 
+        // Initial generation
         updateQR();
     </script>
 </body>
