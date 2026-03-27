@@ -95,8 +95,8 @@
         navigator.geolocation.getCurrentPosition(async (position) => {
             
             // --- SCHOOL COORDINATES (Warangal/Paramount Area) ---
-            const schoolLat = 17.9689; 
-            const schoolLng = 79.5941; 
+            const schoolLat = 17.3905498; 
+            const schoolLng = 78.3708969; 
             const maxDistance = 0.2; // 200 meters allowed radius
 
             const userDist = calculateDistance(position.coords.latitude, position.coords.longitude, schoolLat, schoolLng);
