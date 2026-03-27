@@ -14,7 +14,14 @@
         
         /* PRIVATE LOGIN OVERLAY */
         #authOverlay { position: fixed; top:0; left:0; width:100%; height:100%; background: var(--forest); display:flex; align-items:center; justify-content:center; z-index:9999; padding: 20px; }
-        .auth-card { background: white; width: 100%; max-width: 350px; padding: 40px 30px; border-radius: 25px; box-shadow: 0 15px 40px rgba(0,0,0,0.3); text-align: center; }
+        .auth-card { background: white; width: 100%; max-width: 400px; padding: 40px 30px; border-radius: 25px; box-shadow: 0 15px 40px rgba(0,0,0,0.3); text-align: center; }
+        
+        .auth-header-row { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid #eee; }
+        .auth-logo { height: 45px; width: auto; }
+        .auth-text-box { text-align: left; line-height: 1.1; }
+        .auth-school-name { font-family: 'Montserrat'; font-size: 1.1rem; font-weight: 800; color: var(--forest); display: block; }
+        .auth-school-sub { font-size: 0.65rem; color: #b8860b; font-weight: 700; text-transform: uppercase; display: block; }
+
         .auth-input { width: 100%; padding: 14px; margin-bottom: 12px; border-radius: 12px; border: 1px solid #e0e0e0; background: #fafafa; font-size: 15px; outline: none; text-align: center; }
         
         /* PREMIUM BACK BUTTON */
@@ -27,8 +34,6 @@
         .btn-back-dash:hover { border-color: var(--forest); transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0, 102, 51, 0.15); }
 
         .admin-card { max-width: 800px; margin: 40px auto; background: white; padding: 30px; border-radius: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.05); border-top: 8px solid var(--forest); position: relative; }
-        .school-header-row { display: flex; align-items: center; gap: 15px; }
-        .school-name-main { font-family: 'Montserrat'; font-size: 1.1rem; font-weight: 800; color: var(--forest); }
 
         h2 { color: var(--forest); font-family: 'Montserrat'; text-align: center; margin: 20px 0; text-transform: uppercase; letter-spacing: 1px; font-size: 1.2rem; }
         .input-group { margin-bottom: 15px; }
@@ -48,16 +53,26 @@
         table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 13px; min-width: 600px; }
         th { background: var(--forest); color: white; padding: 12px; text-align: left; text-transform: uppercase; font-size: 11px; }
         td { padding: 12px; border-bottom: 1px solid #eee; color: #444; }
+        tr:hover { background: #f9fdfa; }
+
+        .btn-cancel-return { display: inline-flex; align-items: center; gap: 8px; color: #888; text-decoration: none; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; transition: 0.3s; padding: 10px 20px; border-radius: 50px; }
     </style>
 </head>
 <body>
 
 <div id="authOverlay">
     <div class="auth-card">
-        <img src="logo.png" style="height:70px; margin-bottom:15px;">
-        <h2>ADMIN ACCESS</h2>
+        <div class="auth-header-row">
+            <img src="logo.png" class="auth-logo">
+            <div class="auth-text-box">
+                <span class="auth-school-name">PARAMOUNT</span>
+                <span class="auth-school-sub">English Medium School</span>
+            </div>
+        </div>
+        <h2 style="margin-top: 0; font-size: 1.1rem;">ADMIN ACCESS</h2>
         <input type="password" id="adminPassInput" class="auth-input" placeholder="Enter Private Password">
         <button class="btn-action" style="background:var(--gold); color:var(--forest);" onclick="authenticate()">UNLOCK PANEL</button>
+        <div style="margin-top: 20px;"><a href="admin.html" class="btn-cancel-return"><i class="fas fa-times"></i> Cancel</a></div>
     </div>
 </div>
 
@@ -90,13 +105,39 @@
     </div>
 
     <div class="reg-table-container">
-        <h2><i class="fas fa-user-graduate"></i> Student Registrations</h2>
-        <select id="regEventSelector" onchange="loadRegistrations()" style="margin-top:15px;">
-            <option value="">-- Choose Event --</option>
-        </select>
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 15px;">
+            <div>
+                <h2 style="text-align: left; margin: 0;"><i class="fas fa-user-graduate"></i> Student Registrations</h2>
+                <p style="font-size: 11px; color: #777; margin-top: 5px;">Manage and filter your participant list.</p>
+            </div>
+            <div id="countBadge" style="display: none; background: var(--forest); color: var(--gold); padding: 8px 15px; border-radius: 12px; font-weight: 800; font-size: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                TOTAL: <span id="regCount">0</span> PARTICIPANTS
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 15px; margin-top: 15px;">
+            <div class="input-group" style="margin-bottom: 0;">
+                <label>1. Select Event</label>
+                <select id="regEventSelector" onchange="loadRegistrations()" style="padding: 12px; border-radius: 12px; border: 2px solid #eee;">
+                    <option value="">-- Choose Event --</option>
+                </select>
+            </div>
+            <div class="input-group" style="margin-bottom: 0;">
+                <label>2. Filter Student List</label>
+                <div style="position: relative;">
+                    <input type="text" id="tableSearch" placeholder="Search by Name or Roll No..." onkeyup="filterTable()" style="padding: 12px 12px 12px 40px; border-radius: 12px; border: 2px solid var(--forest);">
+                    <i class="fas fa-search" style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--forest); opacity: 0.5;"></i>
+                </div>
+            </div>
+        </div>
+        
         <table id="regTable">
-            <thead><tr><th>Roll</th><th>Name</th><th>Class</th><th>Phone</th><th>Action</th></tr></thead>
-            <tbody id="regBody"><tr><td colspan="5" style="text-align:center; padding:30px;">Select an event.</td></tr></tbody>
+            <thead>
+                <tr><th>Roll No</th><th>Student Name</th><th>Class</th><th>Phone</th><th>Action</th></tr>
+            </thead>
+            <tbody id="regBody">
+                <tr><td colspan="5" style="text-align:center; padding: 30px; color:#999;">Select an event above.</td></tr>
+            </tbody>
         </table>
     </div>
 </div>
@@ -144,11 +185,10 @@
         });
     });
 
-    // --- SMART DELETE WITH AUTO EXCEL BACKUP ---
     async function deleteEventWithBackup(id, eventName) {
         const result = await Swal.fire({
             title: 'Delete Event?',
-            text: "A backup Excel of registered students will be downloaded automatically before deletion.",
+            text: "A backup Excel will be downloaded before deletion.",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#d32f2f',
@@ -156,30 +196,19 @@
         });
 
         if (result.isConfirmed) {
-            // 1. Fetch Students
             const regSnap = await db.ref(`event_registrations/${eventName}`).once('value');
-            
             if (regSnap.exists()) {
-                // 2. Create CSV Data
                 let csvContent = "data:text/csv;charset=utf-8,Roll No,Student Name,Class,Phone\n";
-                Object.values(regSnap.val()).forEach(s => {
-                    csvContent += `${s.roll},${s.name},${s.cls},${s.phone}\n`;
-                });
-
-                // 3. Trigger Download
+                Object.values(regSnap.val()).forEach(s => { csvContent += `${s.roll},${s.name},${s.cls},${s.phone}\n`; });
                 const encodedUri = encodeURI(csvContent);
                 const link = document.createElement("a");
                 link.setAttribute("href", encodedUri);
-                link.setAttribute("download", `Backup_${eventName}_Students.csv`);
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
+                link.setAttribute("download", `Backup_${eventName}.csv`);
+                document.body.appendChild(link); link.click(); document.body.removeChild(link);
             }
-
-            // 4. Delete from Firebase
             await db.ref('school_events/' + id).remove();
             await db.ref(`event_registrations/${eventName}`).remove();
-            Swal.fire('Deleted', 'Event and registrations removed. Backup downloaded.', 'success');
+            Swal.fire('Deleted', 'Event removed.', 'success');
         }
     }
 
@@ -215,17 +244,42 @@
     function loadRegistrations() {
         const eventName = document.getElementById('regEventSelector').value;
         const body = document.getElementById('regBody');
+        const countBadge = document.getElementById('countBadge');
+        const regCount = document.getElementById('regCount');
+
         body.innerHTML = '<tr><td colspan="5" style="text-align:center;">Loading...</td></tr>';
-        if(!eventName) return;
+        if(!eventName) { countBadge.style.display = 'none'; return; }
+
         db.ref(`event_registrations/${eventName}`).on('value', snap => {
             body.innerHTML = '';
-            if(!snap.exists()) return body.innerHTML = '<tr><td colspan="5" style="text-align:center;">No students.</td></tr>';
-            snap.forEach(child => {
-                const s = child.val();
+            if(!snap.exists()) {
+                body.innerHTML = '<tr><td colspan="5" style="text-align:center;">No students.</td></tr>';
+                countBadge.style.display = 'none'; return;
+            }
+            const students = snap.val();
+            const keys = Object.keys(students);
+            countBadge.style.display = 'block';
+            regCount.innerText = keys.length;
+
+            keys.forEach(k => {
+                const s = students[k];
                 body.innerHTML += `<tr><td><b>${s.roll}</b></td><td>${s.name}</td><td>${s.cls}</td><td>${s.phone}</td>
                 <td><button onclick="deleteStudent('${eventName}','${s.roll}')" style="color:red; border:none; background:none; cursor:pointer;"><i class="fas fa-trash"></i></button></td></tr>`;
             });
         });
+    }
+
+    function filterTable() {
+        const filter = document.getElementById("tableSearch").value.toUpperCase();
+        const tr = document.getElementById("regTable").getElementsByTagName("tr");
+        for (let i = 1; i < tr.length; i++) {
+            const tdR = tr[i].getElementsByTagName("td")[0];
+            const tdN = tr[i].getElementsByTagName("td")[1];
+            if (tdR || tdN) {
+                const val = (tdR.textContent || tdR.innerText) + (tdN.textContent || tdN.innerText);
+                tr[i].style.display = val.toUpperCase().indexOf(filter) > -1 ? "" : "none";
+            }
+        }
     }
 
     function deleteStudent(ev, roll) { db.ref(`event_registrations/${ev}/${roll}`).remove(); }
