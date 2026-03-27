@@ -148,22 +148,22 @@
                     timestamp: firebase.database.ServerValue.TIMESTAMP
                 });
 
-                // --- SAVE TO PHONE HISTORY ---
+                // --- UPDATED HISTORY LOGIC ---
                 const historyEntry = { date: dateKey, time: timeString };
                 let myHistory = JSON.parse(localStorage.getItem('attendance_history') || "[]");
                 myHistory.unshift(historyEntry); 
-                localStorage.setItem('attendance_history', JSON.stringify(myHistory.slice(0, 7)));
+                myHistory = myHistory.slice(0, 7);
+                localStorage.setItem('attendance_history', JSON.stringify(myHistory));
 
                 Swal.fire({
                     icon: 'success',
                     title: 'Attendance Marked!',
                     text: `Welcome, ${teacher}! Recorded at ${timeString}`,
                     confirmButtonColor: '#004d26'
-                }).then(() => {
-                    window.location.href = "index.html"; 
                 });
+
             } catch (e) {
-                Swal.fire('Database Error', 'Could not save your entry.', 'error');
+                Swal.fire('Error', 'Database failed.', 'error');
             }
 
         }, (err) => {
@@ -175,14 +175,19 @@
         let myHistory = JSON.parse(localStorage.getItem('attendance_history') || "[]");
         
         if (myHistory.length === 0) {
-            return Swal.fire('No History', 'You haven\'t marked attendance on this phone yet.', 'info');
+            return Swal.fire({
+                title: 'No History',
+                text: 'You haven\'t marked attendance on this phone yet.',
+                icon: 'info',
+                confirmButtonColor: '#004d26'
+            });
         }
 
-        let historyHtml = '<div style="text-align: left; font-family: sans-serif;">';
+        let historyHtml = '<div style="text-align: left; font-family: sans-serif; min-width: 250px;">';
         myHistory.forEach(entry => {
-            historyHtml += `<div style="padding: 12px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between;">
-                <strong>${entry.date}</strong> 
-                <span style="color: #004d26; font-weight: 700;">${entry.time}</span>
+            historyHtml += `<div style="padding: 12px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;">
+                <strong style="color: #333;">${entry.date}</strong> 
+                <span style="color: #004d26; font-weight: 700; background: #e8f5e9; padding: 4px 8px; border-radius: 8px;">${entry.time}</span>
             </div>`;
         });
         historyHtml += '</div>';
