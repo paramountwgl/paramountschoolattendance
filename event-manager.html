@@ -12,34 +12,13 @@
         * { box-sizing: border-box; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; min-height: 100vh; padding-bottom: 50px; }
         
-        /* PRIVATE LOGIN OVERLAY */
         #authOverlay { position: fixed; top:0; left:0; width:100%; height:100%; background: var(--forest); display:flex; align-items:center; justify-content:center; z-index:9999; padding: 20px; }
         .auth-card { background: white; width: 100%; max-width: 350px; padding: 40px 30px; border-radius: 25px; box-shadow: 0 15px 40px rgba(0,0,0,0.3); text-align: center; }
         .auth-input { width: 100%; padding: 14px; margin-bottom: 12px; border-radius: 12px; border: 1px solid #e0e0e0; background: #fafafa; font-size: 15px; outline: none; text-align: center; }
         
-        /* CANCEL & RETURN BUTTON STYLE */
-        .btn-cancel-return {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            color: #888;
-            text-decoration: none;
-            font-size: 12px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            transition: all 0.3s ease;
-            padding: 8px 15px;
-            border-radius: 50px;
-        }
-        .btn-cancel-return:hover {
-            color: var(--danger);
-            background: rgba(211, 47, 47, 0.05);
-            transform: translateX(-3px);
-        }
-        .btn-cancel-return i { font-size: 10px; }
+        .btn-cancel-return { display: inline-flex; align-items: center; gap: 8px; color: #888; text-decoration: none; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; transition: all 0.3s ease; padding: 8px 15px; border-radius: 50px; }
+        .btn-cancel-return:hover { color: var(--danger); background: rgba(211, 47, 47, 0.05); transform: translateX(-3px); }
 
-        /* MAIN PANEL */
         .admin-card { max-width: 800px; margin: 40px auto; background: white; padding: 30px; border-radius: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.05); border-top: 8px solid var(--forest); }
         .school-header-row { display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #eee; }
         .school-logo-img { height: 50px; width: auto; }
@@ -55,13 +34,22 @@
         .btn-action { width: 100%; background: var(--forest); color: white; padding: 16px; border-radius: 50px; border: none; font-weight: 800; cursor: pointer; text-transform: uppercase; transition: 0.3s; margin-top:10px;}
         .btn-action:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
         
+        /* EVENTS LIST STYLING */
+        .list-section { margin-top: 30px; padding-top: 20px; border-top: 2px dashed #eee; }
+        .event-entry { display: flex; justify-content: space-between; align-items: center; background: #fcfcfc; padding: 15px; border-radius: 15px; margin-bottom: 10px; border: 1px solid #eee; }
+        .event-info b { color: var(--forest); font-size: 14px; }
+        .event-info p { margin: 2px 0; font-size: 11px; color: #666; font-weight: 600; }
+        .event-btns { display: flex; gap: 8px; }
+        .btn-circle { width: 35px; height: 35px; border-radius: 50%; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
+        .btn-edit { background: #e3f2fd; color: var(--info); }
+        .btn-edit:hover { background: var(--info); color: white; }
+        .btn-delete { background: #ffebee; color: var(--danger); }
+        .btn-delete:hover { background: var(--danger); color: white; }
+
         .reg-table-container { margin-top: 40px; border-top: 3px solid var(--gold); padding-top: 20px; overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 13px; }
         th { background: var(--forest); color: white; padding: 12px; text-align: left; text-transform: uppercase; font-size: 11px; }
         td { padding: 12px; border-bottom: 1px solid #eee; color: #444; }
-        tr:hover { background: #f9f9f9; }
-
-        .action-btns button { border: none; background: #f5f5f5; width: 35px; height: 35px; border-radius: 10px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -71,17 +59,12 @@
         <img src="logo.png" style="height:70px; margin-bottom:15px;">
         <h2 style="font-size:18px; margin-bottom:5px;">ADMIN ACCESS</h2>
         <p style="font-size:10px; color:#999; margin-bottom:25px; font-weight:700;">EVENT MANAGER BY SHAIK AHMAD</p>
-        
         <input type="password" id="adminPassInput" class="auth-input" placeholder="Enter Private Password">
-        
         <button class="btn-action" style="background:var(--gold); color:var(--forest); margin-bottom: 15px;" onclick="authenticate()">
             UNLOCK PANEL <i class="fas fa-lock-open" style="margin-left:8px;"></i>
         </button>
-
         <div style="margin-top: 10px; border-top: 1px solid #eee; padding-top: 20px;">
-            <a href="admin.html" class="btn-cancel-return">
-                <i class="fas fa-arrow-left"></i> Cancel & Return to Portal
-            </a>
+            <a href="admin.html" class="btn-cancel-return"><i class="fas fa-arrow-left"></i> Cancel & Return to Portal</a>
         </div>
     </div>
 </div>
@@ -92,8 +75,10 @@
         <div class="school-text-box"><span class="school-name-main">PARAMOUNT</span><span class="school-name-sub">English Medium School</span></div>
     </div>
 
-    <h2><i class="fas fa-edit"></i> Manage Events</h2>
+    <h2 id="formTitle"><i class="fas fa-calendar-plus"></i> Publish New Event</h2>
     
+    <input type="hidden" id="editingKey">
+
     <div class="input-group">
         <label>Event Name</label>
         <input type="text" id="evName" placeholder="e.g. Science Fair">
@@ -103,16 +88,22 @@
         <input type="text" id="evDesc" placeholder="e.g. Join the innovation hub">
     </div>
     <div class="input-group">
-        <label>Event Date & Time (Actual Event Date)</label>
+        <label>Event Date & Time</label>
         <input type="datetime-local" id="evDate">
     </div>
-
     <div class="input-group">
-        <label>Registration Deadline (Stop accepting forms after this)</label>
+        <label>Registration Deadline</label>
         <input type="datetime-local" id="regDeadline">
     </div>
 
     <button id="btnSave" class="btn-action" onclick="saveEvent()">PUBLISH EVENT</button>
+    <button id="btnUpdate" class="btn-action" style="display:none; background:var(--info);" onclick="updateExistingEvent()">UPDATE EVENT DETAILS</button>
+    <button id="btnCancelEdit" class="btn-action" style="display:none; background:#888;" onclick="resetForm()">CANCEL EDITING</button>
+
+    <div class="list-section">
+        <h3 style="color: var(--forest); font-family: Montserrat; font-size: 14px;"><i class="fas fa-list"></i> LIVE EVENTS</h3>
+        <div id="liveEventsContainer"></div>
+    </div>
 
     <div class="reg-table-container">
         <h3 style="color: var(--forest); font-family: Montserrat;"><i class="fas fa-users"></i> Student Registrations</h3>
@@ -122,19 +113,12 @@
                 <option value="">-- Select Event --</option>
             </select>
         </div>
-        
         <table id="regTable">
             <thead>
-                <tr>
-                    <th>Roll No</th>
-                    <th>Student Name</th>
-                    <th>Class</th>
-                    <th>Phone</th>
-                    <th>Action</th>
-                </tr>
+                <tr><th>Roll No</th><th>Student Name</th><th>Class</th><th>Phone</th><th>Action</th></tr>
             </thead>
             <tbody id="regBody">
-                <tr><td colspan="5" style="text-align:center; color:#999;">Select an event to load data</td></tr>
+                <tr><td colspan="5" style="text-align:center; color:#999;">Select an event above</td></tr>
             </tbody>
         </table>
     </div>
@@ -163,68 +147,124 @@
         const desc = document.getElementById('evDesc').value;
         const date = document.getElementById('evDate').value;
         const deadline = document.getElementById('regDeadline').value;
+        if(!name || !date || !deadline) return Swal.fire('Error', 'Fields missing', 'warning');
 
-        if(!name || !date || !deadline) return Swal.fire('Error', 'Name, Event Date, and Deadline are required', 'warning');
-
-        db.ref('school_events').push({ 
-            name: name, 
-            desc: desc, 
-            date: date, 
-            regDeadline: deadline 
-        }).then(() => {
-            Swal.fire('Success', 'Event Published Successfully', 'success');
-            setTimeout(() => location.reload(), 1500);
+        db.ref('school_events').push({ name, desc, date, regDeadline: deadline }).then(() => {
+            Swal.fire('Published', 'Event is now live!', 'success');
+            resetForm();
         });
     }
 
+    // LISTENER FOR LIVE EVENTS LIST
     db.ref('school_events').on('value', snap => {
+        const container = document.getElementById('liveEventsContainer');
         const selector = document.getElementById('regEventSelector');
+        container.innerHTML = '';
         selector.innerHTML = '<option value="">-- Select Event --</option>';
+
+        if(!snap.exists()) container.innerHTML = '<p style="text-align:center; color:#ccc;">No events found.</p>';
+
         snap.forEach(child => {
             const ev = child.val();
+            const key = child.key;
+
+            // Add to dropdown
             selector.innerHTML += `<option value="${ev.name}">${ev.name}</option>`;
+
+            // Add to Edit/Delete list
+            container.innerHTML += `
+                <div class="event-entry">
+                    <div class="event-info">
+                        <b>${ev.name}</b>
+                        <p><i class="fas fa-calendar"></i> ${ev.date.replace('T', ' @ ')}</p>
+                        <p><i class="fas fa-hourglass-end"></i> Deadline: ${ev.regDeadline.replace('T', ' @ ')}</p>
+                    </div>
+                    <div class="event-btns">
+                        <button class="btn-circle btn-edit" onclick="prepareEdit('${key}', \`${ev.name}\`, \`${ev.desc}\`, '${ev.date}', '${ev.regDeadline}')">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn-circle btn-delete" onclick="deleteEvent('${key}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>`;
         });
     });
+
+    function prepareEdit(key, name, desc, date, deadline) {
+        document.getElementById('editingKey').value = key;
+        document.getElementById('evName').value = name;
+        document.getElementById('evDesc').value = desc;
+        document.getElementById('evDate').value = date;
+        document.getElementById('regDeadline').value = deadline;
+
+        document.getElementById('formTitle').innerHTML = '<i class="fas fa-edit"></i> Edit Event';
+        document.getElementById('btnSave').style.display = 'none';
+        document.getElementById('btnUpdate').style.display = 'block';
+        document.getElementById('btnCancelEdit').style.display = 'block';
+        window.scrollTo(0, 0);
+    }
+
+    function updateExistingEvent() {
+        const key = document.getElementById('editingKey').value;
+        const updateData = {
+            name: document.getElementById('evName').value,
+            desc: document.getElementById('evDesc').value,
+            date: document.getElementById('evDate').value,
+            regDeadline: document.getElementById('regDeadline').value
+        };
+
+        db.ref('school_events/' + key).update(updateData).then(() => {
+            Swal.fire('Updated', 'Event details saved.', 'success');
+            resetForm();
+        });
+    }
+
+    function deleteEvent(key) {
+        Swal.fire({
+            title: 'Delete Event?',
+            text: "This will remove the event and countdown for students.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d32f2f',
+            confirmButtonText: 'Yes, Delete'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                db.ref('school_events/' + key).remove();
+            }
+        });
+    }
+
+    function resetForm() {
+        document.getElementById('editingKey').value = '';
+        document.getElementById('evName').value = '';
+        document.getElementById('evDesc').value = '';
+        document.getElementById('evDate').value = '';
+        document.getElementById('regDeadline').value = '';
+        document.getElementById('formTitle').innerHTML = '<i class="fas fa-calendar-plus"></i> Publish New Event';
+        document.getElementById('btnSave').style.display = 'block';
+        document.getElementById('btnUpdate').style.display = 'none';
+        document.getElementById('btnCancelEdit').style.display = 'none';
+    }
 
     function loadRegistrations() {
         const eventName = document.getElementById('regEventSelector').value;
         const body = document.getElementById('regBody');
-        body.innerHTML = '<tr><td colspan="5" style="text-align:center;">Loading registrations...</td></tr>';
-
+        body.innerHTML = '<tr><td colspan="5" style="text-align:center;">Loading...</td></tr>';
         if(!eventName) return;
-
         db.ref(`event_registrations/${eventName}`).on('value', snap => {
             body.innerHTML = '';
-            if(!snap.exists()) {
-                body.innerHTML = '<tr><td colspan="5" style="text-align:center;">No students registered yet.</td></tr>';
-                return;
-            }
+            if(!snap.exists()) return body.innerHTML = '<tr><td colspan="5" style="text-align:center;">No registrations.</td></tr>';
             snap.forEach(child => {
                 const s = child.val();
-                body.innerHTML += `
-                    <tr>
-                        <td><b>${s.roll}</b></td>
-                        <td>${s.name}</td>
-                        <td>${s.cls}</td>
-                        <td>${s.phone}</td>
-                        <td><button onclick="deleteReg('${eventName}', '${s.roll}')" style="color:red; border:none; background:none; cursor:pointer;"><i class="fas fa-trash"></i></button></td>
-                    </tr>`;
+                body.innerHTML += `<tr><td><b>${s.roll}</b></td><td>${s.name}</td><td>${s.cls}</td><td>${s.phone}</td>
+                <td><button onclick="deleteReg('${eventName}', '${s.roll}')" style="color:red; border:none; background:none; cursor:pointer;"><i class="fas fa-trash"></i></button></td></tr>`;
             });
         });
     }
 
     function deleteReg(eventName, roll) {
-        Swal.fire({
-            title: 'Remove Student?',
-            text: "This will delete their registration.",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Delete'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                db.ref(`event_registrations/${eventName}/${roll}`).remove();
-            }
-        });
+        db.ref(`event_registrations/${eventName}/${roll}`).remove();
     }
 </script>
 </body>
