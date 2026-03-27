@@ -6,6 +6,7 @@
     <title>Event Registration | Paramount School</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Segoe+UI:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="logo.png">
     <style>
         :root { --forest: #004d26; --gold: #ffd700; --light: #f4f7f6; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; padding: 20px; }
@@ -36,17 +37,17 @@
         <label>Select Event</label>
         <select id="eventSelector">
             <option value="">-- Choose Upcoming Event --</option>
-            </select>
+        </select>
     </div>
 
     <div class="input-group">
         <label>Full Name</label>
-        <input type="text" id="sName" placeholder="Enter student name">
+        <input type="text" id="nameInput" placeholder="Enter student name">
     </div>
 
     <div class="input-group">
         <label>Class & Section</label>
-        <select id="sClass">
+        <select id="classInput">
             <option value="Pre-KG">Pre-KG</option><option value="KG-1">KG-1</option>
             <option value="KG-2">KG-2</option><option value="Grade-1">Grade-1</option>
             <option value="Grade-2">Grade-2</option><option value="Grade-3">Grade-3</option>
@@ -58,12 +59,12 @@
 
     <div class="input-group">
         <label>Roll Number</label>
-        <input type="number" id="sRoll" placeholder="e.g. 1472070">
+        <input type="number" id="rollInput" placeholder="e.g. 1472070">
     </div>
 
     <div class="input-group">
         <label>Parent Contact Number</label>
-        <input type="tel" id="sPhone" placeholder="Enter phone number">
+        <input type="tel" id="phoneInput" placeholder="Enter phone number">
     </div>
 
     <button class="btn-reg" onclick="registerStudent()">Submit Entry <i class="fas fa-paper-plane"></i></button>
@@ -78,38 +79,88 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // 1. Load active events from your existing 'school_events' node
+    // 1. Updated Event Loading Logic with Deadline Check
     db.ref('school_events').on('value', snap => {
         const selector = document.getElementById('eventSelector');
         selector.innerHTML = '<option value="">-- Choose Upcoming Event --</option>';
+        
+        const now = new Date().getTime();
+
         snap.forEach(child => {
             const ev = child.val();
-            selector.innerHTML += `<option value="${ev.name}">${ev.name}</option>`;
+            
+            // Check if regDeadline exists, otherwise default to a future date
+            const deadline = ev.regDeadline ? new Date(ev.regDeadline).getTime() : new Date(ev.date).getTime();
+
+            // ONLY show the event in the dropdown if the current time is before the deadline
+            if (now < deadline) {
+                selector.innerHTML += `<option value="${ev.name}">${ev.name}</option>`;
+            }
         });
     });
 
+    // 2. Updated Registration Function with Server-Side Deadline Validation
     function registerStudent() {
-        const event = document.getElementById('eventSelector').value;
-        const name = document.getElementById('sName').value;
-        const cls = document.getElementById('sClass').value;
-        const roll = document.getElementById('sRoll').value;
-        const phone = document.getElementById('sPhone').value;
+        const eventName = document.getElementById('eventSelector').value;
+        const roll = document.getElementById('rollInput').value.trim();
+        const name = document.getElementById('nameInput').value.trim();
+        const cls = document.getElementById('classInput').value;
+        const phone = document.getElementById('phoneInput').value;
 
-        if(!event || !name || !roll || !phone) {
-            return Swal.fire('Missing Info', 'Please fill all fields', 'warning');
+        if (!eventName || !roll || !name) {
+            return Swal.fire('Note', 'Please fill all required fields', 'info');
         }
 
-        const entry = { name, cls, roll, phone, time: new Date().toLocaleString() };
+        // Final check: Fetch event data from Firebase to verify deadline hasn't passed while user was typing
+        db.ref('school_events').orderByChild('name').equalTo(eventName).once('value', snap => {
+            let eventData;
+            snap.forEach(c => eventData = c.val());
+            
+            if(!eventData) return Swal.fire('Error', 'Event not found', 'error');
 
-        // 2. Save registration under the specific event name
-        db.ref(`event_registrations/${event}/${roll}`).set(entry).then(() => {
-            Swal.fire('Registered!', `Success! You are now signed up for ${event}.`, 'success');
-            // Clear fields
-            document.getElementById('sName').value = '';
-            document.getElementById('sRoll').value = '';
-            document.getElementById('sPhone').value = '';
+            const now = new Date().getTime();
+            const deadline = eventData.regDeadline ? new Date(eventData.regDeadline).getTime() : new Date(eventData.date).getTime();
+
+            if (now > deadline) {
+                Swal.fire('Expired', 'Registration for this event is now closed.', 'error');
+                return;
+            }
+
+            // Prepare registration data
+            const entry = { roll, name, cls, phone, timestamp: new Date().toISOString() };
+            
+            // Save to registrations node
+            db.ref(`event_registrations/${eventName}/${roll}`).set(entry).then(() => {
+                // SUCCESS POPUP
+                Swal.fire({
+                    title: 'Successfully Registered!',
+                    text: 'Your registration is confirmed. Check your profile card for the official stamp.',
+                    icon: 'success',
+                    confirmButtonColor: '#004d26'
+                }).then(() => {
+                    // Reset form fields
+                    document.getElementById('nameInput').value = '';
+                    document.getElementById('rollInput').value = '';
+                    document.getElementById('phoneInput').value = '';
+                    location.reload();
+                });
+            }).catch(error => {
+                Swal.fire('Error', 'Something went wrong. Please try again.', 'error');
+            });
         });
     }
+
+    // Auto-select event from URL if present (from the Student Portal Popup)
+    window.addEventListener('DOMContentLoaded', () => {
+        const params = new URLSearchParams(window.location.search);
+        const eventParam = params.get('event');
+        if (eventParam) {
+            setTimeout(() => {
+                const selector = document.getElementById('eventSelector');
+                if (selector) selector.value = eventParam;
+            }, 1000);
+        }
+    });
 </script>
 </body>
 </html>
