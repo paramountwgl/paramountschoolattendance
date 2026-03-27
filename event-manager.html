@@ -33,13 +33,19 @@
         label { display: block; font-size: 11px; font-weight: 800; text-transform: uppercase; color: #888; margin-bottom: 6px; }
         input, select { width: 100%; padding: 14px; border-radius: 12px; border: 2px solid #eee; font-size: 14px; outline: none; }
         
+        /* TOGGLE SWITCH STYLE */
+        .toggle-container { display: flex; align-items: center; gap: 15px; background: #fcfcfc; padding: 15px; border-radius: 15px; border: 2px dashed #eee; margin-bottom: 20px; }
+        .switch { position: relative; display: inline-block; width: 50px; height: 26px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--forest); }
+        input:checked + .slider:before { transform: translateX(24px); }
+
         .btn-action { width: 100%; background: var(--forest); color: white; padding: 16px; border-radius: 50px; border: none; font-weight: 800; cursor: pointer; text-transform: uppercase; transition: 0.3s; margin-top:10px;}
         .btn-action:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
         
         .event-card-item { display: flex; justify-content: space-between; align-items: center; background: #fcfcfc; padding: 15px; border-radius: 15px; margin-bottom: 12px; border: 1px solid #eee; }
-        .ev-data b { display: block; color: var(--forest); font-size: 15px; }
-        .ev-data span { display: block; color: #777; font-size: 11px; margin-top: 4px; }
-        
         .btn-group { display: flex; gap: 10px; }
         .icon-btn { width: 35px; height: 35px; border-radius: 10px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
         .edit-btn { background: #e3f2fd; color: #1976d2; }
@@ -52,7 +58,6 @@
         tr:hover { background: #f9fdfa; }
 
         .btn-cancel-return { display: inline-flex; align-items: center; gap: 8px; color: #888; text-decoration: none; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; transition: 0.3s; padding: 10px 20px; border-radius: 50px; }
-        .btn-cancel-return:hover { color: var(--danger); background: rgba(211, 47, 47, 0.05); }
     </style>
 </head>
 <body>
@@ -87,10 +92,26 @@
 
     <h2 id="formHeader">Publish New Event</h2>
     <input type="hidden" id="editId">
+    
     <div class="input-group"><label>Event Name</label><input type="text" id="evName"></div>
     <div class="input-group"><label>Description</label><input type="text" id="evDesc"></div>
-    <div class="input-group"><label>Event Date</label><input type="datetime-local" id="evDate"></div>
-    <div class="input-group"><label>Deadline</label><input type="datetime-local" id="regDeadline"></div>
+    <div class="input-group"><label>Actual Event Date</label><input type="datetime-local" id="evDate"></div>
+
+    <div class="input-group">
+        <label>Event Type Configuration</label>
+        <div class="toggle-container">
+            <label class="switch">
+                <input type="checkbox" id="regToggle" checked onchange="toggleDeadlineField()">
+                <span class="slider"></span>
+            </label>
+            <span id="toggleText" style="font-size: 13px; font-weight: 700; color: var(--forest);">Registration Enabled (Popup will show)</span>
+        </div>
+    </div>
+
+    <div class="input-group" id="deadlineGroup">
+        <label>Registration Deadline</label>
+        <input type="datetime-local" id="regDeadline">
+    </div>
 
     <button id="btnSave" class="btn-action" onclick="saveEvent()">PUBLISH EVENT</button>
     <button id="btnUpdate" class="btn-action" style="display:none; background:var(--info);" onclick="updateEvent()">SAVE CHANGES</button>
@@ -151,38 +172,38 @@
         } else { Swal.fire('Error', 'Incorrect Password', 'error'); }
     }
 
+    function toggleDeadlineField() {
+        const isEnabled = document.getElementById('regToggle').checked;
+        const deadlineGroup = document.getElementById('deadlineGroup');
+        const toggleText = document.getElementById('toggleText');
+        if(isEnabled) {
+            deadlineGroup.style.display = 'block';
+            toggleText.innerText = "Registration Enabled (Popup will show)";
+            toggleText.style.color = "var(--forest)";
+        } else {
+            deadlineGroup.style.display = 'none';
+            toggleText.innerText = "Countdown Only (No Popup)";
+            toggleText.style.color = "#888";
+        }
+    }
+
     function saveEvent() {
         const name = document.getElementById('evName').value;
         const desc = document.getElementById('evDesc').value;
         const date = document.getElementById('evDate').value;
-        const deadline = document.getElementById('regDeadline').value;
+        const isRegRequired = document.getElementById('regToggle').checked;
+        const deadline = isRegRequired ? document.getElementById('regDeadline').value : null;
 
-        if(!name || !date || !deadline) {
-            return Swal.fire({
-                title: 'Missing Info',
-                text: 'Please fill in the Event Name, Date, and Deadline.',
-                icon: 'warning',
-                confirmButtonColor: '#004d26'
-            });
-        }
+        if(!name || !date) return Swal.fire('Error', 'Name and Date are required', 'warning');
 
-        Swal.fire({
-            title: 'Publishing...',
-            text: 'Uploading event to the student portal',
-            allowOutsideClick: false,
-            didOpen: () => { Swal.showLoading(); }
-        });
+        Swal.fire({ title: 'Publishing...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); }});
 
-        db.ref('school_events').push({ name, desc, date, regDeadline: deadline }).then(() => {
-            Swal.fire({
-                title: 'Event is Live!',
-                html: `<b>${name}</b> has been published successfully.<br>Students will now see the registration popup.`,
-                icon: 'success',
-                confirmButtonColor: '#004d26',
-                timer: 3000
-            });
+        db.ref('school_events').push({ 
+            name, desc, date, regDeadline: deadline, isRegistration: isRegRequired 
+        }).then(() => {
+            Swal.fire({ title: 'Event is Live!', icon: 'success', confirmButtonColor: '#004d26', timer: 3000 });
             resetForm();
-        }).catch(err => Swal.fire('Error', err.message, 'error'));
+        });
     }
 
     db.ref('school_events').on('value', snap => {
@@ -196,7 +217,7 @@
                 <div class="event-card-item">
                     <div class="ev-data"><b>${ev.name}</b><span>${ev.desc}</span></div>
                     <div class="btn-group">
-                        <button class="icon-btn edit-btn" onclick="editMode('${child.key}', \`${ev.name}\`, \`${ev.desc}\`, '${ev.date}', '${ev.regDeadline}')"><i class="fas fa-pen"></i></button>
+                        <button class="icon-btn edit-btn" onclick="editMode('${child.key}', \`${ev.name}\`, \`${ev.desc}\`, '${ev.date}', '${ev.regDeadline}', ${ev.isRegistration})"><i class="fas fa-pen"></i></button>
                         <button class="icon-btn del-btn" onclick="deleteEventWithBackup('${child.key}', \`${ev.name}\`)"><i class="fas fa-trash"></i></button>
                     </div>
                 </div>`;
@@ -204,39 +225,32 @@
     });
 
     async function deleteEventWithBackup(id, eventName) {
-        const result = await Swal.fire({
-            title: 'Delete Event?',
-            text: "A backup Excel will be downloaded before deletion.",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d32f2f',
-            confirmButtonText: 'Backup & Delete'
-        });
-
+        const result = await Swal.fire({ title: 'Delete Event?', text: "A backup will be downloaded before deletion.", icon: 'warning', showCancelButton: true, confirmButtonColor: '#d32f2f', confirmButtonText: 'Backup & Delete' });
         if (result.isConfirmed) {
             const regSnap = await db.ref(`event_registrations/${eventName}`).once('value');
             if (regSnap.exists()) {
                 let csvContent = "data:text/csv;charset=utf-8,Roll No,Student Name,Class,Phone\n";
                 Object.values(regSnap.val()).forEach(s => { csvContent += `${s.roll},${s.name},${s.cls},${s.phone}\n`; });
-                const encodedUri = encodeURI(csvContent);
                 const link = document.createElement("a");
-                link.setAttribute("href", encodedUri);
+                link.setAttribute("href", encodeURI(csvContent));
                 link.setAttribute("download", `Backup_${eventName}.csv`);
                 document.body.appendChild(link); link.click(); document.body.removeChild(link);
             }
             await db.ref('school_events/' + id).remove();
             await db.ref(`event_registrations/${eventName}`).remove();
-            Swal.fire('Deleted', 'Event removed successfully.', 'success');
+            Swal.fire('Deleted', 'Success', 'success');
         }
     }
 
-    function editMode(id, name, desc, date, deadline) {
+    function editMode(id, name, desc, date, deadline, isReg) {
         document.getElementById('editId').value = id;
         document.getElementById('evName').value = name;
         document.getElementById('evDesc').value = desc;
         document.getElementById('evDate').value = date;
-        document.getElementById('regDeadline').value = deadline;
-        document.getElementById('formHeader').innerText = "Update Event Details";
+        document.getElementById('regToggle').checked = isReg;
+        document.getElementById('regDeadline').value = deadline || '';
+        toggleDeadlineField();
+        document.getElementById('formHeader').innerText = "Update Event";
         document.getElementById('btnSave').style.display = 'none';
         document.getElementById('btnUpdate').style.display = 'block';
         document.getElementById('btnCancel').style.display = 'block';
@@ -245,17 +259,23 @@
 
     function updateEvent() {
         const id = document.getElementById('editId').value;
-        const data = { name: document.getElementById('evName').value, desc: document.getElementById('evDesc').value, date: document.getElementById('evDate').value, regDeadline: document.getElementById('regDeadline').value };
-        db.ref('school_events/' + id).update(data).then(() => { 
-            Swal.fire('Updated', 'Event details saved.', 'success'); 
-            resetForm(); 
-        });
+        const isReg = document.getElementById('regToggle').checked;
+        const data = { 
+            name: document.getElementById('evName').value, 
+            desc: document.getElementById('evDesc').value, 
+            date: document.getElementById('evDate').value, 
+            regDeadline: isReg ? document.getElementById('regDeadline').value : null,
+            isRegistration: isReg
+        };
+        db.ref('school_events/' + id).update(data).then(() => { Swal.fire('Updated', 'Saved!', 'success'); resetForm(); });
     }
 
     function resetForm() {
         document.getElementById('editId').value = '';
         document.getElementById('evName').value = ''; document.getElementById('evDesc').value = '';
         document.getElementById('evDate').value = ''; document.getElementById('regDeadline').value = '';
+        document.getElementById('regToggle').checked = true;
+        toggleDeadlineField();
         document.getElementById('formHeader').innerText = "Publish New Event";
         document.getElementById('btnSave').style.display = 'block';
         document.getElementById('btnUpdate').style.display = 'none';
@@ -267,21 +287,14 @@
         const body = document.getElementById('regBody');
         const countBadge = document.getElementById('countBadge');
         const regCount = document.getElementById('regCount');
-
         body.innerHTML = '<tr><td colspan="5" style="text-align:center;">Loading...</td></tr>';
         if(!eventName) { countBadge.style.display = 'none'; return; }
-
         db.ref(`event_registrations/${eventName}`).on('value', snap => {
             body.innerHTML = '';
-            if(!snap.exists()) {
-                body.innerHTML = '<tr><td colspan="5" style="text-align:center;">No students registered.</td></tr>';
-                countBadge.style.display = 'none'; return;
-            }
+            if(!snap.exists()) { body.innerHTML = '<tr><td colspan="5" style="text-align:center;">No students.</td></tr>'; countBadge.style.display = 'none'; return; }
             const students = snap.val();
             const keys = Object.keys(students);
-            countBadge.style.display = 'block';
-            regCount.innerText = keys.length;
-
+            countBadge.style.display = 'block'; regCount.innerText = keys.length;
             keys.forEach(k => {
                 const s = students[k];
                 body.innerHTML += `<tr><td><b>${s.roll}</b></td><td>${s.name}</td><td>${s.cls}</td><td>${s.phone}</td>
