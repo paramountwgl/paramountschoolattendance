@@ -89,6 +89,11 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
+    // FUNCTION TO GET UNIQUE TEACHER KEY
+    function getTeacherKey(name) {
+        return `history_${name.replace(/\s+/g, '_')}`;
+    }
+
     async function submitAttendance() {
         const teacher = document.getElementById('teacherName').value;
         const urlParams = new URLSearchParams(window.location.search);
@@ -97,28 +102,17 @@
         if(!teacher) return Swal.fire('Error', 'Please select your name.', 'warning');
         if(!tokenInUrl) return Swal.fire('Invalid Scan', 'Please scan the official QR code.', 'error');
 
-        Swal.fire({ 
-            title: 'Verifying Presence...', 
-            text: 'Checking if you are at school', 
-            allowOutsideClick: false,
-            didOpen: () => { Swal.showLoading(); } 
-        });
+        Swal.fire({ title: 'Verifying Presence...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } });
 
         navigator.geolocation.getCurrentPosition(async (position) => {
             const schoolLat = 17.3905498; 
             const schoolLng = 78.3708969; 
             const maxDistance = 0.2; 
-
             const userDist = calculateDistance(position.coords.latitude, position.coords.longitude, schoolLat, schoolLng);
 
             if (userDist > maxDistance) {
                 Swal.close();
-                return Swal.fire({
-                    icon: 'error',
-                    title: 'Access Denied',
-                    text: 'You are too far from school.',
-                    confirmButtonColor: '#004d26'
-                });
+                return Swal.fire('Access Denied', 'You are too far from school.', 'error');
             }
 
             const now = new Date();
@@ -127,26 +121,21 @@
             const prevToken = btoa("PARAMOUNT_" + (timeBlock - 1));
 
             if(tokenInUrl !== currentToken && tokenInUrl !== prevToken) {
-                return Swal.fire({
-                    icon: 'error',
-                    title: 'Expired QR',
-                    text: 'This code is old. Scan the live screen.',
-                    confirmButtonColor: '#004d26'
-                });
+                return Swal.fire('Expired QR', 'Scan the live screen in the office.', 'error');
             }
 
             const dateKey = now.toISOString().split('T')[0];
             const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
             try {
-                // Master Record for Admin
+                // 1. SAVE TO FIREBASE
                 await db.ref(`teacher_attendance/${dateKey}/${teacher}`).set({
                     name: teacher, timeIn: timeString, status: "Present", date: dateKey, verification: "QR_AND_GPS_VERIFIED"
                 });
 
-                // Personal Record for Teacher's phone
+                // 2. SAVE TO LOCAL HISTORY
                 const historyEntry = { date: dateKey, time: timeString };
-                const storageKey = `history_${teacher.replace(/\s+/g, '_')}`; 
+                const storageKey = getTeacherKey(teacher);
                 
                 let teacherHistory = JSON.parse(localStorage.getItem(storageKey) || "[]");
                 teacherHistory.unshift(historyEntry); 
@@ -170,16 +159,13 @@
 
     function showHistory() {
         const teacher = document.getElementById('teacherName').value;
-        
-        if(!teacher) {
-            return Swal.fire('Select Name', 'Select your name to see your personal history.', 'info');
-        }
+        if(!teacher) return Swal.fire('Select Name', 'Select your name first.', 'info');
 
-        const storageKey = `history_${teacher.replace(/\s+/g, '_')}`;
+        const storageKey = getTeacherKey(teacher);
         let teacherHistory = JSON.parse(localStorage.getItem(storageKey) || "[]");
         
         if (teacherHistory.length === 0) {
-            return Swal.fire('No History', `No records found for ${teacher} on this phone.`, 'info');
+            return Swal.fire('No History', `No local records for ${teacher}.`, 'info');
         }
 
         let historyHtml = `<div style="text-align: left; min-width: 250px;">
