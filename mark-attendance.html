@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Attendance | Paramount</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=Segoe+UI:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root { --forest: #004d26; --gold: #ffd700; --light: #f4f7f6; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--light); display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        
+        .card { 
+            background: white; padding: 30px; border-radius: 35px; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1); width: 90%; 
+            max-width: 400px; text-align: center; border-top: 10px solid var(--forest);
+        }
+
+        .school-logo { height: 60px; margin-bottom: 15px; }
+        
+        h2 { font-family: 'Montserrat'; color: var(--forest); margin: 0; text-transform: uppercase; font-size: 22px; }
+        p { font-size: 13px; color: #666; font-weight: 600; margin-bottom: 25px; }
+
+        select { 
+            width: 100%; padding: 16px; border-radius: 15px; 
+            border: 2px solid #eee; font-size: 16px; font-weight: 600;
+            margin-bottom: 20px; outline: none; appearance: none;
+            background: #fafafa url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e") no-repeat right 15px center;
+            background-size: 15px;
+        }
+
+        .btn-confirm { 
+            background: var(--forest); color: white; border: none; 
+            padding: 18px; border-radius: 50px; font-weight: 800; 
+            width: 100%; cursor: pointer; text-transform: uppercase; 
+            font-family: 'Montserrat'; letter-spacing: 1px;
+            transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+        .btn-confirm:active { transform: scale(0.95); }
+
+        .footer-note { font-size: 10px; color: #999; margin-top: 20px; text-transform: uppercase; font-weight: 700; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <img src="logo.png" class="school-logo" alt="Paramount Logo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2602/2602414.png'">
+    <h2>Staff Check-In</h2>
+    <p>Digital Attendance Diary</p>
+
+    <select id="teacherName">
+        <option value="" disabled selected>-- Select Your Name --</option>
+        <option value="Shaik Tauseef Ali">Shaik Tauseef Ali</option>
+        <option value="Teacher Name 2">Teacher Name 2</option>
+        <option value="Teacher Name 3">Teacher Name 3</option>
+        <option value="Office Admin">Office Admin</option>
+    </select>
+
+    <button class="btn-confirm" onclick="submitAttendance()">
+        Confirm Arrival <i class="fas fa-signature"></i>
+    </button>
+
+    <div class="footer-note">Secure GPS & Time Encrypted</div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+<script>
+    // Firebase Config - Same as your Portal
+    const firebaseConfig = { 
+        apiKey: "AIzaSyDRYk9KOK-ga0c88dnYMsAoifW2NJTd_Y8", 
+        databaseURL: "https://paramount-school-d55bc-default-rtdb.firebaseio.com", 
+        projectId: "paramount-school-d55bc" 
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    async function submitAttendance() {
+        const teacher = document.getElementById('teacherName').value;
+        const urlParams = new URLSearchParams(window.location.search);
+        const tokenInUrl = urlParams.get('auth');
+
+        if(!teacher) {
+            return Swal.fire('Wait!', 'Please select your name from the list.', 'warning');
+        }
+
+        if(!tokenInUrl) {
+            return Swal.fire('Invalid Scan', 'Please scan the official QR code in the office.', 'error');
+        }
+
+        // --- SECURITY VERIFICATION ---
+        // Generates tokens for the current minute and the previous minute 
+        // to account for slight time differences between devices.
+        const now = new Date();
+        const generateToken = (time) => btoa(time.toISOString().substring(0, 16));
+        
+        const currentToken = generateToken(now);
+        const bufferToken = generateToken(new Date(now.getTime() - 60000));
+
+        if(tokenInUrl !== currentToken && tokenInUrl !== bufferToken) {
+            return Swal.fire({
+                icon: 'error',
+                title: 'QR Code Expired',
+                text: 'This code is no longer valid. Please scan the live code on the office screen.',
+                confirmButtonColor: '#004d26'
+            });
+        }
+
+        // --- SAVE TO DATABASE ---
+        const dateKey = now.toISOString().split('T')[0]; // Format: 2026-03-27
+        const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+        try {
+            await db.ref(`teacher_attendance/${dateKey}/${teacher}`).set({
+                name: teacher,
+                timeIn: timeString,
+                status: "Present",
+                date: dateKey,
+                timestamp: firebase.database.ServerValue.TIMESTAMP
+            });
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Signed Successfully',
+                text: `Welcome, ${teacher}! Your arrival time ${timeString} has been recorded.`,
+                confirmButtonColor: '#004d26'
+            }).then(() => {
+                window.location.href = "index.html"; // Redirect to main portal
+            });
+
+        } catch (error) {
+            console.error(error);
+            Swal.fire('Error', 'Database connection failed. Try again.', 'error');
+        }
+    }
+</script>
+</body>
+</html>
