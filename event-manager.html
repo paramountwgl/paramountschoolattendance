@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Private Event Panel | Paramount School</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Segoe+UI:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Segoe+UI:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="icon" type="image/png" href="logo.png">
     <style>
@@ -14,14 +14,7 @@
         
         /* PRIVATE LOGIN OVERLAY */
         #authOverlay { position: fixed; top:0; left:0; width:100%; height:100%; background: var(--forest); display:flex; align-items:center; justify-content:center; z-index:9999; padding: 20px; }
-        .auth-card { background: white; width: 100%; max-width: 400px; padding: 40px 30px; border-radius: 25px; box-shadow: 0 15px 40px rgba(0,0,0,0.3); text-align: center; }
-        
-        .auth-header-row { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid #eee; }
-        .auth-logo { height: 45px; width: auto; }
-        .auth-text-box { text-align: left; line-height: 1.1; }
-        .auth-school-name { font-family: 'Montserrat'; font-size: 1.1rem; font-weight: 800; color: var(--forest); display: block; }
-        .auth-school-sub { font-size: 0.65rem; color: #b8860b; font-weight: 700; text-transform: uppercase; display: block; }
-
+        .auth-card { background: white; width: 100%; max-width: 420px; padding: 40px 30px; border-radius: 25px; box-shadow: 0 15px 40px rgba(0,0,0,0.3); text-align: center; }
         .auth-input { width: 100%; padding: 14px; margin-bottom: 12px; border-radius: 12px; border: 1px solid #e0e0e0; background: #fafafa; font-size: 15px; outline: none; text-align: center; }
         
         /* PREMIUM BACK BUTTON */
@@ -33,8 +26,8 @@
         .btn-back-dash i { background: var(--forest); color: var(--gold); width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 10px; }
         .btn-back-dash:hover { border-color: var(--forest); transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0, 102, 51, 0.15); }
 
-        .admin-card { max-width: 800px; margin: 40px auto; background: white; padding: 30px; border-radius: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.05); border-top: 8px solid var(--forest); position: relative; }
-
+        .admin-card { max-width: 850px; margin: 40px auto; background: white; padding: 30px; border-radius: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.05); border-top: 8px solid var(--forest); position: relative; }
+        
         h2 { color: var(--forest); font-family: 'Montserrat'; text-align: center; margin: 20px 0; text-transform: uppercase; letter-spacing: 1px; font-size: 1.2rem; }
         .input-group { margin-bottom: 15px; }
         label { display: block; font-size: 11px; font-weight: 800; text-transform: uppercase; color: #888; margin-bottom: 6px; }
@@ -44,6 +37,9 @@
         .btn-action:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
         
         .event-card-item { display: flex; justify-content: space-between; align-items: center; background: #fcfcfc; padding: 15px; border-radius: 15px; margin-bottom: 12px; border: 1px solid #eee; }
+        .ev-data b { display: block; color: var(--forest); font-size: 15px; }
+        .ev-data span { display: block; color: #777; font-size: 11px; margin-top: 4px; }
+        
         .btn-group { display: flex; gap: 10px; }
         .icon-btn { width: 35px; height: 35px; border-radius: 10px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
         .edit-btn { background: #e3f2fd; color: #1976d2; }
@@ -56,36 +52,44 @@
         tr:hover { background: #f9fdfa; }
 
         .btn-cancel-return { display: inline-flex; align-items: center; gap: 8px; color: #888; text-decoration: none; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; transition: 0.3s; padding: 10px 20px; border-radius: 50px; }
+        .btn-cancel-return:hover { color: var(--danger); background: rgba(211, 47, 47, 0.05); }
     </style>
 </head>
 <body>
 
 <div id="authOverlay">
     <div class="auth-card">
-        <div class="auth-header-row">
-            <img src="logo.png" class="auth-logo">
-            <div class="auth-text-box">
-                <span class="auth-school-name">PARAMOUNT</span>
-                <span class="auth-school-sub">English Medium School</span>
+        <div class="auth-header-row" style="display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid #eee;">
+            <img src="logo.png" style="height: 55px; width: auto;">
+            <div style="text-align: left; line-height: 1.1;">
+                <span style="font-family: 'Montserrat'; font-size: 22px; font-weight: 900; color: var(--forest); display: block; letter-spacing: 1px;">PARAMOUNT</span>
+                <span style="font-size: 0.7rem; color: #b8860b; font-weight: 700; text-transform: uppercase; display: block;">English Medium School</span>
             </div>
         </div>
-        <h2 style="margin-top: 0; font-size: 1.1rem;">ADMIN ACCESS</h2>
+
+        <h2 style="margin-top: 0; font-size: 1.1rem; color: #444;">ADMIN ACCESS</h2>
         <input type="password" id="adminPassInput" class="auth-input" placeholder="Enter Private Password">
         <button class="btn-action" style="background:var(--gold); color:var(--forest);" onclick="authenticate()">UNLOCK PANEL</button>
-        <div style="margin-top: 20px;"><a href="admin.html" class="btn-cancel-return"><i class="fas fa-times"></i> Cancel</a></div>
+        <div style="margin-top: 20px;">
+            <a href="admin.html" class="btn-cancel-return"><i class="fas fa-times"></i> Cancel</a>
+        </div>
     </div>
 </div>
 
 <div class="admin-card" id="mainPanel" style="display:none;">
-    <div class="top-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 35px; background: #fafafa; padding: 15px 20px; border-radius: 20px; border: 1px solid #eee;">
-        <div class="school-header-row">
-            <img src="logo.png" style="height: 40px;">
-            <div style="display: flex; flex-direction: column; line-height: 1.1;">
-                <span class="school-name-main">PARAMOUNT</span>
-                <span style="font-size: 0.65rem; color: #b8860b; font-weight: 700; text-transform: uppercase;">Admin Control</span>
+    <div class="top-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 35px; background: #fafafa; padding: 15px 25px; border-radius: 20px; border: 1px solid #eee;">
+        <div class="school-header-row" style="display: flex; align-items: center; gap: 15px;">
+            <img src="logo.png" class="school-logo-img" style="height: 55px; width: auto;">
+            <div class="school-text-box" style="display: flex; flex-direction: column; line-height: 1.1; text-align: left;">
+                <span class="school-name-main" style="font-family: 'Montserrat'; font-size: 22px; font-weight: 900; color: var(--forest); letter-spacing: 1px;">PARAMOUNT</span>
+                <span class="school-name-sub" style="font-size: 0.7rem; color: #b8860b; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">Admin Control Panel</span>
             </div>
         </div>
-        <a href="admin.html" class="btn-back-dash"><span>Dashboard</span><i class="fas fa-th-large"></i></a>
+        
+        <a href="admin.html" class="btn-back-dash">
+            <span>Dashboard</span>
+            <i class="fas fa-th-large"></i>
+        </a>
     </div>
 
     <h2 id="formHeader">Publish New Event</h2>
@@ -132,12 +136,8 @@
         </div>
         
         <table id="regTable">
-            <thead>
-                <tr><th>Roll No</th><th>Student Name</th><th>Class</th><th>Phone</th><th>Action</th></tr>
-            </thead>
-            <tbody id="regBody">
-                <tr><td colspan="5" style="text-align:center; padding: 30px; color:#999;">Select an event above.</td></tr>
-            </tbody>
+            <thead><tr><th>Roll No</th><th>Student Name</th><th>Class</th><th>Phone</th><th>Action</th></tr></thead>
+            <tbody id="regBody"><tr><td colspan="5" style="text-align:center; padding:30px; color:#999;">Select an event above.</td></tr></tbody>
         </table>
     </div>
 </div>
@@ -208,7 +208,7 @@
             }
             await db.ref('school_events/' + id).remove();
             await db.ref(`event_registrations/${eventName}`).remove();
-            Swal.fire('Deleted', 'Event removed.', 'success');
+            Swal.fire('Deleted', 'Success', 'success');
         }
     }
 
@@ -253,7 +253,7 @@
         db.ref(`event_registrations/${eventName}`).on('value', snap => {
             body.innerHTML = '';
             if(!snap.exists()) {
-                body.innerHTML = '<tr><td colspan="5" style="text-align:center;">No students.</td></tr>';
+                body.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--danger); padding:30px; font-weight:700;">No students registered.</td></tr>';
                 countBadge.style.display = 'none'; return;
             }
             const students = snap.val();
