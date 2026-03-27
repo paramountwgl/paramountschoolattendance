@@ -10,16 +10,16 @@
     <link rel="icon" type="image/png" href="logo.png">
     <style>
         :root { --forest: #004d26; --gold: #ffd700; --light: #f4f7f6; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--light); display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--light); display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
         
         .card { 
             background: white; padding: 30px; border-radius: 35px; 
             box-shadow: 0 20px 50px rgba(0,0,0,0.1); width: 90%; 
             max-width: 400px; text-align: center; border-top: 10px solid var(--forest);
+            margin: 20px;
         }
 
         .school-logo { height: 60px; margin-bottom: 15px; }
-        
         h2 { font-family: 'Montserrat'; color: var(--forest); margin: 0; text-transform: uppercase; font-size: 22px; }
         p { font-size: 13px; color: #666; font-weight: 600; margin-bottom: 25px; }
 
@@ -39,6 +39,15 @@
             transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px;
         }
         .btn-confirm:active { transform: scale(0.95); }
+
+        .btn-history {
+            background: none; border: 2px solid var(--forest); color: var(--forest); 
+            padding: 12px; border-radius: 50px; font-weight: 700; 
+            width: 100%; margin-top: 15px; cursor: pointer; 
+            font-family: 'Montserrat'; font-size: 12px; transition: 0.3s;
+        }
+        .btn-history:hover { background: #e8f5e9; }
+
         .footer-note { font-size: 10px; color: #999; margin-top: 20px; text-transform: uppercase; font-weight: 700; }
     </style>
 </head>
@@ -59,6 +68,10 @@
 
     <button class="btn-confirm" onclick="submitAttendance()">
         Confirm Arrival <i class="fas fa-signature"></i>
+    </button>
+
+    <button class="btn-history" onclick="showHistory()">
+        <i class="fas fa-history"></i> View My Last 7 Days
     </button>
 
     <div class="footer-note">Secure GPS & Time Encrypted</div>
@@ -84,7 +97,6 @@
         if(!teacher) return Swal.fire('Error', 'Please select your name.', 'warning');
         if(!tokenInUrl) return Swal.fire('Invalid Scan', 'Please scan the official QR code.', 'error');
 
-        // --- STEP 1: REQUEST GPS LOCATION ---
         Swal.fire({ 
             title: 'Verifying Presence...', 
             text: 'Checking if you are at school', 
@@ -93,15 +105,12 @@
         });
 
         navigator.geolocation.getCurrentPosition(async (position) => {
-            
-            // --- SCHOOL COORDINATES (Warangal/Paramount Area) ---
             const schoolLat = 17.3905498; 
             const schoolLng = 78.3708969; 
-            const maxDistance = 0.2; // 200 meters allowed radius
+            const maxDistance = 0.2; 
 
             const userDist = calculateDistance(position.coords.latitude, position.coords.longitude, schoolLat, schoolLng);
 
-            // --- STEP 2: CHECK LOCATION ---
             if (userDist > maxDistance) {
                 Swal.close();
                 return Swal.fire({
@@ -112,7 +121,6 @@
                 });
             }
 
-            // --- STEP 3: CHECK QR TOKEN (TIME) ---
             const now = new Date();
             const timeBlock = Math.floor(now.getTime() / 60000);
             const currentToken = btoa("PARAMOUNT_" + timeBlock);
@@ -127,7 +135,6 @@
                 });
             }
 
-            // --- SUCCESS: RECORD TO FIREBASE ---
             const dateKey = now.toISOString().split('T')[0];
             const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
@@ -140,6 +147,12 @@
                     verification: "QR_AND_GPS_VERIFIED",
                     timestamp: firebase.database.ServerValue.TIMESTAMP
                 });
+
+                // --- SAVE TO PHONE HISTORY ---
+                const historyEntry = { date: dateKey, time: timeString };
+                let myHistory = JSON.parse(localStorage.getItem('attendance_history') || "[]");
+                myHistory.unshift(historyEntry); 
+                localStorage.setItem('attendance_history', JSON.stringify(myHistory.slice(0, 7)));
 
                 Swal.fire({
                     icon: 'success',
@@ -154,8 +167,32 @@
             }
 
         }, (err) => {
-            Swal.fire('GPS Required', 'Please enable Location services in your browser settings to sign.', 'error');
+            Swal.fire('GPS Required', 'Please enable Location services to sign.', 'error');
         }, { enableHighAccuracy: true });
+    }
+
+    function showHistory() {
+        let myHistory = JSON.parse(localStorage.getItem('attendance_history') || "[]");
+        
+        if (myHistory.length === 0) {
+            return Swal.fire('No History', 'You haven\'t marked attendance on this phone yet.', 'info');
+        }
+
+        let historyHtml = '<div style="text-align: left; font-family: sans-serif;">';
+        myHistory.forEach(entry => {
+            historyHtml += `<div style="padding: 12px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between;">
+                <strong>${entry.date}</strong> 
+                <span style="color: #004d26; font-weight: 700;">${entry.time}</span>
+            </div>`;
+        });
+        historyHtml += '</div>';
+
+        Swal.fire({
+            title: 'Your Last 7 Days',
+            html: historyHtml,
+            confirmButtonColor: '#004d26',
+            confirmButtonText: 'Done'
+        });
     }
 
     function calculateDistance(lat1, lon1, lat2, lon2) {
