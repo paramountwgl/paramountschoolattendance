@@ -66,13 +66,10 @@
                 <span style="font-size: 0.7rem; color: #b8860b; font-weight: 700; text-transform: uppercase; display: block;">English Medium School</span>
             </div>
         </div>
-
         <h2 style="margin-top: 0; font-size: 1.1rem; color: #444;">ADMIN ACCESS</h2>
         <input type="password" id="adminPassInput" class="auth-input" placeholder="Enter Private Password">
         <button class="btn-action" style="background:var(--gold); color:var(--forest);" onclick="authenticate()">UNLOCK PANEL</button>
-        <div style="margin-top: 20px;">
-            <a href="admin.html" class="btn-cancel-return"><i class="fas fa-times"></i> Cancel</a>
-        </div>
+        <div style="margin-top: 20px;"><a href="admin.html" class="btn-cancel-return"><i class="fas fa-times"></i> Cancel</a></div>
     </div>
 </div>
 
@@ -85,11 +82,7 @@
                 <span class="school-name-sub" style="font-size: 0.7rem; color: #b8860b; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">Admin Control Panel</span>
             </div>
         </div>
-        
-        <a href="admin.html" class="btn-back-dash">
-            <span>Dashboard</span>
-            <i class="fas fa-th-large"></i>
-        </a>
+        <a href="admin.html" class="btn-back-dash"><span>Dashboard</span><i class="fas fa-th-large"></i></a>
     </div>
 
     <h2 id="formHeader">Publish New Event</h2>
@@ -163,8 +156,33 @@
         const desc = document.getElementById('evDesc').value;
         const date = document.getElementById('evDate').value;
         const deadline = document.getElementById('regDeadline').value;
-        if(!name || !date || !deadline) return Swal.fire('Error', 'Fields missing', 'warning');
-        db.ref('school_events').push({ name, desc, date, regDeadline: deadline }).then(() => { resetForm(); });
+
+        if(!name || !date || !deadline) {
+            return Swal.fire({
+                title: 'Missing Info',
+                text: 'Please fill in the Event Name, Date, and Deadline.',
+                icon: 'warning',
+                confirmButtonColor: '#004d26'
+            });
+        }
+
+        Swal.fire({
+            title: 'Publishing...',
+            text: 'Uploading event to the student portal',
+            allowOutsideClick: false,
+            didOpen: () => { Swal.showLoading(); }
+        });
+
+        db.ref('school_events').push({ name, desc, date, regDeadline: deadline }).then(() => {
+            Swal.fire({
+                title: 'Event is Live!',
+                html: `<b>${name}</b> has been published successfully.<br>Students will now see the registration popup.`,
+                icon: 'success',
+                confirmButtonColor: '#004d26',
+                timer: 3000
+            });
+            resetForm();
+        }).catch(err => Swal.fire('Error', err.message, 'error'));
     }
 
     db.ref('school_events').on('value', snap => {
@@ -208,7 +226,7 @@
             }
             await db.ref('school_events/' + id).remove();
             await db.ref(`event_registrations/${eventName}`).remove();
-            Swal.fire('Deleted', 'Success', 'success');
+            Swal.fire('Deleted', 'Event removed successfully.', 'success');
         }
     }
 
@@ -218,7 +236,7 @@
         document.getElementById('evDesc').value = desc;
         document.getElementById('evDate').value = date;
         document.getElementById('regDeadline').value = deadline;
-        document.getElementById('formHeader').innerText = "Update Event";
+        document.getElementById('formHeader').innerText = "Update Event Details";
         document.getElementById('btnSave').style.display = 'none';
         document.getElementById('btnUpdate').style.display = 'block';
         document.getElementById('btnCancel').style.display = 'block';
@@ -228,7 +246,10 @@
     function updateEvent() {
         const id = document.getElementById('editId').value;
         const data = { name: document.getElementById('evName').value, desc: document.getElementById('evDesc').value, date: document.getElementById('evDate').value, regDeadline: document.getElementById('regDeadline').value };
-        db.ref('school_events/' + id).update(data).then(() => { Swal.fire('Updated', 'Saved!', 'success'); resetForm(); });
+        db.ref('school_events/' + id).update(data).then(() => { 
+            Swal.fire('Updated', 'Event details saved.', 'success'); 
+            resetForm(); 
+        });
     }
 
     function resetForm() {
@@ -253,7 +274,7 @@
         db.ref(`event_registrations/${eventName}`).on('value', snap => {
             body.innerHTML = '';
             if(!snap.exists()) {
-                body.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--danger); padding:30px; font-weight:700;">No students registered.</td></tr>';
+                body.innerHTML = '<tr><td colspan="5" style="text-align:center;">No students registered.</td></tr>';
                 countBadge.style.display = 'none'; return;
             }
             const students = snap.val();
