@@ -39,7 +39,6 @@
             transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px;
         }
         .btn-confirm:active { transform: scale(0.95); }
-
         .footer-note { font-size: 10px; color: #999; margin-top: 20px; text-transform: uppercase; font-weight: 700; }
     </style>
 </head>
@@ -69,7 +68,6 @@
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
 <script>
-    // Firebase Config - Same as your Portal
     const firebaseConfig = { 
         apiKey: "AIzaSyDRYk9KOK-ga0c88dnYMsAoifW2NJTd_Y8", 
         databaseURL: "https://paramount-school-d55bc-default-rtdb.firebaseio.com", 
@@ -83,58 +81,89 @@
         const urlParams = new URLSearchParams(window.location.search);
         const tokenInUrl = urlParams.get('auth');
 
-        if(!teacher) {
-            return Swal.fire('Wait!', 'Please select your name from the list.', 'warning');
-        }
+        if(!teacher) return Swal.fire('Error', 'Please select your name.', 'warning');
+        if(!tokenInUrl) return Swal.fire('Invalid Scan', 'Please scan the official QR code.', 'error');
 
-        if(!tokenInUrl) {
-            return Swal.fire('Invalid Scan', 'Please scan the official QR code in the office.', 'error');
-        }
+        // --- STEP 1: REQUEST GPS LOCATION ---
+        Swal.fire({ 
+            title: 'Verifying Presence...', 
+            text: 'Checking if you are at school', 
+            allowOutsideClick: false,
+            didOpen: () => { Swal.showLoading(); } 
+        });
 
-        // --- SECURITY VERIFICATION ---
-        // Generates tokens for the current minute and the previous minute 
-        // to account for slight time differences between devices.
-        const now = new Date();
-        const generateToken = (time) => btoa(time.toISOString().substring(0, 16));
-        
-        const currentToken = generateToken(now);
-        const bufferToken = generateToken(new Date(now.getTime() - 60000));
+        navigator.geolocation.getCurrentPosition(async (position) => {
+            
+            // --- SCHOOL COORDINATES (Warangal/Paramount Area) ---
+            const schoolLat = 17.9689; 
+            const schoolLng = 79.5941; 
+            const maxDistance = 0.2; // 200 meters allowed radius
 
-        if(tokenInUrl !== currentToken && tokenInUrl !== bufferToken) {
-            return Swal.fire({
-                icon: 'error',
-                title: 'QR Code Expired',
-                text: 'This code is no longer valid. Please scan the live code on the office screen.',
-                confirmButtonColor: '#004d26'
-            });
-        }
+            const userDist = calculateDistance(position.coords.latitude, position.coords.longitude, schoolLat, schoolLng);
 
-        // --- SAVE TO DATABASE ---
-        const dateKey = now.toISOString().split('T')[0]; // Format: 2026-03-27
-        const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            // --- STEP 2: CHECK LOCATION ---
+            if (userDist > maxDistance) {
+                Swal.close();
+                return Swal.fire({
+                    icon: 'error',
+                    title: 'Access Denied',
+                    text: 'You are too far from school. Attendance must be marked on premises.',
+                    confirmButtonColor: '#004d26'
+                });
+            }
 
-        try {
-            await db.ref(`teacher_attendance/${dateKey}/${teacher}`).set({
-                name: teacher,
-                timeIn: timeString,
-                status: "Present",
-                date: dateKey,
-                timestamp: firebase.database.ServerValue.TIMESTAMP
-            });
+            // --- STEP 3: CHECK QR TOKEN (TIME) ---
+            const now = new Date();
+            const timeBlock = Math.floor(now.getTime() / 60000);
+            const currentToken = btoa("PARAMOUNT_" + timeBlock);
+            const prevToken = btoa("PARAMOUNT_" + (timeBlock - 1));
 
-            Swal.fire({
-                icon: 'success',
-                title: 'Signed Successfully',
-                text: `Welcome, ${teacher}! Your arrival time ${timeString} has been recorded.`,
-                confirmButtonColor: '#004d26'
-            }).then(() => {
-                window.location.href = "index.html"; // Redirect to main portal
-            });
+            if(tokenInUrl !== currentToken && tokenInUrl !== prevToken) {
+                return Swal.fire({
+                    icon: 'error',
+                    title: 'Expired QR',
+                    text: 'That QR photo is too old. Scan the live screen in the office.',
+                    confirmButtonColor: '#004d26'
+                });
+            }
 
-        } catch (error) {
-            console.error(error);
-            Swal.fire('Error', 'Database connection failed. Try again.', 'error');
-        }
+            // --- SUCCESS: RECORD TO FIREBASE ---
+            const dateKey = now.toISOString().split('T')[0];
+            const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+            try {
+                await db.ref(`teacher_attendance/${dateKey}/${teacher}`).set({
+                    name: teacher,
+                    timeIn: timeString,
+                    status: "Present",
+                    date: dateKey,
+                    verification: "QR_AND_GPS_VERIFIED",
+                    timestamp: firebase.database.ServerValue.TIMESTAMP
+                });
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Attendance Marked!',
+                    text: `Welcome, ${teacher}! Recorded at ${timeString}`,
+                    confirmButtonColor: '#004d26'
+                }).then(() => {
+                    window.location.href = "index.html"; 
+                });
+            } catch (e) {
+                Swal.fire('Database Error', 'Could not save your entry.', 'error');
+            }
+
+        }, (err) => {
+            Swal.fire('GPS Required', 'Please enable Location services in your browser settings to sign.', 'error');
+        }, { enableHighAccuracy: true });
+    }
+
+    function calculateDistance(lat1, lon1, lat2, lon2) {
+        const R = 6371; 
+        const dLat = (lat2-lat1) * Math.PI / 180;
+        const dLon = (lon2-lon1) * Math.PI / 180;
+        const a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(lat1*Math.PI/180) * Math.cos(lat2*Math.PI/180) * Math.sin(dLon/2) * Math.sin(dLon/2);
+        return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
     }
 </script>
 </body>
