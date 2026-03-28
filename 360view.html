@@ -197,26 +197,49 @@ async function fetchAllData() {
         if(feeSnap.exists()){
             feeSnap.forEach(c => { const d = c.val(); tPaid += parseFloat(d.paid || 0); tFee = d.total || 0; });
         }
+// 2. HOMEWORK (Current Day Only Logic)
+        let hwStatus = "Not Assigned";
+        let hwDetailHTML = "";
+        
+        // Generate Today's Date String (matches YYYY-MM-DD)
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        const todayStr = `${year}-${month}-${day}`; 
 
-        // 2. HOMEWORK (Deep Search Logic)
-        let hwStatus = "Pending", hwDetailHTML = "";
-        const hwSnap = await db.ref('homework').once('value');
+        // Look ONLY at today's folder in Firebase
+        const hwSnap = await db.ref(`homework/${todayStr}/${cls}`).once('value');
+        
         if (hwSnap.exists()) {
-            const allDates = hwSnap.val();
-            const sortedDates = Object.keys(allDates).sort((a, b) => b.localeCompare(a));
-            for (let date of sortedDates) {
-                if (allDates[date][cls]) {
-                    hwStatus = "Assigned";
-                    Object.keys(allDates[date][cls]).forEach(sub => {
-                        const taskData = allDates[date][cls][sub];
-                        const taskText = (typeof taskData === 'object') ? (taskData.task || "See Portal") : taskData;
-                        hwDetailHTML += `<div style="border-bottom:1px solid #f1f5f9; padding:10px 0; display:flex; justify-content:space-between;"><b>${sub}:</b> <span style="text-align:right; flex:1; margin-left:10px;">${taskText}</span></div>`;
-                    });
-                    break; 
-                }
-            }
+            hwStatus = "Assigned";
+            const classTasks = hwSnap.val();
+
+            Object.keys(classTasks).forEach(sub => {
+                const taskData = classTasks[sub];
+                // Support both simple text and object format {task: "..."}
+                const taskText = (typeof taskData === 'object') ? (taskData.task || "Check Portal") : taskData;
+                
+                hwDetailHTML += `
+                    <div style="border-bottom:1px solid #f1f5f9; padding:10px 0; display:flex; justify-content:space-between; align-items:center;">
+                        <b style="color:var(--forest); font-size:0.8rem;">${sub}:</b> 
+                        <span style="text-align:right; flex:1; margin-left:10px; font-size:0.85rem; font-weight:600; color:#333;">${taskText}</span>
+                    </div>`;
+            });
+        } else {
+            // This runs if no homework is found for TODAY specifically
+            hwStatus = "No Homework";
+            hwDetailHTML = `
+                <div style="text-align:center; padding:30px 10px;">
+                    <i class="fas fa-calendar-day" style="font-size:2.5rem; color:#e0e0e0; margin-bottom:15px;"></i>
+                    <p style="color:#888; font-weight:700; margin:0; font-size:0.9rem;">No homework assigned today.</p>
+                    <p style="color:#aaa; font-size:0.7rem; margin-top:5px;">Check back later for updates.</p>
+                </div>`;
         }
-        if(!hwDetailHTML) hwDetailHTML = "<p style='text-align:center; color:#999;'>No tasks synced.</p>";
+
+        // Update the UI elements
+        document.getElementById('vHW').innerText = hwStatus;
+        document.getElementById('hwList').innerHTML = hwDetailHTML;
 
         // 3. ACADEMIC MARKS
         let classSubjects = ["TEL", "HIN", "ENG", "MAT", "SCI", "SOC"]; 
