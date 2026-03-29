@@ -371,6 +371,7 @@ const studentData = {
   "1298334": { Name: "Vyshnavi Uppala", Class: "Grade-8 (Bhagat)", Father: "Ramesh", Roll: "1298334", Phone: "8179254251", Adm: "34", Gender: "Female", DOB: "2012-12-10", DOJ: "2021-09-16" }
 };
 
+// Replace your entire <script> section with this updated logic
 async function fetchAllData() {
     const roll = document.getElementById('rollNumberInput').value.trim();
     const student = studentData[roll];
@@ -380,6 +381,11 @@ async function fetchAllData() {
 
     try {
         const { Name: name, Class: cls } = student;
+        
+        // --- CLEAN CLASS LOGIC ---
+        // Converts "Pre-KG (Diamond)" -> "Pre-KG" for Firebase path matching
+        const dbClass = cls.split(' (')[0].trim(); 
+        
         const now = new Date();
         const dateISO = now.toLocaleDateString('en-CA'); 
         const dateIN = now.toLocaleDateString('en-GB').replace(/\//g, '-'); 
@@ -387,7 +393,7 @@ async function fetchAllData() {
         // --- 1. FEES ---
         let tPaid = 0, tFee = 0;
         try {
-            const feeSnap = await db.ref(`fee_records/${cls}/${name}`).once('value');
+            const feeSnap = await db.ref(`fee_records/${dbClass}/${name}`).once('value');
             if(feeSnap.exists()){
                 feeSnap.forEach(c => { 
                     const d = c.val(); 
@@ -399,8 +405,8 @@ async function fetchAllData() {
 
         // --- 2. HOMEWORK ---
         let hwDetailHTML = "";
-        let hwSnap = await db.ref(`homework/${dateISO}/${cls}`).once('value');
-        if (!hwSnap.exists()) hwSnap = await db.ref(`homework/${dateIN}/${cls}`).once('value');
+        let hwSnap = await db.ref(`homework/${dateISO}/${dbClass}`).once('value');
+        if (!hwSnap.exists()) hwSnap = await db.ref(`homework/${dateIN}/${dbClass}`).once('value');
 
         if (hwSnap.exists()) {
             const tasks = hwSnap.val();
@@ -413,25 +419,42 @@ async function fetchAllData() {
         }
 
         // --- 3. ACADEMIC MARKS ---
+        // Removed "CHE" from the Grade 6-8 list
         let classSubjects = ["TEL", "HIN", "ENG", "MAT", "SCI", "SOC"]; 
-        if (cls.includes("Grade-5")) classSubjects.push("IIT");
-        else if (["Grade-6", "Grade-7", "Grade-8"].some(g => cls.includes(g))) classSubjects = ["TEL", "HIN", "ENG", "MAT", "SOC", "PHY", "CHE", "BIO", "IIT"];
-        const exams = ["FA-1", "FA-2", "FA-3", "SA-1", "SA-2"];
+        if (dbClass.includes("Grade-5")) {
+            classSubjects.push("IIT");
+        } else if (["Grade-6", "Grade-7", "Grade-8"].some(g => dbClass.includes(g))) {
+            classSubjects = ["TEL", "HIN", "ENG", "MAT", "SOC", "PHY", "BIO", "IIT"];
+        }
+
+        // Updated Exam List
+        const exams = ["FA-1", "FA-2", "FA-3", "FA-4", "SA-1", "SA-2", "Annual"];
+        
+        // Dynamic Table Header
+        let headerHTML = `<th>Subject</th>` + exams.map(ex => `<th>${ex}</th>`).join('');
+        document.querySelector(".marks-table thead tr").innerHTML = headerHTML;
+
+        // Dynamic Table Body
         let tableHTML = "";
-        classSubjects.forEach(sub => { tableHTML += `<tr><td>${sub}</td>` + exams.map(ex => `<td id="m-${sub}-${ex}">-</td>`).join('') + `</tr>`; });
+        classSubjects.forEach(sub => { 
+            tableHTML += `<tr><td>${sub}</td>` + exams.map(ex => `<td id="m-${sub}-${ex}">-</td>`).join('') + `</tr>`; 
+        });
         document.getElementById('marksTableBody').innerHTML = tableHTML;
         
         let totalObt = 0, totalMax = 0;
         for (let ex of exams) {
-            const mSnap = await db.ref(`progress_cards/${cls}/${ex}/${name}`).once('value');
+            const mSnap = await db.ref(`progress_cards/${dbClass}/${ex}/${name}`).once('value');
             if(mSnap.exists()){
                 const mData = mSnap.val().marks || mSnap.val();
                 Object.keys(mData).forEach(sub => {
                     const cell = document.getElementById(`m-${sub}-${ex}`);
                     if(cell) { 
                         cell.innerText = mData[sub]; 
-                        totalObt += parseFloat(mData[sub] || 0); 
-                        totalMax += 100; 
+                        let score = parseFloat(mData[sub]);
+                        if(!isNaN(score)) {
+                            totalObt += score; 
+                            totalMax += 100; 
+                        }
                     }
                 });
             }
@@ -443,8 +466,8 @@ async function fetchAllData() {
         if(attSnap.exists()){
             const all = attSnap.val();
             Object.keys(all).forEach(d => {
-                if(all[d][cls] && all[d][cls][name] !== undefined) { 
-                    tDays++; if(all[d][cls][name] === true) pDays++; 
+                if(all[d][dbClass] && all[d][dbClass][name] !== undefined) { 
+                    tDays++; if(all[d][dbClass][name] === true) pDays++; 
                 }
             });
         }
@@ -455,18 +478,20 @@ async function fetchAllData() {
         document.getElementById('vImg').src = `Student images/${roll}.png`;
         document.getElementById('vTimestamp').innerText = "FETCHED: " + now.toLocaleString();
         
-        // New UI Updates
+        // Joining & Bio details
         document.getElementById('vDOJ').innerText = "JOINED: " + (student.DOJ || '--/--/----');
         document.getElementById('vGender').innerText = student.Gender || '--';
         document.getElementById('vDOB').innerText = student.DOB || 'N/A';
         document.getElementById('vAdmExtended').innerText = student.Adm;
 
+        // Fee display
         let fPct = tFee > 0 ? Math.round((tPaid/tFee)*100) : 0;
         document.getElementById('vTotalFee').innerText = `₹ ${tFee}`;
         document.getElementById('vDueFee').innerText = `₹ ${Math.max(0, tFee - tPaid)}`;
         document.getElementById('vFeeCircle').style.strokeDashoffset = 251 - (fPct/100)*251;
         document.getElementById('vFeePercent').innerText = fPct + "%";
         
+        // Final UI assembly
         document.getElementById('hwList').innerHTML = hwDetailHTML;
         document.getElementById('vTotalDays').innerText = tDays;
         document.getElementById('vPresent').innerText = pDays;
@@ -480,7 +505,7 @@ async function fetchAllData() {
         document.getElementById('dashboard').style.display = 'block';
         Swal.close();
     } catch (e) { 
-        console.error(e); 
+        console.error("Fetch Error:", e); 
         Swal.fire('Error', 'Sync Failure: ' + e.message, 'error'); 
     }
 }
