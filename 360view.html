@@ -56,6 +56,12 @@
         .circle-svg { width: 100px; height: 100px; transform: rotate(-90deg); flex-shrink: 0; }
         .circle-bg { fill: none; stroke: #eee; stroke-width: 12; } 
         .circle-bar { fill: none; stroke: var(--forest); stroke-width: 12; stroke-dasharray: 251; stroke-dashoffset: 251; transition: 1.5s; stroke-linecap: round; }
+
+        /* HOMEWORK STYLES */
+        #hwList { max-height: none; overflow-y: visible; display: flex; flex-direction: column; gap: 8px; padding-top: 10px; }
+        .hw-item { background: #f8fafc; border-left: 4px solid var(--sky); padding: 10px 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .hw-subject { color: var(--forest); font-weight: 800; font-size: 0.75rem; text-transform: uppercase; display: block; margin-bottom: 2px; }
+        .hw-task { color: var(--dark); font-weight: 600; font-size: 0.9rem; line-height: 1.4; }
         
         .academic-section { grid-column: span 2; border-top: 5px solid var(--danger); }
         .marks-table { width: 100%; border-collapse: collapse; min-width: 600px; margin-top: 10px;}
@@ -113,26 +119,25 @@
         </div>
 
         <div class="card" style="border-top: 5px solid var(--forest);">
-    <div class="card-header"><i class="fas fa-wallet"></i> FEE MANAGEMENT</div>
-    <div class="fee-flex-box">
-        <svg class="circle-svg" viewBox="0 0 100 100">
-            <circle class="circle-bg" cx="50" cy="50" r="40"></circle>
-            <circle id="vFeeCircle" class="circle-bar" cx="50" cy="50" r="40"></circle>
-        </svg>
-        <div>
-            <span id="vFeePercent" style="font-weight:800; font-size:1.5rem; color:var(--forest);">0%</span><br>
-            <span class="label">PAID</span>
+            <div class="card-header"><i class="fas fa-wallet"></i> FEE MANAGEMENT</div>
+            <div class="fee-flex-box">
+                <svg class="circle-svg" viewBox="0 0 100 100">
+                    <circle class="circle-bg" cx="50" cy="50" r="40"></circle>
+                    <circle id="vFeeCircle" class="circle-bar" cx="50" cy="50" r="40"></circle>
+                </svg>
+                <div>
+                    <span id="vFeePercent" style="font-weight:800; font-size:1.5rem; color:var(--forest);">0%</span><br>
+                    <span class="label">PAID</span>
+                </div>
+            </div>
+            <div class="row"><span class="label">TOTAL FEE</span><span class="val" id="vTotalFee">₹ 0</span></div>
+            <div class="row"><span class="label">PAID FEE</span><span class="val" id="vPaidFee" style="color:var(--forest);">₹ 0</span></div>
+            <div class="row" style="border:none;"><span class="label">BALANCE</span><span class="val" id="vDueFee" style="color:var(--danger);">₹ 0</span></div>
         </div>
-    </div>
-    <div class="row"><span class="label">TOTAL FEE</span><span class="val" id="vTotalFee">₹ 0</span></div>
-    <div class="row"><span class="label">PAID FEE</span><span class="val" id="vPaidFee" style="color:var(--forest);">₹ 0</span></div>
-    <div class="row" style="border:none;"><span class="label">BALANCE</span><span class="val" id="vDueFee" style="color:var(--danger);">₹ 0</span></div>
-</div>
 
         <div class="card" style="border-top: 5px solid var(--sky);">
             <div class="card-header"><i class="fas fa-book"></i> TODAY'S HOMEWORK</div>
-            <h2 id="vHW" style="color:var(--sky); margin:5px 0; font-size: 0.95rem; text-align:center;">Assigned</h2>
-            <div id="hwList" style="max-height: 150px; overflow-y: auto;"></div>
+            <div id="hwList"></div>
         </div>
 
         <div class="card" style="border-top: 5px solid var(--forest);">
@@ -154,7 +159,7 @@
             <div class="card-header"><i class="fas fa-chart-bar"></i> ACADEMIC PROGRESS GRID</div>
             <div style="overflow-x:auto;">
                 <table class="marks-table">
-                    <thead><tr><th>Subject</th><th>FA-1</th><th>FA-2</th><th>FA-3</th><th>SA-1</th><th>SA-2</th></tr></thead>
+                    <thead><tr></tr></thead>
                     <tbody id="marksTableBody"></tbody>
                 </table>
             </div>
@@ -183,7 +188,6 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-// Full studentData object provided in the context of the previous step
 const studentData = {
   "1472070": { Name: "Hanish Macharla", Class: "Pre-KG (Diamond)", Father: "M.Vinay", Roll: "1472070", Phone: "9182861346", Adm: "2052", Gender: "Male", DOB: "N/A", DOJ: "2025-08-04" },
   "1478225": { Name: "Arjun Vihaar Illandula", Class: "Pre-KG (Diamond)", Father: "Illandula Ravi.", Roll: "1478225", Phone: "9848742172", Adm: "2061", Gender: "Male", DOB: "2022-11-22", DOJ: "2025-10-16" },
@@ -236,7 +240,7 @@ const studentData = {
   "1392676": { Name: "Gayathri Erroju", Class: "KG-1 (Ruby)", Father: "Rajesh", Roll: "1392676", Phone: "9010050059", Adm: "1989", Gender: "Female", DOB: "2021-02-12", DOJ: "2024-06-12" },
   "1390570": { Name: "Hanvika Mulkalapelli", Class: "KG-1 (Ruby)", Father: "Raju", Roll: "1390570", Phone: "9177159519", Adm: "1977", Gender: "Female", DOB: "2020-10-16", DOJ: "2024-06-12" },
   "1396188": { Name: "Manvith Kondoju", Class: "KG-1 (Ruby)", Father: "K.Sai Kumar", Roll: "1396188", Phone: "7075175578", Adm: "1995", Gender: "Male", DOB: "2021-05-26", DOJ: "2024-07-23" },
-  "1392703": { Name: "Mariyam", Class: "KG-1 (Ruby)", Father: "Sayyad Vajeed", Roll: "1392703", Phone: "8885451958", Adm: "1991", Gender: "Female", DOB: "2020-09-21", DOJ: "2024-06-12" },
+  "1392703": { Name: "Sayyad Vajeed", Class: "KG-1 (Ruby)", Father: "Mariyam", Roll: "1392703", Phone: "8885451958", Adm: "1991", Gender: "Female", DOB: "2020-09-21", DOJ: "2024-06-12" },
   "1412110": { Name: "Mekala Manu sri", Class: "KG-1 (Ruby)", Father: "Rangith", Roll: "1412110", Phone: "7793959897", Adm: "1998", Gender: "Female", DOB: "2021-03-18", DOJ: "2024-10-20" },
   "1392687": { Name: "Oliva Grace Vallapu", Class: "KG-1 (Ruby)", Father: "Naveen", Roll: "1392687", Phone: "9951886334", Adm: "1990", Gender: "Female", DOB: "2021-03-20", DOJ: "2024-06-12" },
   "1392696": { Name: "Rithwik Oggula", Class: "KG-1 (Ruby)", Father: "Sampath", Roll: "1392696", Phone: "8464872522", Adm: "1984", Gender: "Male", DOB: "N/A", DOJ: "2024-06-12" },
@@ -317,7 +321,7 @@ const studentData = {
   "1298387": { Name: "Bandi Tejasri", Class: "Grade-3 (Crystal)", Father: "Raghu", Roll: "1298387", Phone: "9618791981", Adm: "102", Gender: "Female", DOB: "2017-05-25", DOJ: "2023-01-07" },
   "1298391": { Name: "Bandi Harshavardhan", Class: "Grade-3 (Crystal)", Father: "Rajkumar", Roll: "1298391", Phone: "8008707668", Adm: "99", Gender: "Male", DOB: "2017-09-10", DOJ: "2023-06-23" },
   "1298389": { Name: "Gampala Vyshnavi", Class: "Grade-3 (Crystal)", Father: "Kanakaraju", Roll: "1298389", Phone: "8074393994", Adm: "89", Gender: "Female", DOB: "2016-11-02", DOJ: "2023-10-06" },
-  "1298384": { Name: "Gampala Laxmi", Class: "Grade-3 (Crystal)", Father: "Kanakaraju", Roll: "1298384", Phone: "8074393994", Adm: "90", Gender: "Female", DOB: "2017-02-05", DOJ: "2023-10-06" },
+  "1298384": { Name: "Gampala Laxmi", Class: "Grade-3 (Crystal)", Father: "Kanakaraju", Roll: "1298384", Phone: "90", Gender: "Female", DOB: "2017-02-05", DOJ: "2023-10-06" },
   "1298410": { Name: "Garige Harshith", Class: "Grade-3 (Crystal)", Father: "Chiranjeevi", Roll: "1298410", Phone: "9959114639", Adm: "106", Gender: "Male", DOB: "2017-09-10", DOJ: "2022-06-20" },
   "1459844": { Name: "Katkuri Hanish", Class: "Grade-3 (Crystal)", Father: "Katkuri Suryaprasad", Roll: "1459844", Phone: "9000557009", Adm: "169", Gender: "Male", DOB: "2015-08-25", DOJ: "2025-06-24" },
   "1459798": { Name: "Katukuri Manideep", Class: "Grade-3 (Crystal)", Father: "Chiranjeevi", Roll: "1459798", Phone: "8247004380", Adm: "172", Gender: "Male", DOB: "2016-05-15", DOJ: "2025-05-31" },
@@ -372,7 +376,6 @@ const studentData = {
   "1298334": { Name: "Vyshnavi Uppala", Class: "Grade-8 (Bhagat)", Father: "Ramesh", Roll: "1298334", Phone: "8179254251", Adm: "34", Gender: "Female", DOB: "2012-12-10", DOJ: "2021-09-16" }
 };
 
-// Replace your entire <script> section with this updated logic
 async function fetchAllData() {
     const roll = document.getElementById('rollNumberInput').value.trim();
     const student = studentData[roll];
@@ -382,9 +385,6 @@ async function fetchAllData() {
 
     try {
         const { Name: name, Class: cls } = student;
-        
-        // --- CLEAN CLASS LOGIC ---
-        // Converts "Pre-KG (Diamond)" -> "Pre-KG" for Firebase path matching
         const dbClass = cls.split(' (')[0].trim(); 
         
         const now = new Date();
@@ -404,7 +404,7 @@ async function fetchAllData() {
             }
         } catch (e) { console.warn("Fee fetch fail", e); }
 
-        // --- 2. HOMEWORK ---
+        // --- 2. HOMEWORK (No Scrolling) ---
         let hwDetailHTML = "";
         let hwSnap = await db.ref(`homework/${dateISO}/${dbClass}`).once('value');
         if (!hwSnap.exists()) hwSnap = await db.ref(`homework/${dateIN}/${dbClass}`).once('value');
@@ -413,14 +413,17 @@ async function fetchAllData() {
             const tasks = hwSnap.val();
             Object.keys(tasks).forEach(sub => {
                 const taskText = (typeof tasks[sub] === 'object') ? (tasks[sub].task || "See Portal") : tasks[sub];
-                hwDetailHTML += `<div class="row"><b style="color:var(--forest); font-size:0.75rem;">${sub}:</b> <span class="val">${taskText}</span></div>`;
+                hwDetailHTML += `
+                    <div class="hw-item">
+                        <span class="hw-subject">${sub}</span>
+                        <span class="hw-task">${taskText}</span>
+                    </div>`;
             });
         } else {
-            hwDetailHTML = `<p style="text-align:center; color:#ccc; font-size:0.8rem; padding:15px;">No homework assigned for today.</p>`;
+            hwDetailHTML = `<p style="text-align:center; color:#ccc; padding:15px;">No homework assigned for today.</p>`;
         }
 
-        // --- 3. ACADEMIC MARKS ---
-        // Removed "CHE" from the Grade 6-8 list
+        // --- 3. ACADEMIC MARKS (No CHE, Dynamic Headers) ---
         let classSubjects = ["TEL", "HIN", "ENG", "MAT", "SCI", "SOC"]; 
         if (dbClass.includes("Grade-5")) {
             classSubjects.push("IIT");
@@ -428,14 +431,11 @@ async function fetchAllData() {
             classSubjects = ["TEL", "HIN", "ENG", "MAT", "SOC", "PHY", "BIO", "IIT"];
         }
 
-        // Updated Exam List
         const exams = ["FA-1", "FA-2", "FA-3", "FA-4", "SA-1", "SA-2", "Annual"];
         
-        // Dynamic Table Header
         let headerHTML = `<th>Subject</th>` + exams.map(ex => `<th>${ex}</th>`).join('');
         document.querySelector(".marks-table thead tr").innerHTML = headerHTML;
 
-        // Dynamic Table Body
         let tableHTML = "";
         classSubjects.forEach(sub => { 
             tableHTML += `<tr><td>${sub}</td>` + exams.map(ex => `<td id="m-${sub}-${ex}">-</td>`).join('') + `</tr>`; 
@@ -452,10 +452,7 @@ async function fetchAllData() {
                     if(cell) { 
                         cell.innerText = mData[sub]; 
                         let score = parseFloat(mData[sub]);
-                        if(!isNaN(score)) {
-                            totalObt += score; 
-                            totalMax += 100; 
-                        }
+                        if(!isNaN(score)) { totalObt += score; totalMax += 100; }
                     }
                 });
             }
@@ -468,40 +465,29 @@ async function fetchAllData() {
             const all = attSnap.val();
             Object.keys(all).forEach(d => {
                 if(all[d][dbClass] && all[d][dbClass][name] !== undefined) { 
-                    tDays++; if(all[d][dbClass][name] === true) pDays++; 
+                    tDays++; if(all[d][cls][name] === true) pDays++; 
                 }
             });
         }
 
-        // --- UI UPDATE ---
+        // --- UI UPDATES ---
         document.getElementById('vName').innerText = name;
         document.getElementById('vSub').innerText = `${cls} | Roll: ${roll}`;
         document.getElementById('vImg').src = `Student images/${roll}.png`;
         document.getElementById('vTimestamp').innerText = "FETCHED: " + now.toLocaleString();
         
-        // Joining & Bio details
         document.getElementById('vDOJ').innerText = "JOINED: " + (student.DOJ || '--/--/----');
         document.getElementById('vGender').innerText = student.Gender || '--';
         document.getElementById('vDOB').innerText = student.DOB || 'N/A';
         document.getElementById('vAdmExtended').innerText = student.Adm;
 
-       // --- UI UPDATE FOR FEES ---
         let fPct = tFee > 0 ? Math.round((tPaid/tFee)*100) : 0;
-        
-        // Show Total Fee
         document.getElementById('vTotalFee').innerText = `₹ ${tFee}`;
-        
-        // NEW: Show Paid Fee (Added here)
         document.getElementById('vPaidFee').innerText = `₹ ${tPaid}`;
-        
-        // Show Balance (Due Fee)
         document.getElementById('vDueFee').innerText = `₹ ${Math.max(0, tFee - tPaid)}`;
-        
-        // Update Progress Circle
         document.getElementById('vFeeCircle').style.strokeDashoffset = 251 - (fPct/100)*251;
         document.getElementById('vFeePercent').innerText = fPct + "%";
         
-        // Final UI assembly
         document.getElementById('hwList').innerHTML = hwDetailHTML;
         document.getElementById('vTotalDays').innerText = tDays;
         document.getElementById('vPresent').innerText = pDays;
@@ -515,7 +501,7 @@ async function fetchAllData() {
         document.getElementById('dashboard').style.display = 'block';
         Swal.close();
     } catch (e) { 
-        console.error("Fetch Error:", e); 
+        console.error(e); 
         Swal.fire('Error', 'Sync Failure: ' + e.message, 'error'); 
     }
 }
