@@ -113,20 +113,21 @@
         </div>
 
         <div class="card" style="border-top: 5px solid var(--forest);">
-            <div class="card-header"><i class="fas fa-wallet"></i> FEE MANAGEMENT</div>
-            <div class="fee-flex-box">
-                <svg class="circle-svg" viewBox="0 0 100 100">
-                    <circle class="circle-bg" cx="50" cy="50" r="40"></circle>
-                    <circle id="vFeeCircle" class="circle-bar" cx="50" cy="50" r="40"></circle>
-                </svg>
-                <div>
-                    <span id="vFeePercent" style="font-weight:800; font-size:1.5rem; color:var(--forest);">0%</span><br>
-                    <span class="label">PAID</span>
-                </div>
-            </div>
-            <div class="row"><span class="label">TOTAL FEE</span><span class="val" id="vTotalFee">₹ 0</span></div>
-            <div class="row" style="border:none;"><span class="label">BALANCE</span><span class="val" id="vDueFee" style="color:var(--danger);">₹ 0</span></div>
+    <div class="card-header"><i class="fas fa-wallet"></i> FEE MANAGEMENT</div>
+    <div class="fee-flex-box">
+        <svg class="circle-svg" viewBox="0 0 100 100">
+            <circle class="circle-bg" cx="50" cy="50" r="40"></circle>
+            <circle id="vFeeCircle" class="circle-bar" cx="50" cy="50" r="40"></circle>
+        </svg>
+        <div>
+            <span id="vFeePercent" style="font-weight:800; font-size:1.5rem; color:var(--forest);">0%</span><br>
+            <span class="label">PAID</span>
         </div>
+    </div>
+    <div class="row"><span class="label">TOTAL FEE</span><span class="val" id="vTotalFee">₹ 0</span></div>
+    <div class="row"><span class="label">PAID FEE</span><span class="val" id="vPaidFee" style="color:var(--forest);">₹ 0</span></div>
+    <div class="row" style="border:none;"><span class="label">BALANCE</span><span class="val" id="vDueFee" style="color:var(--danger);">₹ 0</span></div>
+</div>
 
         <div class="card" style="border-top: 5px solid var(--sky);">
             <div class="card-header"><i class="fas fa-book"></i> TODAY'S HOMEWORK</div>
@@ -484,10 +485,19 @@ async function fetchAllData() {
         document.getElementById('vDOB').innerText = student.DOB || 'N/A';
         document.getElementById('vAdmExtended').innerText = student.Adm;
 
-        // Fee display
+       // --- UI UPDATE FOR FEES ---
         let fPct = tFee > 0 ? Math.round((tPaid/tFee)*100) : 0;
+        
+        // Show Total Fee
         document.getElementById('vTotalFee').innerText = `₹ ${tFee}`;
+        
+        // NEW: Show Paid Fee (Added here)
+        document.getElementById('vPaidFee').innerText = `₹ ${tPaid}`;
+        
+        // Show Balance (Due Fee)
         document.getElementById('vDueFee').innerText = `₹ ${Math.max(0, tFee - tPaid)}`;
+        
+        // Update Progress Circle
         document.getElementById('vFeeCircle').style.strokeDashoffset = 251 - (fPct/100)*251;
         document.getElementById('vFeePercent').innerText = fPct + "%";
         
