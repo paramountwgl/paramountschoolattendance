@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Progress Portal | Paramount School</title>
+    <title>Marks Portal | Paramount School</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Segoe+UI:wght@400;700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/png" href="logo.png">
@@ -12,73 +12,51 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: 'Segoe UI', sans-serif; background: #eef2f1; margin: 0; padding-bottom: 100px; overflow-x: hidden; }
         
-        /* PREMIUM LOGIN SECTION WITH BACKGROUND */
         .auth-container {
             background: linear-gradient(rgba(0, 50, 25, 0.7), rgba(0, 50, 25, 0.7)), url('https://images.unsplash.com/photo-1523050853064-185e6b7ce248?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
-            background-size: cover;
-            background-position: center;
-            border-radius: 25px;
-            padding: 40px 20px;
-            margin-bottom: 20px;
-            text-align: center;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-            border: 1px solid rgba(255,255,255,0.1);
+            background-size: cover; background-position: center; border-radius: 25px; padding: 40px 20px; margin-bottom: 20px; text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1);
         }
         .auth-container h3 { color: var(--gold) !important; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); margin-top: 0; }
-        .auth-container label { color: white !important; font-weight: 800; opacity: 0.9; }
 
         header { background: var(--forest); color: white; padding: 20px 15px; border-bottom: 4px solid var(--gold); }
-        .header-content { display: flex; flex-direction: column; align-items: center; gap: 10px; max-width: 1200px; margin: 0 auto; text-align: center; }
+        .header-content { display: flex; align-items: center; justify-content: center; gap: 20px; max-width: 1200px; margin: 0 auto; }
         .header-logo { height: 60px; width: auto; }
         .school-text { display: flex; flex-direction: column; line-height: 1.1; }
         .school-name-main { font-family: 'Montserrat', sans-serif; font-size: 1.4rem; font-weight: 800; letter-spacing: 1px; }
         .school-name-sub { font-family: 'Montserrat', sans-serif; font-size: 0.7rem; color: var(--gold); font-weight: 700; text-transform: uppercase; }
-        .divider-v { width: 2px; height: 35px; background: rgba(255,255,255,0.3); display: none; }
-        .page-brand { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 1.2rem; color: white; text-transform: uppercase; margin-top: 5px; }
+        .page-brand { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 1.5rem; color: white; text-transform: uppercase; border-left: 2px solid rgba(255,255,255,0.3); padding-left: 15px; }
 
         .container { width: 100%; max-width: 900px; margin: 15px auto; padding: 0 10px; }
         .card { background: white; padding: 20px; border-radius: 25px; box-shadow: 0 10px 40px rgba(0,0,0,0.06); margin-bottom: 20px; border-top: 5px solid var(--gold); }
         h3 { color: var(--forest); text-align: center; font-size: 1.1rem; text-transform: uppercase; margin-bottom: 20px; font-weight: 800; }
 
-        .setup-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
+        .setup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         label { display: block; font-size: 10px; font-weight: 900; color: #777; margin-bottom: 5px; text-transform: uppercase; }
         select, .search-input { width: 100%; padding: 14px; border-radius: 12px; border: 2px solid #eee; background: #fafafa; font-weight: 700; outline: none; }
         
-        #searchBox { display: none; margin-bottom: 20px; }
-        .search-input { border: 2px solid var(--forest); background: white; }
-
         .student-mark-card { background: white; border: 1px solid #eee; border-radius: 20px; padding: 15px; margin-bottom: 15px; }
         .student-name { font-weight: 800; color: var(--forest); font-size: 1rem; display: block; margin-bottom: 15px; border-bottom: 1px solid #f1f1f1; padding-bottom: 8px; }
         
-        .marks-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+        .marks-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
         .subject-box { background: #f9fcf9; padding: 8px; border-radius: 12px; border: 1px solid #f0f0f0; text-align: center; }
-        .subject-box label { font-size: 9px; margin-bottom: 5px; color: #555; }
-        
-        .split-inputs { display: flex; gap: 4px; }
-        .split-inputs div { flex: 1; }
-        .split-inputs label { font-size: 7px; margin-bottom: 2px; }
-
         .subject-box input { width: 100%; text-align: center; padding: 10px 2px; font-weight: 800; border-radius: 8px; border: 2px solid #ddd; font-size: 16px; outline: none; background: white; }
 
         .stats-bar { display: flex; justify-content: space-between; margin-top: 15px; padding: 12px; background: #f1f8f4; border-radius: 12px; font-size: 10px; font-weight: 800; color: var(--forest); }
-        .audit-footer { font-size: 9px; color: #999; font-style: italic; margin-top: 10px; text-align: left; padding-top: 8px; border-top: 1px dashed #eee; display: none; }
-
-        .btn-fetch { background: var(--forest); color: white; border: none; border-radius: 12px; padding: 15px; font-weight: 800; width: 100%; margin-top: 15px; cursor: pointer; text-transform: uppercase; font-size: 11px; }
+        .btn-fetch { background: var(--forest); color: white; border: none; border-radius: 12px; padding: 15px; font-weight: 800; width: 100%; margin-top: 15px; cursor: pointer; text-transform: uppercase; }
+        
         .action-row { display: none; gap: 10px; margin-top: 20px; }
-        .btn-save { flex: 2; background: var(--premium-gradient); color: white; border: none; padding: 18px; border-radius: 50px; font-weight: 800; cursor: pointer; text-transform: uppercase; font-size: 12px; box-shadow: 0 5px 15px rgba(0,102,51,0.2); }
-        .btn-delete { flex: 1; background: white; color: var(--danger); border: 2px solid var(--danger); padding: 18px; border-radius: 50px; font-weight: 800; cursor: pointer; text-transform: uppercase; font-size: 12px; }
+        .btn-save { flex: 2; background: var(--premium-gradient); color: white; border: none; padding: 18px; border-radius: 50px; font-weight: 800; cursor: pointer; text-transform: uppercase; }
+        .btn-delete { flex: 1; background: white; color: var(--danger); border: 2px solid var(--danger); padding: 18px; border-radius: 50px; font-weight: 800; cursor: pointer; }
 
-        @media (min-width: 768px) {
-            .header-content { flex-direction: row; justify-content: center; gap: 20px; text-align: left; }
-            .divider-v { display: block; }
-            .setup-grid { grid-template-columns: 1fr 1fr; }
-            .marks-grid { grid-template-columns: repeat(6, 1fr); }
-            .page-brand { margin-top: 0; font-size: 1.5rem; }
+        @media (max-width: 768px) {
+            .setup-grid { grid-template-columns: 1fr; }
+            .marks-grid { grid-template-columns: repeat(2, 1fr); }
+            .page-brand { font-size: 1.1rem; }
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
-<body autocomplete="off">
+<body>
 
 <header>
     <div class="header-content">
@@ -87,8 +65,7 @@
             <span class="school-name-main">PARAMOUNT</span>
             <span class="school-name-sub">ENGLISH MEDIUM SCHOOL</span>
         </div>
-        <div class="divider-v"></div>
-        <div class="page-brand">PROGRESS PORTAL</div>
+        <div class="page-brand">MARKS ENTRY</div>
     </div>
 </header>
 
@@ -96,12 +73,9 @@
     <div class="auth-container" id="authCard">
         <h3><i class="fas fa-user-shield"></i> Teacher Access</h3>
         <div style="max-width:300px; margin:0 auto;">
-            <label>Identify Yourself</label>
-            <select id="teacherSelect" onchange="verifyStaff()" style="margin-top:10px; background: white; border: none; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+            <select id="teacherSelect" onchange="verifyStaff()" style="background: white;">
                 <option value="">-- Select Your Name --</option>
                 <option value="Mr. Shaik Ahmad">Mr. Shaik Ahmad</option>
-                <option value="Ms. Riha">Ms. Riha (IIT)</option>
-                <option value="Ms. Raniya Zainab">Ms. Raniya Zainab (Physics)</option>
                 <option value="Ms. Roqiya Begum">Ms. Roqiya Begum</option>
                 <option value="Ms. G.Rajitha">Ms. G.Rajitha</option>
                 <option value="Ms. Ameena Tabassum">Ms. Ameena Tabassum</option>
@@ -114,6 +88,8 @@
                 <option value="Ms. P.Shailaja">Ms. P.Shailaja</option>
                 <option value="Ms. A.Jhansi Rani">Ms. A.Jhansi Rani</option>
                 <option value="Ms. S. Neelima">Ms. S. Neelima</option>
+                <option value="Ms. Riha">Ms. Riha (IIT)</option>
+                <option value="Ms. Raniya Zainab">Ms. Raniya Zainab (Physics)</option>
             </select>
         </div>
     </div>
@@ -129,8 +105,13 @@
                 <option value="Grade-7">Grade-7</option><option value="Grade-8">Grade-8</option>
             </select></div>
             <div><label>Exam Type</label><select id="examType" onchange="loadStudentMarksheet()">
-                <option value="FORMATIVE ASSESSMENT-1">FORMATIVE ASSESSMENT-1</option><option value="FORMATIVE ASSESSMENT-2">FORMATIVE ASSESSMENT-2</option><option value="FORMATIVE ASSESSMENT-3">FORMATIVE ASSESSMENT-3</option><option value="FORMATIVE ASSESSMENT-4">FORMATIVE ASSESSMENT-4</option>
-                <option value="SUMMATIVE ASSESSMENT-1">SUMMATIVE ASSESSMENT-1</option><option value="SUMMATIVE ASSESSMENT-2">SUMMATIVE ASSESSMENT-2</option><option value="Annual">Annual</option>
+                <option value="FORMATIVE ASSESSMENT-1">FORMATIVE ASSESSMENT-1</option>
+                <option value="FORMATIVE ASSESSMENT-2">FORMATIVE ASSESSMENT-2</option>
+                <option value="FORMATIVE ASSESSMENT-3">FORMATIVE ASSESSMENT-3</option>
+                <option value="FORMATIVE ASSESSMENT-4">FORMATIVE ASSESSMENT-4</option>
+                <option value="SUMMATIVE ASSESSMENT-1">SUMMATIVE ASSESSMENT-1</option>
+                <option value="SUMMATIVE ASSESSMENT-2">SUMMATIVE ASSESSMENT-2</option>
+                <option value="Annual">Annual</option>
             </select></div>
         </div>
         <button class="btn-fetch" onclick="fetchExistingData()">
@@ -138,7 +119,7 @@
         </button>
     </div>
 
-    <div id="searchBox">
+    <div id="searchBox" style="display:none; margin-bottom:20px;">
         <input type="text" class="search-input" id="studentSearch" placeholder="🔍 Search student name..." onkeyup="filterStudents()">
     </div>
 
@@ -147,10 +128,6 @@
     <div class="action-row" id="actionRow">
         <button id="saveAllBtn" class="btn-save" onclick="saveAllMarks()">Save All Records <i class="fas fa-cloud-upload-alt"></i></button>
         <button class="btn-delete" onclick="deleteAllMarks()">Clear Data <i class="fas fa-trash-alt"></i></button>
-    </div>
-
-    <div style="text-align:center; margin-top:20px;">
-        <a href="index.html" style="color:#666; font-size:12px; text-decoration:none; font-weight:700;"><i class="fas fa-arrow-left"></i> BACK TO DASHBOARD</a>
     </div>
 </div>
 
@@ -164,42 +141,23 @@
     let authenticatedTeacher = "";
     const registry = { "Mr. Shaik Ahmad": "Ahmad@123", "Ms. Roqiya Begum": "Roqiya@123", "Ms. G.Rajitha": "Rajitha@123", "Ms. Ameena Tabassum": "Ameena@123", "Ms. Shaik Shabana": "Shabana@123", "Ms. B.Ravali": "Ravali@123", "Ms. L.Kalyani": "Kalyani@123", "Ms. J.Alaya Sree": "Alaya@123", "Ms. S.Sujatha": "Sujatha@123", "Ms. J.Prathibha": "Prathibha@123", "Ms. P.Shailaja": "Phailaja@123", "Ms. A.Jhansi Rani": "Jhansi@123", "Ms. S. Neelima": "Neelima@123", "Ms. Riha": "Riha@123", "Ms. Raniya Zainab": "Raniya@123" };
 
-    const studentData = { "Pre-KG": ["Hanish Macharla", "Arjun Vihaar Illandula", "Thanu sree Allakunta", "Aadhya Gangaraboina", "Aadhya Sri Oggula", "Aadhyasri Shivagoni", "Afraha Begum", "Aliya Sultana", "Anvika Bandi", "Aradana Devara konda", "Devansh Bandi", "Hanvitha Mulkalapelli", "Harsha Vardhan Seenapelli", "Hiranya Bandi", "Jashritha Boina", "Konreddy Shreyanvi", "Kriyansh Sammeta", "Mohammed Mohiuddin Sayyad", "Nethra Narkurthi", "Reeyansh Bandi", "Rishi Manupati", "Rudransh Bandi", "Sanvika Bandi", "Shanvith Khatha", "Shishira Jalagam", "Shiva Sai Mekala", "Shree Rudhraveer Chevvu", "Shreyansh Gangaraboina", "Sreeja Thalla", "Srikrithini Myakala", "Srivatsav Vanam", "Sriyansh Mekala", "Thanvika Lakka", "Thrilokansh Vudari", "Ujjwal Chekka", "Vaishnavi Lakka", "Vedansh Myakala", "Vishnu Priya Molugu", "Vyshnav Tej Boina", "Yafiah Mohammad"], "KG-1": ["Aadhya Sri Amaravadi", "Aditya Manda", "Aadhya Jella", "Advaita Gauri Bandi", "Aizah Amna Shaik", "Akshara Singaram", "Bhahuveer Raj Somishetti", "Gayathri Erroju", "Hanvika Mulkalapelli", "Manvith Kondoju", "Sayyad Vajeed", "Mekala Manu sri", "Oliva Grace Vallapu", "Rithwik Oggula", "Rithwika Kandagatla", "Srimahi Chevvu", "Thanvesh Thalla", "Trishul Nanduri", "Yoganshika Nanduri", "Yusra Mohammad", "Zainul Abideen Syed"], "KG-2": ["Deekshanth Sammeta", "Hanshith Erroju", "Harika Bandi", "Himarsha Naini", "Karthik Vallepu", "Kruthika Bandi", "Rajavardhan Gampala", "Roshan Kaitha", "Sri Anshu Ayaan Lyadala", "Srihansh Bandi", "Srikshitha Guduri", "Varshith Gonela", "Adyasri Makala", "Anvik Boini", "Anvith Pokanati", "Awais Ur Rehman Mohammad", "Dakshu Pothuganti", "Hansith Reddy Katukuri", "Harshith Pokanati", "Jella Aditya", "Krishank Nallabothula", "Kundana Katkuri", "Munukuntla Revanth Rudhra", "Niraja Nethri Siluveru", "Pranav Mattepelli", "Sreenith Yadav Naini", "Uvan Reddy Dasari", "Zayan Mohammad", "Zoya Mohammed"], "Grade-1": ["Dheeraj Gattu", "Preetham Sannayala", "Shiva nandu Gonela", "Shrayan Nuthanakanti", "Sriyanksha Mandala", "Advitha Garige", "Harika Bandi", "Himansi Kondoju", "Izhaan Rahamath Syed", "Jaisurya Myakala", "Khadeeja Fathima", "Manaswini Dandugula", "Manusri Bandi", "Rithwik krishna Amaravadi", "Rohan Bandi", "Shiva Junnu", "Shivanandh Bandi", "Sridha Thalla", "Srinika Chengelly", "Sriyanshi Oggula", "Vishwak Chekka"], "Grade-2": ["Aliza Manha Shaik", "Dhruvan Reddy Katukuri", "Druthika Enugala", "Manaswini Bandi", "Rakshith Macharla", "Sathwika Katkuri", "Shalini Uppala", "Chandu Devarakonda", "Gnaneshwar Pokanati", "Hasnain Syed", "Koushik Siluveru", "Senen Desabattula", "Shivarajan Pothuganti"], "Grade-3": ["Nagavelly Manikanta", "Mirja Ismail", "Bandi Aryan", "Dandugula Mahesh Babu", "Bandi Tejasri", "Bandi Harshavardhan", "Gampala Vyshnavi", "Gampala Laxmi", "Garige Harshith", "Katkuri Hanish", "Katukuri Manideep", "MD Abdul Quddus", "Muppa Sathwik Patel", "Nuthanakanti Sansita", "Pasarakonda Ritwin", "Pinninti Rakshith Rao", "Rayi Sriman Adithya"], "Grade-4": ["Abdul Saqib Mohammad", "Anudeep Chintha", "Bhavan Bandi", "Harshavardhan Gonela", "Jayadev Chiluveru", "Mahaboob Syed", "Nandith Reddy Enugala", "Sai Charan Goud Mandala", "Sai Prasanna Keerthi", "Ajmeri Shaik", "Akshith Chiluveru", "Jayasri Myakala", "Rahul Kanjarla", "Saketh Devarakonda"], "Grade-5": ["Adya Reddy Vangala", "Kowshik Patel Muppa", "Siri Singaram", "Srikar Mandala", "Abdus Salaam MD", "Akshith Ram Kalvacharla", "Jaffar Anas Shaik", "Khaja Azeemuddin Mohammed", "Nihan Mohammed", "Saif Shaik", "Saketh Renukuntla", "Sreeja Dasari", "Vidhaatri Sahani"], "Grade-6": ["Abdul Razzak Mohammad", "Anudeepthi Chintha", "Saketh Ranaveni", "Shiva Sri Katukuri", "Aklees Shaik", "Akshya Kalvacharla", "Prince Katkuri"], "Grade-7": ["Manikanta Sannayala", "Sreeyan Reddy Karra", "Jayadhithya Chiluveru"], "Grade-8": ["Sathwika Nagavelly", "Vyshnavi Uppala", "Akshaya Gampala", "Ganesh Oggula", "Gayathri Renukuntla", "Khaja Sadeemuddin Mohammed"] };
+    const studentData = { "Pre-KG": ["Hanish Macharla", "Arjun Vihaar Illandula", "Thanu sree Allakunta", "Aadhya Gangaraboina", "Aadhya Sri Oggula", "Aadhyasri Shivagoni", "Afraha Begum", "Aliya Sultana", "Anvika Bandi", "Aradana Devara konda", "Devansh Bandi", "Hanvitha Mulkalapelli", "Harsha Vardhan Seenapelli", "Hiranya Bandi", "Jashritha Boina", "Konreddy Shreyanvi", "Kriyansh Sammeta", "Mohammed Mohiuddin Sayyad", "Nethra Narkurthi", "Reeyansh Bandi", "Rishi Manupati", "Rudransh Bandi", "Rudransh Bandi_1", "Sanvika Bandi", "Shanvith Khatha", "Shishira Jalagam", "Shiva Sai Mekala", "Shree Rudhraveer Chevvu", "Shreyansh Gangaraboina", "Sreeja Thalla", "Srikrithini Myakala", "Srivatsav Vanam", "Sriyansh Mekala", "Thanvika Lakka", "Thrilokansh Vudari", "Ujjwal Chekka", "Vaishnavi Lakka", "Vedansh Myakala", "Vishnu Priya Molugu", "Vyshnav Tej Boina", "Yafiah Mohammad"], "KG-1": ["Aadhya Sri Amaravadi", "Aditya Manda", "Aadhya Jella", "Advaita Gauri Bandi", "Aizah Amna Shaik", "Akshara Singaram", "Bhahuveer Raj Somishetti", "Gayathri Erroju", "Hanvika Mulkalapelli", "Manvith Kondoju", "Sayyad Vajeed", "Mekala Manu sri", "Oliva Grace Vallapu", "Rithwik Oggula", "Rithwika Kandagatla", "Srimahi Chevvu", "Thanvesh Thalla", "Trishul Nanduri", "Yoganshika Nanduri", "Yusra Mohammad", "Zainul Abideen Syed"], "KG-2": ["Deekshanth Sammeta", "Hanshith Erroju", "Harika Bandi", "Himarsha Naini", "Karthik Vallepu", "Kruthika Bandi", "Rajavardhan Gampala", "Roshan Kaitha", "Sri Anshu Ayaan Lyadala", "Srihansh Bandi", "Srikshitha Guduri", "Varshith Gonela", "Adyasri Makala", "Anvik Boini", "Anvith Pokanati", "Awais Ur Rehman Mohammad", "Dakshu Pothuganti", "Hansith Reddy Katukuri", "Harshith Pokanati", "Jella Aditya", "Krishank Nallabothula", "Kundana Katkuri", "Munukuntla Revanth Rudhra", "Niraja Nethri Siluveru", "Pranav Mattepelli", "Sreenith Yadav Naini", "Uvan Reddy Dasari", "Zayan Mohammad", "Zoya Mohammed"], "Grade-1": ["Dheeraj Gattu", "Preetham Sannayala", "Shiva nandu Gonela", "Shrayan Nuthanakanti", "Sriyanksha Mandala", "Advitha Garige", "Harika Bandi", "Himansi Kondoju", "Izhaan Rahamath Syed", "Jaisurya Myakala", "Khadeeja Fathima", "Manaswini Dandugula", "Manusri Bandi", "Rithwik krishna Amaravadi", "Rohan Bandi", "Shiva Junnu", "Shivanandh Bandi", "Sridha Thalla", "Srinika Chengelly", "Sriyanshi Oggula", "Vishwak Chekka"], "Grade-2": ["Aliza Manha Shaik", "Dhruvan Reddy Katukuri", "Druthika Enugala", "Manaswini Bandi", "Rakshith Macharla", "Sathwika Katkuri", "Shalini Uppala", "Chandu Devarakonda", "Gnaneshwar Pokanati", "Hasnain Syed", "Koushik Siluveru", "Senen Desabattula", "Shivarajan Pothuganti"], "Grade-3": ["Nagavelly Manikanta", "Mirja Ismail", "Bandi Aryan", "Dandugula Mahesh Babu", "Bandi Tejasri", "Bandi Harshavardhan", "Gampala Vyshnavi", "Gampala Laxmi", "Garige Harshith", "Katkuri Hanish", "Katukuri Manideep", "MD Abdul Quddus", "Muppa Sathwik Patel", "Nuthanakanti Sansita", "Pasarakonda Ritwin", "Pinninti Rakshith Rao", "Rayi Sriman Adithya"], "Grade-4": ["Abdul Saqib Mohammad", "Anudeep Chintha", "Bhavan Bandi", "Harshavardhan Gonela", "Jayadev Chiluveru", "Mahaboob Syed", "Nandith Reddy Enugala", "Sai Charan Goud Mandala", "Sai Prasanna Keerthi", "Ajmeri Shaik", "Akshith Chiluveru", "Jayasri Myakala", "Rahul Kanjarla", "Saketh Devarakonda"], "Grade-5": ["Adya Reddy Vangala", "Kowshik Patel Muppa", "Siri Singaram", "Srikar Mandala", "Abdus Salaam MD", "Akshith Ram Kalvacharla", "Jaffar Anas Shaik", "Khaja Azeemuddin Mohammed", "Nihan Mohammed", "Saif Shaik", "Saketh Renukuntla", "Sreeja Dasari", "Vidhaatri Sahani"], "Grade-6": ["Abdul Razzak Mohammad", "Anudeepthi Chintha", "Saketh Ranaveni", "Shiva Sri Katukuri", "Aklees Shaik", "Akshya Kalvacharla", "Prince Katkuri"], "Grade-7": ["Manikanta Sannayala", "Sreeyan Reddy Karra", "Jayadhithya Chiluveru"], "Grade-8": ["Sathwika Nagavelly", "Vyshnavi Uppala", "Akshaya Gampala", "Ganesh Oggula", "Gayathri Renukuntla", "Khaja Sadeemuddin Mohammed"] };
 
     async function verifyStaff() {
         const name = document.getElementById('teacherSelect').value;
         if(!name) return;
-        document.getElementById('teacherSelect').blur();
-        
-        // UPDATE: Added autocomplete="new-password" and didOpen clear logic to fix autofill
         const { value: pw } = await Swal.fire({ 
-            title: `Verification`, 
-            text: `Enter password for ${name}`, 
-            input: 'password', 
-            inputAttributes: {
-                autocomplete: 'new-password'
-            },
-            didOpen: () => {
-                const input = Swal.getInput();
-                if (input) input.value = '';
-            },
-            showCancelButton: true, 
-            confirmButtonColor: '#006633' 
+            title: `Verification`, text: `Enter password for ${name}`, input: 'password', 
+            didOpen: () => Swal.getInput().value = '', showCancelButton: true, confirmButtonColor: '#006633' 
         });
-
-        if(pw === registry[name]) { authenticatedTeacher = name; document.getElementById('selectionCard').style.display = 'block'; document.getElementById('authCard').style.display = 'none'; Swal.fire('Logged In', `Welcome ${name}`, 'success'); } 
-        else { 
-            if (pw !== undefined) Swal.fire('Error', 'Incorrect Password', 'error'); 
+        if(pw === registry[name]) { 
+            authenticatedTeacher = name; 
+            document.getElementById('selectionCard').style.display = 'block'; 
+            document.getElementById('authCard').style.display = 'none'; 
+        } else { 
+            if (pw !== undefined) Swal.fire('Error', 'Incorrect Password', 'error');
             document.getElementById('teacherSelect').value = ""; 
         }
-    }
-
-    function filterStudents() {
-        const query = document.getElementById('studentSearch').value.toLowerCase();
-        document.querySelectorAll('.student-mark-card').forEach(card => {
-            const name = card.getAttribute('data-student').toLowerCase();
-            card.style.display = name.includes(query) ? "block" : "none";
-        });
     }
 
     function loadStudentMarksheet() {
@@ -214,27 +172,22 @@
         else if (cls === "Grade-5") subjects.push("SCI", "IIT");
         else subjects.push("SCI");
 
-        const isGrade6to8 = ["Grade-6", "Grade-7", "Grade-8"].includes(cls);
-        const isFA = exam.startsWith("FA");
+        const isFA = exam.includes("FORMATIVE ASSESSMENT");
 
         let html = "";
         studentData[cls].forEach((name, index) => {
-            const studentId = name.replace(/\s+/g, '');
             html += `<div class="student-mark-card" data-student="${name}">
                 <span class="student-name">${index + 1}. ${name}</span>
                 <div class="marks-grid">
                     ${subjects.map(sub => {
-                        if(sub === "IIT") {
-                            return `<div class="subject-box"><label>IIT (50)</label><input type="text" placeholder="-" class="sub-input total-inp" data-sub="IIT" oninput="validateInput(this, 50)"></div>`;
-                        }
-                        if(isGrade6to8) {
-                            return `<div class="subject-box"><label>${sub}</label><div class="split-inputs">
-                                <div><label>EXT</label><input type="text" placeholder="-" class="sub-input ext" data-sub="${sub}" oninput="validateInput(this, ${isFA?40:80})"></div>
-                                <div><label>INT</label><input type="text" placeholder="-" class="sub-input int" data-sub="${sub}" oninput="validateInput(this, ${isFA?10:20})"></div>
+                        if(sub === "IIT") return `<div class="subject-box"><label>IIT (50)</label><input type="text" placeholder="-" class="sub-input total-inp" data-sub="IIT" oninput="validateInput(this, 50)"></div>`;
+                        if(["Grade-6", "Grade-7", "Grade-8"].includes(cls)) {
+                            return `<div class="subject-box"><label>${sub}</label><div style="display:flex;gap:2px">
+                                <input type="text" placeholder="E" class="sub-input ext" data-sub="${sub}" oninput="validateInput(this, ${isFA?40:80})">
+                                <input type="text" placeholder="I" class="sub-input int" data-sub="${sub}" oninput="validateInput(this, ${isFA?10:20})">
                             </div></div>`;
-                        } else {
-                            return `<div class="subject-box"><label>${sub}</label><input type="text" placeholder="-" class="sub-input total-inp" data-sub="${sub}" oninput="validateInput(this, ${isFA?50:100})"></div>`;
                         }
+                        return `<div class="subject-box"><label>${sub}</label><input type="text" placeholder="-" class="sub-input total-inp" data-sub="${sub}" oninput="validateInput(this, ${isFA?50:100})"></div>`;
                     }).join('')}
                 </div>
                 <div class="stats-bar">
@@ -242,7 +195,6 @@
                     <span>%: <span class="res-perc">0%</span></span>
                     <span>GRADE: <span class="res-grade">-</span></span>
                 </div>
-                <div class="audit-footer" id="audit-${studentId}"></div>
             </div>`;
         });
         list.innerHTML = html;
@@ -250,7 +202,6 @@
     }
 
     function validateInput(input, max) {
-        if(input.value === "") { calculateStats(input); return; }
         let val = parseInt(input.value);
         if (val > max) input.value = max;
         if (val < 0) input.value = 0;
@@ -261,33 +212,25 @@
         const card = input.closest('.student-mark-card');
         const exam = document.getElementById('examType').value;
         const cls = document.getElementById('examClass').value;
-        const isFA = exam.startsWith("FA");
-        const isGrade6to8 = ["Grade-6", "Grade-7", "Grade-8"].includes(cls);
+        const isFA = exam.includes("FORMATIVE ASSESSMENT");
+        const isSenior = ["Grade-6", "Grade-7", "Grade-8"].includes(cls);
 
         let totalObtained = 0, totalMax = 0;
-
         card.querySelectorAll('.subject-box').forEach(box => {
-            const subName = box.querySelector('input').getAttribute('data-sub');
-            if(subName === "IIT") {
-                totalObtained += parseInt(box.querySelector('input').value) || 0;
-                totalMax += 50;
-            } else if (isGrade6to8) {
-                const ext = parseInt(box.querySelector('.ext').value) || 0;
-                const int = parseInt(box.querySelector('.int').value) || 0;
-                totalObtained += (ext + int);
-                totalMax += (isFA ? 50 : 100);
+            const inp = box.querySelector('input');
+            const sub = inp.getAttribute('data-sub');
+            if(sub === "IIT") { totalObtained += parseInt(inp.value) || 0; totalMax += 50; }
+            else if(isSenior) {
+                totalObtained += (parseInt(box.querySelector('.ext').value) || 0) + (parseInt(box.querySelector('.int').value) || 0);
+                totalMax += isFA ? 50 : 100;
             } else {
-                totalObtained += parseInt(box.querySelector('.total-inp').value) || 0;
-                totalMax += (isFA ? 50 : 100);
+                totalObtained += parseInt(inp.value) || 0;
+                totalMax += isFA ? 50 : 100;
             }
         });
-
         const perc = totalMax > 0 ? ((totalObtained / totalMax) * 100).toFixed(1) : 0;
-        const roundPerc = Math.round(perc);
         let grade = "F";
-        if(roundPerc >= 91) grade = "A1"; else if(roundPerc >= 81) grade = "A2"; else if(roundPerc >= 71) grade = "B1";
-        else if(roundPerc >= 61) grade = "B2"; else if(roundPerc >= 51) grade = "C1"; else if(roundPerc >= 35) grade = "D";
-
+        if(perc >= 91) grade = "A1"; else if(perc >= 81) grade = "A2"; else if(perc >= 71) grade = "B1"; else if(perc >= 61) grade = "B2"; else if(perc >= 51) grade = "C1"; else if(perc >= 35) grade = "D";
         card.querySelector('.res-total').innerText = totalObtained;
         card.querySelector('.res-perc').innerText = perc + "%";
         card.querySelector('.res-grade').innerText = grade;
@@ -303,64 +246,52 @@
             Swal.close();
             document.querySelectorAll('.student-mark-card').forEach(card => {
                 const name = card.getAttribute('data-student');
-                const studentId = name.replace(/\s+/g, '');
                 if(data[name]) {
                     Object.keys(data[name].marks).forEach(sub => {
-                        const mData = data[name].marks[sub];
-                        if (typeof mData === 'object') {
-                            if(card.querySelector(`.ext[data-sub="${sub}"]`)) card.querySelector(`.ext[data-sub="${sub}"]`).value = mData.ext || "";
-                            if(card.querySelector(`.int[data-sub="${sub}"]`)) card.querySelector(`.int[data-sub="${sub}"]`).value = mData.int || "";
+                        const m = data[name].marks[sub];
+                        if(typeof m === 'object') {
+                            if(card.querySelector(`.ext[data-sub="${sub}"]`)) card.querySelector(`.ext[data-sub="${sub}"]`).value = m.ext || "";
+                            if(card.querySelector(`.int[data-sub="${sub}"]`)) card.querySelector(`.int[data-sub="${sub}"]`).value = m.int || "";
                         } else {
-                            if(card.querySelector(`.total-inp[data-sub="${sub}"]`)) card.querySelector(`.total-inp[data-sub="${sub}"]`).value = mData || "";
+                            if(card.querySelector(`.total-inp[data-sub="${sub}"]`)) card.querySelector(`.total-inp[data-sub="${sub}"]`).value = m || "";
                         }
                     });
                     calculateStats(card.querySelector('input'));
-                    const audit = document.getElementById(`audit-${studentId}`);
-                    if(data[name].updatedBy) {
-                        audit.innerHTML = `Last updated: <b>${data[name].updatedBy}</b> on <b>${data[name].updatedAt}</b>`;
-                        audit.style.display = "block";
-                    }
                 }
             });
         });
     }
 
-    async function saveAllMarks() {
+    function saveAllMarks() {
         const cls = document.getElementById('examClass').value;
         const exam = document.getElementById('examType').value;
-        const isGrade6to8 = ["Grade-6", "Grade-7", "Grade-8"].includes(cls);
         const updates = {};
-        const timeStamp = new Date().toLocaleString();
+        const isSenior = ["Grade-6", "Grade-7", "Grade-8"].includes(cls);
 
         document.querySelectorAll('.student-mark-card').forEach(card => {
             const name = card.getAttribute('data-student');
             const studentMarks = {};
             card.querySelectorAll('.subject-box').forEach(box => {
-                const subInp = box.querySelector('input');
-                const subName = subInp.getAttribute('data-sub');
-                if (subName === "IIT") { studentMarks[subName] = subInp.value || 0; }
-                else if (isGrade6to8) { studentMarks[subName] = { ext: box.querySelector('.ext').value || 0, int: box.querySelector('.int').value || 0 }; }
-                else { studentMarks[subName] = box.querySelector('.total-inp').value || 0; }
+                const inp = box.querySelector('input');
+                const sub = inp.getAttribute('data-sub');
+                if(sub === "IIT") studentMarks[sub] = inp.value || 0;
+                else if(isSenior) studentMarks[sub] = { ext: box.querySelector('.ext').value || 0, int: box.querySelector('.int').value || 0 };
+                else studentMarks[sub] = inp.value || 0;
             });
             updates[`progress_cards/${cls}/${exam}/${name}`] = {
                 marks: studentMarks, total: card.querySelector('.res-total').innerText,
                 percentage: card.querySelector('.res-perc').innerText, grade: card.querySelector('.res-grade').innerText,
-                updatedBy: authenticatedTeacher, updatedAt: timeStamp
+                updatedBy: authenticatedTeacher, updatedAt: new Date().toLocaleString()
             };
         });
-        db.ref().update(updates).then(() => Swal.fire('Saved', 'Records updated successfully.', 'success'));
+        db.ref().update(updates).then(() => Swal.fire('Saved', 'Records updated', 'success'));
     }
 
-    async function deleteAllMarks() {
-        const cls = document.getElementById('examClass').value;
-        const exam = document.getElementById('examType').value;
-        const res = await Swal.fire({ title: 'Are you sure?', text: `This will wipe all marks for ${cls} ${exam}.`, icon: 'warning', showCancelButton: true });
-        if (res.isConfirmed) {
-            db.ref(`progress_cards/${cls}/${exam}`).remove().then(() => {
-                Swal.fire('Deleted', 'Database cleared.', 'success');
-                loadStudentMarksheet();
-            });
-        }
+    function filterStudents() {
+        const q = document.getElementById('studentSearch').value.toLowerCase();
+        document.querySelectorAll('.student-mark-card').forEach(c => {
+            c.style.display = c.getAttribute('data-student').toLowerCase().includes(q) ? "block" : "none";
+        });
     }
 </script>
 </body>
