@@ -12,26 +12,33 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: 'Segoe UI', sans-serif; background: #eef2f1; margin: 0; padding-bottom: 100px; overflow-x: hidden; }
         
-        .auth-container {
-            background: linear-gradient(rgba(0, 50, 25, 0.7), rgba(0, 50, 25, 0.7)), url('https://images.unsplash.com/photo-1523050853064-185e6b7ce248?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
-            background-size: cover; background-position: center; border-radius: 25px; padding: 40px 20px; margin-bottom: 20px; text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1);
+        /* --- PREMIUM HEADER --- */
+        header { 
+            background: var(--forest); color: white; padding: 12px 4%; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15); position: sticky; top: 0; z-index: 100; 
+            border-bottom: 4px solid var(--gold); 
         }
-        .auth-container h3 { color: var(--gold) !important; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); margin-top: 0; }
-
-        header { background: var(--forest); color: white; padding: 20px 15px; border-bottom: 4px solid var(--gold); position: sticky; top: 0; z-index: 100; }
-        .header-content { display: flex; align-items: center; justify-content: space-between; max-width: 1200px; margin: 0 auto; width: 100%; }
-        .header-left { display: flex; align-items: center; gap: 15px; }
-        .header-logo { height: 50px; width: auto; }
-        .school-text { display: flex; flex-direction: column; line-height: 1.1; }
-        .school-name-main { font-family: 'Montserrat', sans-serif; font-size: 1.2rem; font-weight: 800; letter-spacing: 1px; }
-        .school-name-sub { font-family: 'Montserrat', sans-serif; font-size: 0.6rem; color: var(--gold); font-weight: 700; text-transform: uppercase; }
+        .header-content { display: flex; align-items: center; justify-content: space-between; max-width: 1400px; margin: 0 auto; width: 100%; }
+        .header-left { display: flex; align-items: center; gap: 12px; }
+        .header-logo { height: 55px; width: auto; }
+        .school-branding { line-height: 1.1; }
+        .school-name-main { font-family: 'Montserrat', sans-serif; font-size: 1.4rem; font-weight: 800; letter-spacing: 0.5px; color: white; }
+        .school-name-sub { font-family: 'Montserrat', sans-serif; font-size: 0.65rem; color: var(--gold); font-weight: 700; text-transform: uppercase; }
+        .portal-title { font-family: 'Montserrat', sans-serif; font-size: 1.2rem; font-weight: 800; text-transform: uppercase; padding-left: 15px; margin-left: 15px; border-left: 2px solid rgba(255,255,255,0.3); color: white; }
         
         .header-right { display: flex; gap: 10px; }
-        .btn-nav { background: rgba(255,255,255,0.1); border: 1.5px solid white; color: white; padding: 6px 15px; border-radius: 50px; font-size: 10px; font-weight: 800; cursor: pointer; transition: 0.3s; text-decoration: none; display: flex; align-items: center; gap: 5px; }
+        .btn-nav { background: rgba(255,255,255,0.1); border: 1.5px solid white; color: white; padding: 6px 18px; border-radius: 50px; font-size: 10px; font-weight: 800; cursor: pointer; transition: 0.3s; text-decoration: none; display: flex; align-items: center; gap: 6px; text-transform: uppercase; }
         .btn-nav:hover { background: white; color: var(--forest); }
 
-        .container { width: 100%; max-width: 900px; margin: 15px auto; padding: 0 10px; }
-        .card { background: white; padding: 20px; border-radius: 25px; box-shadow: 0 10px 40px rgba(0,0,0,0.06); margin-bottom: 20px; border-top: 5px solid var(--gold); }
+        /* --- AUTH SECTION --- */
+        .auth-container {
+            background: linear-gradient(rgba(0, 50, 25, 0.7), rgba(0, 50, 25, 0.7)), url('https://images.unsplash.com/photo-1523050853064-185e6b7ce248?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover; background-position: center; border-radius: 25px; padding: 40px 20px; text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1);
+        }
+        .auth-container h3 { color: var(--gold) !important; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); margin-top: 0; font-weight: 800; }
+
+        .container { width: 100%; max-width: 1000px; margin: 25px auto; padding: 0 10px; }
+        .card { background: white; padding: 25px; border-radius: 25px; box-shadow: 0 10px 40px rgba(0,0,0,0.06); margin-bottom: 20px; border-top: 5px solid var(--gold); }
         h3 { color: var(--forest); text-align: center; font-size: 1.1rem; text-transform: uppercase; margin-bottom: 20px; font-weight: 800; }
 
         .setup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
@@ -43,19 +50,20 @@
         
         .marks-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
         .subject-box { background: #f9fcf9; padding: 8px; border-radius: 12px; border: 1px solid #f0f0f0; text-align: center; }
+        .subject-box label { font-size: 9px; margin-bottom: 5px; color: #555; font-weight: 800; }
         .subject-box input { width: 100%; text-align: center; padding: 10px 2px; font-weight: 800; border-radius: 8px; border: 2px solid #ddd; font-size: 16px; outline: none; background: white; }
 
         .stats-bar { display: flex; justify-content: space-between; margin-top: 15px; padding: 12px; background: #f1f8f4; border-radius: 12px; font-size: 10px; font-weight: 800; color: var(--forest); }
         .btn-fetch { background: var(--forest); color: white; border: none; border-radius: 12px; padding: 15px; font-weight: 800; width: 100%; margin-top: 15px; cursor: pointer; text-transform: uppercase; }
         
         .action-row { display: none; gap: 10px; margin-top: 20px; }
-        .btn-save { flex: 2; background: var(--premium-gradient); color: white; border: none; padding: 18px; border-radius: 50px; font-weight: 800; cursor: pointer; text-transform: uppercase; }
-        .btn-delete { flex: 1; background: white; color: var(--danger); border: 2px solid var(--danger); padding: 18px; border-radius: 50px; font-weight: 800; cursor: pointer; }
+        .btn-save { flex: 2; background: var(--premium-gradient); color: white; border: none; padding: 18px; border-radius: 50px; font-weight: 800; cursor: pointer; text-transform: uppercase; box-shadow: 0 5px 15px rgba(0,102,51,0.2); }
+        .btn-delete { flex: 1; background: white; color: var(--danger); border: 2px solid var(--danger); padding: 18px; border-radius: 50px; font-weight: 800; cursor: pointer; text-transform: uppercase; }
 
         @media (max-width: 768px) {
             .setup-grid { grid-template-columns: 1fr; }
             .marks-grid { grid-template-columns: repeat(2, 1fr); }
-            .header-content { flex-direction: column; gap: 10px; }
+            .portal-title { display: none; }
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -65,15 +73,16 @@
 <header>
     <div class="header-content">
         <div class="header-left">
-            <img src="logo.png" class="header-logo" alt="Logo">
-            <div class="school-text">
+            <img src="logo.png" class="header-logo">
+            <div class="school-branding">
                 <span class="school-name-main">PARAMOUNT</span>
                 <span class="school-name-sub">ENGLISH MEDIUM SCHOOL</span>
             </div>
+            <div class="portal-title">MARKS ENTRY</div>
         </div>
         <div class="header-right">
-            <a href="index.html" class="btn-nav"><i class="fas fa-home"></i> HOME</a>
-            <button onclick="location.reload()" class="btn-nav"><i class="fas fa-sign-out-alt"></i> EXIT</button>
+            <a href="index.html" class="btn-nav"><i class="fas fa-home"></i> Home</a>
+            <button onclick="location.reload()" class="btn-nav"><i class="fas fa-sign-out-alt"></i> Exit</button>
         </div>
     </div>
 </header>
@@ -81,8 +90,8 @@
 <div class="container">
     <div class="auth-container" id="authCard">
         <h3><i class="fas fa-user-shield"></i> Teacher Access</h3>
-        <div style="max-width:300px; margin:0 auto;">
-            <select id="teacherSelect" onchange="verifyStaff()" style="background: white;">
+        <div style="max-width:300px; margin:20px auto 0;">
+            <select id="teacherSelect" onchange="verifyStaff()" style="background: white; border:none; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
                 <option value="">-- Select Your Name --</option>
                 <option value="Mr. Shaik Ahmad">Mr. Shaik Ahmad</option>
                 <option value="Ms. Roqiya Begum">Ms. Roqiya Begum</option>
@@ -100,9 +109,7 @@
                 <option value="Ms. Riha">Ms. Riha</option>
                 <option value="Ms. Raniya Zainab">Ms. Raniya Zainab</option>
             </select>
-            <a href="index.html" style="display:block; margin-top:20px; color:white; font-size:11px; text-decoration:none; font-weight:700; opacity:0.8;">
-                <i class="fas fa-arrow-left"></i> Return to Main Page
-            </a>
+            <a href="index.html" style="display:inline-block; margin-top:15px; color:white; font-size:11px; text-decoration:none; font-weight:700; opacity:0.8;"><i class="fas fa-arrow-left"></i> Return to Main Page</a>
         </div>
     </div>
 
@@ -153,7 +160,7 @@
     let authenticatedTeacher = "";
     const registry = { "Mr. Shaik Ahmad": "Ahmad@123", "Ms. Roqiya Begum": "Roqiya@123", "Ms. G.Rajitha": "Rajitha@123", "Ms. Ameena Tabassum": "Ameena@123", "Ms. Shaik Shabana": "Shabana@123", "Ms. B.Ravali": "Ravali@123", "Ms. L.Kalyani": "Kalyani@123", "Ms. J.Alaya Sree": "Alaya@123", "Ms. S.Sujatha": "Sujatha@123", "Ms. J.Prathibha": "Prathibha@123", "Ms. P.Shailaja": "Phailaja@123", "Ms. A.Jhansi Rani": "Jhansi@123", "Ms. S. Neelima": "Neelima@123", "Ms. Riha": "Riha@123", "Ms. Raniya Zainab": "Raniya@123" };
 
-    const studentData = { "Pre-KG": ["Hanish Macharla", "Arjun Vihaar Illandula", "Thanu sree Allakunta", "Aadhya Gangaraboina", "Aadhya Sri Oggula", "Aadhyasri Shivagoni", "Afraha Begum", "Aliya Sultana", "Anvika Bandi", "Aradana Devara konda", "Devansh Bandi", "Hanvitha Mulkalapelli", "Harsha Vardhan Seenapelli", "Hiranya Bandi", "Jashritha Boina", "Konreddy Shreyanvi", "Kriyansh Sammeta", "Mohammed Mohiuddin Sayyad", "Nethra Narkurthi", "Reeyansh Bandi", "Rishi Manupati", "Rudransh Bandi", "Rudransh Bandi_1", "Sanvika Bandi", "Shanvith Khatha", "Shishira Jalagam", "Shiva Sai Mekala", "Shree Rudhraveer Chevvu", "Shreyansh Gangaraboina", "Sreeja Thalla", "Srikrithini Myakala", "Srivatsav Vanam", "Sriyansh Mekala", "Thanvika Lakka", "Thrilokansh Vudari", "Ujjwal Chekka", "Vaishnavi Lakka", "Vedansh Myakala", "Vishnu Priya Molugu", "Vyshnav Tej Boina", "Yafiah Mohammad"], "KG-1": ["Aadhya Sri Amaravadi", "Aditya Manda", "Aadhya Jella", "Advaita Gauri Bandi", "Aizah Amna Shaik", "Akshara Singaram", "Bhahuveer Raj Somishetti", "Gayathri Erroju", "Hanvika  Mulkalapelli", "Manvith Kondoju", "Sayyad Vajeed", "Mekala Manu sri", "Oliva Grace Vallapu", "Rithwik Oggula", "Rithwika Kandagatla", "Srimahi Chevvu", "Thanvesh Thalla", "Trishul Nanduri", "Yoganshika Nanduri", "Yusra Mohammad", "Zainul Abideen Syed"], "KG-2": ["Deekshanth Sammeta", "Hanshith Erroju", "Harika Bandi", "Himarsha Naini", "Karthik Vallepu", "Kruthika Bandi", "Rajavardhan Gampala", "Roshan Kaitha", "Sri Anshu Ayaan Lyadala", "Srihansh Bandi", "Srikshitha Guduri", "Varshith Gonela", "Adyasri Makala", "Anvik Boini", "Anvith Pokanati", "Awais Ur Rehman Mohammad", "Dakshu Pothuganti", "Hansith Reddy Katukuri", "Harshith Pokanati", "Jella Aditya", "Krishank Nallabothula", "Kundana Katkuri", "Munukuntla Revanth Rudhra", "Niraja Nethri Siluveru", "Pranav Mattepelli", "Sreenith Yadav Naini", "Uvan Reddy Dasari", "Zayan Mohammad", "Zoya Mohammed"], "Grade-1": ["Dheeraj Gattu", "Preetham Sannayala", "Shiva nandu Gonela", "Shrayan Nuthanakanti", "Sriyanksha Mandala", "Advitha Garige", "Harika Bandi", "Himansi Kondoju", "Izhaan Rahamath Syed", "Jaisurya Myakala", "Khadeeja Fathima", "Manaswini Dandugula", "Manusri Bandi", "Rithwik krishna Amaravadi", "Rohan Bandi", "Shiva Junnu", "Shivanandh Bandi", "Sridha Thalla", "Srinika Chengelly", "Sriyanshi Oggula", "Vishwak Checkka"], "Grade-2": ["Aliza Manha Shaik", "Dhruvan Reddy Katukuri", "Druthika Enugala", "Manaswini Bandi", "Rakshith Macharla", "Sathwika Katkuri", "Shalini Uppala", "Chandu Devarakonda", "Gnaneshwar Pokanati", "Hasnain Syed", "Koushik Siluveru", "Senen Desabattula", "Shivarajan Pothuganti"], "Grade-3": ["Nagavelly Manikanta", "Mirja Ismail", "Bandi Aryan", "Dandugula Mahesh Babu", "Bandi Tejasri", "Bandi Harshavardhan", "Gampala Vyshnavi", "Gampala Laxmi", "Garige Harshith", "Katkuri Hanish", "Katukuri Manideep", "MD Abdul Quddus", "Muppa Sathwik Patel", "Nuthanakanti Sansita", "Pasarakonda Ritwin", "Pinninti Rakshith Rao", "Rayi Sriman Adithya"], "Grade-4": ["Abdul Saqib Mohammad", "Anudeep Chintha", "Bhavan Bandi", "Harshavardhan Gonela", "Jayadev Chiluveru", "Mahaboob Syed", "Nandith Reddy Enugala", "Sai Charan Goud Mandala", "Sai Prasanna Keerthi", "Ajmeri Shaik", "Akshith Chiluveru", "Jayasri Myakala", "Rahul Kanjarla", "Saketh Devarakonda"], "Grade-5": ["Adya Reddy Vangala", "Kowshik Patel Muppa", "Siri Singaram", "Srikar Mandala", "Abdus Salaam MD", "Akshith Ram Kalvacharla", "Jaffar Anas Shaik", "Khaja Azeemuddin Mohammed", "Nihan Mohammed", "Saif Shaik", "Saketh Renukuntla", "Sreeja Dasari", "Vidhaatri Sahani"], "Grade-6": ["Abdul Razzak Mohammad", "Anudeepthi Chintha", "Saketh Ranaveni", "Shiva Sri Katukuri", "Aklees Shaik", "Akshya Kalvacharla", "Prince Katkuri"], "Grade-7": ["Manikanta Sannayala", "Sreeyan Reddy Karra", "Jayadhithya Chiluveru"], "Grade-8": ["Sathwika Nagavelly", "Vyshnavi Uppala", "Akshaya Gampala", "Ganesh Oggula", "Gayathri Renukuntla", "Khaja Sadeemuddin Mohammed"] };
+    const studentData = { "Pre-KG": ["Hanish Macharla", "Arjun Vihaar Illandula", "Thanu sree Allakunta", "Aadhya Gangaraboina", "Aadhya Sri Oggula", "Aadhyasri Shivagoni", "Afraha Begum", "Aliya Sultana", "Anvika Bandi", "Aradana Devara konda", "Devansh Bandi", "Hanvitha Mulkalapelli", "Harsha Vardhan Seenapelli", "Hiranya Bandi", "Jashritha Boina", "Konreddy Shreyanvi", "Kriyansh Sammeta", "Mohammed Mohiuddin Sayyad", "Nethra Narkurthi", "Reeyansh Bandi", "Rishi Manupati", "Rudransh Bandi", "Rudransh Bandi_1", "Sanvika Bandi", "Shanvith Khatha", "Shishira Jalagam", "Shiva Sai Mekala", "Shree Rudhraveer Chevvu", "Shreyansh Gangaraboina", "Sreeja Thalla", "Srikrithini Myakala", "Srivatsav Vanam", "Sriyansh Mekala", "Thanvika Lakka", "Thrilokansh Vudari", "Ujjwal Chekka", "Vaishnavi Lakka", "Vedansh Myakala", "Vishnu Priya Molugu", "Vyshnav Tej Boina", "Yafiah Mohammad"], "KG-1": ["Aadhya Sri Amaravadi", "Aditya Manda", "Aadhya Jella", "Advaita Gauri Bandi", "Aizah Amna Shaik", "Akshara Singaram", "Bhahuveer Raj Somishetti", "Gayathri Erroju", "Hanvika  Mulkalapelli", "Manvith Kondoju", "Sayyad Vajeed", "Mekala Manu sri", "Oliva Grace Vallapu", "Rithwik Oggula", "Rithwika Kandagatla", "Srimahi Chevvu", "Thanvesh Thalla", "Trishul Nanduri", "Yoganshika Nanduri", "Yusra Mohammad", "Zainul Abideen Syed"], "KG-2": ["Deekshanth Sammeta", "Hanshith Erroju", "Harika Bandi", "Himarsha Naini", "Karthik Vallepu", "Kruthika Bandi", "Rajavardhan Gampala", "Roshan Kaitha", "Sri Anshu Ayaan Lyadala", "Srihansh Bandi", "Srikshitha Guduri", "Varshith Gonela", "Adyasri Makala", "Anvik Boini", "Anvith Pokanati", "Awais Ur Rehman Mohammad", "Dakshu Pothuganti", "Hansith Reddy Katukuri", "Harshith Pokanati", "Jella Aditya", "Krishank Nallabothula", "Kundana Katkuri", "Munukuntla Revanth Rudhra", "Niraja Nethri Siluveru", "Pranav Mattepelli", "Sreenith Yadav Naini", "Uvan Reddy Dasari", "Zayan Mohammad", "Zoya Mohammed"], "Grade-1": ["Dheeraj Gattu", "Preetham Sannayala", "Shiva nandu Gonela", "Shrayan Nuthanakanti", "Sriyanksha Mandala", "Advitha Garige", "Harika Bandi", "Himansi Kondoju", "Izhaan Rahamath Syed", "Jaisurya Myakala", "Khadeeja Fathima", "Manaswini Dandugula", "Manusri Bandi", "Rithwik krishna Amaravadi", "Rohan Bandi", "Shiva Junnu", "Shivanandh Bandi", "Sridha Thalla", "Srinika Chengelly", "Sriyanshi Oggula", "Vishwak Chekka"], "Grade-2": ["Aliza Manha Shaik", "Dhruvan Reddy Katukuri", "Druthika Enugala", "Manaswini Bandi", "Rakshith Macharla", "Sathwika Katkuri", "Shalini Uppala", "Chandu Devarakonda", "Gnaneshwar Pokanati", "Hasnain Syed", "Koushik Siluveru", "Senen Desabattula", "Shivarajan Pothuganti"], "Grade-3": ["Nagavelly Manikanta", "Mirja Ismail", "Bandi Aryan", "Dandugula Mahesh Babu", "Bandi Tejasri", "Bandi Harshavardhan", "Gampala Vyshnavi", "Gampala Laxmi", "Garige Harshith", "Katkuri Hanish", "Katukuri Manideep", "MD Abdul Quddus", "Muppa Sathwik Patel", "Nuthanakanti Sansita", "Pasarakonda Ritwin", "Pinninti Rakshith Rao", "Rayi Sriman Adithya"], "Grade-4": ["Abdul Saqib Mohammad", "Anudeep Chintha", "Bhavan Bandi", "Harshavardhan Gonela", "Jayadev Chiluveru", "Mahaboob Syed", "Nandith Reddy Enugala", "Sai Charan Goud Mandala", "Sai Prasanna Keerthi", "Ajmeri Shaik", "Akshith Chiluveru", "Jayasri Myakala", "Rahul Kanjarla", "Saketh Devarakonda"], "Grade-5": ["Adya Reddy Vangala", "Kowshik Patel Muppa", "Siri Singaram", "Srikar Mandala", "Abdus Salaam MD", "Akshith Ram Kalvacharla", "Jaffar Anas Shaik", "Khaja Azeemuddin Mohammed", "Nihan Mohammed", "Saif Shaik", "Saketh Renukuntla", "Sreeja Dasari", "Vidhaatri Sahani"], "Grade-6": ["Abdul Razzak Mohammad", "Anudeepthi Chintha", "Saketh Ranaveni", "Shiva Sri Katukuri", "Aklees Shaik", "Akshya Kalvacharla", "Prince Katkuri"], "Grade-7": ["Manikanta Sannayala", "Sreeyan Reddy Karra", "Jayadhithya Chiluveru"], "Grade-8": ["Sathwika Nagavelly", "Vyshnavi Uppala", "Akshaya Gampala", "Ganesh Oggula", "Gayathri Renukuntla", "Khaja Sadeemuddin Mohammed"] };
 
     async function verifyStaff() {
         const name = document.getElementById('teacherSelect').value;
@@ -305,4 +312,4 @@
     }
 </script>
 </body>
-</html>
+</html>      
