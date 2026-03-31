@@ -18,13 +18,17 @@
         }
         .auth-container h3 { color: var(--gold) !important; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); margin-top: 0; }
 
-        header { background: var(--forest); color: white; padding: 20px 15px; border-bottom: 4px solid var(--gold); }
-        .header-content { display: flex; align-items: center; justify-content: center; gap: 20px; max-width: 1200px; margin: 0 auto; }
-        .header-logo { height: 60px; width: auto; }
+        header { background: var(--forest); color: white; padding: 20px 15px; border-bottom: 4px solid var(--gold); position: sticky; top: 0; z-index: 100; }
+        .header-content { display: flex; align-items: center; justify-content: space-between; max-width: 1200px; margin: 0 auto; width: 100%; }
+        .header-left { display: flex; align-items: center; gap: 15px; }
+        .header-logo { height: 50px; width: auto; }
         .school-text { display: flex; flex-direction: column; line-height: 1.1; }
-        .school-name-main { font-family: 'Montserrat', sans-serif; font-size: 1.4rem; font-weight: 800; letter-spacing: 1px; }
-        .school-name-sub { font-family: 'Montserrat', sans-serif; font-size: 0.7rem; color: var(--gold); font-weight: 700; text-transform: uppercase; }
-        .page-brand { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 1.5rem; color: white; text-transform: uppercase; border-left: 2px solid rgba(255,255,255,0.3); padding-left: 15px; }
+        .school-name-main { font-family: 'Montserrat', sans-serif; font-size: 1.2rem; font-weight: 800; letter-spacing: 1px; }
+        .school-name-sub { font-family: 'Montserrat', sans-serif; font-size: 0.6rem; color: var(--gold); font-weight: 700; text-transform: uppercase; }
+        
+        .header-right { display: flex; gap: 10px; }
+        .btn-nav { background: rgba(255,255,255,0.1); border: 1.5px solid white; color: white; padding: 6px 15px; border-radius: 50px; font-size: 10px; font-weight: 800; cursor: pointer; transition: 0.3s; text-decoration: none; display: flex; align-items: center; gap: 5px; }
+        .btn-nav:hover { background: white; color: var(--forest); }
 
         .container { width: 100%; max-width: 900px; margin: 15px auto; padding: 0 10px; }
         .card { background: white; padding: 20px; border-radius: 25px; box-shadow: 0 10px 40px rgba(0,0,0,0.06); margin-bottom: 20px; border-top: 5px solid var(--gold); }
@@ -37,7 +41,7 @@
         .student-mark-card { background: white; border: 1px solid #eee; border-radius: 20px; padding: 15px; margin-bottom: 15px; }
         .student-name { font-weight: 800; color: var(--forest); font-size: 1rem; display: block; margin-bottom: 15px; border-bottom: 1px solid #f1f1f1; padding-bottom: 8px; }
         
-        .marks-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
+        .marks-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
         .subject-box { background: #f9fcf9; padding: 8px; border-radius: 12px; border: 1px solid #f0f0f0; text-align: center; }
         .subject-box input { width: 100%; text-align: center; padding: 10px 2px; font-weight: 800; border-radius: 8px; border: 2px solid #ddd; font-size: 16px; outline: none; background: white; }
 
@@ -51,7 +55,7 @@
         @media (max-width: 768px) {
             .setup-grid { grid-template-columns: 1fr; }
             .marks-grid { grid-template-columns: repeat(2, 1fr); }
-            .page-brand { font-size: 1.1rem; }
+            .header-content { flex-direction: column; gap: 10px; }
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -60,12 +64,17 @@
 
 <header>
     <div class="header-content">
-        <img src="logo.png" class="header-logo" alt="Logo">
-        <div class="school-text">
-            <span class="school-name-main">PARAMOUNT</span>
-            <span class="school-name-sub">ENGLISH MEDIUM SCHOOL</span>
+        <div class="header-left">
+            <img src="logo.png" class="header-logo" alt="Logo">
+            <div class="school-text">
+                <span class="school-name-main">PARAMOUNT</span>
+                <span class="school-name-sub">ENGLISH MEDIUM SCHOOL</span>
+            </div>
         </div>
-        <div class="page-brand">MARKS ENTRY</div>
+        <div class="header-right">
+            <a href="index.html" class="btn-nav"><i class="fas fa-home"></i> HOME</a>
+            <button onclick="location.reload()" class="btn-nav"><i class="fas fa-sign-out-alt"></i> EXIT</button>
+        </div>
     </div>
 </header>
 
@@ -88,9 +97,12 @@
                 <option value="Ms. P.Shailaja">Ms. P.Shailaja</option>
                 <option value="Ms. A.Jhansi Rani">Ms. A.Jhansi Rani</option>
                 <option value="Ms. S. Neelima">Ms. S. Neelima</option>
-                <option value="Ms. Riha">Ms. Riha (IIT)</option>
-                <option value="Ms. Raniya Zainab">Ms. Raniya Zainab (Physics)</option>
+                <option value="Ms. Riha">Ms. Riha</option>
+                <option value="Ms. Raniya Zainab">Ms. Raniya Zainab</option>
             </select>
+            <a href="index.html" style="display:block; margin-top:20px; color:white; font-size:11px; text-decoration:none; font-weight:700; opacity:0.8;">
+                <i class="fas fa-arrow-left"></i> Return to Main Page
+            </a>
         </div>
     </div>
 
@@ -141,7 +153,7 @@
     let authenticatedTeacher = "";
     const registry = { "Mr. Shaik Ahmad": "Ahmad@123", "Ms. Roqiya Begum": "Roqiya@123", "Ms. G.Rajitha": "Rajitha@123", "Ms. Ameena Tabassum": "Ameena@123", "Ms. Shaik Shabana": "Shabana@123", "Ms. B.Ravali": "Ravali@123", "Ms. L.Kalyani": "Kalyani@123", "Ms. J.Alaya Sree": "Alaya@123", "Ms. S.Sujatha": "Sujatha@123", "Ms. J.Prathibha": "Prathibha@123", "Ms. P.Shailaja": "Phailaja@123", "Ms. A.Jhansi Rani": "Jhansi@123", "Ms. S. Neelima": "Neelima@123", "Ms. Riha": "Riha@123", "Ms. Raniya Zainab": "Raniya@123" };
 
-    const studentData = { "Pre-KG": ["Hanish Macharla", "Arjun Vihaar Illandula", "Thanu sree Allakunta", "Aadhya Gangaraboina", "Aadhya Sri Oggula", "Aadhyasri Shivagoni", "Afraha Begum", "Aliya Sultana", "Anvika Bandi", "Aradana Devara konda", "Devansh Bandi", "Hanvitha Mulkalapelli", "Harsha Vardhan Seenapelli", "Hiranya Bandi", "Jashritha Boina", "Konreddy Shreyanvi", "Kriyansh Sammeta", "Mohammed Mohiuddin Sayyad", "Nethra Narkurthi", "Reeyansh Bandi", "Rishi Manupati", "Rudransh Bandi", "Rudransh Bandi_1", "Sanvika Bandi", "Shanvith Khatha", "Shishira Jalagam", "Shiva Sai Mekala", "Shree Rudhraveer Chevvu", "Shreyansh Gangaraboina", "Sreeja Thalla", "Srikrithini Myakala", "Srivatsav Vanam", "Sriyansh Mekala", "Thanvika Lakka", "Thrilokansh Vudari", "Ujjwal Chekka", "Vaishnavi Lakka", "Vedansh Myakala", "Vishnu Priya Molugu", "Vyshnav Tej Boina", "Yafiah Mohammad"], "KG-1": ["Aadhya Sri Amaravadi", "Aditya Manda", "Aadhya Jella", "Advaita Gauri Bandi", "Aizah Amna Shaik", "Akshara Singaram", "Bhahuveer Raj Somishetti", "Gayathri Erroju", "Hanvika Mulkalapelli", "Manvith Kondoju", "Sayyad Vajeed", "Mekala Manu sri", "Oliva Grace Vallapu", "Rithwik Oggula", "Rithwika Kandagatla", "Srimahi Chevvu", "Thanvesh Thalla", "Trishul Nanduri", "Yoganshika Nanduri", "Yusra Mohammad", "Zainul Abideen Syed"], "KG-2": ["Deekshanth Sammeta", "Hanshith Erroju", "Harika Bandi", "Himarsha Naini", "Karthik Vallepu", "Kruthika Bandi", "Rajavardhan Gampala", "Roshan Kaitha", "Sri Anshu Ayaan Lyadala", "Srihansh Bandi", "Srikshitha Guduri", "Varshith Gonela", "Adyasri Makala", "Anvik Boini", "Anvith Pokanati", "Awais Ur Rehman Mohammad", "Dakshu Pothuganti", "Hansith Reddy Katukuri", "Harshith Pokanati", "Jella Aditya", "Krishank Nallabothula", "Kundana Katkuri", "Munukuntla Revanth Rudhra", "Niraja Nethri Siluveru", "Pranav Mattepelli", "Sreenith Yadav Naini", "Uvan Reddy Dasari", "Zayan Mohammad", "Zoya Mohammed"], "Grade-1": ["Dheeraj Gattu", "Preetham Sannayala", "Shiva nandu Gonela", "Shrayan Nuthanakanti", "Sriyanksha Mandala", "Advitha Garige", "Harika Bandi", "Himansi Kondoju", "Izhaan Rahamath Syed", "Jaisurya Myakala", "Khadeeja Fathima", "Manaswini Dandugula", "Manusri Bandi", "Rithwik krishna Amaravadi", "Rohan Bandi", "Shiva Junnu", "Shivanandh Bandi", "Sridha Thalla", "Srinika Chengelly", "Sriyanshi Oggula", "Vishwak Chekka"], "Grade-2": ["Aliza Manha Shaik", "Dhruvan Reddy Katukuri", "Druthika Enugala", "Manaswini Bandi", "Rakshith Macharla", "Sathwika Katkuri", "Shalini Uppala", "Chandu Devarakonda", "Gnaneshwar Pokanati", "Hasnain Syed", "Koushik Siluveru", "Senen Desabattula", "Shivarajan Pothuganti"], "Grade-3": ["Nagavelly Manikanta", "Mirja Ismail", "Bandi Aryan", "Dandugula Mahesh Babu", "Bandi Tejasri", "Bandi Harshavardhan", "Gampala Vyshnavi", "Gampala Laxmi", "Garige Harshith", "Katkuri Hanish", "Katukuri Manideep", "MD Abdul Quddus", "Muppa Sathwik Patel", "Nuthanakanti Sansita", "Pasarakonda Ritwin", "Pinninti Rakshith Rao", "Rayi Sriman Adithya"], "Grade-4": ["Abdul Saqib Mohammad", "Anudeep Chintha", "Bhavan Bandi", "Harshavardhan Gonela", "Jayadev Chiluveru", "Mahaboob Syed", "Nandith Reddy Enugala", "Sai Charan Goud Mandala", "Sai Prasanna Keerthi", "Ajmeri Shaik", "Akshith Chiluveru", "Jayasri Myakala", "Rahul Kanjarla", "Saketh Devarakonda"], "Grade-5": ["Adya Reddy Vangala", "Kowshik Patel Muppa", "Siri Singaram", "Srikar Mandala", "Abdus Salaam MD", "Akshith Ram Kalvacharla", "Jaffar Anas Shaik", "Khaja Azeemuddin Mohammed", "Nihan Mohammed", "Saif Shaik", "Saketh Renukuntla", "Sreeja Dasari", "Vidhaatri Sahani"], "Grade-6": ["Abdul Razzak Mohammad", "Anudeepthi Chintha", "Saketh Ranaveni", "Shiva Sri Katukuri", "Aklees Shaik", "Akshya Kalvacharla", "Prince Katkuri"], "Grade-7": ["Manikanta Sannayala", "Sreeyan Reddy Karra", "Jayadhithya Chiluveru"], "Grade-8": ["Sathwika Nagavelly", "Vyshnavi Uppala", "Akshaya Gampala", "Ganesh Oggula", "Gayathri Renukuntla", "Khaja Sadeemuddin Mohammed"] };
+    const studentData = { "Pre-KG": ["Hanish Macharla", "Arjun Vihaar Illandula", "Thanu sree Allakunta", "Aadhya Gangaraboina", "Aadhya Sri Oggula", "Aadhyasri Shivagoni", "Afraha Begum", "Aliya Sultana", "Anvika Bandi", "Aradana Devara konda", "Devansh Bandi", "Hanvitha Mulkalapelli", "Harsha Vardhan Seenapelli", "Hiranya Bandi", "Jashritha Boina", "Konreddy Shreyanvi", "Kriyansh Sammeta", "Mohammed Mohiuddin Sayyad", "Nethra Narkurthi", "Reeyansh Bandi", "Rishi Manupati", "Rudransh Bandi", "Rudransh Bandi_1", "Sanvika Bandi", "Shanvith Khatha", "Shishira Jalagam", "Shiva Sai Mekala", "Shree Rudhraveer Chevvu", "Shreyansh Gangaraboina", "Sreeja Thalla", "Srikrithini Myakala", "Srivatsav Vanam", "Sriyansh Mekala", "Thanvika Lakka", "Thrilokansh Vudari", "Ujjwal Chekka", "Vaishnavi Lakka", "Vedansh Myakala", "Vishnu Priya Molugu", "Vyshnav Tej Boina", "Yafiah Mohammad"], "KG-1": ["Aadhya Sri Amaravadi", "Aditya Manda", "Aadhya Jella", "Advaita Gauri Bandi", "Aizah Amna Shaik", "Akshara Singaram", "Bhahuveer Raj Somishetti", "Gayathri Erroju", "Hanvika  Mulkalapelli", "Manvith Kondoju", "Sayyad Vajeed", "Mekala Manu sri", "Oliva Grace Vallapu", "Rithwik Oggula", "Rithwika Kandagatla", "Srimahi Chevvu", "Thanvesh Thalla", "Trishul Nanduri", "Yoganshika Nanduri", "Yusra Mohammad", "Zainul Abideen Syed"], "KG-2": ["Deekshanth Sammeta", "Hanshith Erroju", "Harika Bandi", "Himarsha Naini", "Karthik Vallepu", "Kruthika Bandi", "Rajavardhan Gampala", "Roshan Kaitha", "Sri Anshu Ayaan Lyadala", "Srihansh Bandi", "Srikshitha Guduri", "Varshith Gonela", "Adyasri Makala", "Anvik Boini", "Anvith Pokanati", "Awais Ur Rehman Mohammad", "Dakshu Pothuganti", "Hansith Reddy Katukuri", "Harshith Pokanati", "Jella Aditya", "Krishank Nallabothula", "Kundana Katkuri", "Munukuntla Revanth Rudhra", "Niraja Nethri Siluveru", "Pranav Mattepelli", "Sreenith Yadav Naini", "Uvan Reddy Dasari", "Zayan Mohammad", "Zoya Mohammed"], "Grade-1": ["Dheeraj Gattu", "Preetham Sannayala", "Shiva nandu Gonela", "Shrayan Nuthanakanti", "Sriyanksha Mandala", "Advitha Garige", "Harika Bandi", "Himansi Kondoju", "Izhaan Rahamath Syed", "Jaisurya Myakala", "Khadeeja Fathima", "Manaswini Dandugula", "Manusri Bandi", "Rithwik krishna Amaravadi", "Rohan Bandi", "Shiva Junnu", "Shivanandh Bandi", "Sridha Thalla", "Srinika Chengelly", "Sriyanshi Oggula", "Vishwak Checkka"], "Grade-2": ["Aliza Manha Shaik", "Dhruvan Reddy Katukuri", "Druthika Enugala", "Manaswini Bandi", "Rakshith Macharla", "Sathwika Katkuri", "Shalini Uppala", "Chandu Devarakonda", "Gnaneshwar Pokanati", "Hasnain Syed", "Koushik Siluveru", "Senen Desabattula", "Shivarajan Pothuganti"], "Grade-3": ["Nagavelly Manikanta", "Mirja Ismail", "Bandi Aryan", "Dandugula Mahesh Babu", "Bandi Tejasri", "Bandi Harshavardhan", "Gampala Vyshnavi", "Gampala Laxmi", "Garige Harshith", "Katkuri Hanish", "Katukuri Manideep", "MD Abdul Quddus", "Muppa Sathwik Patel", "Nuthanakanti Sansita", "Pasarakonda Ritwin", "Pinninti Rakshith Rao", "Rayi Sriman Adithya"], "Grade-4": ["Abdul Saqib Mohammad", "Anudeep Chintha", "Bhavan Bandi", "Harshavardhan Gonela", "Jayadev Chiluveru", "Mahaboob Syed", "Nandith Reddy Enugala", "Sai Charan Goud Mandala", "Sai Prasanna Keerthi", "Ajmeri Shaik", "Akshith Chiluveru", "Jayasri Myakala", "Rahul Kanjarla", "Saketh Devarakonda"], "Grade-5": ["Adya Reddy Vangala", "Kowshik Patel Muppa", "Siri Singaram", "Srikar Mandala", "Abdus Salaam MD", "Akshith Ram Kalvacharla", "Jaffar Anas Shaik", "Khaja Azeemuddin Mohammed", "Nihan Mohammed", "Saif Shaik", "Saketh Renukuntla", "Sreeja Dasari", "Vidhaatri Sahani"], "Grade-6": ["Abdul Razzak Mohammad", "Anudeepthi Chintha", "Saketh Ranaveni", "Shiva Sri Katukuri", "Aklees Shaik", "Akshya Kalvacharla", "Prince Katkuri"], "Grade-7": ["Manikanta Sannayala", "Sreeyan Reddy Karra", "Jayadhithya Chiluveru"], "Grade-8": ["Sathwika Nagavelly", "Vyshnavi Uppala", "Akshaya Gampala", "Ganesh Oggula", "Gayathri Renukuntla", "Khaja Sadeemuddin Mohammed"] };
 
     async function verifyStaff() {
         const name = document.getElementById('teacherSelect').value;
@@ -168,8 +180,7 @@
 
         document.getElementById('searchBox').style.display = "block";
         let subjects = ["TEL", "HIN", "ENG", "MAT", "SOC"];
-        if (["Grade-6", "Grade-7", "Grade-8"].includes(cls)) subjects.push("PHY", "BIO", "IIT");
-        else if (cls === "Grade-5") subjects.push("SCI", "IIT");
+        if (["Grade-6", "Grade-7", "Grade-8"].includes(cls)) subjects.push("PHY", "BIO");
         else subjects.push("SCI");
 
         const isFA = exam.includes("FORMATIVE ASSESSMENT");
@@ -180,7 +191,6 @@
                 <span class="student-name">${index + 1}. ${name}</span>
                 <div class="marks-grid">
                     ${subjects.map(sub => {
-                        if(sub === "IIT") return `<div class="subject-box"><label>IIT (50)</label><input type="text" placeholder="-" class="sub-input total-inp" data-sub="IIT" oninput="validateInput(this, 50)"></div>`;
                         if(["Grade-6", "Grade-7", "Grade-8"].includes(cls)) {
                             return `<div class="subject-box"><label>${sub}</label><div style="display:flex;gap:2px">
                                 <input type="text" placeholder="E" class="sub-input ext" data-sub="${sub}" oninput="validateInput(this, ${isFA?40:80})">
@@ -203,6 +213,7 @@
 
     function validateInput(input, max) {
         let val = parseInt(input.value);
+        if (isNaN(val)) { calculateStats(input); return; }
         if (val > max) input.value = max;
         if (val < 0) input.value = 0;
         calculateStats(input);
@@ -219,8 +230,8 @@
         card.querySelectorAll('.subject-box').forEach(box => {
             const inp = box.querySelector('input');
             const sub = inp.getAttribute('data-sub');
-            if(sub === "IIT") { totalObtained += parseInt(inp.value) || 0; totalMax += 50; }
-            else if(isSenior) {
+            
+            if(isSenior) {
                 totalObtained += (parseInt(box.querySelector('.ext').value) || 0) + (parseInt(box.querySelector('.int').value) || 0);
                 totalMax += isFA ? 50 : 100;
             } else {
@@ -274,8 +285,7 @@
             card.querySelectorAll('.subject-box').forEach(box => {
                 const inp = box.querySelector('input');
                 const sub = inp.getAttribute('data-sub');
-                if(sub === "IIT") studentMarks[sub] = inp.value || 0;
-                else if(isSenior) studentMarks[sub] = { ext: box.querySelector('.ext').value || 0, int: box.querySelector('.int').value || 0 };
+                if(isSenior) studentMarks[sub] = { ext: box.querySelector('.ext').value || 0, int: box.querySelector('.int').value || 0 };
                 else studentMarks[sub] = inp.value || 0;
             });
             updates[`progress_cards/${cls}/${exam}/${name}`] = {
