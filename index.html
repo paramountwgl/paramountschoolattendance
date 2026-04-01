@@ -19,8 +19,33 @@
         .school-name-main { font-family: 'Montserrat', sans-serif; font-size: clamp(1.1rem, 5vw, 2rem); font-weight: 800; letter-spacing: 1px; }
         .school-name-sub { font-family: 'Montserrat', sans-serif; font-size: clamp(0.6rem, 2.5vw, 0.9rem); color: var(--gold); font-weight: 700; text-transform: uppercase; }
 
-        .portal-nav-container { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin: 15px auto; padding: 0 10px; max-width: 950px; }
-        .btn-premium-nav { padding: 12px 5px; border-radius: 12px; text-decoration: none; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 9px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); background: linear-gradient(135deg, #004d26 0%, var(--forest) 100%); color: white; border: 1.5px solid var(--gold); transition: 0.2s; text-align: center; }
+        .portal-nav-container { 
+            display: grid; 
+            grid-template-columns: repeat(7, 1fr); /* Updated to 7 columns for the new button */
+            gap: 8px; 
+            margin: 15px auto; 
+            padding: 0 10px; 
+            max-width: 1000px; 
+        }
+        .btn-premium-nav { 
+            padding: 12px 5px; 
+            border-radius: 12px; 
+            text-decoration: none; 
+            font-family: 'Montserrat', sans-serif; 
+            font-weight: 800; 
+            font-size: 9px; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 6px; 
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); 
+            background: linear-gradient(135deg, #004d26 0%, var(--forest) 100%); 
+            color: white; 
+            border: 1.5px solid var(--gold); 
+            transition: 0.2s; 
+            text-align: center; 
+        }
         .btn-premium-nav:hover { transform: translateY(-2px); border-color: white; }
         .btn-premium-nav i { font-size: 1.1rem; }
 
@@ -39,7 +64,10 @@
         input[type="checkbox"] { width: 24px; height: 24px; accent-color: var(--forest); }
         .info-bar { font-size: 11px; color: #555; margin-top: 8px; font-style: italic; padding: 8px; background: #f0f4f2; border-radius: 8px; border-left: 4px solid var(--gold); display: none; }
 
-        @media (max-width: 480px) {
+        @media (max-width: 600px) {
+            .portal-nav-container { grid-template-columns: repeat(4, 1fr); } /* 4 columns on mobile for readability */
+        }
+        @media (max-width: 400px) {
             .portal-nav-container { grid-template-columns: repeat(3, 1fr); }
         }
     </style>
@@ -66,6 +94,7 @@
     <a href="fees.html" class="btn-premium-nav"><i class="fas fa-file-invoice-dollar"></i> Fees</a>
     <a href="marks.html" class="btn-premium-nav"><i class="fas fa-chart-line"></i> Marks</a>
     <a href="halltickets.html" class="btn-premium-nav"><i class="fas fa-id-card"></i> Hall Ticket</a>
+    <a href="exam-papers.html" class="btn-premium-nav"><i class="fas fa-file-alt"></i> Post Exam Papers</a>
 </div>
 
 <div class="container">
@@ -143,6 +172,7 @@
         });
         if(pw === registry[name]) { 
             authenticatedTeacher = name;
+            sessionStorage.setItem('activeTeacher', name); // Store name for Exam Vault and other pages
             const isPT = (name === "Ms. Riha" || name === "Ms. Raniya Zainab");
             document.getElementById('attCard').style.display = isPT ? 'none' : 'block';
             document.getElementById('hwCard').style.display = 'block';
@@ -213,7 +243,6 @@
             updatedAt: timeStamp
         };
 
-        // .set() overwrites the existing entry to prevent double counting
         db.ref(`daily_attendance/${date}/${cls}`).set(finalData).then(() => {
             Swal.fire('Success', 'Attendance Saved Successfully!', 'success');
             checkExistingAttendance();
