@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Exam Vault | Paramount School</title>
+    <title>High Speed Vault | Paramount School</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Segoe+UI:wght@400;700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/png" href="logo.png">
@@ -12,52 +12,43 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; padding-bottom: 50px; overflow-x: hidden; }
         
-        /* --- LOGIN SCREEN --- */
         .overlay-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--light); z-index: 2000; display: flex; justify-content: center; align-items: center; padding: 15px; }
-        .auth-box { background: white; padding: 40px 25px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); width: 100%; max-width: 420px; border-bottom: 5px solid var(--forest); text-align: center; }
+        .auth-box { background: white; padding: 40px 25px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); width: 100%; max-width: 400px; border-bottom: 5px solid var(--forest); text-align: center; }
         
-        /* --- PREMIUM HEADER --- */
         header { background: var(--forest); color: white; padding: 15px 3%; border-bottom: 4px solid var(--gold); box-shadow: 0 4px 15px rgba(0,0,0,0.15); position: sticky; top: 0; z-index: 1000; }
         .header-content { display: flex; align-items: center; justify-content: space-between; max-width: 1400px; margin: 0 auto; width: 100%; }
-        .header-left { display: flex; align-items: center; gap: 12px; }
-        .header-logo { height: 55px; width: auto; }
-        .school-text { display: flex; flex-direction: column; line-height: 1.1; text-align: left; }
-        .school-name-main { font-family: 'Montserrat', sans-serif; font-size: 1.4rem; font-weight: 800; letter-spacing: 0.5px; color: white; }
-        .school-name-sub { font-family: 'Montserrat', sans-serif; font-size: 0.65rem; color: var(--gold); font-weight: 700; text-transform: uppercase; }
+        .header-logo { height: 50px; width: auto; }
+        .school-name { font-family: 'Montserrat', sans-serif; font-size: 1.2rem; font-weight: 800; color: white; }
 
-        .container { max-width: 900px; margin: 25px auto; padding: 0 15px; }
-        .card { background: white; padding: 25px; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 20px; border-top: 8px solid var(--forest); }
-        h3 { color: var(--forest); text-align: center; text-transform: uppercase; font-weight: 800; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        .container { max-width: 800px; margin: 25px auto; padding: 0 15px; }
+        .card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 20px; border-top: 8px solid var(--forest); }
+        h3 { color: var(--forest); text-align: center; text-transform: uppercase; font-weight: 800; margin-bottom: 20px; font-size: 1rem; }
         
-        .upload-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        label { display: block; font-size: 10px; font-weight: 900; color: #777; margin: 10px 0 5px; text-transform: uppercase; }
-        select, input, .search-bar { width: 100%; padding: 12px; border-radius: 12px; border: 2px solid #eee; background: #fafafa; font-weight: 600; outline: none; font-size: 14px; }
+        .upload-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        label { display: block; font-size: 9px; font-weight: 900; color: #777; margin: 8px 0 4px; text-transform: uppercase; }
+        select, input, .search-bar { width: 100%; padding: 10px; border-radius: 10px; border: 2px solid #eee; background: #fafafa; font-weight: 600; outline: none; font-size: 13px; }
         
-        .file-item { background: white; border: 1px solid #eee; padding: 18px; border-radius: 20px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
-        .file-info b { color: var(--forest); display: block; font-size: 14px; text-transform: uppercase; }
-        .file-info span { font-size: 10px; color: #888; display: block; margin-top: 4px; font-weight: 600; }
+        .file-item { background: #fff; border: 1px solid #eee; padding: 15px; border-radius: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .file-info b { color: var(--forest); display: block; font-size: 13px; }
         
-        .btn { padding: 12px 25px; border-radius: 50px; border: none; font-weight: 800; cursor: pointer; text-transform: uppercase; font-size: 12px; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .btn-upload { background: var(--forest); color: white; width: 100%; margin-top: 20px; border: 2px solid var(--gold); }
-        .btn-download { background: var(--gold); color: var(--forest); text-decoration: none; padding: 10px 18px; border-radius: 10px; }
-        .btn-preview { background: #e3f2fd; color: #1976d2; text-decoration: none; padding: 10px 18px; border-radius: 10px; }
-        .btn-delete { background: #fee2e2; color: #dc2626; padding: 10px 15px; border-radius: 10px; }
+        .btn { padding: 12px 20px; border-radius: 50px; border: none; font-weight: 800; cursor: pointer; text-transform: uppercase; font-size: 11px; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-upload { background: var(--forest); color: white; width: 100%; margin-top: 15px; border: 2px solid var(--gold); }
+        .btn-delete { background: #fee2e2; color: #dc2626; padding: 8px 12px; border-radius: 8px; }
+        .btn-download { background: var(--gold); color: var(--forest); text-decoration: none; padding: 8px 15px; border-radius: 8px; }
         
-        progress { width: 100%; height: 10px; border-radius: 10px; margin-top: 15px; display: none; accent-color: var(--forest); }
+        progress { width: 100%; height: 6px; border-radius: 10px; margin-top: 10px; display: none; accent-color: var(--forest); }
         
-        @media (max-width: 600px) { .upload-grid { grid-template-columns: 1fr; } .school-name-main { font-size: 1.1rem; } }
+        @media (max-width: 600px) { .upload-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
 
 <div id="vaultAuth" class="overlay-screen">
     <div class="auth-box">
-        <img src="logo.png" style="height: 70px; margin-bottom: 15px;">
-        <h2 style="font-family:'Montserrat'; color:var(--forest); margin:0;">STAFF ACCESS</h2>
-        <p style="font-size:10px; font-weight:800; color:var(--gold); text-transform:uppercase; margin-bottom:20px;">Exam Management Vault</p>
-        
+        <img src="logo.png" style="height: 60px;">
+        <h3 style="border:none; margin:10px 0;">FACULTY LOGIN</h3>
         <select id="loginTeacher" class="search-bar">
-            <option value="">-- Choose Your Name --</option>
+            <option value="">-- Select Name --</option>
             <option value="Mr. Shaik Ahmad">Mr. Shaik Ahmad</option>
             <option value="Ms. Roqiya Begum">Ms. Roqiya Begum</option>
             <option value="Ms. Jyothi">Ms. Jyothi</option>
@@ -74,59 +65,39 @@
             <option value="Ms. Riha">Ms. Riha</option>
             <option value="Ms. Raniya Zainab">Ms. Raniya Zainab</option>
         </select>
-        
-        <input type="password" id="loginPass" class="search-bar" placeholder="Enter Password" style="margin-top:10px;">
-        
-        <button onclick="verifyVaultAccess()" class="btn btn-upload" style="margin-top:20px;">Unlock Vault <i class="fas fa-lock-open"></i></button>
-        <button onclick="window.location.href='teacher.html'" style="margin-top:15px; width:100%; background:none; border:none; color:#777; font-weight:800; font-size:10px; cursor:pointer;">RETURN TO DASHBOARD</button>
+        <input type="password" id="loginPass" class="search-bar" placeholder="Password" style="margin-top:8px;">
+        <button onclick="verifyVaultAccess()" class="btn btn-upload">Enter Vault</button>
+        <button onclick="window.location.href='teacher.html'" style="margin-top:10px; background:none; border:none; color:#777; font-weight:800; cursor:pointer; font-size:9px;">RETURN TO DASHBOARD</button>
     </div>
 </div>
 
 <div id="vaultApp" style="display:none;">
     <header>
         <div class="header-content">
-            <div class="header-left">
+            <div style="display:flex; align-items:center; gap:10px;">
                 <img src="logo.png" class="header-logo">
-                <div class="school-text">
-                    <span class="school-name-main">PARAMOUNT</span>
-                    <span class="school-name-sub">ENGLISH MEDIUM SCHOOL</span>
-                </div>
+                <span class="school-name">PARAMOUNT EXAM VAULT</span>
             </div>
-            <div style="display:flex; gap:10px;">
-                <button onclick="location.reload()" style="background:rgba(255,255,255,0.1); border:1.5px solid white; color:white; padding:6px 18px; border-radius:50px; font-size:10px; cursor:pointer; font-weight:800;">LOGOUT</button>
-            </div>
+            <button onclick="location.reload()" style="background:rgba(255,255,255,0.1); border:1px solid white; color:white; padding:5px 12px; border-radius:20px; font-size:10px; font-weight:800;">LOGOUT</button>
         </div>
     </header>
 
     <div class="container">
         <div class="card">
-            <h3><i class="fas fa-file-upload"></i> Archive New Paper</h3>
+            <h3>Quick Archive</h3>
             <div class="upload-grid">
-                <div><label>Class</label><select id="vClass">
-                    <option value="Pre-KG">Pre-KG</option><option value="KG-1">KG-1</option><option value="KG-2">KG-2</option>
-                    <option value="Grade-1">Grade-1</option><option value="Grade-2">Grade-2</option><option value="Grade-3">Grade-3</option>
-                    <option value="Grade-4">Grade-4</option><option value="Grade-5">Grade-5</option><option value="Grade-6">Grade-6</option>
-                    <option value="Grade-7">Grade-7</option><option value="Grade-8">Grade-8</option>
-                </select></div>
-                <div><label>Subject</label><select id="vSubject">
-                    <option value="TELUGU">TELUGU</option><option value="HINDI">HINDI</option><option value="ENGLISH">ENGLISH</option>
-                    <option value="MATHS">MATHS</option><option value="SCIENCE">SCIENCE</option><option value="SOCIAL">SOCIAL</option>
-                    <option value="PHYSICS">PHYSICS</option><option value="BIOLOGY">BIOLOGY</option>
-                </select></div>
-                <div><label>Exam Category</label><select id="vExam">
-                    <option value="FA-1">FA-1</option><option value="FA-2">FA-2</option><option value="FA-3">FA-3</option><option value="FA-4">FA-4</option>
-                    <option value="SA-1">SA-1</option><option value="SA-2">SA-2</option><option value="ANNUAL">ANNUAL EXAM</option>
-                </select></div>
-                <div><label>File (PDF/Word)</label><input type="file" id="vFile" accept=".pdf,.docx,.doc"></div>
+                <div><label>Class</label><select id="vClass"><option value="Pre-KG">Pre-KG</option><option value="KG-1">KG-1</option><option value="KG-2">KG-2</option><option value="Grade-1">Grade-1</option><option value="Grade-2">Grade-2</option><option value="Grade-3">Grade-3</option><option value="Grade-4">Grade-4</option><option value="Grade-5">Grade-5</option><option value="Grade-6">Grade-6</option><option value="Grade-7">Grade-7</option><option value="Grade-8">Grade-8</option></select></div>
+                <div><label>Subject</label><select id="vSubject"><option value="TELUGU">TELUGU</option><option value="HINDI">HINDI</option><option value="ENGLISH">ENGLISH</option><option value="MATHS">MATHS</option><option value="SCIENCE">SCIENCE</option><option value="SOCIAL">SOCIAL</option><option value="PHYSICS">PHYSICS</option><option value="BIOLOGY">BIOLOGY</option></select></div>
+                <div><label>Exam</label><select id="vExam"><option value="FA-1">FA-1</option><option value="FA-2">FA-2</option><option value="FA-3">FA-3</option><option value="FA-4">FA-4</option><option value="SA-1">SA-1</option><option value="SA-2">SA-2</option><option value="ANNUAL">ANNUAL</option></select></div>
+                <div><label>Document</label><input type="file" id="vFile" accept=".pdf,.docx,.doc"></div>
             </div>
-            <progress id="uploadProgress" value="0" max="100"></progress>
-            <button class="btn btn-upload" id="upBtn" onclick="handleUpload()">Upload Question Paper <i class="fas fa-cloud-upload-alt"></i></button>
+            <progress id="upProgress" value="0" max="100"></progress>
+            <button class="btn btn-upload" id="upBtn" onclick="ultraFastUpload()">Archive Now <i class="fas fa-paper-plane"></i></button>
         </div>
 
         <div class="card">
-            <h3><i class="fas fa-archive"></i> Vault Archive</h3>
-            <input type="text" id="vaultSearch" class="search-bar" placeholder="🔍 Search by Class, Subject or Teacher..." onkeyup="filterArchive()">
-            <div id="vaultContainer" style="margin-top:20px;"></div>
+            <h3>Archived Papers</h3>
+            <div id="vaultContainer"></div>
         </div>
     </div>
 </div>
@@ -149,82 +120,59 @@
     function verifyVaultAccess() {
         const name = document.getElementById('loginTeacher').value;
         const pass = document.getElementById('loginPass').value;
-        
-        if(!name || !pass) { Swal.fire('Error', 'Fill all fields', 'warning'); return; }
-
         if(pass === registry[name]) {
             currentUser = name;
-            document.getElementById('vaultAuth').style.display = 'none'; // Hide Login
-            document.getElementById('vaultApp').style.display = 'block'; // Show Dashboard
+            document.getElementById('vaultAuth').style.display = 'none';
+            document.getElementById('vaultApp').style.display = 'block';
             loadVault();
-        } else {
-            Swal.fire('Denied', 'Incorrect Password', 'error');
-        }
+        } else { Swal.fire('Error', 'Invalid password', 'error'); }
     }
 
-    async function handleUpload() {
-    const file = document.getElementById('vFile').files[0];
-    const cls = document.getElementById('vClass').value;
-    const sub = document.getElementById('vSubject').value;
-    const exam = document.getElementById('vExam').value;
-    const prog = document.getElementById('uploadProgress');
-    const btn = document.getElementById('upBtn');
+    async function ultraFastUpload() {
+        const file = document.getElementById('vFile').files[0];
+        const cls = document.getElementById('vClass').value;
+        const sub = document.getElementById('vSubject').value;
+        const exam = document.getElementById('vExam').value;
+        const prog = document.getElementById('upProgress');
+        const btn = document.getElementById('upBtn');
 
-    if(!file) return Swal.fire('Wait', 'Select a file', 'warning');
-    
-    // Check file size - Warn if it's over 5MB
-    if(file.size > 5 * 1024 * 1024) {
-        return Swal.fire('File Too Large', 'Please keep papers under 5MB for fast uploading.', 'error');
+        if(!file) return Swal.fire('Wait', 'Attach a file!', 'warning');
+        
+        btn.disabled = true;
+        btn.innerHTML = "Archiving... <i class='fas fa-circle-notch fa-spin'></i>";
+        prog.style.display = 'block';
+
+        const fileName = `${cls}_${exam}_${sub}_${Date.now()}`;
+        const uploadTask = storage.ref(`vault/${fileName}`).put(file, { contentType: file.type });
+
+        uploadTask.on('state_changed', 
+            (snap) => { prog.value = (snap.bytesTransferred / snap.totalBytes) * 100; }, 
+            (err) => { Swal.fire('Error', err.message, 'error'); btn.disabled = false; }, 
+            async () => {
+                const url = await uploadTask.snapshot.ref.getDownloadURL();
+                
+                // Real-time Database write (Parallel)
+                await db.ref(`exam_vault/${fileName}`).set({
+                    className: cls, subject: sub, examName: exam, fileUrl: url,
+                    updatedBy: currentUser, updatedAt: new Date().toLocaleString()
+                });
+
+                // Immediate SUCCESS Popup
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Paper Uploaded Successfully',
+                    text: 'Archived in school cloud vault',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+
+                document.getElementById('vFile').value = '';
+                prog.style.display = 'none';
+                btn.disabled = false;
+                btn.innerHTML = "Archive Now <i class='fas fa-paper-plane'></i>";
+            }
+        );
     }
-
-    btn.disabled = true;
-    btn.innerHTML = "Processing... <i class='fas fa-spinner fa-spin'></i>";
-    prog.style.display = 'block';
-
-    const fileName = `${cls}_${exam}_${sub}_${Date.now()}`;
-    // Optimized: Setting metadata manually helps Firebase process it faster
-    const metadata = { contentType: file.type };
-    
-    const uploadTask = storage.ref(`vault/${fileName}`).put(file, metadata);
-
-    uploadTask.on('state_changed', 
-        (snap) => { 
-            const percentage = (snap.bytesTransferred / snap.totalBytes) * 100;
-            prog.value = percentage;
-        }, 
-        (err) => { 
-            Swal.fire('Error', err.message, 'error'); 
-            btn.disabled = false; 
-            btn.innerHTML = "Upload Question Paper <i class='fas fa-cloud-upload-alt'></i>";
-        }, 
-        async () => {
-            // Speed Tip: Don't wait too long for the URL
-            const url = await uploadTask.snapshot.ref.getDownloadURL();
-            
-            await db.ref(`exam_vault/${fileName}`).set({
-                className: cls, 
-                subject: sub, 
-                examName: exam, 
-                fileUrl: url,
-                updatedBy: currentUser, 
-                updatedAt: new Date().toLocaleString()
-            });
-
-            Swal.fire({
-                icon: 'success',
-                title: 'Success!',
-                text: 'Paper archived in the vault.',
-                timer: 2000,
-                showConfirmButton: false
-            });
-
-            document.getElementById('vFile').value = '';
-            prog.style.display = 'none';
-            btn.disabled = false;
-            btn.innerHTML = "Upload Question Paper <i class='fas fa-cloud-upload-alt'></i>";
-        }
-    );
-}
 
     function loadVault() {
         db.ref('exam_vault').on('value', (snap) => {
@@ -236,37 +184,26 @@
                     const isAdm = printAdmins.includes(currentUser);
                     const isOwn = p.updatedBy === currentUser;
                     html += `
-                    <div class="file-item archive-entry" data-search="${p.className} ${p.subject} ${p.updatedBy}">
+                    <div class="file-item">
                         <div class="file-info">
-                            <b>${p.className} | ${p.subject}</b>
-                            <span>Category: ${p.examName} | Uploaded by: ${p.updatedBy}</span>
-                            <span>Date: ${p.updatedAt}</span>
+                            <b>${p.className} - ${p.subject}</b>
+                            <span style="font-size:9px; color:#666;">${p.examName} | By: ${p.updatedBy}</span>
                         </div>
-                        <div style="display:flex; gap:8px;">
-                            <a href="${p.fileUrl}" target="_blank" class="btn-preview"><i class="fas fa-eye"></i></a>
-                            ${isAdm ? `<a href="${p.fileUrl}" target="_blank" class="btn-download" download><i class="fas fa-print"></i></a>` : ''}
-                            ${(isAdm || isOwn) ? `<button onclick="deletePaper('${id}')" class="btn btn-delete"><i class="fas fa-trash"></i></button>` : ''}
+                        <div style="display:flex; gap:6px;">
+                            ${isAdm ? `<a href="${p.fileUrl}" target="_blank" class="btn-download"><i class="fas fa-print"></i></a>` : `<a href="${p.fileUrl}" target="_blank" style="background:#e3f2fd; color:#1565c0; padding:8px 12px; border-radius:8px;"><i class="fas fa-eye"></i></a>`}
+                            ${(isAdm || isOwn) ? `<button onclick="deletePaper('${id}')" class="btn btn-delete" style="padding:8px 12px;"><i class="fas fa-trash"></i></button>` : ''}
                         </div>
                     </div>`;
                 });
             }
-            document.getElementById('vaultContainer').innerHTML = html || "<p style='text-align:center;'>Archive empty.</p>";
+            document.getElementById('vaultContainer').innerHTML = html || "<p style='text-align:center; font-size:12px; color:#999;'>Archive is empty</p>";
         });
     }
 
-    function filterArchive() {
-        const q = document.getElementById('vaultSearch').value.toLowerCase();
-        document.querySelectorAll('.archive-entry').forEach(el => {
-            el.style.display = el.getAttribute('data-search').toLowerCase().includes(q) ? "flex" : "none";
+    function deletePaper(id) {
+        Swal.fire({ title: 'Remove file?', showCancelButton: true }).then(r => {
+            if(r.isConfirmed) db.ref(`exam_vault/${id}`).remove();
         });
-    }
-
-    async function deletePaper(id) {
-        const res = await Swal.fire({ title: 'Delete Paper?', text: "Permanent removal.", icon: 'warning', showCancelButton: true });
-        if(res.isConfirmed) {
-            await db.ref(`exam_vault/${id}`).remove();
-            Swal.fire('Deleted', 'Record removed.', 'success');
-        }
     }
 </script>
 </body>
