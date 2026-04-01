@@ -12,7 +12,6 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; } 
         body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; padding-bottom: 50px; }
 
-        /* --- LOGIN SCREEN --- */
         .overlay-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--light); z-index: 1000; display: flex; justify-content: center; align-items: center; padding: 15px; }
         .auth-box { background: white; padding: 40px 25px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); width: 100%; max-width: 420px; border-bottom: 5px solid var(--forest); text-align: center; }
         .auth-logo { height: 75px; margin-bottom: 10px; }
@@ -20,53 +19,42 @@
         .auth-input { width: 100%; padding: 12px; border-radius: 10px; border: 2px solid #eee; margin-bottom: 15px; text-align: center; font-size: 16px; height: 50px; outline: none; transition: 0.3s; }
         .btn-premium-unlock { background: linear-gradient(135deg, var(--forest), #004d26); color: white; padding: 15px; border-radius: 50px; font-weight: 800; border: 2px solid var(--gold); cursor: pointer; width: 100%; height: 55px; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; margin-top: 15px; text-transform: uppercase; font-size: 14px; }
 
-        /* --- PREMIUM HEADER --- */
         header { background: var(--forest); color: white; padding: 12px 4%; border-bottom: 4px solid var(--gold); box-shadow: 0 4px 12px rgba(0,0,0,0.15); position: sticky; top: 0; z-index: 100; }
         .header-content { display: flex; align-items: center; justify-content: space-between; max-width: 1400px; margin: 0 auto; width: 100%; }
-        .brand-group { display: flex; align-items: center; flex-wrap: nowrap; } 
         .header-left { display: flex; align-items: center; gap: 12px; }
-        .header-logo { height: 55px; width: auto; flex-shrink: 0; }
-        .school-branding { display: flex; flex-direction: column; line-height: 1.1; flex-shrink: 0; }
-        .school-name-main { font-family: 'Montserrat', sans-serif; font-size: 1.4rem; font-weight: 800; letter-spacing: 0.5px; color: white; }
-        .school-name-sub { font-family: 'Montserrat', sans-serif; font-size: 0.65rem; color: var(--gold); font-weight: 700; text-transform: uppercase; opacity: 0.9; }
-        .divider-line { width: 2px; height: 35px; background-color: rgba(255,255,255,0.3); margin: 0 15px; flex-shrink: 0; }
-        .portal-label { font-family: 'Montserrat', sans-serif; font-size: 1.4rem; font-weight: 800; text-transform: uppercase; color: white; white-space: nowrap; flex-shrink: 0; }
-
-        .nav-tools { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
-        .live-clock { font-family: 'Montserrat', sans-serif; font-weight: 800; color: var(--gold); font-size: 13px; text-transform: uppercase; }
-        .btn-exit { background: rgba(255,255,255,0.1); border: 1.5px solid white; color: white; padding: 5px 18px; border-radius: 50px; font-size: 10px; font-weight: 800; text-transform: uppercase; cursor: pointer; transition: 0.3s all ease; display: flex; align-items: center; gap: 8px; }
-
-        /* --- SUB-NAVIGATION --- */
-        .sub-nav { display: flex; gap: 10px; max-width: 650px; margin: 15px auto 0; padding: 0 15px; }
-        .nav-link { flex: 1; text-align: center; background: white; padding: 12px; border-radius: 50px; font-weight: 700; text-transform: uppercase; font-size: 11px; color: #666; text-decoration: none; border: 1px solid #f1f5f9; box-shadow: 0 2px 6px rgba(0,0,0,0.03); transition: 0.3s; }
-        .nav-link.standout { background: var(--gold); color: var(--forest); border-color: var(--gold); }
-        .nav-link.active { background: var(--forest); color: white; }
+        .header-logo { height: 55px; width: auto; }
+        .school-name-main { font-family: 'Montserrat', sans-serif; font-size: 1.4rem; font-weight: 800; color: white; }
+        .portal-label { font-family: 'Montserrat', sans-serif; font-size: 1.2rem; font-weight: 800; text-transform: uppercase; border-left: 2px solid rgba(255,255,255,0.3); padding-left: 15px; margin-left: 15px; color: white; }
+        .nav-tools { display: flex; align-items: center; gap: 15px; }
+        .live-clock { font-family: 'Montserrat', sans-serif; font-weight: 800; color: var(--gold); font-size: 13px; }
 
         .container { max-width: 650px; margin: 25px auto; padding: 0 15px; }
         .card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); border-top: 8px solid var(--gold); margin-bottom: 25px; }
-        h3 { color: var(--forest); margin: 0 0 20px; font-size: 1.1rem; text-align: center; border-bottom: 1px solid #eee; padding-bottom: 10px; text-transform: uppercase; font-weight: 800; }
+        h3 { color: var(--forest); margin: 0 0 20px; font-size: 1.1rem; text-align: center; text-transform: uppercase; font-weight: 800; }
         
         .tab-box { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
         .tab-btn { flex: 1; padding: 10px; border-radius: 50px; border: 1px solid #ddd; background: #fafafa; color: #777; font-weight: 700; cursor: pointer; text-transform: uppercase; font-size: 10px; }
-        .tab-btn.active { border-color: var(--forest); color: var(--forest); }
+        .tab-btn.active { background: var(--forest); color: white; border-color: var(--forest); }
 
         .subject-grid { display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 15px; }
         .sched-box { background: #fbfbfb; padding: 12px; border-radius: 12px; border: 1px solid #eee; display: flex; flex-direction: column; gap: 8px; }
-        .sched-box label { font-weight: 800; font-size: 11px; color: var(--forest); margin: 0; }
+        .sched-box label { font-weight: 800; font-size: 11px; color: var(--forest); }
         .sched-inputs { display: flex; gap: 10px; }
-        .sched-inputs input[type="date"], .sched-inputs select { flex: 1; padding: 10px; font-size: 12px; margin-bottom: 0; border-radius: 8px; border: 1px solid #ddd; height: 40px; }
-
-        .ht-card { background: white; padding: 12px; border-radius: 12px; border: 1px solid #eee; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
         
-        select, input { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #eee; font-size: 15px; margin-bottom: 10px; outline: none; background: #fafafa; }
-        .btn-action { color: white; border: none; padding: 16px; border-radius: 50px; font-weight: 700; cursor: pointer; text-transform: uppercase; font-size: 13px; width: 100%; margin-top: 10px; transition: 0.3s; }
+        select, input { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #eee; font-size: 14px; margin-bottom: 10px; outline: none; background: #fafafa; }
+        
+        .btn-action { color: white; border: none; padding: 16px; border-radius: 50px; font-weight: 700; cursor: pointer; text-transform: uppercase; font-size: 12px; width: 100%; transition: 0.3s; margin-top: 10px; }
         .btn-save { background: var(--forest); }
+        .btn-publish { background: #2980b9; }
+        .btn-delete { background: white; color: var(--danger); border: 2px solid var(--danger); }
         .btn-print { background: var(--gold); color: var(--forest); margin-top: 20px; }
+
+        .ht-card { background: #f8fafc; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; font-weight: 700; }
 
         @media (min-width: 600px) { .subject-grid { grid-template-columns: 1fr 1fr; } }
     </style>
 </head>
-<body autocomplete="off">
+<body>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -82,53 +70,44 @@
             <option value="Ms. Roqiya">Ms. Roqiya</option>
             <option value="Ms. Jyothi">Ms. Jyothi</option>
         </select>
-        <input type="password" id="staffPass" class="auth-input" placeholder="Password" onkeypress="if(event.key === 'Enter') unlockPortal()">
+        <input type="password" id="staffPass" class="auth-input" placeholder="Password">
         <button onclick="unlockPortal()" class="btn-premium-unlock">Unlock Portal <i class="fas fa-unlock"></i></button>
-        <button onclick="window.location.href='teacher.html'" style="margin-top:12px; width:100%; border:none; background:#f1f5f9; color:#475569; padding:12px; border-radius:50px; font-weight:700; cursor:pointer; font-size:0.8rem; text-transform:uppercase;">Return to Dashboard</button>
     </div>
 </div>
 
 <div id="hallApp" style="display:none;">
     <header>
         <div class="header-content">
-            <div class="brand-group">
-                <div class="header-left">
-                    <img src="logo.png" class="header-logo">
-                    <div class="school-branding">
-                        <span class="school-name-main">PARAMOUNT</span>
-                        <span class="school-name-sub">ENGLISH MEDIUM SCHOOL</span>
-                    </div>
+            <div class="header-left">
+                <img src="logo.png" class="header-logo">
+                <div class="school-branding">
+                    <span class="school-name-main">PARAMOUNT</span>
+                    <span class="school-name-sub">ENGLISH MEDIUM SCHOOL</span>
                 </div>
-                <div class="divider-line"></div>
                 <div class="portal-label">HALL TICKETS</div>
             </div>
             <div class="nav-tools">
                 <div id="liveClock" class="live-clock">00:00:00 AM</div>
-                <button class="btn-exit" onclick="location.reload()"><i class="fas fa-sign-out-alt"></i> Exit</button>
+                <button onclick="location.reload()" style="background:none; border:1px solid white; color:white; border-radius:20px; padding:4px 12px; cursor:pointer; font-size:10px; font-weight:800;">EXIT</button>
             </div>
         </div>
     </header>
-
-    <div class="sub-nav">
-        <a href="fees.html" class="nav-link standout"><i class="fas fa-money-bill-wave"></i> Fee Records</a>
-        <a href="halltickets.html" class="nav-link active"><i class="fas fa-id-card"></i> Hall Tickets</a>
-    </div>
 
     <div class="container">
         <div id="teacherDisplay" style="text-align:center; font-weight:800; color:var(--forest); background:#e8f5e9; padding:10px; border-radius:12px; margin-bottom:15px; font-size:12px;"></div>
         
         <div class="card">
-            <h3><i class="fas fa-calendar-check"></i> Schedule Manager</h3>
+            <h3><i class="fas fa-calendar-check"></i> Hall Ticket Manager</h3>
             <div class="tab-box">
-                <button class="tab-btn active" id="btn-setup" onclick="switchView('setup')">1. Setup Dates</button>
-                <button class="tab-btn" id="btn-gen" onclick="switchView('generate')">2. Generate Tickets</button>
+                <button class="tab-btn active" id="btn-setup" onclick="switchView('setup')">1. Setup Schedule</button>
+                <button class="tab-btn" id="btn-gen" onclick="switchView('generate')">2. Print & Publish</button>
             </div>
 
             <div id="setupView">
-                <label style="font-size:10px; font-weight:900; color:#777;">SELECT CLASS</label>
+                <label>SELECT CLASS</label>
                 <select id="setupClassSelect" onchange="renderSubjectSchedule()"></select>
                 
-                <label style="font-size:10px; font-weight:900; color:#777;">EXAM TYPE</label>
+                <label>EXAM TYPE</label>
                 <select id="examSelect" onchange="renderSubjectSchedule()">
                     <option value="Formative Assessment-1">Formative Assessment-1</option>
                     <option value="Formative Assessment-2">Formative Assessment-2</option>
@@ -136,30 +115,31 @@
                     <option value="Formative Assessment-4">Formative Assessment-4</option>
                     <option value="Summative Assessment-1">Summative Assessment-1</option>
                     <option value="Summative Assessment-2">Summative Assessment-2</option>
-                    <option value="End-Term">End-Term</option>
+                    <option value="Annual">Annual Exam</option>
                 </select>
 
                 <div id="dynamicSubjectGrid" class="subject-grid"></div>
-                <button class="btn-action btn-save" onclick="saveClassExamDates()">Save Class Schedule <i class="fas fa-save"></i></button>
+                
+                <div style="display:flex; gap:10px; margin-top:20px;">
+                    <button class="btn-action btn-save" onclick="saveClassExamDates()">Save Schedule</button>
+                    <button class="btn-action btn-delete" onclick="deleteAllScheduleData()">Clear Data</button>
+                </div>
             </div>
 
             <div id="generateView" style="display:none;">
-                <label style="font-size:10px; font-weight:900; color:#777;">SELECT CLASS TO PRINT</label>
+                <label>SELECT CLASS</label>
                 <select id="feeClass" onchange="generateClassHallTickets()"></select>
+                
+                <button id="publishBtn" style="display:none;" class="btn-action btn-publish" onclick="publishToPortal()">Publish to Student Portal <i class="fas fa-globe"></i></button>
+                
                 <div id="hallTickets" style="margin-top:15px;"></div>
-                <button id="printBtn" style="display:none;" class="btn-action btn-print" onclick="printAllClassTickets()">Print All Class Tickets <i class="fas fa-print"></i></button>
+                <button id="printBtn" style="display:none;" class="btn-action btn-print" onclick="printAllClassTickets()">Print All Tickets <i class="fas fa-print"></i></button>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    function updateClock() {
-        const now = new Date();
-        document.getElementById('liveClock').innerText = now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:true}).toUpperCase();
-    }
-    setInterval(updateClock, 1000); updateClock();
-
     const firebaseConfig = { apiKey: "AIzaSyDRYk9KOK-ga0c88dnYMsAoifW2NJTd_Y8", databaseURL: "https://paramount-school-d55bc-default-rtdb.firebaseio.com", projectId: "paramount-school-d55bc" };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
@@ -167,12 +147,44 @@
     const authorized = { "Mr. Ahmad": "Ahmad@123", "Ms. Roqiya": "Roqiya@123", "Ms. Jyothi": "Jyothi@123" };
     let activeTeacher = "", ticketsToPrint = [];
 
+    // --- STUDENT ROLL DATA ---
+    const rollData = {
+        "1472070": { Name: "Hanish Macharla", Class: "Pre-KG (Diamond)" }, "1478225": { Name: "Arjun Vihaar Illandula", Class: "Pre-KG (Diamond)" }, "1469391": { Name: "Thanu sree Allakunta", Class: "Pre-KG (Diamond)" }, "1459555": { Name: "Aadhya Gangaraboina", Class: "Pre-KG (Diamond)" }, "1459560": { Name: "Aadhya Sri Oggula", Class: "Pre-KG (Diamond)" }, "1474500": { Name: "Aadhyasri Shivagoni", Class: "Pre-KG (Diamond)" }, "1460680": { Name: "Afraha Begum", Class: "Pre-KG (Diamond)" }, "1472299": { Name: "Aliya Sultana", Class: "Pre-KG (Diamond)" }, "1459683": { Name: "Anvika Bandi", Class: "Pre-KG (Diamond)" }, "1459620": { Name: "Aradana Devara konda", Class: "Pre-KG (Diamond)" }, "1459605": { Name: "Devansh Bandi", Class: "Pre-KG (Diamond)" }, "1472069": { Name: "Hanvitha Mulkalapelli", Class: "Pre-KG (Diamond)" }, "1472723": { Name: "Harsha Vardhan Seenapelli", Class: "Pre-KG (Diamond)" }, "1459658": { Name: "Hiranya Bandi", Class: "Pre-KG (Diamond)" }, "1478248": { Name: "Jashritha Boina", Class: "Pre-KG (Diamond)" }, "1481135": { Name: "Konreddy Shreyanvi", Class: "Pre-KG (Diamond)" }, "1459568": { Name: "Kriyansh Sammeta", Class: "Pre-KG (Diamond)" }, "1459652": { Name: "Mohammed Mohiuddin Sayyad", Class: "Pre-KG (Diamond)" }, "1459636": { Name: "Nethra Narkurthi", Class: "Pre-KG (Diamond)" }, "1463720": { Name: "Reeyansh Bandi", Class: "Pre-KG (Diamond)" }, "1459582": { Name: "Rishi Manupati", Class: "Pre-KG (Diamond)" }, "1459607": { Name: "Rudransh Bandi", Class: "Pre-KG (Diamond)" }, "1459604": { Name: "Rudransh Bandi", Class: "Pre-KG (Diamond)" }, "1459625": { Name: "Sanvika Bandi", Class: "Pre-KG (Diamond)" }, "1472074": { Name: "Shanvith Khatha", Class: "Pre-KG (Diamond)" }, "1469395": { Name: "Shishira Jalagam", Class: "Pre-KG (Diamond)" }, "1456748": { Name: "Shiva Sai Mekala", Class: "Pre-KG (Diamond)" }, "1459687": { Name: "Shree Rudhraveer Chevvu", Class: "Pre-KG (Diamond)" }, "1459572": { Name: "Shreyansh Gangaraboina", Class: "Pre-KG (Diamond)" }, "1459643": { Name: "Sreeja Thalla", Class: "Pre-KG (Diamond)" }, "1459603": { Name: "Srikrithini Myakala", Class: "Pre-KG (Diamond)" }, "1472536": { Name: "Srivatsav Vanam", Class: "Pre-KG (Diamond)" }, "1456743": { Name: "Sriyansh Mekala", Class: "Pre-KG (Diamond)" }, "1473500": { Name: "Thanvika Lakka", Class: "Pre-KG (Diamond)" }, "1463724": { Name: "Thrilokansh Vudari", Class: "Pre-KG (Diamond)" }, "1459694": { Name: "Ujjwal Chekka", Class: "Pre-KG (Diamond)" }, "1474815": { Name: "Vaishnavi Lakka", Class: "Pre-KG (Diamond)" }, "1460690": { Name: "Vedansh Myakala", Class: "Pre-KG (Diamond)" }, "1478250": { Name: "Vishnu Priya Molugu", Class: "Pre-KG (Diamond)" }, "1413563": { Name: "Vyshnav Tej Boina", Class: "Pre-KG (Diamond)" }, "1459577": { Name: "Yafiah Mohammad", Class: "Pre-KG (Diamond)" },
+        "1424084": { Name: "Aadhya Sri Amaravadi", Class: "KG-1 (Ruby)" }, "1426519": { Name: "Aditya Manda", Class: "KG-1 (Ruby)" }, "1426518": { Name: "Aadhya Jella", Class: "KG-1 (Ruby)" }, "1392920": { Name: "Advaita Gauri Bandi", Class: "KG-1 (Ruby)" }, "1392683": { Name: "Aizah Amna Shaik", Class: "KG-1 (Ruby)" }, "1472077": { Name: "Akshara Singaram", Class: "KG-1 (Ruby)" }, "1469394": { Name: "Bhahuveer Raj Somishetti", Class: "KG-1 (Ruby)" }, "1392676": { Name: "Gayathri Erroju", Class: "KG-1 (Ruby)" }, "1390570": { Name: "Hanvika Mulkalapelli", Class: "KG-1 (Ruby)" }, "1396188": { Name: "Manvith Kondoju", Class: "KG-1 (Ruby)" }, "1392703": { Name: "Mariyam", Class: "KG-1 (Ruby)" }, "1412110": { Name: "Mekala Manu sri", Class: "KG-1 (Ruby)" }, "1392687": { Name: "Oliva Grace Vallapu", Class: "KG-1 (Ruby)" }, "1392696": { Name: "Rithwik Oggula", Class: "KG-1 (Ruby)" }, "1413326": { Name: "Rithwika Kandagatla", Class: "KG-1 (Ruby)" }, "1392679": { Name: "Srimahi Chevvu", Class: "KG-1 (Ruby)" }, "1459706": { Name: "Thanvesh Thalla", Class: "KG-1 (Ruby)" }, "1317800": { Name: "Trishul Nanduri", Class: "KG-1 (Ruby)" }, "1424085": { Name: "Yoganshika Nanduri", Class: "KG-1 (Ruby)" }, "1387264": { Name: "Yusra Mohammad", Class: "KG-1 (Ruby)" }, "1402461": { Name: "Zainul Abideen Syed", Class: "KG-1 (Ruby)" },
+        "1298438": { Name: "Deekshanth Sammeta", Class: "KG-2 (Amber)" }, "1298439": { Name: "Hanshith Erroju", Class: "KG-2 (Amber)" }, "1298447": { Name: "Harika Bandi", Class: "KG-2 (Amber)" }, "1298432": { Name: "Himarsha Naini", Class: "KG-2 (Amber)" }, "1298440": { Name: "Karthik Vallepu", Class: "KG-2 (Amber)" }, "1298433": { Name: "Kruthika Bandi", Class: "KG-2 (Amber)" }, "1298441": { Name: "Rajavardhan Gampala", Class: "KG-2 (Amber)" }, "1298443": { Name: "Roshan Kaitha", Class: "KG-2 (Amber)" }, "1298448": { Name: "Sri Anshu Ayaan Lyadala", Class: "KG-2 (Amber)" }, "1298444": { Name: "Srihansh Bandi", Class: "KG-2 (Amber)" }, "1298435": { Name: "Srikshitha Guduri", Class: "KG-2 (Amber)" }, "1298445": { Name: "Varshith Gonela", Class: "KG-2 (Amber)" }, "1392815": { Name: "Adyasri Makala", Class: "KG-2 (Amber)" }, "1394463": { Name: "Anvik Boini", Class: "KG-2 (Amber)" }, "1459764": { Name: "Anvith Pokanati", Class: "KG-2 (Amber)" }, "1459748": { Name: "Awais Ur Rehman Mohammad", Class: "KG-2 (Amber)" }, "1459742": { Name: "Dakshu Pothuganti", Class: "KG-2 (Amber)" }, "1393477": { Name: "Hansith Reddy Katukuri", Class: "KG-2 (Amber)" }, "1459762": { Name: "Harshith Pokanati", Class: "KG-2 (Amber)" }, "1402310": { Name: "Jella Aditya", Class: "KG-2 (Amber)" }, "1390563": { Name: "Krishank Nallabothula", Class: "KG-2 (Amber)" }, "1459771": { Name: "Kundana Katkuri", Class: "KG-2 (Amber)" }, "1307790": { Name: "Munukuntla Revanth Rudhra", Class: "KG-2 (Amber)" }, "1459758": { Name: "Niraja Nethri Siluveru", Class: "KG-2 (Amber)" }, "1459752": { Name: "Pranav Mattepelli", Class: "KG-2 (Amber)" }, "1390566": { Name: "Sreenith Yadav Naini", Class: "KG-2 (Amber)" }, "1459756": { Name: "Uvan Reddy Dasari", Class: "KG-2 (Amber)" }, "1459775": { Name: "Zayan Mohammad", Class: "KG-2 (Amber)" }, "1459714": { Name: "Zoya Mohammed", Class: "KG-2 (Amber)" },
+        "1298423": { Name: "Dheeraj Gattu", Class: "Grade-1 (Opal)" }, "1298425": { Name: "Preetham Sannayala", Class: "Grade-1 (Opal)" }, "1298428": { Name: "Shiva nandu Gonela", Class: "Grade-1 (Opal)" }, "1298429": { Name: "Shrayan Nuthanakanti", Class: "Grade-1 (Opal)" }, "1392864": { Name: "Sriyanksha Mandala", Class: "Grade-1 (Opal)" }, "1298411": { Name: "Advitha Garige", Class: "Grade-1 (Opal)" }, "1298413": { Name: "Harika Bandi", Class: "Grade-1 (Opal)" }, "1298414": { Name: "Himansi Kondoju", Class: "Grade-1 (Opal)" }, "1392895": { Name: "Izhaan Rahamath Syed", Class: "Grade-1 (Opal)" }, "1298424": { Name: "Jaisurya Myakala", Class: "Grade-1 (Opal)" }, "1298415": { Name: "Khadeeja Fathima", Class: "Grade-1 (Opal)" }, "1298416": { Name: "Manaswini Dandugula", Class: "Grade-1 (Opal)" }, "1298417": { Name: "Manusri Bandi", Class: "Grade-1 (Opal)" }, "1298426": { Name: "Rithwik krishna Amaravadi", Class: "Grade-1 (Opal)" }, "1298427": { Name: "Rohan Bandi", Class: "Grade-1 (Opal)" }, "1392876": { Name: "Shiva Junnu", Class: "Grade-1 (Opal)" }, "1392885": { Name: "Shivanandh Bandi", Class: "Grade-1 (Opal)" }, "1459709": { Name: "Sridha Thalla", Class: "Grade-1 (Opal)" }, "1298419": { Name: "Srinika Chengelly", Class: "Grade-1 (Opal)" }, "1298420": { Name: "Sriyanshi Oggula", Class: "Grade-1 (Opal)" }, "1298431": { Name: "Vishwak Chekka", Class: "Grade-1 (Opal)" },
+        "1298397": { Name: "Aliza Manha Shaik", Class: "Grade-2 (Emerald)" }, "1298407": { Name: "Dhruvan Reddy Katukuri", Class: "Grade-2 (Emerald)" }, "1298398": { Name: "Druthika Enugala", Class: "Grade-2 (Emerald)" }, "1298399": { Name: "Manaswini Bandi", Class: "Grade-2 (Emerald)" }, "1298408": { Name: "Rakshith Macharla", Class: "Grade-2 (Emerald)" }, "1298401": { Name: "Sathwika Katkuri", Class: "Grade-2 (Emerald)" }, "1298402": { Name: "Shalini Uppala", Class: "Grade-2 (Emerald)" }, "1459786": { Name: "Chandu Devarakonda", Class: "Grade-2 (Emerald)" }, "1459815": { Name: "Gnaneshwar Pokanati", Class: "Grade-2 (Emerald)" }, "1298409": { Name: "Hasnain Syed", Class: "Grade-2 (Emerald)" }, "1459832": { Name: "Koushik Siluveru", Class: "Grade-2 (Emerald)" }, "1316732": { Name: "Senen Desabattula", Class: "Grade-2 (Emerald)" }, "1459817": { Name: "Shivarajan Pothuganti", Class: "Grade-2 (Emerald)" },
+        "1298393": { Name: "Nagavelly Manikanta", Class: "Grade-3 (Crystal)" }, "1459834": { Name: "Mirja Ismail", Class: "Grade-3 (Crystal)" }, "1298390": { Name: "Bandi Aryan", Class: "Grade-3 (Crystal)" }, "1298392": { Name: "Dandugula Mahesh Babu", Class: "Grade-3 (Crystal)" }, "1298387": { Name: "Bandi Tejasri", Class: "Grade-3 (Crystal)" }, "1298391": { Name: "Bandi Harshavardhan", Class: "Grade-3 (Crystal)" }, "1298389": { Name: "Gampala Vyshnavi", Class: "Grade-3 (Crystal)" }, "1298384": { Name: "Gampala Laxmi", Class: "Grade-3 (Crystal)" }, "1298410": { Name: "Garige Harshith", Class: "Grade-3 (Crystal)" }, "1459844": { Name: "Katkuri Hanish", Class: "Grade-3 (Crystal)" }, "1459798": { Name: "Katukuri Manideep", Class: "Grade-3 (Crystal)" }, "1459805": { Name: "MD. Abdul Quddus", Class: "Grade-3 (Crystal)" }, "1298395": { Name: "Muppa Sathwik Patel", Class: "Grade-3 (Crystal)" }, "1298386": { Name: "Nuthanakanti Sansita", Class: "Grade-3 (Crystal)" }, "1298396": { Name: "Pasarakonda Ritwin", Class: "Grade-3 (Crystal)" }, "1459841": { Name: "Pinninti Rakshith Rao", Class: "Grade-3 (Crystal)" }, "1400203": { Name: "Rayi Sriman Adithya", Class: "Grade-3 (Crystal)" },
+        "1298376": { Name: "Abdul Saqib Mohammad", Class: "Grade-4 (Citrine)" }, "1298366": { Name: "Anudeep Chintha", Class: "Grade-4 (Citrine)" }, "1298368": { Name: "Bhavan Bandi", Class: "Grade-4 (Citrine)" }, "1298370": { Name: "Harshavardhan Gonela", Class: "Grade-4 (Citrine)" }, "1298372": { Name: "Jayadev Chiluveru", Class: "Grade-4 (Citrine)" }, "1298373": { Name: "Mahaboob Syed", Class: "Grade-4 (Citrine)" }, "1298374": { Name: "Nandith Reddy Enugala", Class: "Grade-4 (Citrine)" }, "1392930": { Name: "Sai Charan Goud Mandala", Class: "Grade-4 (Citrine)" }, "1298380": { Name: "Sai Prasanna Keerthi", Class: "Grade-4 (Citrine)" }, "1298363": { Name: "Ajmeri Shaik", Class: "Grade-4 (Citrine)" }, "1392939": { Name: "Akshith Chiluveru", Class: "Grade-4 (Citrine)" }, "1298364": { Name: "Jayasri Myakala", Class: "Grade-4 (Citrine)" }, "1298381": { Name: "Rahul Kanjarla", Class: "Grade-4 (Citrine)" }, "1459784": { Name: "Saketh Devarakonda", Class: "Grade-4 (Citrine)" },
+        "1298353": { Name: "Adya Reddy Vangala", Class: "Grade-5 (Moonstone)" }, "1298361": { Name: "Kowshik Patel Muppa", Class: "Grade-5 (Moonstone)" }, "1298355": { Name: "Siri Singaram", Class: "Grade-5 (Moonstone)" }, "1298360": { Name: "Srikar Mandala", Class: "Grade-5 (Moonstone)" }, "1459801": { Name: "Abdus Salaam MD.", Class: "Grade-5 (Moonstone)" }, "1392968": { Name: "Akshith Ram Kalvacharla", Class: "Grade-5 (Moonstone)" }, "1392965": { Name: "Jaffar Anas Shaik", Class: "Grade-5 (Moonstone)" }, "1298359": { Name: "Khaja Azeemuddin Mohammed", Class: "Grade-5 (Moonstone)" }, "1459839": { Name: "Nihan Mohammed", Class: "Grade-5 (Moonstone)" }, "1392963": { Name: "Saif Shaik", Class: "Grade-5 (Moonstone)" }, "1459794": { Name: "Saketh Renukuntla", Class: "Grade-5 (Moonstone)" }, "1392955": { Name: "Sreeja Dasari", Class: "Grade-5 (Moonstone)" }, "1459821": { Name: "Vidhaatri Sahani", Class: "Grade-5 (Moonstone)" },
+        "1298347": { Name: "Abdul Razzak Mohammad", Class: "Grade-6 (Alluri)" }, "1298341": { Name: "Anudeepthi Chintha", Class: "Grade-6 (Alluri)" }, "1298350": { Name: "Saketh Ranaveni", Class: "Grade-6 (Alluri)" }, "1298346": { Name: "Shiva Sri Katukuri", Class: "Grade-6 (Alluri)" }, "1298348": { Name: "Aklees Shaik", Class: "Grade-6 (Alluri)" }, "1392992": { Name: "Akshya Kalvacharla", Class: "Grade-6 (Alluri)" }, "1472577": { Name: "Prince Katkuri", Class: "Grade-6 (Alluri)" },
+        "1298339": { Name: "Manikanta Sannayala", Class: "Grade-7 (Kalam)" }, "1298340": { Name: "Sreeyan Reddy Karra", Class: "Grade-7 (Kalam)" }, "1393008": { Name: "Jayadhithya Chiluveru", Class: "Grade-7 (Kalam)" },
+        "1459846": { Name: "Akshaya Gampala", Class: "Grade-8 (Bhagat)" }, "1298335": { Name: "Ganesh Oggula", Class: "Grade-8 (Bhagat)" }, "1459792": { Name: "Gayathri Renukuntla", Class: "Grade-8 (Bhagat)" }, "1298337": { Name: "Khaja Sadeemuddin Mohammed", Class: "Grade-8 (Bhagat)" }, "1298333": { Name: "Sathwika Nagavelly", Class: "Grade-8 (Bhagat)" }, "1298334": { Name: "Vyshnavi Uppala", Class: "Grade-8 (Bhagat)" }
+    };
+
+    // --- REVERSE MAP FOR DATA PROCESSING ---
+    const studentData = {};
+    const rollByName = {};
+
+    Object.keys(rollData).forEach(roll => {
+        const student = rollData[roll];
+        const classKey = student.Class.split(' (')[0];
+        if(!studentData[classKey]) studentData[classKey] = [];
+        studentData[classKey].push(student.Name);
+        rollByName[student.Name] = roll;
+    });
+
+    function updateClock() {
+        const now = new Date();
+        document.getElementById('liveClock').innerText = now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:true}).toUpperCase();
+    }
+    setInterval(updateClock, 1000); updateClock();
+
     const timeOptions = ["-"];
     for(let h=9; h<=17; h++) {
         let period = h >= 12 ? "PM" : "AM";
         let hr = h > 12 ? h-12 : (h === 0 ? 12 : h);
-        timeOptions.push(`${hr}:00 ${period}`);
-        if(h < 17) timeOptions.push(`${hr}:30 ${period}`);
+        timeOptions.push(`${hr}:00 ${period}`, `${hr}:30 ${period}`);
     }
 
     function unlockPortal() {
@@ -182,7 +194,7 @@
             document.getElementById('hallLoginScreen').style.display = 'none';
             document.getElementById('hallApp').style.display = 'block';
             document.getElementById('teacherDisplay').innerText = "AUTHORIZED: " + n;
-            const classOptions = '<option value="">-- Choose Class --</option>' + Object.keys(studentData).map(c => `<option value="${c}">${c}</option>`).join('');
+            const classOptions = '<option value="">-- Choose Class --</option>' + Object.keys(studentData).sort().map(c => `<option value="${c}">${c}</option>`).join('');
             document.getElementById('setupClassSelect').innerHTML = classOptions;
             document.getElementById('feeClass').innerHTML = classOptions;
         } else { Swal.fire('Error', 'Invalid credentials', 'error'); }
@@ -196,8 +208,10 @@
     }
 
     async function renderSubjectSchedule() {
-        const cls = document.getElementById('setupClassSelect').value, exam = document.getElementById('examSelect').value, grid = document.getElementById('dynamicSubjectGrid');
+        const cls = document.getElementById('setupClassSelect').value, exam = document.getElementById('examSelect').value;
+        const grid = document.getElementById('dynamicSubjectGrid');
         grid.innerHTML = ""; if(!cls) return;
+        
         let subjects = ["TEL", "HIN", "ENG", "MAT", "SOC"];
         if (["Grade-6", "Grade-7", "Grade-8"].includes(cls)) subjects.push("PHY", "CHE", "BIO", "IIT");
         else if (cls === "Grade-5") subjects.push("SCI", "IIT"); else subjects.push("SCI");
@@ -223,25 +237,59 @@
         Swal.fire('Saved', `Schedule updated for ${cls}`, 'success');
     }
 
-    const rollData = { "Hanish Macharla": "1472070", "Arjun Vihaar Illandula": "1478225", "Thanu sree Allakunta": "1469391", "Aadhya Gangaraboina": "1459555", "Aadhya Sri Oggula": "1459560", "Aadhyasri Shivagoni": "1474500", "Afraha Begum": "1460680", "Aliya Sultana": "1472299", "Anvika Bandi": "1459683", "Aradana Devara konda": "1459620", "Devansh Bandi": "1459605", "Hanvitha Mulkalapelli": "1472069", "Harsha Vardhan Seenapelli": "1472723", "Hiranya Bandi": "1459658", "Jashritha Boina": "1478248", "Konreddy Shreyanvi": "1481135", "Kriyansh Sammeta": "1459568", "Mohammed Mohiuddin Sayyad": "1459652", "Nethra Narkurthi": "1459636", "Reeyansh Bandi": "1463720", "Rishi Myakala": "1459582", "Rudransh Bandi": "1459607", "Rudransh Bandi_1": "1459604", "Sanvika Bandi": "1459625", "Shanvith Khatha": "1472074", "Shishira Jalagam": "1469395", "Shiva Sai Mekala": "1456748", "Shree Rudhraveer Chevvu": "1459687", "Shreyansh Gangaraboina": "1459572", "Sreeja Thalla": "1459643", "Srikrithini Myakala": "1459603", "Srivatsav Vanam": "1472536", "Sriyansh Mekala": "1456743", "Thanvika Lakka": "1473500", "Thrilokansh Vudari": "1463724", "Ujjwal Checkka": "1459694", "Vaishnavi Lakka": "1474815", "Vedansh Myakala": "1460690", "Vishnu Priya Molugu": "1478250", "Vyshnav Tej Boina": "1413563", "Yafiah Mohammad": "1459577" };
+    async function publishToPortal() {
+        const cls = document.getElementById('feeClass').value, exam = document.getElementById('examSelect').value;
+        if(!cls) return;
+        
+        Swal.fire({ title: 'Publishing...', didOpen: () => Swal.showLoading() });
+        const schedSnap = await db.ref(`class_schedules/${cls}/${exam}`).once('value');
+        if(!schedSnap.exists()) { Swal.fire('Error', 'No schedule saved for this class/exam', 'error'); return; }
+        
+        await db.ref(`published_halltickets/${cls}`).set({ exam: exam, schedule: schedSnap.val(), timestamp: Date.now() });
+        Swal.fire('Success', `Hall Tickets for ${cls} are now available in the student portal.`, 'success');
+    }
+
+    async function deleteAllScheduleData() {
+        const cls = document.getElementById('setupClassSelect').value, exam = document.getElementById('examSelect').value;
+        if(!cls) { Swal.fire('Error', 'Select a class first', 'info'); return; }
+
+        const { value: pw } = await Swal.fire({
+            title: 'Verify Password',
+            text: `Enter password for ${activeTeacher} to CLEAR records.`,
+            input: 'password',
+            showCancelButton: true,
+            confirmButtonColor: '#c62828',
+            confirmButtonText: 'Clear Data'
+        });
+
+        if (pw === authorized[activeTeacher]) {
+            Swal.fire({ title: 'Clearing...', didOpen: () => Swal.showLoading() });
+            await db.ref(`class_schedules/${cls}/${exam}`).remove();
+            await renderSubjectSchedule();
+            Swal.fire('Deleted', 'Schedule data cleared from cloud.', 'success');
+        } else if(pw !== undefined) {
+            Swal.fire('Denied', 'Incorrect Password', 'error');
+        }
+    }
 
     async function generateClassHallTickets() {
         const cls = document.getElementById('feeClass').value, exam = document.getElementById('examSelect').value;
         if(!cls) return;
-        Swal.fire({ title: 'Syncing Data...', didOpen: () => Swal.showLoading() });
+        Swal.fire({ title: 'Processing...', didOpen: () => Swal.showLoading() });
         const schedSnap = await db.ref(`class_schedules/${cls}/${exam}`).once('value'), schedule = schedSnap.val() || {};
         const feeSnap = await db.ref(`fee_records/${cls}`).once('value'), feeData = feeSnap.val();
         ticketsToPrint = []; let html = "";
+        
         (studentData[cls] || []).forEach((name, index) => {
             let tFee = 0, tPaid = 0;
             if(feeData && feeData[name]) Object.values(feeData[name]).forEach(r => { tFee = r.total; tPaid += parseFloat(r.paid || 0); });
-            const roll = rollData[name] || "logo";
-            const ticket = { name, cls, roll, regNo: 1000 + index, exam, schedule, due: (tFee - tPaid) };
-            ticketsToPrint.push(ticket);
-            html += `<div class="ht-card"><span><b>${name}</b></span><button onclick="printIndividualTicket(${index})" style="padding:5px 12px; border-radius:5px; border:1px solid #ccc; font-size:10px; cursor:pointer; font-weight:800;">PRINT</button></div>`;
+            const roll = rollByName[name] || "logo";
+            ticketsToPrint.push({ name, cls, roll, regNo: 1000 + index, exam, schedule, due: (tFee - tPaid) });
+            html += `<div class="ht-card"><span>${name}</span><button onclick="printIndividualTicket(${index})" style="padding:6px 15px; border-radius:8px; border:none; background:var(--forest); color:white; font-size:10px; cursor:pointer;">PRINT</button></div>`;
         });
         document.getElementById('hallTickets').innerHTML = html;
         document.getElementById('printBtn').style.display = 'block';
+        document.getElementById('publishBtn').style.display = 'block';
         Swal.close();
     }
 
@@ -249,10 +297,8 @@
     function printAllClassTickets() { printTickets(ticketsToPrint); }
 
     function printTickets(list) {
-        const logoOrigin = window.location.origin + "/logo.png";
         const win = window.open('', '', 'height=800,width=1000');
-        win.document.write('<html><head><style>body{font-family:sans-serif;padding:0;margin:0;color:#333;} *{-webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;} .page{width:210mm; height:297mm; padding:8mm; box-sizing:border-box; page-break-after:always;} .ticket{width:100%; border:2px solid #333; padding:15px; box-sizing:border-box; border-radius:15px; position:relative; margin-bottom:10mm;} .header{display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #333; padding-bottom:10px; margin-bottom:10px;} .tbl{width:100%; border-collapse:collapse; margin-top:10px;} .tbl th, .tbl td{border:1px solid #333; padding:6px; text-align:center; font-weight:bold; font-size:10px; line-height: 1.2;} .exam-type{background:black; color:white; padding:3px 15px; display:inline-block; font-size:10px; font-weight:800; border-radius:3px; text-transform:uppercase; margin-top:5px;}</style></head><body>');
-        
+        win.document.write('<html><head><style>body{font-family:sans-serif;padding:0;margin:0;color:#333;} .page{width:210mm; height:297mm; padding:10mm; box-sizing:border-box; page-break-after:always;} .ticket{width:100%; border:2px solid #333; padding:15px; border-radius:15px; margin-bottom:15mm;} .header{display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #333; padding-bottom:10px; margin-bottom:10px;} .tbl{width:100%; border-collapse:collapse; margin-top:10px;} .tbl th, .tbl td{border:1px solid #333; padding:6px; text-align:center; font-weight:bold; font-size:11px;} .exam-type{background:black; color:white; padding:3px 15px; display:inline-block; font-size:10px; font-weight:800; border-radius:3px;}</style></head><body>');
         for (let i = 0; i < list.length; i += 2) {
             win.document.write('<div class="page">');
             [list[i], list[i+1]].forEach((t) => {
@@ -262,36 +308,26 @@
                 <div class="ticket">
                     <div class="header">
                         <div style="display:flex; align-items:center; gap:10px;">
-                            <img src="${logoOrigin}" style="height:50px;" onerror="this.src='logo.png'">
+                            <img src="logo.png" style="height:50px;">
                             <div><h1 style="margin:0; font-size:18px;">PARAMOUNT ENGLISH MEDIUM SCHOOL</h1><div class="exam-type">${t.exam}</div></div>
                         </div>
-                        <div style="width:80px; height:100px; border:1px solid #333; display:flex; align-items:center; justify-content:center; overflow:hidden;">
-                            <img src="Student images/${t.roll}.png" style="width:100%; height:100%; object-fit:cover;" onerror="this.innerHTML='PHOTO'">
-                        </div>
+                        <div style="width:80px; height:90px; border:1px solid #333; overflow:hidden;"><img src="Student images/${t.roll}.png" style="width:100%; height:100%; object-fit:cover;" onerror="this.src='logo.png'"></div>
                     </div>
-                    <div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:8px;">
+                    <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:10px;">
                         <div><b>Name:</b> ${t.name.toUpperCase()}<br><b>Class:</b> ${t.cls}</div>
                         <div style="text-align:right;"><b>Reg No:</b> ${t.regNo}<br><b style="color:red;">Fee Due: ₹ ${t.due}</b></div>
                     </div>
                     <table class="tbl">
                         <thead><tr><th>Subject</th>${subs.map(s=>`<th>${s}</th>`).join('')}</tr></thead>
                         <tbody>
-                            <tr><td style="text-align:left; background:#f4f4f4;">Date/Time</td>${subs.map(s=>{ 
-                                let val = t.schedule[s] || "-";
-                                if(val === "-") return `<td>-</td>`;
-                                let parts = val.split(" @ ");
-                                let d = parts[0].split('-').reverse().join('/');
-                                return `<td>${d}<br>${parts[1]}</td>`; 
-                            }).join('')}</tr>
-                            <tr style="height:35px;"><td style="text-align:left; background:#f4f4f4;">Sign</td>${subs.map(s=>`<td></td>`).join('')}</tr>
+                            <tr><td>Date</td>${subs.map(s=>{ let val = t.schedule[s] || "-"; return `<td>${val.split(' @ ')[0] || "-"}</td>`; }).join('')}</tr>
+                            <tr><td>Time</td>${subs.map(s=>{ let val = t.schedule[s] || "-"; return `<td>${val.split(' @ ')[1] || "-"}</td>`; }).join('')}</tr>
+                            <tr style="height:30px;"><td>Sign</td>${subs.map(()=>`<td></td>`).join('')}</tr>
                         </tbody>
                     </table>
-                    <div style="margin-top:40px; display:flex; justify-content:space-between; font-size:9px; font-weight:bold; text-transform:uppercase;">
-                        <div style="border-top:1px solid #333; width:170px; text-align:center; padding-top:4px;">Class Teacher Signature</div>
-                        <div style="border-top:1px solid #333; width:170px; text-align:center; padding-top:4px;">Correspondent Signature</div>
-                    </div>
-                    <div style="margin-top:10px; font-size:8px; border-top:1px dashed #ccc; padding-top:5px;">
-                        <b>Note:</b> Mandatory hall ticket. Restricted entry if due exceeds ₹5000.
+                    <div style="margin-top:30px; display:flex; justify-content:space-between; font-size:10px; font-weight:bold;">
+                        <div style="border-top:1px solid #333; width:180px; text-align:center; padding-top:5px;">Teacher Sign</div>
+                        <div style="border-top:1px solid #333; width:180px; text-align:center; padding-top:5px;">Principal Sign</div>
                     </div>
                 </div>`);
             });
@@ -301,8 +337,6 @@
         win.document.close();
         setTimeout(() => { win.print(); win.close(); }, 800);
     }
-
-    const studentData = { "Pre-KG": ["Hanish Macharla", "Arjun Vihaar Illandula", "Thanu sree Allakunta", "Aadhya Gangaraboina", "Aadhya Sri Oggula", "Aadhyasri Shivagoni", "Afraha Begum", "Aliya Sultana", "Anvika Bandi", "Aradana Devara konda", "Devansh Bandi", "Hanvitha Mulkalapelli", "Harsha Vardhan Seenapelli", "Hiranya Bandi", "Jashritha Boina", "Konreddy Shreyanvi", "Kriyansh Sammeta", "Mohammed Mohiuddin Sayyad", "Nethra Narkurthi", "Reeyansh Bandi", "Rishi Myakala", "Rudransh Bandi", "Sanvika Bandi", "Shanvith Khatha", "Shishira Jalagam", "Shiva Sai Mekala", "Shree Rudhraveer Chevvu", "Shreyansh Gangaraboina", "Sreeja Thalla", "Srikrithini Myakala", "Srivatsav Vanam", "Sriyansh Mekala", "Thanvika Lakka", "Thrilokansh Vudari", "Ujjwal Checkka", "Vaishnavi Lakka", "Vedansh Myakala", "Vishnu Priya Molugu", "Vyshnav Tej Boina", "Yafiah Mohammad"], "KG-1": ["Aadhya Sri Amaravadi", "Aditya Manda", "Aadhya Jella", "Advaita Gauri Bandi", "Aizah Amna Shaik", "Akshara Singaram", "Bhahuveer Raj Somishetti", "Gayathri Erroju", "Hanvika Mulkalapelli", "Manvith Kondoju", "Sayyad Vajeed", "Mekala Manu sri", "Oliva Grace Vallapu", "Rithwik Oggula", "Rithwika Kandagatla", "Srimahi Chevvu", "Thanvesh Thalla", "Trishul Nanduri", "Yoganshika Nanduri", "Yusra Mohammad", "Zainul Abideen Syed"], "KG-2": ["Deekshanth Sammeta", "Hanshith Erroju", "Harika Bandi", "Himarsha Naini", "Karthik Vallepu", "Kruthika Bandi", "Rajavardhan Gampala", "Roshan Kaitha", "Sri Anshu Ayaan Lyadala", "Srihansh Bandi", "Srikshitha Guduri", "Varshith Gonela", "Adyasri Makala", "Anvik Boini", "Anvith Pokanati", "Awais Ur Rehman Mohammad", "Dakshu Pothuganti", "Hansith Reddy Katukuri", "Harshith Pokanati", "Jella Aditya", "Krishank Nallabothula", "Kundana Katkuri", "Munukuntla Revanth Rudhra", "Niraja Nethri Siluveru", "Pranav Mattepelli", "Sreenith Yadav Naini", "Uvan Reddy Dasari", "Zayan Mohammad", "Zoya Mohammed"], "Grade-1": ["Dheeraj Gattu", "Preetham Sannayala", "Shiva nandu Gonela", "Shrayan Nuthanakanti", "Sriyanksha Mandala", "Advitha Garige", "Harika Bandi", "Himansi Kondoju", "Izhaan Rahamath Syed", "Jaisurya Myakala", "Khadeeja Fathima", "Manaswini Dandugula", "Manusri Bandi", "Rithwik krishna Amaravadi", "Rohan Bandi", "Shiva Junnu", "Shivanandh Bandi", "Sridha Thalla", "Srinika Chengelly", "Sriyanshi Oggula", "Vishwak Checkka"], "Grade-2": ["Aliza Manha Shaik", "Dhruvan Reddy Katukuri", "Druthika Enugala", "Manaswini Bandi", "Rakshith Macharla", "Sathwika Katkuri", "Shalini Uppala", "Chandu Devarakonda", "Gnaneshwar Pokanati", "Hasnain Syed", "Koushik Siluveru", "Senen Desabattula", "Shivarajan Pothuganti"], "Grade-3": ["Nagavelly Manikanta", "Mirja Ismail", "Bandi Aryan", "Dandugula Mahesh Babu", "Bandi Tejasri", "Bandi Harshavardhan", "Gampala Vyshnavi", "Gampala Laxmi", "Garige Harshith", "Katkuri Hanish", "Katukuri Manideep", "MD Abdul Quddus", "Muppa Sathwik Patel", "Nuthanakanti Sansita", "Pasarakonda Ritwin", "Pinninti Rakshith Rao", "Rayi Sriman Adithya"], "Grade-4": ["Abdul Saqib Mohammad", "Anudeep Chintha", "Bhavan Bandi", "Harshavardhan Gonela", "Jayadev Chiluveru", "Mahaboob Syed", "Nandith Reddy Enugala", "Sai Charan Goud Mandala", "Sai Prasanna Keerthi", "Ajmeri Shaik", "Akshith Chiluveru", "Jayasri Myakala", "Rahul Kanjarla", "Saketh Devarakonda"], "Grade-5": ["Adya Reddy Vangala", "Kowshik Patel Muppa", "Siri Singaram", "Srikar Mandala", "Abdus Salaam MD", "Akshith Ram Kalvacharla", "Jaffar Anas Shaik", "Khaja Azeemuddin Mohammed", "Nihan Mohammed", "Saif Shaik", "Saketh Renukuntla", "Sreeja Dasari", "Vidhaatri Sahani"], "Grade-6": ["Abdul Razzak Mohammad", "Anudeepthi Chintha", "Saketh Ranaveni", "Shiva Sri Katukuri", "Aklees Shaik", "Akshya Kalvacharla", "Prince Katkuri"], "Grade-7": ["Manikanta Sannayala", "Sreeyan Reddy Karra", "Jayadhithya Chiluveru"], "Grade-8": ["Sathwika Nagavelly", "Vyshnavi Uppala", "Akshaya Gampala", "Ganesh Oggula", "Gayathri Renukuntla", "Khaja Sadeemuddin Mohammed"] };
 </script>
 </body>
-</html>    
+</html>
