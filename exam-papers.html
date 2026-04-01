@@ -163,37 +163,68 @@
     }
 
     async function handleUpload() {
-        const file = document.getElementById('vFile').files[0];
-        const cls = document.getElementById('vClass').value;
-        const sub = document.getElementById('vSubject').value;
-        const exam = document.getElementById('vExam').value;
-        const prog = document.getElementById('uploadProgress');
-        const btn = document.getElementById('upBtn');
+    const file = document.getElementById('vFile').files[0];
+    const cls = document.getElementById('vClass').value;
+    const sub = document.getElementById('vSubject').value;
+    const exam = document.getElementById('vExam').value;
+    const prog = document.getElementById('uploadProgress');
+    const btn = document.getElementById('upBtn');
 
-        if(!file) return Swal.fire('Wait', 'Select a file', 'warning');
-        
-        btn.disabled = true;
-        prog.style.display = 'block';
-
-        const fileName = `${cls}_${exam}_${sub}_${Date.now()}`;
-        const uploadTask = storage.ref(`vault/${fileName}`).put(file);
-
-        uploadTask.on('state_changed', 
-            (snap) => { prog.value = (snap.bytesTransferred / snap.totalBytes) * 100; }, 
-            (err) => { Swal.fire('Error', err.message, 'error'); btn.disabled = false; }, 
-            async () => {
-                const url = await uploadTask.snapshot.ref.getDownloadURL();
-                await db.ref(`exam_vault/${fileName}`).set({
-                    className: cls, subject: sub, examName: exam, fileUrl: url,
-                    updatedBy: currentUser, updatedAt: new Date().toLocaleString()
-                });
-                Swal.fire('Success', 'Paper archived safely.', 'success');
-                document.getElementById('vFile').value = '';
-                prog.style.display = 'none';
-                btn.disabled = false;
-            }
-        );
+    if(!file) return Swal.fire('Wait', 'Select a file', 'warning');
+    
+    // Check file size - Warn if it's over 5MB
+    if(file.size > 5 * 1024 * 1024) {
+        return Swal.fire('File Too Large', 'Please keep papers under 5MB for fast uploading.', 'error');
     }
+
+    btn.disabled = true;
+    btn.innerHTML = "Processing... <i class='fas fa-spinner fa-spin'></i>";
+    prog.style.display = 'block';
+
+    const fileName = `${cls}_${exam}_${sub}_${Date.now()}`;
+    // Optimized: Setting metadata manually helps Firebase process it faster
+    const metadata = { contentType: file.type };
+    
+    const uploadTask = storage.ref(`vault/${fileName}`).put(file, metadata);
+
+    uploadTask.on('state_changed', 
+        (snap) => { 
+            const percentage = (snap.bytesTransferred / snap.totalBytes) * 100;
+            prog.value = percentage;
+        }, 
+        (err) => { 
+            Swal.fire('Error', err.message, 'error'); 
+            btn.disabled = false; 
+            btn.innerHTML = "Upload Question Paper <i class='fas fa-cloud-upload-alt'></i>";
+        }, 
+        async () => {
+            // Speed Tip: Don't wait too long for the URL
+            const url = await uploadTask.snapshot.ref.getDownloadURL();
+            
+            await db.ref(`exam_vault/${fileName}`).set({
+                className: cls, 
+                subject: sub, 
+                examName: exam, 
+                fileUrl: url,
+                updatedBy: currentUser, 
+                updatedAt: new Date().toLocaleString()
+            });
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: 'Paper archived in the vault.',
+                timer: 2000,
+                showConfirmButton: false
+            });
+
+            document.getElementById('vFile').value = '';
+            prog.style.display = 'none';
+            btn.disabled = false;
+            btn.innerHTML = "Upload Question Paper <i class='fas fa-cloud-upload-alt'></i>";
+        }
+    );
+}
 
     function loadVault() {
         db.ref('exam_vault').on('value', (snap) => {
