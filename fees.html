@@ -12,7 +12,6 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; } 
         body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; padding-bottom: 50px; }
 
-        /* --- PREMIUM HEADER --- */
         header { 
             background: var(--forest); color: white; padding: 12px 4%; border-bottom: 4px solid var(--gold); 
             box-shadow: 0 4px 12px rgba(0,0,0,0.15); position: sticky; top: 0; z-index: 100;
@@ -34,9 +33,7 @@
             padding: 5px 18px; border-radius: 50px; font-size: 10px; font-weight: 800; 
             text-transform: uppercase; cursor: pointer; transition: 0.3s;
         }
-        .btn-signout:hover { background: white; color: var(--forest); }
 
-        /* --- DASHBOARD CARDS --- */
         .container { max-width: 650px; margin: 25px auto; padding: 0 15px; }
         .card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); border-top: 8px solid var(--forest); margin-bottom: 25px; }
         h3 { color: var(--forest); margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; display: flex; align-items: center; gap: 8px; font-size: 1.1rem; text-transform: uppercase; font-weight: 800; }
@@ -70,7 +67,6 @@
         .history-table th { text-align: center; padding: 12px; background: #f8fafc; color: #64748b; font-size: 10px; text-transform: uppercase; }
         .history-table td { padding: 12px 10px; border-bottom: 1px solid #f1f5f9; font-weight: 700; color: #334155; text-align: center; }
 
-        /* --- LOGIN SCREEN --- */
         .overlay-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--light); z-index: 1000; display: flex; justify-content: center; align-items: center; padding: 15px; }
         .auth-box { background: white; padding: 40px 25px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); width: 100%; max-width: 420px; border-bottom: 5px solid var(--forest); text-align: center; }
         .btn-premium-unlock { 
@@ -92,16 +88,16 @@
     <div class="auth-box">
         <img src="logo.png" style="height:75px; margin-bottom:10px;">
         <div class="auth-branding-text"><h2>PARAMOUNT</h2><p style="color:var(--gold); font-weight:800; font-size:11px; text-transform:uppercase;">Fee Entry Access</p></div>
-        <select id="staffName" class="auth-input" style="margin-top:20px;">
+        <select id="staffName" class="auth-input" style="margin-top:20px;" autocomplete="off">
             <option value="">-- Select Staff --</option>
             <option value="Mr. Ahmad">Mr. Ahmad</option>
             <option value="Ms. Roqiya">Ms. Roqiya</option>
             <option value="Ms. Jyothi">Ms. Jyothi</option>
         </select>
-        <input type="password" id="staffPass" class="auth-input" placeholder="Password" onkeypress="if(event.key === 'Enter') unlockFees()">
+        <input type="password" id="staffPass" class="auth-input" placeholder="Password" autocomplete="new-password" onkeypress="if(event.key === 'Enter') unlockFees()">
         <button onclick="unlockFees()" class="btn-premium-unlock">Unlock Portal <i class="fas fa-unlock"></i></button>
-        <button onclick="window.location.href='index.html'" style="margin-top:12px; background:#f1f5f9; border:none; color:#475569; padding:12px; border-radius:50px; font-weight:700; width:100%; cursor:pointer; font-size:10px; text-transform:uppercase;">Return to Dashboard</button>
-        <div style="margin-top:20px;"><a onclick="handleForgotPassword()" style="color:#999; font-size:11px; text-decoration:underline; cursor:pointer; font-weight:bold;">Forgot Password?</a></div>
+        <button onclick="window.location.href='teacher.html'" style="margin-top:12px; background:#f1f5f9; border:none; color:#475569; padding:12px; border-radius:50px; font-weight:700; width:100%; cursor:pointer; font-size:10px; text-transform:uppercase;">Return to Dashboard</button>
+        <div style="margin-top:20px;"><a onclick="handleForgotPassword()" style="color:#999; font-size:12px; text-decoration:underline; cursor:pointer; font-weight:bold;">Forgot Password?</a></div>
     </div>
 </div>
 
@@ -171,7 +167,7 @@
             <button id="receiptBtn" class="btn-action btn-receipt" onclick="printReceipt()">Generate Receipt <i class="fas fa-print"></i></button>
         </div>
 
-        <div class="card" id="historyCard" style="display:none;">
+        <div class="card history-card" id="historyCard" style="display:none;">
             <h3><i class="fas fa-history"></i> Payment History</h3>
             <div class="history-table-wrapper">
                 <table class="history-table">
@@ -194,12 +190,19 @@
     const recoveryPins = { "Mr. Ahmad": "Ahmad@07", "Ms. Roqiya": "Roqiya@07", "Ms. Jyothi": "Jyothi@07" };
     let activeUser = "", paidTillNow = 0, lastTx = null;
 
+    // FORCED CLEANUP ON LOAD TO PREVENT AUTOFILL
+    window.onload = function() {
+        document.getElementById('staffName').selectedIndex = 0;
+        document.getElementById('staffPass').value = "";
+    };
+
     function updateClock() { document.getElementById('liveClock').innerText = new Date().toLocaleTimeString().toUpperCase(); }
     setInterval(updateClock, 1000); updateClock();
 
     function handleMethodChange() {
         const m = document.getElementById('payMethod').value;
         document.getElementById('onlineField').style.display = (m === 'Online') ? 'block' : 'none';
+        if(m === 'Cash') document.getElementById('transId').value = "";
     }
 
     async function handleForgotPassword() {
@@ -269,7 +272,7 @@
         const c = document.getElementById('feeClass').value, n = document.getElementById('feeStudent').value;
         const t = document.getElementById('totalFee').value, p = document.getElementById('payAmt').value, meth = document.getElementById('payMethod').value, tid = document.getElementById('transId').value, d = document.getElementById('payDate').value;
         if(!n || !p) return Swal.fire('Error', 'Missing Data', 'warning');
-        if(meth === 'Online' && tid.length < 5) return Swal.fire('Error', '5-digit Transaction ID', 'warning');
+        if(meth === 'Online' && tid.length < 5) return Swal.fire('Error', 'Enter 5-digit Transaction ID', 'warning');
         
         const stamp = new Date().toLocaleDateString() + ", " + new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}).toUpperCase();
         const entry = { total: t, paid: p, method: meth, transId: tid || null, recordedBy: activeUser, date: d, timestamp: stamp };
@@ -281,18 +284,19 @@
     }
 
     function printReceipt() {
-        if(!lastTx) return Swal.fire('Error', 'Save payment first', 'info');
+        if(!lastTx) return;
         const { n, c, p, d, method, transId } = lastTx;
         const recId = "REC-" + Date.now().toString().slice(-6);
         const win = window.open('', '', 'height=700,width=600');
-        win.document.write(`<html><head><style>body { font-family: sans-serif; padding: 40px; text-align: center; } .box { border: 2px solid #006633; padding: 20px; }</style></head><body><div class="box"><h2>PARAMOUNT SCHOOL</h2><hr><p>Receipt: ${recId} | Date: ${d}</p><p>Student: ${n} (${c})</p><h3>Paid: ₹ ${p}</h3><p>Method: ${method} ${transId ? '('+transId+')':''}</p><hr><p>Sign: ${activeUser}</p></div><script>window.onload=function(){window.print();window.close();}<\/script></body></html>`);
-        win.document.close();
+        win.document.write(`<html><body style="text-align:center; padding:40px; font-family:sans-serif; border:5px double #006633;"><h2>PARAMOUNT SCHOOL</h2><hr><p>Receipt: ${recId} | Date: ${d}</p><p>Student: ${n} (${c})</p><h3>Paid: ₹ ${p}</h3><p>Method: ${method} ${transId ? '('+transId+')':''}</p><hr><p>Sign: ${activeUser}</p></body></html>`);
+        win.document.close(); win.print();
     }
 
     async function clearData() {
         const c = document.getElementById('feeClass').value, n = document.getElementById('feeStudent').value;
-        const { value: pass } = await Swal.fire({ title: 'Security', text: 'Enter Password to Delete', input: 'password' });
-        if(pass === authorized[activeUser]) {
+        if (!n) return;
+        const { value: pass } = await Swal.fire({ title: 'Authorization', text: 'Enter Password to Delete', input: 'password' });
+        if (pass === authorized[activeUser]) {
             db.ref(`fee_records/${c}/${n}`).remove().then(() => { fetchFeeData(); Swal.fire('Deleted', 'History Cleared', 'success'); });
         }
     }
