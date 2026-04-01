@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Exam Vault | Paramount School</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Segoe+UI:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="logo.png">
+    <style>
+        :root { --forest: #006633; --gold: #ffd700; --danger: #e53935; --light: #f4f7f6; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; padding-bottom: 50px; }
+        
+        /* --- LOGIN SCREEN --- */
+        .overlay-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--light); z-index: 2000; display: flex; justify-content: center; align-items: center; padding: 15px; }
+        .auth-box { background: white; padding: 40px 25px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); width: 100%; max-width: 420px; border-bottom: 5px solid var(--forest); text-align: center; }
+        
+        header { background: var(--forest); color: white; padding: 15px 3%; border-bottom: 4px solid var(--gold); box-shadow: 0 4px 15px rgba(0,0,0,0.15); position: sticky; top: 0; z-index: 1000; }
+        .header-content { display: flex; align-items: center; justify-content: space-between; max-width: 1200px; margin: 0 auto; width: 100%; }
+        
+        .container { max-width: 900px; margin: 25px auto; padding: 0 15px; }
+        .card { background: white; padding: 25px; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 20px; border-top: 8px solid var(--forest); }
+        h3 { color: var(--forest); text-align: center; text-transform: uppercase; font-weight: 800; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        
+        .upload-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        label { display: block; font-size: 10px; font-weight: 900; color: #777; margin: 10px 0 5px; text-transform: uppercase; }
+        select, input[type="file"], .search-bar, .auth-input { width: 100%; padding: 12px; border-radius: 12px; border: 2px solid #eee; background: #fafafa; font-weight: 600; outline: none; }
+        
+        .file-item { background: white; border: 1px solid #eee; padding: 18px; border-radius: 20px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+        .file-info b { color: var(--forest); display: block; font-size: 14px; text-transform: uppercase; }
+        .file-info span { font-size: 10px; color: #888; display: block; margin-top: 4px; }
+        
+        .btn { padding: 12px 25px; border-radius: 50px; border: none; font-weight: 800; cursor: pointer; text-transform: uppercase; font-size: 12px; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-upload { background: var(--forest); color: white; width: 100%; margin-top: 20px; border: 2px solid var(--gold); }
+        .btn-download { background: var(--gold); color: var(--forest); text-decoration: none; padding: 10px 18px; border-radius: 10px; }
+        .btn-preview { background: #e3f2fd; color: #1976d2; text-decoration: none; padding: 10px 18px; border-radius: 10px; }
+        .btn-delete { background: #fee2e2; color: #dc2626; padding: 10px 15px; border-radius: 10px; }
+        
+        @media (max-width: 600px) { .upload-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+<div id="vaultAuth" class="overlay-screen">
+    <div class="auth-box">
+        <img src="logo.png" style="height: 70px; margin-bottom: 15px;">
+        <h2 style="font-family:'Montserrat'; color:var(--forest); margin-bottom:5px;">STAFF LOGIN</h2>
+        <p style="font-size:10px; font-weight:800; color:var(--gold); text-transform:uppercase; margin-bottom:20px;">Exam Management Vault</p>
+        
+        <select id="loginTeacher" class="auth-input">
+            <option value="">-- Select Your Name --</option>
+            <option value="Mr. Shaik Ahmad">Mr. Shaik Ahmad</option>
+            <option value="Ms. Roqiya Begum">Ms. Roqiya Begum</option>
+            <option value="Ms. Jyothi">Ms. Jyothi</option>
+            <option value="Ms. G.Rajitha">Ms. G.Rajitha</option>
+            <option value="Ms. Ameena Tabassum">Ms. Ameena Tabassum</option>
+            <option value="Ms. Shaik Shabana">Ms. Shaik Shabana</option>
+            <option value="Ms. B.Ravali">Ms. B.Ravali</option>
+            <option value="Ms. L.Kalyani">Ms. L.Kalyani</option>
+            <option value="Ms. S.Sujatha">Ms. S.Sujatha</option>
+            <option value="Ms. J.Prathibha">Ms. J.Prathibha</option>
+            <option value="Ms. P.Shailaja">Ms. P.Shailaja</option>
+            <option value="Ms. A.Jhansi Rani">Ms. A.Jhansi Rani</option>
+            <option value="Ms. S. Neelima">Ms. S. Neelima</option>
+            <option value="Ms. Riha">Ms. Riha</option>
+            <option value="Ms. Raniya Zainab">Ms. Raniya Zainab</option>
+        </select>
+        
+        <input type="password" id="loginPass" class="auth-input" placeholder="Enter Password" style="margin-top:10px;">
+        
+        <button onclick="verifyVaultAccess()" class="btn btn-upload" style="margin-top:20px;">Unlock Vault <i class="fas fa-key"></i></button>
+        <button onclick="window.location.href='index.html'" style="margin-top:10px; width:100%; background:none; border:none; color:#999; font-weight:800; font-size:10px; cursor:pointer;">EXIT TO DASHBOARD</button>
+    </div>
+</div>
+
+<div id="vaultApp" style="display:none;">
+    <header>
+        <div class="header-content">
+            <div style="display:flex; align-items:center; gap:12px;">
+                <img src="logo.png" style="height:50px;">
+                <span style="font-family:'Montserrat'; font-weight:800; font-size:1.3rem;">EXAM VAULT</span>
+            </div>
+            <div style="display:flex; gap:10px;">
+                <span id="activeUserDisplay" style="font-size:10px; font-weight:800; align-self:center; opacity:0.8;"></span>
+                <button onclick="location.reload()" style="background:rgba(255,255,255,0.1); border:1px solid white; color:white; padding:6px 18px; border-radius:50px; font-size:10px; cursor:pointer; font-weight:800;">LOGOUT</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <h3><i class="fas fa-file-upload"></i> Archive New Paper</h3>
+            <div class="upload-grid">
+                <div><label>Class</label><select id="vClass">
+                    <option value="Pre-KG">Pre-KG</option><option value="KG-1">KG-1</option><option value="KG-2">KG-2</option>
+                    <option value="Grade-1">Grade-1</option><option value="Grade-2">Grade-2</option><option value="Grade-3">Grade-3</option>
+                    <option value="Grade-4">Grade-4</option><option value="Grade-5">Grade-5</option><option value="Grade-6">Grade-6</option>
+                    <option value="Grade-7">Grade-7</option><option value="Grade-8">Grade-8</option>
+                </select></div>
+                <div><label>Subject</label><select id="vSubject">
+                    <option value="TELUGU">TELUGU</option><option value="HINDI">HINDI</option><option value="ENGLISH">ENGLISH</option>
+                    <option value="MATHS">MATHS</option><option value="SCIENCE">SCIENCE</option><option value="SOCIAL">SOCIAL</option>
+                    <option value="PHYSICS">PHYSICS</option><option value="BIOLOGY">BIOLOGY</option>
+                </select></div>
+                <div><label>Exam</label><select id="vExam">
+                    <option value="FORMATIVE ASSESSMENT-1">FORMATIVE ASSESSMENT-1</option><option value="FORMATIVE ASSESSMENT-2">FORMATIVE ASSESSMENT-2</option><option value="FORMATIVE ASSESSMENT-3">FORMATIVE ASSESSMENT-3</option><option value="FORMATIVE ASSESSMENT-4">FORMATIVE ASSESSMENT-4</option>
+                    <option value="SUMMATIVE ASSESSMENT -1">SUMMATIVE ASSESSMENT-1</option><option value="SUMMATIVE ASSESSMENT-2">SUMMATIVE ASSESSMENT-2</option><option value="ANNUAL EXAM">ANNUAL EXAM</option>
+                </select></div>
+                <div><label>Document</label><input type="file" id="vFile" accept=".pdf,.docx,.doc"></div>
+            </div>
+            <button class="btn btn-upload" onclick="handleUpload()">Upload to Archive</button>
+        </div>
+
+        <div class="card">
+            <h3><i class="fas fa-history"></i> Vault Records</h3>
+            <input type="text" id="vaultSearch" class="search-bar" placeholder="🔍 Search Archive..." onkeyup="filterArchive()">
+            <div id="vaultContainer" style="margin-top:20px;"></div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+
+<script>
+    const firebaseConfig = { apiKey: "AIzaSyDRYk9KOK-ga0c88dnYMsAoifW2NJTd_Y8", databaseURL: "https://paramount-school-d55bc-default-rtdb.firebaseio.com", projectId: "paramount-school-d55bc", storageBucket: "paramount-school-d55bc.appspot.com" };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+    const storage = firebase.storage();
+
+    const registry = { "Mr. Shaik Ahmad": "Ahmad@123", "Ms. Roqiya Begum": "Roqiya@123", "Ms. Jyothi": "Jyothi@123", "Ms. G.Rajitha": "Rajitha@123", "Ms. Ameena Tabassum": "Ameena@123", "Ms. Shaik Shabana": "Shabana@123", "Ms. B.Ravali": "Ravali@123", "Ms. L.Kalyani": "Kalyani@123", "Ms. S.Sujatha": "Sujatha@123", "Ms. J.Prathibha": "Prathibha@123", "Ms. P.Shailaja": "Phailaja@123", "Ms. A.Jhansi Rani": "Jhansi@123", "Ms. S. Neelima": "Neelima@123", "Ms. Riha": "Riha@123", "Ms. Raniya Zainab": "Raniya@123" };
+    const printAdmins = ["Mr. Shaik Ahmad", "Ms. Roqiya Begum", "Ms. Jyothi"];
+    let currentUser = "";
+
+    function verifyVaultAccess() {
+        const name = document.getElementById('loginTeacher').value;
+        const pass = document.getElementById('loginPass').value;
+        if(pass === registry[name]) {
+            currentUser = name;
+            document.getElementById('vaultAuth').style.display = 'none';
+            document.getElementById('vaultApp').style.display = 'block';
+            document.getElementById('activeUserDisplay').innerText = currentUser.toUpperCase();
+            loadVault();
+        } else { Swal.fire('Error', 'Incorrect credentials', 'error'); }
+    }
+
+    async function handleUpload() {
+        const file = document.getElementById('vFile').files[0];
+        const cls = document.getElementById('vClass').value;
+        const sub = document.getElementById('vSubject').value;
+        const exam = document.getElementById('vExam').value;
+        if(!file) return Swal.fire('Wait', 'Select a file', 'warning');
+        Swal.fire({ title: 'Archiving...', didOpen: () => Swal.showLoading() });
+        try {
+            const fileName = `${cls}_${exam}_${sub}_${Date.now()}`;
+            const ref = storage.ref(`vault/${fileName}`);
+            await ref.put(file);
+            const url = await ref.getDownloadURL();
+            await db.ref(`exam_vault/${fileName}`).set({
+                className: cls, subject: sub, examName: exam, fileUrl: url,
+                updatedBy: currentUser, updatedAt: new Date().toLocaleString()
+            });
+            Swal.fire('Success', 'Paper archived', 'success');
+        } catch (e) { Swal.fire('Error', e.message, 'error'); }
+    }
+
+    function loadVault() {
+        db.ref('exam_vault').on('value', (snap) => {
+            const data = snap.val();
+            let html = "";
+            if(data) {
+                Object.keys(data).reverse().forEach(id => {
+                    const p = data[id];
+                    const isAdm = printAdmins.includes(currentUser);
+                    const isOwn = p.updatedBy === currentUser;
+                    html += `
+                    <div class="file-item archive-entry" data-search="${p.className} ${p.subject} ${p.updatedBy}">
+                        <div class="file-info">
+                            <b>${p.className} | ${p.subject}</b>
+                            <span>Exam: ${p.examName} | By: ${p.updatedBy}</span>
+                            <span>Uploaded: ${p.updatedAt}</span>
+                        </div>
+                        <div style="display:flex; gap:8px;">
+                            <a href="${p.fileUrl}" target="_blank" class="btn-preview"><i class="fas fa-eye"></i></a>
+                            ${isAdm ? `<a href="${p.fileUrl}" target="_blank" class="btn-download"><i class="fas fa-print"></i></a>` : ''}
+                            ${(isAdm || isOwn) ? `<button onclick="deletePaper('${id}')" class="btn btn-delete"><i class="fas fa-trash"></i></button>` : ''}
+                        </div>
+                    </div>`;
+                });
+            }
+            document.getElementById('vaultContainer').innerHTML = html || "<p style='text-align:center;'>Vault is empty.</p>";
+        });
+    }
+
+    function filterArchive() {
+        const q = document.getElementById('vaultSearch').value.toLowerCase();
+        document.querySelectorAll('.archive-entry').forEach(el => {
+            el.style.display = el.getAttribute('data-search').toLowerCase().includes(q) ? "flex" : "none";
+        });
+    }
+
+    async function deletePaper(id) {
+        const res = await Swal.fire({ title: 'Delete?', showCancelButton: true });
+        if(res.isConfirmed) {
+            await db.ref(`exam_vault/${id}`).remove();
+            Swal.fire('Deleted', '', 'success');
+        }
+    }
+</script>
+</body>
+</html>
