@@ -52,6 +52,8 @@
         .subject-box input { width: 100%; text-align: center; padding: 10px 2px; font-weight: 800; border-radius: 8px; border: 2px solid #ddd; font-size: 16px; outline: none; background: white; }
 
         .stats-bar { display: flex; justify-content: space-between; margin-top: 15px; padding: 12px; background: #f1f8f4; border-radius: 12px; font-size: 10px; font-weight: 800; color: var(--forest); }
+        .update-info { display: block; margin-top: 8px; font-size: 9px; color: #94a3b8; font-style: italic; font-weight: 600; text-align: right; }
+        
         .btn-fetch { background: var(--forest); color: white; border: none; border-radius: 12px; padding: 15px; font-weight: 800; width: 100%; margin-top: 15px; cursor: pointer; text-transform: uppercase; }
         
         .action-row { display: none; gap: 10px; margin-top: 20px; }
@@ -61,7 +63,6 @@
         @media (max-width: 768px) {
             .setup-grid { grid-template-columns: 1fr; }
             .marks-grid { grid-template-columns: repeat(2, 1fr); }
-            .portal-title { display: none; }
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -80,7 +81,6 @@
         </div>
         <div class="header-right">
             <a href="index.html" class="btn-nav"><i class="fas fa-home"></i> Exit </a>
-            
         </div>
     </div>
 </header>
@@ -89,9 +89,6 @@
     <div class="auth-container" id="authCard">
         <h3><i class="fas fa-user-shield"></i> Teacher Access</h3>
         <div style="max-width:300px; margin:20px auto 0;">
-            <input type="text" style="display:none">
-            <input type="password" style="display:none">
-            
             <select id="teacherSelect" onchange="verifyStaff()" style="background: white; border:none; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
                 <option value="">-- Select Your Name --</option>
                 <option value="Mr. Shaik Ahmad">Mr. Shaik Ahmad</option>
@@ -161,34 +158,12 @@
     let authenticatedTeacher = "";
     const registry = { "Mr. Shaik Ahmad": "Ahmad@123", "Ms. Roqiya Begum": "Roqiya@123", "Ms. G.Rajitha": "Rajitha@123", "Ms. Ameena Tabassum": "Ameena@123", "Ms. Shaik Shabana": "Shabana@123", "Ms. B.Ravali": "Ravali@123", "Ms. L.Kalyani": "Kalyani@123", "Ms. J.Alaya Sree": "Alaya@123", "Ms. S.Sujatha": "Sujatha@123", "Ms. J.Prathibha": "Prathibha@123", "Ms. P.Shailaja": "Phailaja@123", "Ms. A.Jhansi Rani": "Jhansi@123", "Ms. S. Neelima": "Neelima@123", "Ms. Riha": "Riha@123", "Ms. Raniya Zainab": "Raniya@123" };
 
-    const studentData = { "Pre-KG": ["Hanish Macharla", "Arjun Vihaar Illandula", "Thanu sree Allakunta", "Aadhya Gangaraboina", "Aadhya Sri Oggula", "Aadhyasri Shivagoni", "Afraha Begum", "Aliya Sultana", "Anvika Bandi", "Aradana Devara konda", "Devansh Bandi", "Hanvitha Mulkalapelli", "Harsha Vardhan Seenapelli", "Hiranya Bandi", "Jashritha Boina", "Konreddy Shreyanvi", "Kriyansh Sammeta", "Mohammed Mohiuddin Sayyad", "Nethra Narkurthi", "Reeyansh Bandi", "Rishi Manupati", "Rudransh Bandi", "Rudransh Bandi_1", "Sanvika Bandi", "Shanvith Khatha", "Shishira Jalagam", "Shiva Sai Mekala", "Shree Rudhraveer Chevvu", "Shreyansh Gangaraboina", "Sreeja Thalla", "Srikrithini Myakala", "Srivatsav Vanam", "Sriyansh Mekala", "Thanvika Lakka", "Thrilokansh Vudari", "Ujjwal Chekka", "Vaishnavi Lakka", "Vedansh Myakala", "Vishnu Priya Molugu", "Vyshnav Tej Boina", "Yafiah Mohammad"], "KG-1": ["Aadhya Sri Amaravadi", "Aditya Manda", "Aadhya Jella", "Advaita Gauri Bandi", "Aizah Amna Shaik", "Akshara Singaram", "Bhahuveer Raj Somishetti", "Gayathri Erroju", "Hanvika  Mulkalapelli", "Manvith Kondoju", "Sayyad Vajeed", "Mekala Manu sri", "Oliva Grace Vallapu", "Rithwik Oggula", "Rithwika Kandagatla", "Srimahi Chevvu", "Thanvesh Thalla", "Trishul Nanduri", "Yoganshika Nanduri", "Yusra Mohammad", "Zainul Abideen Syed"], "KG-2": ["Deekshanth Sammeta", "Hanshith Erroju", "Harika Bandi", "Himarsha Naini", "Karthik Vallepu", "Kruthika Bandi", "Rajavardhan Gampala", "Roshan Kaitha", "Sri Anshu Ayaan Lyadala", "Srihansh Bandi", "Srikshitha Guduri", "Varshith Gonela", "Adyasri Makala", "Anvik Boini", "Anvith Pokanati", "Awais Ur Rehman Mohammad", "Dakshu Pothuganti", "Hansith Reddy Katukuri", "Harshith Pokanati", "Jella Aditya", "Krishank Nallabothula", "Kundana Katkuri", "Munukuntla Revanth Rudhra", "Niraja Nethri Siluveru", "Pranav Mattepelli", "Sreenith Yadav Naini", "Uvan Reddy Dasari", "Zayan Mohammad", "Zoya Mohammed"], "Grade-1": ["Dheeraj Gattu", "Preetham Sannayala", "Shiva nandu Gonela", "Shrayan Nuthanakanti", "Sriyanksha Mandala", "Advitha Garige", "Harika Bandi", "Himansi Kondoju", "Izhaan Rahamath Syed", "Jaisurya Myakala", "Khadeeja Fathima", "Manaswini Dandugula", "Manusri Bandi", "Rithwik krishna Amaravadi", "Rohan Bandi", "Shiva Junnu", "Shivanandh Bandi", "Sridha Thalla", "Srinika Chengelly", "Sriyanshi Oggula", "Vishwak Checkka"], "Grade-2": ["Aliza Manha Shaik", "Dhruvan Reddy Katukuri", "Druthika Enugala", "Manaswini Bandi", "Rakshith Macharla", "Sathwika Katkuri", "Shalini Uppala", "Chandu Devarakonda", "Gnaneshwar Pokanati", "Hasnain Syed", "Koushik Siluveru", "Senen Desabattula", "Shivarajan Pothuganti"], "Grade-3": ["Nagavelly Manikanta", "Mirja Ismail", "Bandi Aryan", "Dandugula Mahesh Babu", "Bandi Tejasri", "Bandi Harshavardhan", "Gampala Vyshnavi", "Gampala Laxmi", "Garige Harshith", "Katkuri Hanish", "Katukuri Manideep", "MD Abdul Quddus", "Muppa Sathwik Patel", "Nuthanakanti Sansita", "Pasarakonda Ritwin", "Pinninti Rakshith Rao", "Rayi Sriman Adithya"], "Grade-4": ["Abdul Saqib Mohammad", "Anudeep Chintha", "Bhavan Bandi", "Harshavardhan Gonela", "Jayadev Chiluveru", "Mahaboob Syed", "Nandith Reddy Enugala", "Sai Charan Goud Mandala", "Sai Prasanna Keerthi", "Ajmeri Shaik", "Akshara Chiluveru", "Jayasri Myakala", "Rahul Kanjarla", "Saketh Devarakonda"], "Grade-5": ["Adya Reddy Vangala", "Kowshik Patel Muppa", "Siri Singaram", "Srikar Mandala", "Abdus Salaam MD", "Akshith Ram Kalvacharla", "Jaffar Anas Shaik", "Khaja Azeemuddin Mohammed", "Nihan Mohammed", "Saif Shaik", "Saketh Renukuntla", "Sreeja Dasari", "Vidhaatri Sahani"], "Grade-6": ["Abdul Razzak Mohammad", "Anudeepthi Chintha", "Saketh Ranaveni", "Shiva Sri Katukuri", "Aklees Shaik", "Akshya Kalvacharla", "Prince Katkuri"], "Grade-7": ["Manikanta Sannayala", "Sreeyan Reddy Karra", "Jayadhithya Chiluveru"], "Grade-8": ["Sathwika Nagavelly", "Vyshnavi Uppala", "Akshaya Gampala", "Ganesh Oggula", "Gayathri Renukuntla", "Khaja Sadeemuddin Mohammed"] };
+    const studentData = { "Pre-KG": ["Hanish Macharla", "Arjun Vihaar Illandula", "Thanu sree Allakunta", "Aadhya Gangaraboina", "Aadhya Sri Oggula", "Aadhyasri Shivagoni", "Afraha Begum", "Aliya Sultana", "Anvika Bandi", "Aradana Devara konda", "Devansh Bandi", "Hanvitha Mulkalapelli", "Harsha Vardhan Seenapelli", "Hiranya Bandi", "Jashritha Boina", "Konreddy Shreyanvi", "Kriyansh Sammeta", "Mohammed Mohiuddin Sayyad", "Nethra Narkurthi", "Reeyansh Bandi", "Rishi Manupati", "Rudransh Bandi", "Rudransh Bandi_1", "Sanvika Bandi", "Shanvith Khatha", "Shishira Jalagam", "Shiva Sai Mekala", "Shree Rudhraveer Chevvu", "Shreyansh Gangaraboina", "Sreeja Thalla", "Srikrithini Myakala", "Srivatsav Vanam", "Sriyansh Mekala", "Thanvika Lakka", "Thrilokansh Vudari", "Ujjwal Chekka", "Vaishnavi Lakka", "Vedansh Myakala", "Vishnu Priya Molugu", "Vyshnav Tej Boina", "Yafiah Mohammad"], "KG-1": ["Aadhya Sri Amaravadi", "Aditya Manda", "Aadhya Jella", "Advaita Gauri Bandi", "Aizah Amna Shaik", "Akshara Singaram", "Bhahuveer Raj Somishetti", "Gayathri Erroju", "Hanvika Mulkalapelli", "Manvith Kondoju", "Sayyad Vajeed", "Mekala Manu sri", "Oliva Grace Vallapu", "Rithwik Oggula", "Rithwika Kandagatla", "Srimahi Chevvu", "Thanvesh Thalla", "Trishul Nanduri", "Yoganshika Nanduri", "Yusra Mohammad", "Zainul Abideen Syed"], "KG-2": ["Deekshanth Sammeta", "Hanshith Erroju", "Harika Bandi", "Himarsha Naini", "Karthik Vallepu", "Kruthika Bandi", "Rajavardhan Gampala", "Roshan Kaitha", "Sri Anshu Ayaan Lyadala", "Srihansh Bandi", "Srikshitha Guduri", "Varshith Gonela", "Adyasri Makala", "Anvik Boini", "Anvith Pokanati", "Awais Ur Rehman Mohammad", "Dakshu Pothuganti", "Hansith Reddy Katukuri", "Harshith Pokanati", "Jella Aditya", "Krishank Nallabothula", "Kundana Katkuri", "Munukuntla Revanth Rudhra", "Niraja Nethri Siluveru", "Pranav Mattepelli", "Sreenith Yadav Naini", "Uvan Reddy Dasari", "Zayan Mohammad", "Zoya Mohammed"], "Grade-1": ["Dheeraj Gattu", "Preetham Sannayala", "Shiva nandu Gonela", "Shrayan Nuthanakanti", "Sriyanksha Mandala", "Advitha Garige", "Harika Bandi", "Himansi Kondoju", "Izhaan Rahamath Syed", "Jaisurya Myakala", "Khadeeja Fathima", "Manaswini Dandugula", "Manusri Bandi", "Rithwik krishna Amaravadi", "Rohan Bandi", "Shiva Junnu", "Shivanandh Bandi", "Sridha Thalla", "Srinika Chengelly", "Sriyanshi Oggula", "Vishwak Checkka"], "Grade-2": ["Aliza Manha Shaik", "Dhruvan Reddy Katukuri", "Druthika Enugala", "Manaswini Bandi", "Rakshith Macharla", "Sathwika Katkuri", "Shalini Uppala", "Chandu Devarakonda", "Gnaneshwar Pokanati", "Hasnain Syed", "Koushik Siluveru", "Senen Desabattula", "Shivarajan Pothuganti"], "Grade-3": ["Nagavelly Manikanta", "Mirja Ismail", "Bandi Aryan", "Dandugula Mahesh Babu", "Bandi Tejasri", "Bandi Harshavardhan", "Gampala Vyshnavi", "Gampala Laxmi", "Garige Harshith", "Katkuri Hanish", "Katukuri Manideep", "MD Abdul Quddus", "Muppa Sathwik Patel", "Nuthanakanti Sansita", "Pasarakonda Ritwin", "Pinninti Rakshith Rao", "Rayi Sriman Adithya"], "Grade-4": ["Abdul Saqib Mohammad", "Anudeep Chintha", "Bhavan Bandi", "Harshavardhan Gonela", "Jayadev Chiluveru", "Mahaboob Syed", "Nandith Reddy Enugala", "Sai Charan Goud Mandala", "Sai Prasanna Keerthi", "Ajmeri Shaik", "Akshara Chiluveru", "Jayasri Myakala", "Rahul Kanjarla", "Saketh Devarakonda"], "Grade-5": ["Adya Reddy Vangala", "Kowshik Patel Muppa", "Siri Singaram", "Srikar Mandala", "Abdus Salaam MD", "Akshith Ram Kalvacharla", "Jaffar Anas Shaik", "Khaja Azeemuddin Mohammed", "Nihan Mohammed", "Saif Shaik", "Saketh Renukuntla", "Sreeja Dasari", "Vidhaatri Sahani"], "Grade-6": ["Abdul Razzak Mohammad", "Anudeepthi Chintha", "Saketh Ranaveni", "Shiva Sri Katukuri", "Aklees Shaik", "Akshya Kalvacharla", "Prince Katkuri"], "Grade-7": ["Manikanta Sannayala", "Sreeyan Reddy Karra", "Jayadhithya Chiluveru"], "Grade-8": ["Sathwika Nagavelly", "Vyshnavi Uppala", "Akshaya Gampala", "Ganesh Oggula", "Gayathri Renukuntla", "Khaja Sadeemuddin Mohammed"] };
 
     async function verifyStaff() {
         const name = document.getElementById('teacherSelect').value;
         if(!name) return;
-
-        const { value: pw } = await Swal.fire({ 
-            title: `Verification`, 
-            text: `Enter password for ${name}`, 
-            input: 'password', 
-            inputAttributes: {
-                autocomplete: 'new-password' // Tells browser this is not a common login
-            },
-            didOpen: () => {
-                // Manually clear the value after a tiny delay to fight autofill
-                setTimeout(() => {
-                    const input = Swal.getInput();
-                    if (input) {
-                        input.value = '';
-                        input.setAttribute('readonly', 'readonly'); // Temporarily lock
-                        setTimeout(() => input.removeAttribute('readonly'), 100); // Unlock
-                    }
-                }, 50);
-            },
-            showCancelButton: true, 
-            confirmButtonColor: '#006633' 
-        });
-
+        const { value: pw } = await Swal.fire({ title: `Verification`, text: `Enter password for ${name}`, input: 'password', showCancelButton: true });
         if(pw === registry[name]) { 
             authenticatedTeacher = name; 
             document.getElementById('selectionCard').style.display = 'block'; 
@@ -232,6 +207,7 @@
                     <span>%: <span class="res-perc">0%</span></span>
                     <span>GRADE: <span class="res-grade">-</span></span>
                 </div>
+                <span class="update-info res-updated">Not saved yet</span>
             </div>`;
         });
         list.innerHTML = html;
@@ -256,8 +232,6 @@
         let totalObtained = 0, totalMax = 0;
         card.querySelectorAll('.subject-box').forEach(box => {
             const inp = box.querySelector('input');
-            const sub = inp.getAttribute('data-sub');
-            
             if(isSenior) {
                 totalObtained += (parseInt(box.querySelector('.ext').value) || 0) + (parseInt(box.querySelector('.int').value) || 0);
                 totalMax += isFA ? 50 : 100;
@@ -278,15 +252,17 @@
         const cls = document.getElementById('examClass').value;
         const exam = document.getElementById('examType').value;
         if(!cls || !exam) return;
-        Swal.fire({ title: 'Syncing...', didOpen: () => Swal.showLoading() });
+        Swal.fire({ title: 'Syncing Records...', didOpen: () => Swal.showLoading() });
         db.ref(`progress_cards/${cls}/${exam}`).once('value', (snap) => {
             const data = snap.val() || {};
             Swal.close();
             document.querySelectorAll('.student-mark-card').forEach(card => {
                 const name = card.getAttribute('data-student');
                 if(data[name]) {
-                    Object.keys(data[name].marks).forEach(sub => {
-                        const m = data[name].marks[sub];
+                    const studentData = data[name];
+                    const marks = studentData.marks || {};
+                    Object.keys(marks).forEach(sub => {
+                        const m = marks[sub];
                         if(typeof m === 'object') {
                             if(card.querySelector(`.ext[data-sub="${sub}"]`)) card.querySelector(`.ext[data-sub="${sub}"]`).value = m.ext || "";
                             if(card.querySelector(`.int[data-sub="${sub}"]`)) card.querySelector(`.int[data-sub="${sub}"]`).value = m.int || "";
@@ -294,7 +270,15 @@
                             if(card.querySelector(`.total-inp[data-sub="${sub}"]`)) card.querySelector(`.total-inp[data-sub="${sub}"]`).value = m || "";
                         }
                     });
+                    
+                    // Restore Last Updated By
+                    if(studentData.updatedBy) {
+                        card.querySelector('.res-updated').innerText = `Last update by ${studentData.updatedBy} on ${studentData.updatedAt || 'N/A'}`;
+                    }
+                    
                     calculateStats(card.querySelector('input'));
+                } else {
+                    card.querySelector('.res-updated').innerText = "No record found";
                 }
             });
         });
@@ -305,6 +289,7 @@
         const exam = document.getElementById('examType').value;
         const updates = {};
         const isSenior = ["Grade-6", "Grade-7", "Grade-8"].includes(cls);
+        const timestamp = new Date().toLocaleString();
 
         document.querySelectorAll('.student-mark-card').forEach(card => {
             const name = card.getAttribute('data-student');
@@ -315,13 +300,25 @@
                 if(isSenior) studentMarks[sub] = { ext: box.querySelector('.ext').value || 0, int: box.querySelector('.int').value || 0 };
                 else studentMarks[sub] = inp.value || 0;
             });
+            
             updates[`progress_cards/${cls}/${exam}/${name}`] = {
-                marks: studentMarks, total: card.querySelector('.res-total').innerText,
-                percentage: card.querySelector('.res-perc').innerText, grade: card.querySelector('.res-grade').innerText,
-                updatedBy: authenticatedTeacher, updatedAt: new Date().toLocaleString()
+                marks: studentMarks, 
+                total: card.querySelector('.res-total').innerText,
+                percentage: card.querySelector('.res-perc').innerText, 
+                grade: card.querySelector('.res-grade').innerText,
+                updatedBy: authenticatedTeacher, 
+                updatedAt: timestamp
             };
+            
+            // UI Update immediate feedback
+            card.querySelector('.res-updated').innerText = `Updated by ${authenticatedTeacher} just now`;
         });
-        db.ref().update(updates).then(() => Swal.fire('Saved', 'Records updated', 'success'));
+
+        db.ref().update(updates).then(() => {
+            Swal.fire({ icon: 'success', title: 'Success', text: 'All records have been saved successfully!' });
+        }).catch(err => {
+            Swal.fire('Error', 'Failed to save: ' + err.message, 'error');
+        });
     }
 
     function filterStudents() {
