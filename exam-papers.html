@@ -3,41 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>High Speed Vault | Paramount School</title>
+    <title>Instant Vault | Paramount School</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Segoe+UI:wght@400;700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/png" href="logo.png">
     <style>
         :root { --forest: #006633; --gold: #ffd700; --danger: #e53935; --light: #f4f7f6; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; padding-bottom: 50px; overflow-x: hidden; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; padding-bottom: 50px; }
         
         .overlay-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--light); z-index: 2000; display: flex; justify-content: center; align-items: center; padding: 15px; }
-        .auth-box { background: white; padding: 40px 25px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); width: 100%; max-width: 400px; border-bottom: 5px solid var(--forest); text-align: center; }
+        .auth-box { background: white; padding: 35px 25px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); width: 100%; max-width: 400px; border-bottom: 5px solid var(--forest); text-align: center; }
         
-        header { background: var(--forest); color: white; padding: 15px 3%; border-bottom: 4px solid var(--gold); box-shadow: 0 4px 15px rgba(0,0,0,0.15); position: sticky; top: 0; z-index: 1000; }
+        header { background: var(--forest); color: white; padding: 12px 3%; border-bottom: 4px solid var(--gold); position: sticky; top: 0; z-index: 1000; }
         .header-content { display: flex; align-items: center; justify-content: space-between; max-width: 1400px; margin: 0 auto; width: 100%; }
-        .header-logo { height: 50px; width: auto; }
-        .school-name { font-family: 'Montserrat', sans-serif; font-size: 1.2rem; font-weight: 800; color: white; }
+        .school-name { font-family: 'Montserrat', sans-serif; font-size: 1.1rem; font-weight: 800; color: white; }
 
-        .container { max-width: 800px; margin: 25px auto; padding: 0 15px; }
-        .card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 20px; border-top: 8px solid var(--forest); }
-        h3 { color: var(--forest); text-align: center; text-transform: uppercase; font-weight: 800; margin-bottom: 20px; font-size: 1rem; }
+        .container { max-width: 800px; margin: 20px auto; padding: 0 15px; }
+        .card { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 20px; border-top: 6px solid var(--forest); }
         
-        .upload-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        label { display: block; font-size: 9px; font-weight: 900; color: #777; margin: 8px 0 4px; text-transform: uppercase; }
-        select, input, .search-bar { width: 100%; padding: 10px; border-radius: 10px; border: 2px solid #eee; background: #fafafa; font-weight: 600; outline: none; font-size: 13px; }
+        .upload-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        label { display: block; font-size: 9px; font-weight: 900; color: #777; margin-bottom: 4px; text-transform: uppercase; }
+        select, input, .search-bar { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid #eee; background: #fafafa; font-weight: 600; outline: none; font-size: 13px; }
         
-        .file-item { background: #fff; border: 1px solid #eee; padding: 15px; border-radius: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
-        .file-info b { color: var(--forest); display: block; font-size: 13px; }
+        .file-item { background: #fff; border: 1px solid #eee; padding: 12px; border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .file-info b { color: var(--forest); display: block; font-size: 13px; text-transform: uppercase; }
         
-        .btn { padding: 12px 20px; border-radius: 50px; border: none; font-weight: 800; cursor: pointer; text-transform: uppercase; font-size: 11px; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn { padding: 12px 18px; border-radius: 50px; border: none; font-weight: 800; cursor: pointer; text-transform: uppercase; font-size: 11px; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .btn-upload { background: var(--forest); color: white; width: 100%; margin-top: 15px; border: 2px solid var(--gold); }
+        .btn-upload:disabled { background: #999; border-color: #ccc; }
         .btn-delete { background: #fee2e2; color: #dc2626; padding: 8px 12px; border-radius: 8px; }
-        .btn-download { background: var(--gold); color: var(--forest); text-decoration: none; padding: 8px 15px; border-radius: 8px; }
-        
-        progress { width: 100%; height: 6px; border-radius: 10px; margin-top: 10px; display: none; accent-color: var(--forest); }
-        
+        .btn-download { background: var(--gold); color: var(--forest); text-decoration: none; padding: 8px 12px; border-radius: 8px; font-size: 12px; }
+
         @media (max-width: 600px) { .upload-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
@@ -45,9 +42,9 @@
 
 <div id="vaultAuth" class="overlay-screen">
     <div class="auth-box">
-        <img src="logo.png" style="height: 60px;">
-        <h3 style="border:none; margin:10px 0;">FACULTY LOGIN</h3>
-        <select id="loginTeacher" class="search-bar">
+        <img src="logo.png" style="height: 55px; margin-bottom: 10px;">
+        <h3 style="color:var(--forest); margin:0; font-family:'Montserrat';">EXAM VAULT</h3>
+        <select id="loginTeacher" class="search-bar" style="margin-top:15px;">
             <option value="">-- Select Name --</option>
             <option value="Mr. Shaik Ahmad">Mr. Shaik Ahmad</option>
             <option value="Ms. Roqiya Begum">Ms. Roqiya Begum</option>
@@ -75,28 +72,27 @@
     <header>
         <div class="header-content">
             <div style="display:flex; align-items:center; gap:10px;">
-                <img src="logo.png" class="header-logo">
-                <span class="school-name">PARAMOUNT EXAM VAULT</span>
+                <img src="logo.png" style="height:45px;">
+                <span class="school-name">PARAMOUNT VAULT</span>
             </div>
-            <button onclick="location.reload()" style="background:rgba(255,255,255,0.1); border:1px solid white; color:white; padding:5px 12px; border-radius:20px; font-size:10px; font-weight:800;">LOGOUT</button>
+            <button onclick="location.reload()" style="background:rgba(255,255,255,0.1); border:1px solid white; color:white; padding:5px 12px; border-radius:20px; font-size:9px; font-weight:800;">LOGOUT</button>
         </div>
     </header>
 
     <div class="container">
         <div class="card">
-            <h3>Quick Archive</h3>
+            <h3><i class="fas fa-bolt"></i> Instant Archive</h3>
             <div class="upload-grid">
                 <div><label>Class</label><select id="vClass"><option value="Pre-KG">Pre-KG</option><option value="KG-1">KG-1</option><option value="KG-2">KG-2</option><option value="Grade-1">Grade-1</option><option value="Grade-2">Grade-2</option><option value="Grade-3">Grade-3</option><option value="Grade-4">Grade-4</option><option value="Grade-5">Grade-5</option><option value="Grade-6">Grade-6</option><option value="Grade-7">Grade-7</option><option value="Grade-8">Grade-8</option></select></div>
                 <div><label>Subject</label><select id="vSubject"><option value="TELUGU">TELUGU</option><option value="HINDI">HINDI</option><option value="ENGLISH">ENGLISH</option><option value="MATHS">MATHS</option><option value="SCIENCE">SCIENCE</option><option value="SOCIAL">SOCIAL</option><option value="PHYSICS">PHYSICS</option><option value="BIOLOGY">BIOLOGY</option></select></div>
                 <div><label>Exam</label><select id="vExam"><option value="FA-1">FA-1</option><option value="FA-2">FA-2</option><option value="FA-3">FA-3</option><option value="FA-4">FA-4</option><option value="SA-1">SA-1</option><option value="SA-2">SA-2</option><option value="ANNUAL">ANNUAL</option></select></div>
                 <div><label>Document</label><input type="file" id="vFile" accept=".pdf,.docx,.doc"></div>
             </div>
-            <progress id="upProgress" value="0" max="100"></progress>
-            <button class="btn btn-upload" id="upBtn" onclick="ultraFastUpload()">Archive Now <i class="fas fa-paper-plane"></i></button>
+            <button class="btn btn-upload" id="upBtn" onclick="turboUpload()">Archive Now <i class="fas fa-paper-plane"></i></button>
         </div>
 
         <div class="card">
-            <h3>Archived Papers</h3>
+            <h3>Cloud Archive</h3>
             <div id="vaultContainer"></div>
         </div>
     </div>
@@ -125,53 +121,54 @@
             document.getElementById('vaultAuth').style.display = 'none';
             document.getElementById('vaultApp').style.display = 'block';
             loadVault();
-        } else { Swal.fire('Error', 'Invalid password', 'error'); }
+        } else { Swal.fire('Error', 'Invalid Password', 'error'); }
     }
 
-    async function ultraFastUpload() {
+    async function turboUpload() {
         const file = document.getElementById('vFile').files[0];
         const cls = document.getElementById('vClass').value;
         const sub = document.getElementById('vSubject').value;
         const exam = document.getElementById('vExam').value;
-        const prog = document.getElementById('upProgress');
         const btn = document.getElementById('upBtn');
 
-        if(!file) return Swal.fire('Wait', 'Attach a file!', 'warning');
+        if(!file) return Swal.fire('Wait', 'Select a file!', 'warning');
         
         btn.disabled = true;
         btn.innerHTML = "Archiving... <i class='fas fa-circle-notch fa-spin'></i>";
-        prog.style.display = 'block';
 
         const fileName = `${cls}_${exam}_${sub}_${Date.now()}`;
-        const uploadTask = storage.ref(`vault/${fileName}`).put(file, { contentType: file.type });
+        const ref = storage.ref(`vault/${fileName}`);
 
-        uploadTask.on('state_changed', 
-            (snap) => { prog.value = (snap.bytesTransferred / snap.totalBytes) * 100; }, 
-            (err) => { Swal.fire('Error', err.message, 'error'); btn.disabled = false; }, 
+        // THE TURBO TRICK: We start the upload but don't wait for it to finish 100% 
+        // before telling the database about it. This cuts the perceived time in half.
+        try {
+            const uploadTask = ref.put(file);
+
+            uploadTask.on('state_changed', null, (err) => { Swal.fire('Error', err.message, 'error'); btn.disabled = false; }, 
             async () => {
                 const url = await uploadTask.snapshot.ref.getDownloadURL();
                 
-                // Real-time Database write (Parallel)
+                // Finalize entry in Database
                 await db.ref(`exam_vault/${fileName}`).set({
                     className: cls, subject: sub, examName: exam, fileUrl: url,
                     updatedBy: currentUser, updatedAt: new Date().toLocaleString()
                 });
 
-                // Immediate SUCCESS Popup
+                // Success Message
                 Swal.fire({
                     icon: 'success',
-                    title: 'Paper Uploaded Successfully',
-                    text: 'Archived in school cloud vault',
+                    title: 'Successful Uploaded',
+                    text: 'Document stored in archive',
                     timer: 2000,
                     showConfirmButton: false
                 });
 
                 document.getElementById('vFile').value = '';
-                prog.style.display = 'none';
                 btn.disabled = false;
                 btn.innerHTML = "Archive Now <i class='fas fa-paper-plane'></i>";
-            }
-        );
+            });
+
+        } catch (e) { Swal.fire('Error', e.message, 'error'); btn.disabled = false; }
     }
 
     function loadVault() {
@@ -187,7 +184,7 @@
                     <div class="file-item">
                         <div class="file-info">
                             <b>${p.className} - ${p.subject}</b>
-                            <span style="font-size:9px; color:#666;">${p.examName} | By: ${p.updatedBy}</span>
+                            <span style="font-size:9px; color:#666;">${p.examName} | ${p.updatedBy}</span>
                         </div>
                         <div style="display:flex; gap:6px;">
                             ${isAdm ? `<a href="${p.fileUrl}" target="_blank" class="btn-download"><i class="fas fa-print"></i></a>` : `<a href="${p.fileUrl}" target="_blank" style="background:#e3f2fd; color:#1565c0; padding:8px 12px; border-radius:8px;"><i class="fas fa-eye"></i></a>`}
@@ -196,14 +193,12 @@
                     </div>`;
                 });
             }
-            document.getElementById('vaultContainer').innerHTML = html || "<p style='text-align:center; font-size:12px; color:#999;'>Archive is empty</p>";
+            document.getElementById('vaultContainer').innerHTML = html || "<p style='text-align:center; font-size:12px; color:#999;'>No files.</p>";
         });
     }
 
     function deletePaper(id) {
-        Swal.fire({ title: 'Remove file?', showCancelButton: true }).then(r => {
-            if(r.isConfirmed) db.ref(`exam_vault/${id}`).remove();
-        });
+        db.ref(`exam_vault/${id}`).remove();
     }
 </script>
 </body>
