@@ -63,9 +63,12 @@
         @media (max-width: 768px) {
             .setup-grid { grid-template-columns: 1fr; }
             .marks-grid { grid-template-columns: repeat(2, 1fr); }
+            .portal-title { display: none; }
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 </head>
 <body>
 
@@ -89,7 +92,7 @@
     <div class="auth-container" id="authCard">
         <h3><i class="fas fa-user-shield"></i> Teacher Access</h3>
         <div style="max-width:300px; margin:20px auto 0;">
-            <select id="teacherSelect" onchange="verifyStaff()" style="background: white; border:none; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+            <select id="teacherSelect" onchange="verifyStaff()" style="background: white; border:none; box-shadow: 0 5px 15px rgba(0,0,0,0.1); width: 100%; padding: 14px; border-radius: 12px; font-weight: 700;">
                 <option value="">-- Select Your Name --</option>
                 <option value="Mr. Shaik Ahmad">Mr. Shaik Ahmad</option>
                 <option value="Ms. Roqiya Begum">Ms. Roqiya Begum</option>
@@ -148,8 +151,6 @@
     </div>
 </div>
 
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 <script>
     const firebaseConfig = { apiKey: "AIzaSyDRYk9KOK-ga0c88dnYMsAoifW2NJTd_Y8", databaseURL: "https://paramount-school-d55bc-default-rtdb.firebaseio.com", projectId: "paramount-school-d55bc" };
     firebase.initializeApp(firebaseConfig);
@@ -160,53 +161,36 @@
 
     const studentData = { "Pre-KG": ["Hanish Macharla", "Arjun Vihaar Illandula", "Thanu sree Allakunta", "Aadhya Gangaraboina", "Aadhya Sri Oggula", "Aadhyasri Shivagoni", "Afraha Begum", "Aliya Sultana", "Anvika Bandi", "Aradana Devara konda", "Devansh Bandi", "Hanvitha Mulkalapelli", "Harsha Vardhan Seenapelli", "Hiranya Bandi", "Jashritha Boina", "Konreddy Shreyanvi", "Kriyansh Sammeta", "Mohammed Mohiuddin Sayyad", "Nethra Narkurthi", "Reeyansh Bandi", "Rishi Manupati", "Rudransh Bandi", "Rudransh Bandi_1", "Sanvika Bandi", "Shanvith Khatha", "Shishira Jalagam", "Shiva Sai Mekala", "Shree Rudhraveer Chevvu", "Shreyansh Gangaraboina", "Sreeja Thalla", "Srikrithini Myakala", "Srivatsav Vanam", "Sriyansh Mekala", "Thanvika Lakka", "Thrilokansh Vudari", "Ujjwal Chekka", "Vaishnavi Lakka", "Vedansh Myakala", "Vishnu Priya Molugu", "Vyshnav Tej Boina", "Yafiah Mohammad"], "KG-1": ["Aadhya Sri Amaravadi", "Aditya Manda", "Aadhya Jella", "Advaita Gauri Bandi", "Aizah Amna Shaik", "Akshara Singaram", "Bhahuveer Raj Somishetti", "Gayathri Erroju", "Hanvika Mulkalapelli", "Manvith Kondoju", "Sayyad Vajeed", "Mekala Manu sri", "Oliva Grace Vallapu", "Rithwik Oggula", "Rithwika Kandagatla", "Srimahi Chevvu", "Thanvesh Thalla", "Trishul Nanduri", "Yoganshika Nanduri", "Yusra Mohammad", "Zainul Abideen Syed"], "KG-2": ["Deekshanth Sammeta", "Hanshith Erroju", "Harika Bandi", "Himarsha Naini", "Karthik Vallepu", "Kruthika Bandi", "Rajavardhan Gampala", "Roshan Kaitha", "Sri Anshu Ayaan Lyadala", "Srihansh Bandi", "Srikshitha Guduri", "Varshith Gonela", "Adyasri Makala", "Anvik Boini", "Anvith Pokanati", "Awais Ur Rehman Mohammad", "Dakshu Pothuganti", "Hansith Reddy Katukuri", "Harshith Pokanati", "Jella Aditya", "Krishank Nallabothula", "Kundana Katkuri", "Munukuntla Revanth Rudhra", "Niraja Nethri Siluveru", "Pranav Mattepelli", "Sreenith Yadav Naini", "Uvan Reddy Dasari", "Zayan Mohammad", "Zoya Mohammed"], "Grade-1": ["Dheeraj Gattu", "Preetham Sannayala", "Shiva nandu Gonela", "Shrayan Nuthanakanti", "Sriyanksha Mandala", "Advitha Garige", "Harika Bandi", "Himansi Kondoju", "Izhaan Rahamath Syed", "Jaisurya Myakala", "Khadeeja Fathima", "Manaswini Dandugula", "Manusri Bandi", "Rithwik krishna Amaravadi", "Rohan Bandi", "Shiva Junnu", "Shivanandh Bandi", "Sridha Thalla", "Srinika Chengelly", "Sriyanshi Oggula", "Vishwak Checkka"], "Grade-2": ["Aliza Manha Shaik", "Dhruvan Reddy Katukuri", "Druthika Enugala", "Manaswini Bandi", "Rakshith Macharla", "Sathwika Katkuri", "Shalini Uppala", "Chandu Devarakonda", "Gnaneshwar Pokanati", "Hasnain Syed", "Koushik Siluveru", "Senen Desabattula", "Shivarajan Pothuganti"], "Grade-3": ["Nagavelly Manikanta", "Mirja Ismail", "Bandi Aryan", "Dandugula Mahesh Babu", "Bandi Tejasri", "Bandi Harshavardhan", "Gampala Vyshnavi", "Gampala Laxmi", "Garige Harshith", "Katkuri Hanish", "Katukuri Manideep", "MD Abdul Quddus", "Muppa Sathwik Patel", "Nuthanakanti Sansita", "Pasarakonda Ritwin", "Pinninti Rakshith Rao", "Rayi Sriman Adithya"], "Grade-4": ["Abdul Saqib Mohammad", "Anudeep Chintha", "Bhavan Bandi", "Harshavardhan Gonela", "Jayadev Chiluveru", "Mahaboob Syed", "Nandith Reddy Enugala", "Sai Charan Goud Mandala", "Sai Prasanna Keerthi", "Ajmeri Shaik", "Akshara Chiluveru", "Jayasri Myakala", "Rahul Kanjarla", "Saketh Devarakonda"], "Grade-5": ["Adya Reddy Vangala", "Kowshik Patel Muppa", "Siri Singaram", "Srikar Mandala", "Abdus Salaam MD", "Akshith Ram Kalvacharla", "Jaffar Anas Shaik", "Khaja Azeemuddin Mohammed", "Nihan Mohammed", "Saif Shaik", "Saketh Renukuntla", "Sreeja Dasari", "Vidhaatri Sahani"], "Grade-6": ["Abdul Razzak Mohammad", "Anudeepthi Chintha", "Saketh Ranaveni", "Shiva Sri Katukuri", "Aklees Shaik", "Akshya Kalvacharla", "Prince Katkuri"], "Grade-7": ["Manikanta Sannayala", "Sreeyan Reddy Karra", "Jayadhithya Chiluveru"], "Grade-8": ["Sathwika Nagavelly", "Vyshnavi Uppala", "Akshaya Gampala", "Ganesh Oggula", "Gayathri Renukuntla", "Khaja Sadeemuddin Mohammed"] };
 
-   async function verifyStaff() {
-    const name = document.getElementById('teacherSelect').value;
-    if(!name) return;
+    async function verifyStaff() {
+        const name = document.getElementById('teacherSelect').value;
+        if(!name) return;
 
-    // 1. CLEAR ANY PREVIOUSLY STORED VALUE IMMEDIATELY
-    const { value: pw } = await Swal.fire({ 
-        title: `Verification`, 
-        html: `
-            <input type="password" name="fake-password-to-stop-autofill" style="display:none">
-            <p>Enter password for ${name}</p>
-        `,
-        input: 'password',
-        inputAttributes: {
-            name: 'real-password-' + Math.random(), // Dynamic name confuses the browser
-            autocomplete: 'new-password',
-            autocapitalize: 'off',
-            autocorrect: 'off'
-        },
-        didOpen: () => {
-            const input = Swal.getInput();
-            // Forcefully clear the input value after the modal opens
-            setTimeout(() => {
-                input.value = '';
-                input.removeAttribute('readonly');
-            }, 100);
-        },
-        showCancelButton: true, 
-        confirmButtonColor: '#006633' 
-    });
+        const { value: pw } = await Swal.fire({ 
+            title: `Verification`, 
+            html: `<input type="password" name="fake-field" style="display:none"><p>Enter password for ${name}</p>`,
+            input: 'password',
+            inputAttributes: { autocomplete: 'new-password' },
+            didOpen: () => {
+                const input = Swal.getInput();
+                setTimeout(() => {
+                    input.value = '';
+                    input.removeAttribute('readonly');
+                }, 100);
+            },
+            showCancelButton: true, 
+            confirmButtonColor: '#006633' 
+        });
 
-    if(pw === registry[name]) { 
-        authenticatedTeacher = name; 
-        document.getElementById('selectionCard').style.display = 'block'; 
-        document.getElementById('authCard').style.display = 'none'; 
-        //Reset the select so it's clean if they logout
-        document.getElementById('teacherSelect').value = "";
-    } else { 
-        if (pw !== undefined) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Access Denied',
-                text: 'Incorrect Password'
-            });
+        if(pw === registry[name]) { 
+            authenticatedTeacher = name; 
+            document.getElementById('selectionCard').style.display = 'block'; 
+            document.getElementById('authCard').style.display = 'none'; 
+            document.getElementById('teacherSelect').value = "";
+        } else { 
+            if (pw !== undefined) Swal.fire({ icon: 'error', title: 'Access Denied', text: 'Incorrect Password' });
+            document.getElementById('teacherSelect').value = ""; 
         }
-        document.getElementById('teacherSelect').value = ""; 
     }
-}
 
     function loadStudentMarksheet() {
         const cls = document.getElementById('examClass').value;
@@ -304,12 +288,7 @@
                             if(card.querySelector(`.total-inp[data-sub="${sub}"]`)) card.querySelector(`.total-inp[data-sub="${sub}"]`).value = m || "";
                         }
                     });
-                    
-                    // Restore Last Updated By
-                    if(studentData.updatedBy) {
-                        card.querySelector('.res-updated').innerText = `Last update by ${studentData.updatedBy} on ${studentData.updatedAt || 'N/A'}`;
-                    }
-                    
+                    if(studentData.updatedBy) card.querySelector('.res-updated').innerText = `Last update by ${studentData.updatedBy} on ${studentData.updatedAt || 'N/A'}`;
                     calculateStats(card.querySelector('input'));
                 } else {
                     card.querySelector('.res-updated').innerText = "No record found";
@@ -334,25 +313,55 @@
                 if(isSenior) studentMarks[sub] = { ext: box.querySelector('.ext').value || 0, int: box.querySelector('.int').value || 0 };
                 else studentMarks[sub] = inp.value || 0;
             });
-            
             updates[`progress_cards/${cls}/${exam}/${name}`] = {
-                marks: studentMarks, 
-                total: card.querySelector('.res-total').innerText,
-                percentage: card.querySelector('.res-perc').innerText, 
-                grade: card.querySelector('.res-grade').innerText,
-                updatedBy: authenticatedTeacher, 
-                updatedAt: timestamp
+                marks: studentMarks, total: card.querySelector('.res-total').innerText,
+                percentage: card.querySelector('.res-perc').innerText, grade: card.querySelector('.res-grade').innerText,
+                updatedBy: authenticatedTeacher, updatedAt: timestamp
             };
-            
-            // UI Update immediate feedback
             card.querySelector('.res-updated').innerText = `Updated by ${authenticatedTeacher} just now`;
         });
+        db.ref().update(updates).then(() => Swal.fire({ icon: 'success', title: 'Success', text: 'All saved!' }));
+    }
 
-        db.ref().update(updates).then(() => {
-            Swal.fire({ icon: 'success', title: 'Success', text: 'All records have been saved successfully!' });
-        }).catch(err => {
-            Swal.fire('Error', 'Failed to save: ' + err.message, 'error');
+    async function deleteAllMarks() {
+        const cls = document.getElementById('examClass').value;
+        const exam = document.getElementById('examType').value;
+        if (!cls || !exam) { Swal.fire('Wait', 'Select Class & Exam!', 'warning'); return; }
+
+        const { value: pw } = await Swal.fire({
+            title: 'Verify Password',
+            text: `Enter password for ${authenticatedTeacher} to DELETE records.`,
+            input: 'password',
+            inputAttributes: { autocomplete: 'new-password' },
+            showCancelButton: true,
+            confirmButtonColor: '#ef4444',
+            confirmButtonText: 'Authorize Deletion',
+            didOpen: () => {
+                const input = Swal.getInput();
+                setTimeout(() => { input.value = ''; }, 100);
+            }
         });
+
+        if (pw === registry[authenticatedTeacher]) {
+            Swal.fire({
+                title: 'Final Warning',
+                text: "Wipe all data from Firebase?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Confirm Delete'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({ title: 'Deleting...', didOpen: () => Swal.showLoading() });
+                    db.ref(`progress_cards/${cls}/${exam}`).remove().then(() => {
+                        Swal.fire('Cleared!', 'Records removed.', 'success');
+                        document.querySelectorAll('.sub-input').forEach(i => i.value = '');
+                        document.querySelectorAll('.res-total').forEach(el => el.innerText = '0');
+                        document.querySelectorAll('.res-perc').forEach(el => el.innerText = '0%');
+                        document.querySelectorAll('.res-updated').forEach(el => el.innerText = 'Record Deleted');
+                    });
+                }
+            });
+        } else { if (pw !== undefined) Swal.fire('Error', 'Wrong Password', 'error'); }
     }
 
     function filterStudents() {
