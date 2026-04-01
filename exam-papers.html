@@ -10,27 +10,32 @@
     <style>
         :root { --forest: #006633; --gold: #ffd700; --danger: #e53935; --light: #f4f7f6; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; padding-bottom: 50px; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; padding-bottom: 50px; overflow-x: hidden; }
         
+        /* --- LOGIN SCREEN --- */
         .overlay-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--light); z-index: 2000; display: flex; justify-content: center; align-items: center; padding: 15px; }
         .auth-box { background: white; padding: 40px 25px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); width: 100%; max-width: 420px; border-bottom: 5px solid var(--forest); text-align: center; }
         
+        /* --- PREMIUM HEADER --- */
         header { background: var(--forest); color: white; padding: 15px 3%; border-bottom: 4px solid var(--gold); box-shadow: 0 4px 15px rgba(0,0,0,0.15); position: sticky; top: 0; z-index: 1000; }
-        .header-content { display: flex; align-items: center; justify-content: space-between; max-width: 1200px; margin: 0 auto; width: 100%; }
-        
+        .header-content { display: flex; align-items: center; justify-content: space-between; max-width: 1400px; margin: 0 auto; width: 100%; }
+        .header-left { display: flex; align-items: center; gap: 12px; }
+        .header-logo { height: 55px; width: auto; }
+        .school-text { display: flex; flex-direction: column; line-height: 1.1; text-align: left; }
+        .school-name-main { font-family: 'Montserrat', sans-serif; font-size: 1.4rem; font-weight: 800; letter-spacing: 0.5px; color: white; }
+        .school-name-sub { font-family: 'Montserrat', sans-serif; font-size: 0.65rem; color: var(--gold); font-weight: 700; text-transform: uppercase; }
+
         .container { max-width: 900px; margin: 25px auto; padding: 0 15px; }
         .card { background: white; padding: 25px; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 20px; border-top: 8px solid var(--forest); }
         h3 { color: var(--forest); text-align: center; text-transform: uppercase; font-weight: 800; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
         
         .upload-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         label { display: block; font-size: 10px; font-weight: 900; color: #777; margin: 10px 0 5px; text-transform: uppercase; }
-        select, input[type="file"], .search-bar, .auth-input { width: 100%; padding: 12px; border-radius: 12px; border: 2px solid #eee; background: #fafafa; font-weight: 600; outline: none; }
+        select, input, .search-bar { width: 100%; padding: 12px; border-radius: 12px; border: 2px solid #eee; background: #fafafa; font-weight: 600; outline: none; font-size: 14px; }
         
-        .file-item { background: white; border: 1px solid #eee; padding: 18px; border-radius: 20px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; animation: slideIn 0.3s ease-out; }
-        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
+        .file-item { background: white; border: 1px solid #eee; padding: 18px; border-radius: 20px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
         .file-info b { color: var(--forest); display: block; font-size: 14px; text-transform: uppercase; }
-        .file-info span { font-size: 10px; color: #888; display: block; margin-top: 4px; }
+        .file-info span { font-size: 10px; color: #888; display: block; margin-top: 4px; font-weight: 600; }
         
         .btn { padding: 12px 25px; border-radius: 50px; border: none; font-weight: 800; cursor: pointer; text-transform: uppercase; font-size: 12px; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .btn-upload { background: var(--forest); color: white; width: 100%; margin-top: 20px; border: 2px solid var(--gold); }
@@ -38,10 +43,9 @@
         .btn-preview { background: #e3f2fd; color: #1976d2; text-decoration: none; padding: 10px 18px; border-radius: 10px; }
         .btn-delete { background: #fee2e2; color: #dc2626; padding: 10px 15px; border-radius: 10px; }
         
-        /* Progress Bar Style */
-        #uploadProgress { width: 100%; height: 8px; border-radius: 10px; margin-top: 10px; display: none; }
+        progress { width: 100%; height: 10px; border-radius: 10px; margin-top: 15px; display: none; accent-color: var(--forest); }
         
-        @media (max-width: 600px) { .upload-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 600px) { .upload-grid { grid-template-columns: 1fr; } .school-name-main { font-size: 1.1rem; } }
     </style>
 </head>
 <body>
@@ -49,9 +53,11 @@
 <div id="vaultAuth" class="overlay-screen">
     <div class="auth-box">
         <img src="logo.png" style="height: 70px; margin-bottom: 15px;">
-        <h2 style="font-family:'Montserrat'; color:var(--forest);">STAFF LOGIN</h2>
-        <select id="loginTeacher" class="auth-input">
-            <option value="">-- Select Your Name --</option>
+        <h2 style="font-family:'Montserrat'; color:var(--forest); margin:0;">STAFF ACCESS</h2>
+        <p style="font-size:10px; font-weight:800; color:var(--gold); text-transform:uppercase; margin-bottom:20px;">Exam Management Vault</p>
+        
+        <select id="loginTeacher" class="search-bar">
+            <option value="">-- Choose Your Name --</option>
             <option value="Mr. Shaik Ahmad">Mr. Shaik Ahmad</option>
             <option value="Ms. Roqiya Begum">Ms. Roqiya Begum</option>
             <option value="Ms. Jyothi">Ms. Jyothi</option>
@@ -68,19 +74,27 @@
             <option value="Ms. Riha">Ms. Riha</option>
             <option value="Ms. Raniya Zainab">Ms. Raniya Zainab</option>
         </select>
-        <input type="password" id="loginPass" class="auth-input" placeholder="Enter Password" style="margin-top:10px;">
-        <button onclick="verifyVaultAccess()" class="btn btn-upload">Unlock Vault <i class="fas fa-key"></i></button>
+        
+        <input type="password" id="loginPass" class="search-bar" placeholder="Enter Password" style="margin-top:10px;">
+        
+        <button onclick="verifyVaultAccess()" class="btn btn-upload" style="margin-top:20px;">Unlock Vault <i class="fas fa-lock-open"></i></button>
+        <button onclick="window.location.href='teacher.html'" style="margin-top:15px; width:100%; background:none; border:none; color:#777; font-weight:800; font-size:10px; cursor:pointer;">RETURN TO DASHBOARD</button>
     </div>
 </div>
 
 <div id="vaultApp" style="display:none;">
     <header>
         <div class="header-content">
-            <div style="display:flex; align-items:center; gap:12px;">
-                <img src="logo.png" style="height:50px;">
-                <span style="font-family:'Montserrat'; font-weight:800; font-size:1.3rem;">EXAM VAULT</span>
+            <div class="header-left">
+                <img src="logo.png" class="header-logo">
+                <div class="school-text">
+                    <span class="school-name-main">PARAMOUNT</span>
+                    <span class="school-name-sub">ENGLISH MEDIUM SCHOOL</span>
+                </div>
             </div>
-            <button onclick="location.reload()" style="background:rgba(255,255,255,0.1); border:1.5px solid white; color:white; padding:6px 18px; border-radius:50px; font-size:10px; cursor:pointer; font-weight:800;">LOGOUT</button>
+            <div style="display:flex; gap:10px;">
+                <button onclick="location.reload()" style="background:rgba(255,255,255,0.1); border:1.5px solid white; color:white; padding:6px 18px; border-radius:50px; font-size:10px; cursor:pointer; font-weight:800;">LOGOUT</button>
+            </div>
         </div>
     </header>
 
@@ -99,19 +113,19 @@
                     <option value="MATHS">MATHS</option><option value="SCIENCE">SCIENCE</option><option value="SOCIAL">SOCIAL</option>
                     <option value="PHYSICS">PHYSICS</option><option value="BIOLOGY">BIOLOGY</option>
                 </select></div>
-                <div><label>Exam</label><select id="vExam">
-                    <option value="FORMATIVE ASSESSMENT-1">FORMATIVE ASSESSMENT-1</option><option value="FORMATIVE ASSESSMENT-2">FORMATIVE ASSESSMENT-2</option><option value="FORMATIVE ASSESSMENT-3">FORMATIVE ASSESSMENT-3</option><option value="FORMATIVE ASSESSMENT-4">FORMATIVE ASSESSMENT-4</option>
-                    <option value="SUMMATIVE ASSESSMENT-1">SUMMATIVE ASSESSMENT-1</option><option value="SUMMATIVE ASSESSMENT-2">SUMMATIVE ASSESSMENT-2</option><option value="ANNUAL EXAM">ANNUAL EXAM</option>
+                <div><label>Exam Category</label><select id="vExam">
+                    <option value="FA-1">FA-1</option><option value="FA-2">FA-2</option><option value="FA-3">FA-3</option><option value="FA-4">FA-4</option>
+                    <option value="SA-1">SA-1</option><option value="SA-2">SA-2</option><option value="ANNUAL">ANNUAL EXAM</option>
                 </select></div>
-                <div><label>Document</label><input type="file" id="vFile" accept=".pdf,.docx,.doc"></div>
+                <div><label>File (PDF/Word)</label><input type="file" id="vFile" accept=".pdf,.docx,.doc"></div>
             </div>
             <progress id="uploadProgress" value="0" max="100"></progress>
-            <button class="btn btn-upload" id="upBtn" onclick="handleUpload()">Upload to Archive</button>
+            <button class="btn btn-upload" id="upBtn" onclick="handleUpload()">Upload Question Paper <i class="fas fa-cloud-upload-alt"></i></button>
         </div>
 
         <div class="card">
-            <h3><i class="fas fa-history"></i> Vault Records</h3>
-            <input type="text" id="vaultSearch" class="search-bar" placeholder="🔍 Search Archive..." onkeyup="filterArchive()">
+            <h3><i class="fas fa-archive"></i> Vault Archive</h3>
+            <input type="text" id="vaultSearch" class="search-bar" placeholder="🔍 Search by Class, Subject or Teacher..." onkeyup="filterArchive()">
             <div id="vaultContainer" style="margin-top:20px;"></div>
         </div>
     </div>
@@ -135,12 +149,17 @@
     function verifyVaultAccess() {
         const name = document.getElementById('loginTeacher').value;
         const pass = document.getElementById('loginPass').value;
+        
+        if(!name || !pass) { Swal.fire('Error', 'Fill all fields', 'warning'); return; }
+
         if(pass === registry[name]) {
             currentUser = name;
-            document.getElementById('vaultAuth').style.display = 'none';
-            document.getElementById('vaultApp').style.display = 'block';
+            document.getElementById('vaultAuth').style.display = 'none'; // Hide Login
+            document.getElementById('vaultApp').style.display = 'block'; // Show Dashboard
             loadVault();
-        } else { Swal.fire('Error', 'Incorrect credentials', 'error'); }
+        } else {
+            Swal.fire('Denied', 'Incorrect Password', 'error');
+        }
     }
 
     async function handleUpload() {
@@ -148,40 +167,30 @@
         const cls = document.getElementById('vClass').value;
         const sub = document.getElementById('vSubject').value;
         const exam = document.getElementById('vExam').value;
-        const progBar = document.getElementById('uploadProgress');
-        const upBtn = document.getElementById('upBtn');
+        const prog = document.getElementById('uploadProgress');
+        const btn = document.getElementById('upBtn');
 
         if(!file) return Swal.fire('Wait', 'Select a file', 'warning');
         
-        upBtn.disabled = true;
-        progBar.style.display = 'block';
+        btn.disabled = true;
+        prog.style.display = 'block';
 
         const fileName = `${cls}_${exam}_${sub}_${Date.now()}`;
-        const ref = storage.ref(`vault/${fileName}`);
-        const uploadTask = ref.put(file);
+        const uploadTask = storage.ref(`vault/${fileName}`).put(file);
 
         uploadTask.on('state_changed', 
-            (snapshot) => {
-                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                progBar.value = progress;
-            }, 
-            (error) => {
-                Swal.fire('Error', error.message, 'error');
-                upBtn.disabled = false;
-            }, 
+            (snap) => { prog.value = (snap.bytesTransferred / snap.totalBytes) * 100; }, 
+            (err) => { Swal.fire('Error', err.message, 'error'); btn.disabled = false; }, 
             async () => {
                 const url = await uploadTask.snapshot.ref.getDownloadURL();
                 await db.ref(`exam_vault/${fileName}`).set({
                     className: cls, subject: sub, examName: exam, fileUrl: url,
                     updatedBy: currentUser, updatedAt: new Date().toLocaleString()
                 });
-                
-                Swal.fire('Uploaded!', 'Paper has been archived successfully.', 'success');
+                Swal.fire('Success', 'Paper archived safely.', 'success');
                 document.getElementById('vFile').value = '';
-                progBar.style.display = 'none';
-                progBar.value = 0;
-                upBtn.disabled = false;
-                loadVault(); // Force immediate reload
+                prog.style.display = 'none';
+                btn.disabled = false;
             }
         );
     }
@@ -199,18 +208,18 @@
                     <div class="file-item archive-entry" data-search="${p.className} ${p.subject} ${p.updatedBy}">
                         <div class="file-info">
                             <b>${p.className} | ${p.subject}</b>
-                            <span>Exam: ${p.examName} | By: ${p.updatedBy}</span>
-                            <span>Uploaded: ${p.updatedAt}</span>
+                            <span>Category: ${p.examName} | Uploaded by: ${p.updatedBy}</span>
+                            <span>Date: ${p.updatedAt}</span>
                         </div>
                         <div style="display:flex; gap:8px;">
                             <a href="${p.fileUrl}" target="_blank" class="btn-preview"><i class="fas fa-eye"></i></a>
-                            ${isAdm ? `<a href="${p.fileUrl}" target="_blank" class="btn-download"><i class="fas fa-print"></i></a>` : ''}
+                            ${isAdm ? `<a href="${p.fileUrl}" target="_blank" class="btn-download" download><i class="fas fa-print"></i></a>` : ''}
                             ${(isAdm || isOwn) ? `<button onclick="deletePaper('${id}')" class="btn btn-delete"><i class="fas fa-trash"></i></button>` : ''}
                         </div>
                     </div>`;
                 });
             }
-            document.getElementById('vaultContainer').innerHTML = html || "<p style='text-align:center;'>Vault is empty.</p>";
+            document.getElementById('vaultContainer').innerHTML = html || "<p style='text-align:center;'>Archive empty.</p>";
         });
     }
 
@@ -222,10 +231,10 @@
     }
 
     async function deletePaper(id) {
-        const res = await Swal.fire({ title: 'Delete Paper?', text: "This will remove it permanently.", icon: 'warning', showCancelButton: true });
+        const res = await Swal.fire({ title: 'Delete Paper?', text: "Permanent removal.", icon: 'warning', showCancelButton: true });
         if(res.isConfirmed) {
             await db.ref(`exam_vault/${id}`).remove();
-            Swal.fire('Deleted', 'Record removed from vault.', 'success');
+            Swal.fire('Deleted', 'Record removed.', 'success');
         }
     }
 </script>
