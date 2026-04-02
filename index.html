@@ -220,9 +220,9 @@
 
     function updateHWSubjects() { 
         const cls = document.getElementById('hwClass').value; 
-        const common = ["TELUGU", "HINDI", "ENGLISH", "MATHS", "SOCIAL STUDIES"]; 
+        const common = ["TELUGU", "HINDI", "ENGLISH", "MATHS", "SCIENCE ","SOCIAL STUDIES"]; 
         // FIXED: Added better logic for Grade-5 and lower grades to avoid empty subjects
-        let subs = (["Grade-6", "Grade-7", "Grade-8"].includes(cls)) ? [...common, "PHYSICS", "BIOLOGY", "IIT"] : (cls === "Grade-5") ? [...common, "SCIENCE", "IIT"] : (cls && !cls.includes("KG")) ? [...common, "SCIENCE"] : common;
+        let subs = (["Grade-6", "Grade-7", "Grade-8"].includes(cls)) ? [...common, "PHYSICS", "BIOLOGY"] : (cls === "Grade-5") ? [...common, "SCIENCE"] : (cls && !cls.includes("KG")) ? [...common, "SCIENCE"] : common;
         document.getElementById('hwSubSelect').innerHTML = subs.map(s => `<option value="${s}">${s}</option>`).join(''); 
         fetchExistingHW(); 
     }
