@@ -412,7 +412,7 @@ async function fetchAllData() {
             hwDetailHTML = `<p style="color:#999; text-align:center; padding:10px;">No entries for today.</p>`;
         }
 
-      // 3. ACADEMIC MARKS
+     // 3. ACADEMIC MARKS
         let classSubjects = ["TEL", "HIN", "ENG", "MAT", "SCI", "SOC"]; 
         if (dbClass.includes("Grade-5")) classSubjects.push("IIT");
         else if (["Grade-6", "Grade-7", "Grade-8"].some(g => dbClass.includes(g))) 
@@ -430,13 +430,16 @@ async function fetchAllData() {
         document.getElementById('marksTableBody').innerHTML = tableHTML;
         
         let totalObt = 0;
-        let subjectsCounted = 0; // New variable to track actual marks found
+        let totalMaxPossible = 0; // Tracks 50 for FA and 100 for SA/Annual
 
         for (let ex of exams) {
             const mSnap = await db.ref(`progress_cards/${dbClass}/${ex}/${name}`).once('value');
             if(mSnap.exists()){
                 const mData = mSnap.val().marks || mSnap.val();
                 if(mData) {
+                    // Check if it's a Formative Assessment (Out of 50) or other (Out of 100)
+                    let maxPerSubject = ex.toUpperCase().includes("FORMATIVE") ? 50 : 100;
+
                     Object.keys(mData).forEach(sub => {
                         const cell = document.getElementById(`m-${sub}-${ex}`);
                         if(cell) { 
@@ -446,7 +449,7 @@ async function fetchAllData() {
                             let sc = parseFloat(scoreVal); 
                             if(!isNaN(sc)){ 
                                 totalObt += sc; 
-                                subjectsCounted++; // Only count if we actually found a number
+                                totalMaxPossible += maxPerSubject; 
                             } 
                         }
                     });
