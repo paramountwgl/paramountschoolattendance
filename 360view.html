@@ -479,7 +479,7 @@ async function fetchAllData() {
             });
         }
 
-        // UI UPDATES
+        // --- UI UPDATES ---
         document.getElementById('vName').innerText = name;
         document.getElementById('vSub').innerText = `${cls} | Roll: ${roll}`;
         document.getElementById('vImg').src = `Student images/${roll}.png`;
@@ -489,6 +489,7 @@ async function fetchAllData() {
         document.getElementById('vDOB').innerText = student.DOB || 'N/A';
         document.getElementById('vAdmExtended').innerText = student.Adm;
 
+        // Fee Logic
         let fPct = tFee > 0 ? Math.round((tPaid/tFee)*100) : 0;
         document.getElementById('vTotalFee').innerText = `₹ ${tFee}`;
         document.getElementById('vPaidFee').innerText = `₹ ${tPaid}`;
@@ -496,6 +497,7 @@ async function fetchAllData() {
         document.getElementById('vFeeCircle').style.strokeDashoffset = 251 - (fPct/100)*251;
         document.getElementById('vFeePercent').innerText = fPct + "%";
         
+        // Attendance & Homework
         document.getElementById('hwList').innerHTML = hwDetailHTML;
         document.getElementById('vTotalDays').innerText = tDays;
         document.getElementById('vPresent').innerText = pDays;
@@ -504,8 +506,16 @@ async function fetchAllData() {
         document.getElementById('vFather').innerText = student.Father;
         document.getElementById('vPhone').innerText = student.Phone;
         document.getElementById('vAdm').innerText = student.Adm;
-        document.getElementById('vMarkPercent').innerText = totalMax > 0 ? ((totalObt/totalMax)*100).toFixed(1) + "%" : "0.0%";
 
+        // --- AGGREGATE SCORE SYNC (THE FIX) ---
+        let finalPctString = "0.0%";
+        if (subjectsCounted > 0) {
+            let rawAvg = (totalObt / (subjectsCounted * 100)) * 100;
+            finalPctString = rawAvg.toFixed(1) + "%";
+        }
+        document.getElementById('vMarkPercent').innerText = finalPctString;
+
+        // Show the dashboard and hide loader
         document.getElementById('dashboard').style.display = 'block';
         Swal.close();
     } catch (e) { console.error(e); Swal.fire('Error', 'Sync Failure: ' + e.message, 'error'); }
