@@ -120,7 +120,11 @@
 </div>
 
 <script>
-    const firebaseConfig = { apiKey: "AIzaSyDRYk9KOK-ga0c88dnYMsAoifW2NJTd_Y8", databaseURL: "https://paramount-school-d55bc-default-rtdb.firebaseio.com", projectId: "paramount-school-d55bc" };
+    const firebaseConfig = { 
+        apiKey: "AIzaSyDRYk9KOK-ga0c88dnYMsAoifW2NJTd_Y8", 
+        databaseURL: "https://paramount-school-d55bc-default-rtdb.firebaseio.com", 
+        projectId: "paramount-school-d55bc" 
+    };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
@@ -142,7 +146,6 @@
         });
         if(pw === registry[name]) { 
             authenticatedTeacher = name;
-            // FIXED: Removed the isPT restriction so cards show for everyone
             document.getElementById('attCard').style.display = 'block';
             document.getElementById('hwCard').style.display = 'block';
             Swal.fire('Welcome', `Hello ${authenticatedTeacher}`, 'success');
@@ -153,6 +156,7 @@
         }
     }
 
+    // UPDATED: More robust check for tomorrow's attendance
     async function checkExistingAttendance() {
         const cls = document.getElementById('attClass').value;
         const date = document.getElementById('attDate').value;
@@ -161,15 +165,19 @@
         const snap = await db.ref(`daily_attendance/${date}/${cls}`).once('value');
         if(snap.exists()) {
             const res = await Swal.fire({
-                title: 'Duplicate Entry',
-                text: `Attendance for ${cls} is already taken. Do you want to update it?`,
-                icon: 'question',
+                title: 'Attendance Already Taken',
+                text: `Records for ${cls} on ${date} already exist. Update them?`,
+                icon: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Yes, Update',
-                cancelButtonText: 'No'
+                cancelButtonText: 'Cancel'
             });
             if(res.isConfirmed) { loadStudents(snap.val()); }
-            else { document.getElementById('studentList').innerHTML = ""; document.getElementById('submitAtt').style.display = 'none'; }
+            else { 
+                document.getElementById('attClass').value = "";
+                document.getElementById('studentList').innerHTML = ""; 
+                document.getElementById('submitAtt').style.display = 'none'; 
+            }
         } else {
             loadStudents(null);
         }
@@ -181,7 +189,11 @@
         const auditDiv = document.getElementById('attAuditTrail');
         
         list.innerHTML = (studentData[cls] || []).map(n => {
-            const isP = (existingData && existingData.records && existingData.records[n] !== undefined) ? (existingData.records[n] ? "checked" : "") : "checked";
+            // Default to checked (Present) for new records, use existing value if updating
+            let isP = "checked";
+            if(existingData && existingData.records && existingData.records[n] !== undefined) {
+                isP = existingData.records[n] ? "checked" : "";
+            }
             return `<div class="student-item"><span>${n}</span><input type="checkbox" class="att-check" data-name="${n}" ${isP}></div>`;
         }).join('');
 
@@ -191,7 +203,6 @@
         } else {
             auditDiv.style.display = "none";
         }
-
         document.getElementById('submitAtt').style.display = 'flex';
     }
 
@@ -213,16 +224,22 @@
         };
 
         db.ref(`daily_attendance/${date}/${cls}`).set(finalData).then(() => {
-            Swal.fire('Success', 'Attendance Saved Successfully!', 'success');
-            checkExistingAttendance();
+            Swal.fire({
+                title: 'Success',
+                text: 'Attendance Saved & Student Portal Updated!',
+                icon: 'success',
+                timer: 1500
+            });
+            // Clear list to confirm action finished
+            document.getElementById('studentList').innerHTML = "";
+            document.getElementById('submitAtt').style.display = 'none';
         });
     }
 
     function updateHWSubjects() { 
         const cls = document.getElementById('hwClass').value; 
         const common = ["TELUGU", "HINDI", "ENGLISH", "MATHS", "SCIENCE ","SOCIAL STUDIES"]; 
-        // FIXED: Added better logic for Grade-5 and lower grades to avoid empty subjects
-        let subs = (["Grade-6", "Grade-7", "Grade-8"].includes(cls)) ? [...common, "PHYSICS", "BIOLOGY"] : (cls === "Grade-5") ? [...common, "SCIENCE"] : (cls && !cls.includes("KG")) ? [...common, "SCIENCE"] : common;
+        let subs = (["Grade-6", "Grade-7", "Grade-8"].includes(cls)) ? [...common, "PHYSICS", "BIOLOGY"] : (cls && !cls.includes("KG")) ? [...common, "SCIENCE"] : common;
         document.getElementById('hwSubSelect').innerHTML = subs.map(s => `<option value="${s}">${s}</option>`).join(''); 
         fetchExistingHW(); 
     }
