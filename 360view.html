@@ -453,7 +453,19 @@ async function fetchAllData() {
                 }
             }
         }
-
+// 4. ATTENDANCE (RE-ADD THIS SECTION)
+        let tDays = 0, pDays = 0;
+        const attSnap = await db.ref('daily_attendance').once('value');
+        if(attSnap.exists()){
+            const all = attSnap.val();
+            Object.keys(all).forEach(d => {
+                // Ensure the class and student exist in this day's record
+                if(all[d][dbClass] && all[d][dbClass][name] !== undefined) { 
+                    tDays++; 
+                    if(all[d][dbClass][name] === true) pDays++; 
+                }
+            });
+        }
         // --- UI UPDATES ---
         document.getElementById('vName').innerText = name;
         document.getElementById('vSub').innerText = `${cls} | Roll: ${roll}`;
