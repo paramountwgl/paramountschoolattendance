@@ -412,32 +412,61 @@ async function fetchAllData() {
             hwDetailHTML = `<p style="color:#999; text-align:center; padding:10px;">No entries for today.</p>`;
         }
 
-        // 3. ACADEMIC MARKS
+      // 3. ACADEMIC MARKS
         let classSubjects = ["TEL", "HIN", "ENG", "MAT", "SCI", "SOC"]; 
         if (dbClass.includes("Grade-5")) classSubjects.push("IIT");
-        else if (["Grade-6", "Grade-7", "Grade-8"].some(g => dbClass.includes(g))) classSubjects = ["TEL", "HIN", "ENG", "MAT", "SOC", "PHY", "BIO", "IIT"];
+        else if (["Grade-6", "Grade-7", "Grade-8"].some(g => dbClass.includes(g))) 
+            classSubjects = ["TEL", "HIN", "ENG", "MAT", "SOC", "PHY", "BIO", "IIT"];
+        
         const exams = ["FORMATIVE ASSESSMENT-1", "FORMATIVE ASSESSMENT-2", "FORMATIVE ASSESSMENT-3", "FORMATIVE ASSESSMENT-4", "SUMMATIVE ASSESSMENT-1", "SUMMATIVE ASSESSMENT-2", "Annual"];
         
         let headerHTML = `<th>Subject</th>` + exams.map(ex => `<th>${ex}</th>`).join('');
         document.querySelector(".marks-table thead tr").innerHTML = headerHTML;
+        
         let tableHTML = "";
-        classSubjects.forEach(sub => { tableHTML += `<tr><td>${sub}</td>` + exams.map(ex => `<td id="m-${sub}-${ex}">-</td>`).join('') + `</tr>`; });
+        classSubjects.forEach(sub => { 
+            tableHTML += `<tr><td>${sub}</td>` + exams.map(ex => `<td id="m-${sub}-${ex}">-</td>`).join('') + `</tr>`; 
+        });
         document.getElementById('marksTableBody').innerHTML = tableHTML;
         
-        let totalObt = 0, totalMax = 0;
+        let totalObt = 0;
+        let subjectsCounted = 0; // Track how many actual marks were found
+
         for (let ex of exams) {
             const mSnap = await db.ref(`progress_cards/${dbClass}/${ex}/${name}`).once('value');
             if(mSnap.exists()){
-                const mData = mSnap.val().marks || mSnap.val();
+                const data = mSnap.val();
+                // Check if marks are nested under a .marks key or directly in the object
+                const mData = data.marks ? data.marks : data; 
+                
                 if(mData) {
                     Object.keys(mData).forEach(sub => {
                         const cell = document.getElementById(`m-${sub}-${ex}`);
-                        if(cell) { cell.innerText = mData[sub]; let sc = parseFloat(mData[sub]); if(!isNaN(sc)){ totalObt += sc; totalMax += 100; } }
+                        if(cell) { 
+                            let scoreAttr = mData[sub];
+                            cell.innerText = scoreAttr; 
+                            
+                            let sc = parseFloat(scoreAttr); 
+                            if(!isNaN(sc)){ 
+                                totalObt += sc; 
+                                subjectsCounted++; 
+                            } 
+                        }
                     });
                 }
             }
         }
 
+        // Calculate based on the number of actual scores found (assuming each is out of 100)
+        let aggregateLabel = document.getElementById('vMarkPercent');
+        if (subjectsCounted > 0) {
+            let avg = (totalObt / (subjectsCounted * 100)) * 100;
+            aggregateLabel.innerText = avg.toFixed(1) + "%";
+            // Visual feedback: change color to green if passing
+            aggregateLabel.style.color = avg > 35 ? "var(--forest)" : "var(--danger)";
+        } else {
+            aggregateLabel.innerText = "0.0%";
+        }
         // 4. ATTENDANCE
         let tDays = 0, pDays = 0;
         const attSnap = await db.ref('daily_attendance').once('value');
