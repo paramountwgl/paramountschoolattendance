@@ -416,7 +416,7 @@ async function fetchAllData() {
         let classSubjects = ["TEL", "HIN", "ENG", "MAT", "SCI", "SOC"]; 
         if (dbClass.includes("Grade-5")) classSubjects.push("IIT");
         else if (["Grade-6", "Grade-7", "Grade-8"].some(g => dbClass.includes(g))) classSubjects = ["TEL", "HIN", "ENG", "MAT", "SOC", "PHY", "BIO", "IIT"];
-        const exams = ["FA-1", "FA-2", "FA-3", "FA-4", "SA-1", "SA-2", "Annual"];
+        const exams = ["FORMATIVE ASSESSMENT-1", "FORMATIVE ASSESSMENT-2", "FORMATIVE ASSESSMENT-3", "FORMATIVE ASSESSMENT-4", "SUMMATIVE ASSESSMENT-1", "SUMMATIVE ASSESSMENT-2", "Annual"];
         
         let headerHTML = `<th>Subject</th>` + exams.map(ex => `<th>${ex}</th>`).join('');
         document.querySelector(".marks-table thead tr").innerHTML = headerHTML;
