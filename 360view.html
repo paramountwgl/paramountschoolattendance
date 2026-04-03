@@ -494,10 +494,11 @@ async function fetchAllData() {
         document.getElementById('vFather').innerText = student.Father;
         document.getElementById('vPhone').innerText = student.Phone;
         document.getElementById('vAdm').innerText = student.Adm;
-
-        // FIXED AGGREGATE CALCULATION
-        if (subjectsCounted > 0) {
-            let avg = (totalObt / (subjectsCounted * 100)) * 100;
+// --- FIXED AGGREGATE CALCULATION (UPDATED TO USE totalMaxPossible) ---
+        if (totalMaxPossible > 0) {
+            // totalObt is the sum of marks (e.g., 210)
+            // totalMaxPossible is the sum of max marks (e.g., 300)
+            let avg = (totalObt / totalMaxPossible) * 100;
             document.getElementById('vMarkPercent').innerText = avg.toFixed(1) + "%";
         } else {
             document.getElementById('vMarkPercent').innerText = "0.0%";
