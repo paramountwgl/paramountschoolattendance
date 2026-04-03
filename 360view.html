@@ -417,7 +417,7 @@ async function fetchAllData() {
         if (dbClass.includes("Grade-5")) classSubjects.push("IIT");
         else if (["Grade-6", "Grade-7", "Grade-8"].some(g => dbClass.includes(g))) 
             classSubjects = ["TEL", "HIN", "ENG", "MAT", "SOC", "PHY", "BIO", "IIT"];
-        
+
         const exams = ["FORMATIVE ASSESSMENT-1", "FORMATIVE ASSESSMENT-2", "FORMATIVE ASSESSMENT-3", "FORMATIVE ASSESSMENT-4", "SUMMATIVE ASSESSMENT-1", "SUMMATIVE ASSESSMENT-2", "Annual"];
         
         let headerHTML = `<th>Subject</th>` + exams.map(ex => `<th>${ex}</th>`).join('');
@@ -430,53 +430,28 @@ async function fetchAllData() {
         document.getElementById('marksTableBody').innerHTML = tableHTML;
         
         let totalObt = 0;
-        let subjectsCounted = 0; // Track how many actual marks were found
+        let subjectsCounted = 0; // New variable to track actual marks found
 
         for (let ex of exams) {
             const mSnap = await db.ref(`progress_cards/${dbClass}/${ex}/${name}`).once('value');
             if(mSnap.exists()){
-                const data = mSnap.val();
-                // Check if marks are nested under a .marks key or directly in the object
-                const mData = data.marks ? data.marks : data; 
-                
+                const mData = mSnap.val().marks || mSnap.val();
                 if(mData) {
                     Object.keys(mData).forEach(sub => {
                         const cell = document.getElementById(`m-${sub}-${ex}`);
                         if(cell) { 
-                            let scoreAttr = mData[sub];
-                            cell.innerText = scoreAttr; 
+                            let scoreVal = mData[sub];
+                            cell.innerText = scoreVal; 
                             
-                            let sc = parseFloat(scoreAttr); 
+                            let sc = parseFloat(scoreVal); 
                             if(!isNaN(sc)){ 
                                 totalObt += sc; 
-                                subjectsCounted++; 
+                                subjectsCounted++; // Only count if we actually found a number
                             } 
                         }
                     });
                 }
             }
-        }
-
-        // Calculate based on the number of actual scores found (assuming each is out of 100)
-        let aggregateLabel = document.getElementById('vMarkPercent');
-        if (subjectsCounted > 0) {
-            let avg = (totalObt / (subjectsCounted * 100)) * 100;
-            aggregateLabel.innerText = avg.toFixed(1) + "%";
-            // Visual feedback: change color to green if passing
-            aggregateLabel.style.color = avg > 35 ? "var(--forest)" : "var(--danger)";
-        } else {
-            aggregateLabel.innerText = "0.0%";
-        }
-        // 4. ATTENDANCE
-        let tDays = 0, pDays = 0;
-        const attSnap = await db.ref('daily_attendance').once('value');
-        if(attSnap.exists()){
-            const all = attSnap.val();
-            Object.keys(all).forEach(d => {
-                if(all[d][dbClass] && all[d][dbClass][name] !== undefined) { 
-                    tDays++; if(all[d][dbClass][name] === true) pDays++; 
-                }
-            });
         }
 
         // --- UI UPDATES ---
@@ -489,7 +464,6 @@ async function fetchAllData() {
         document.getElementById('vDOB').innerText = student.DOB || 'N/A';
         document.getElementById('vAdmExtended').innerText = student.Adm;
 
-        // Fee Logic
         let fPct = tFee > 0 ? Math.round((tPaid/tFee)*100) : 0;
         document.getElementById('vTotalFee').innerText = `₹ ${tFee}`;
         document.getElementById('vPaidFee').innerText = `₹ ${tPaid}`;
@@ -497,7 +471,6 @@ async function fetchAllData() {
         document.getElementById('vFeeCircle').style.strokeDashoffset = 251 - (fPct/100)*251;
         document.getElementById('vFeePercent').innerText = fPct + "%";
         
-        // Attendance & Homework
         document.getElementById('hwList').innerHTML = hwDetailHTML;
         document.getElementById('vTotalDays').innerText = tDays;
         document.getElementById('vPresent').innerText = pDays;
@@ -507,15 +480,14 @@ async function fetchAllData() {
         document.getElementById('vPhone').innerText = student.Phone;
         document.getElementById('vAdm').innerText = student.Adm;
 
-        // --- AGGREGATE SCORE SYNC (THE FIX) ---
-        let finalPctString = "0.0%";
+        // FIXED AGGREGATE CALCULATION
         if (subjectsCounted > 0) {
-            let rawAvg = (totalObt / (subjectsCounted * 100)) * 100;
-            finalPctString = rawAvg.toFixed(1) + "%";
+            let avg = (totalObt / (subjectsCounted * 100)) * 100;
+            document.getElementById('vMarkPercent').innerText = avg.toFixed(1) + "%";
+        } else {
+            document.getElementById('vMarkPercent').innerText = "0.0%";
         }
-        document.getElementById('vMarkPercent').innerText = finalPctString;
 
-        // Show the dashboard and hide loader
         document.getElementById('dashboard').style.display = 'block';
         Swal.close();
     } catch (e) { console.error(e); Swal.fire('Error', 'Sync Failure: ' + e.message, 'error'); }
