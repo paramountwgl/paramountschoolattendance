@@ -349,36 +349,72 @@ function updateDue() {
         
         const c = document.getElementById('feeClass').value;
         const n = document.getElementById('feeStudent').value;
-        const p = parseFloat(document.getElementById('payAmt').value) || 0;
+        let pRemaining = parseFloat(document.getElementById('payAmt').value) || 0;
         const pDate = document.getElementById('payDate').value;
         const pMethod = document.getElementById('payMethod').value;
         
-        if(p <= 0) return Swal.fire('Error', 'Enter a valid payment amount', 'warning');
+        if(pRemaining <= 0) return Swal.fire('Error', 'Enter a valid amount', 'warning');
 
-        const g1 = parseFloat(document.getElementById('goal1').value) || 0;
-        const g2 = parseFloat(document.getElementById('goal2').value) || 0;
-        const g3 = parseFloat(document.getElementById('goal3').value) || 0;
-        const totalYearlyGoal = g1 + g2 + g3;
-
-        // Prevent payment if already fully cleared
-        if (paidTillNow >= totalYearlyGoal && totalYearlyGoal > 0) {
-            return Swal.fire('Fully Paid', 'This student has already cleared the total yearly fee.', 'info');
-        }
-
-        const entry = { 
-            total: totalYearlyGoal, 
-            paid: p, 
-            method: pMethod, 
-            date: pDate, 
-            recordedBy: activeUser, 
-            goals: { g1, g2, g3 } 
+        // Get Goals
+        const goals = {
+            "Term-1": parseFloat(document.getElementById('goal1').value) || 0,
+            "Term-2": parseFloat(document.getElementById('goal2').value) || 0,
+            "Term-3": parseFloat(document.getElementById('goal3').value) || 0
         };
 
-        db.ref(`fee_records/${c}/${n}`).push(entry).then(() => { 
-            Swal.fire('Success', 'Payment Logged & Distributed', 'success'); 
-            document.getElementById('payAmt').value = ""; // Clear input after save
-            fetchFeeData(); 
-        });
+        // Determine how much is ALREADY paid per term from the current state
+        // (This uses the termTotals variable already updated by fetchFeeData)
+        const terms = ["Term-1", "Term-2", "Term-3"];
+        let updates = [];
+
+        for (let term of terms) {
+            if (pRemaining <= 0) break;
+
+            let currentTermPaid = termTotals[term] || 0;
+            let termGoal = goals[term];
+            let spaceInTerm = termGoal - currentTermPaid;
+
+            if (spaceInTerm > 0) {
+                let amountToAssign = Math.min(pRemaining, spaceInTerm);
+                
+                // Prepare the entry for this specific term
+                updates.push({
+                    paid: amountToAssign,
+                    term: term,
+                    method: pMethod,
+                    date: pDate,
+                    recordedBy: activeUser,
+                    goals: { 
+                        g1: goals["Term-1"], 
+                        g2: goals["Term-2"], 
+                        g3: goals["Term-3"] 
+                    }
+                });
+
+                pRemaining -= amountToAssign;
+            }
+        }
+
+        // Handle Case: If there's still money left after filling all goals
+        if (pRemaining > 0) {
+            updates.push({
+                paid: pRemaining,
+                term: "Excess/Other",
+                method: pMethod,
+                date: pDate,
+                recordedBy: activeUser,
+                goals: { g1: goals["Term-1"], g2: goals["Term-2"], g3: goals["Term-3"] }
+            });
+        }
+
+        // Save all split entries to Firebase
+        const promises = updates.map(entry => db.ref(`fee_records/${c}/${n}`).push(entry));
+
+        Promise.all(promises).then(() => {
+            Swal.fire('Success', `Payment split into ${updates.length} term records.`, 'success');
+            document.getElementById('payAmt').value = "";
+            fetchFeeData(); // This refreshes the history table to show the new rows
+        }).catch(err => Swal.fire('Error', err.message, 'error'));
     }
 
     function handleMethodChange() { document.getElementById('onlineField').style.display = (document.getElementById('payMethod').value === 'Online') ? 'block' : 'none'; }
