@@ -6,6 +6,7 @@
     <title>Fee Portal | Paramount School</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Segoe+UI:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+     <link rel="icon" type="image/png" href="logo.png">
     <style>
         :root { --forest: #006633; --gold: #ffd700; --danger: #c62828; --light: #f4f7f6; --sky: #2196f3; --dark-green: #004d26; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; } 
@@ -24,7 +25,6 @@
         .school-name-main { font-family: 'Montserrat', sans-serif; font-size: 1.4rem; font-weight: 800; color: white; }
         .portal-label { font-family: 'Montserrat', sans-serif; font-size: 1.4rem; font-weight: 800; text-transform: uppercase; margin-left: 15px; border-left: 2px solid rgba(255,255,255,0.3); padding-left: 15px; }
         .btn-header { background: rgba(255,255,255,0.1); border: 1.5px solid white; color: white; padding: 8px 18px; border-radius: 50px; font-size: 11px; font-weight: 800; text-transform: uppercase; cursor: pointer; text-decoration: none; transition: 0.3s; }
-        .btn-header:hover { background: white; color: var(--forest); }
 
         /* Content */
         .container { max-width: 650px; margin: 25px auto; padding: 0 15px; }
@@ -114,9 +114,9 @@
 
             <p style="font-size: 10px; font-weight: 800; color: #666; margin-bottom: 5px;">STEP 1: ENTER TERM GOALS</p>
             <div class="goal-row">
-                <div class="goal-input-box"><label>TERM 1 GOAL</label><input type="number" id="goal1" placeholder="0" oninput="calculateTotalFromGoals()"></div>
-                <div class="goal-input-box"><label>TERM 2 GOAL</label><input type="number" id="goal2" placeholder="0" oninput="calculateTotalFromGoals()"></div>
-                <div class="goal-input-box"><label>TERM 3 GOAL</label><input type="number" id="goal3" placeholder="0" oninput="calculateTotalFromGoals()"></div>
+                <div class="goal-input-box"><label>TERM 1 GOAL</label><input type="number" id="goal1" placeholder="0" onfocus="checkSelection()" oninput="calculateTotalFromGoals()"></div>
+                <div class="goal-input-box"><label>TERM 2 GOAL</label><input type="number" id="goal2" placeholder="0" onfocus="checkSelection()" oninput="calculateTotalFromGoals()"></div>
+                <div class="goal-input-box"><label>TERM 3 GOAL</label><input type="number" id="goal3" placeholder="0" onfocus="checkSelection()" oninput="calculateTotalFromGoals()"></div>
             </div>
 
             <label>TOTAL YEARLY FEE</label>
@@ -183,13 +183,49 @@
         } else { Swal.fire('Error', 'Incorrect Password', 'error'); }
     }
 
+    // NEW VALIDATION LOGIC
+    function checkSelection() {
+        const cls = document.getElementById('feeClass').value;
+        const stu = document.getElementById('feeStudent').value;
+        
+        if (!cls && !stu) {
+            Swal.fire('Selection Required', 'Please select a Class and Student Name first.', 'warning');
+            document.activeElement.blur(); 
+            return false;
+        } else if (!cls) {
+            Swal.fire('Class Missing', 'Please select a Class first.', 'warning');
+            document.activeElement.blur();
+            return false;
+        } else if (!stu) {
+            Swal.fire('Student Missing', 'Please select a Student Name first.', 'warning');
+            document.activeElement.blur();
+            return false;
+        }
+        return true;
+    }
+
     function selectTerm(term) {
+        if(!checkSelection()) return; // Block term selection if names are missing
         selectedTerm = term;
         document.querySelectorAll('.term-card').forEach(c => c.classList.remove('active'));
         document.getElementById('card-' + term).classList.add('active');
         document.getElementById('paymentArea').style.display = 'block';
         document.getElementById('payingForLabel').innerText = "PAYING FOR " + term.replace('-', ' ').toUpperCase();
-        document.getElementById('payAmt').value = ""; // Always manual entry
+        document.getElementById('payAmt').value = "";
+        updateDue();
+    }
+
+    function calculateTotalFromGoals() {
+        if(!checkSelection()) { // Clear inputs if they tried to type without selection
+            document.getElementById('goal1').value = "";
+            document.getElementById('goal2').value = "";
+            document.getElementById('goal3').value = "";
+            return;
+        }
+        const g1 = parseFloat(document.getElementById('goal1').value) || 0;
+        const g2 = parseFloat(document.getElementById('goal2').value) || 0;
+        const g3 = parseFloat(document.getElementById('goal3').value) || 0;
+        document.getElementById('totalFee').value = g1 + g2 + g3;
         updateDue();
     }
 
@@ -205,14 +241,6 @@
             const suffix = term.split('-')[1];
             document.getElementById(`t${suffix}Amt`).innerText = `₹${termTotals[term]}`;
         });
-    }
-
-    function calculateTotalFromGoals() {
-        const g1 = parseFloat(document.getElementById('goal1').value) || 0;
-        const g2 = parseFloat(document.getElementById('goal2').value) || 0;
-        const g3 = parseFloat(document.getElementById('goal3').value) || 0;
-        document.getElementById('totalFee').value = g1 + g2 + g3;
-        updateDue();
     }
 
     const studentData = { "Pre-KG": ["Hanish Macharla", "Arjun Vihaar Illandula", "Thanu sree Allakunta", "Aadhya Gangaraboina", "Aadhya Sri Oggula", "Aadhyasri Shivagoni", "Afraha Begum", "Aliya Sultana", "Anvika Bandi", "Aradana Devara konda", "Devansh Bandi", "Hanvitha Mulkalapelli", "Harsha Vardhan Seenapelli", "Hiranya Bandi", "Jashritha Boina", "Konreddy Shreyanvi", "Kriyansh Sammeta", "Mohammed Mohiuddin Sayyad", "Nethra Narkurthi", "Reeyansh Bandi", "Rishi Myakala", "Rudransh Bandi", "Sanvika Bandi", "Shanvith Khatha", "Shishira Jalagam", "Shiva Sai Mekala", "Shree Rudhraveer Chevvu", "Shreyansh Gangaraboina", "Sreeja Thalla", "Srikrithini Myakala", "Srivatsav Vanam", "Sriyansh Mekala", "Thanvika Lakka", "Thrilokansh Vudari", "Ujjwal Checkka", "Vaishnavi Lakka", "Vedansh Myakala", "Vishnu Priya Molugu", "Vyshnav Tej Boina", "Yafiah Mohammad"], "KG-1": ["Aadhya Sri Amaravadi", "Aditya Manda", "Aadhya Jella", "Advaita Gauri Bandi", "Aizah Amna Shaik", "Akshara Singaram", "Bhahuveer Raj Somishetti", "Gayathri Erroju", "Hanvika Mulkalapelli", "Manvith Kondoju", "Sayyad Vajeed", "Mekala Manu sri", "Oliva Grace Vallapu", "Rithwik Oggula", "Rithwika Kandagatla", "Srimahi Chevvu", "Thanvesh Thalla", "Trishul Nanduri", "Yoganshika Nanduri", "Yusra Mohammad", "Zainul Abideen Syed"], "KG-2": ["Deekshanth Sammeta", "Hanshith Erroju", "Harika Bandi", "Himarsha Naini", "Karthik Vallepu", "Kruthika Bandi", "Rajavardhan Gampala", "Roshan Kaitha", "Sri Anshu Ayaan Lyadala", "Srihansh Bandi", "Srikshitha Guduri", "Varshith Gonela", "Adyasri Makala", "Anvik Boini", "Anvith Pokanati", "Awais Ur Rehman Mohammad", "Dakshu Pothuganti", "Hansith Reddy Katukuri", "Harshith Pokanati", "Jella Aditya", "Krishank Nallabothula", "Kundana Katkuri", "Munukuntla Revanth Rudhra", "Niraja Nethri Siluveru", "Pranav Mattepelli", "Sreenith Yadav Naini", "Uvan Reddy Dasari", "Zayan Mohammad", "Zoya Mohammed"], "Grade-1": ["Dheeraj Gattu", "Preetham Sannayala", "Shiva nandu Gonela", "Shrayan Nuthanakanti", "Sriyanksha Mandala", "Advitha Garige", "Harika Bandi", "Himansi Kondoju", "Izhaan Rahamath Syed", "Jaisurya Myakala", "Khadeeja Fathima", "Manaswini Dandugula", "Manusri Bandi", "Rithwik krishna Amaravadi", "Rohan Bandi", "Shiva Junnu", "Shivanandh Bandi", "Sridha Thalla", "Srinika Chengelly", "Sriyanshi Oggula", "Vishwak Checkka"], "Grade-2": ["Aliza Manha Shaik", "Dhruvan Reddy Katukuri", "Druthika Enugala", "Manaswini Bandi", "Rakshith Macharla", "Sathwika Katkuri", "Shalini Uppala", "Chandu Devarakonda", "Gnaneshwar Pokanati", "Hasnain Syed", "Koushik Siluveru", "Senen Desabattula", "Shivarajan Pothuganti"], "Grade-3": ["Nagavelly Manikanta", "Mirja Ismail", "Bandi Aryan", "Dandugula Mahesh Babu", "Bandi Tejasri", "Bandi Harshavardhan", "Gampala Vyshnavi", "Gampala Laxmi", "Garige Harshith", "Katkuri Hanish", "Katukuri Manideep", "MD Abdul Quddus", "Muppa Sathwik Patel", "Nuthanakanti Sansita", "Pasarakonda Ritwin", "Pinninti Rakshith Rao", "Rayi Sriman Adithya"], "Grade-4": ["Abdul Saqib Mohammad", "Anudeep Chintha", "Bhavan Bandi", "Harshavardhan Gonela", "Jayadev Chiluveru", "Mahaboob Syed", "Nandith Reddy Enugala", "Sai Charan Goud Mandala", "Sai Prasanna Keerthi", "Ajmeri Shaik", "Akshara Chiluveru", "Jayasri Myakala", "Rahul Kanjarla", "Saketh Devarakonda"], "Grade-5": ["Adya Reddy Vangala", "Kowshik Patel Muppa", "Siri Singaram", "Srikar Mandala", "Abdus Salaam MD", "Akshith Ram Kalvacharla", "Jaffar Anas Shaik", "Khaja Azeemuddin Mohammed", "Nihan Mohammed", "Saif Shaik", "Saketh Renukuntla", "Sreeja Dasari", "Vidhaatri Sahani"], "Grade-6": ["Abdul Razzak Mohammad", "Anudeepthi Chintha", "Saketh Ranaveni", "Shiva Sri Katukuri", "Aklees Shaik", "Akshya Kalvacharla", "Prince Katkuri"], "Grade-7": ["Manikanta Sannayala", "Sreeyan Reddy Karra", "Jayadhithya Chiluveru"], "Grade-8": ["Sathwika Nagavelly", "Vyshnavi Uppala", "Akshaya Gampala", "Ganesh Oggula", "Gayathri Renukuntla", "Khaja Sadeemuddin Mohammed"] };
@@ -231,7 +259,6 @@
         const snap = await db.ref(`fee_records/${c}/${n}`).once('value'), data = snap.val();
         paidTillNow = 0; termTotals = { "Term-1": 0, "Term-2": 0, "Term-3": 0 };
         let historyHtml = "", goals = {g1:0, g2:0, g3:0};
-        
         if(data) {
             Object.keys(data).forEach(k => {
                 const r = data[k]; 
@@ -248,11 +275,16 @@
             calculateTotalFromGoals();
         } else {
             document.getElementById('historyCard').style.display = 'none';
+            document.getElementById('goal1').value = "";
+            document.getElementById('goal2').value = "";
+            document.getElementById('goal3').value = "";
+            document.getElementById('totalFee').value = 0;
         }
         updateDue();
     }
 
     function saveRecord() {
+        if(!checkSelection()) return;
         const c = document.getElementById('feeClass').value, n = document.getElementById('feeStudent').value, p = document.getElementById('payAmt').value;
         if(!selectedTerm || !p) return Swal.fire('Error', 'Enter amount and select term', 'warning');
         const entry = { total: document.getElementById('totalFee').value, paid: p, term: selectedTerm, method: document.getElementById('payMethod').value, date: document.getElementById('payDate').value, recordedBy: activeUser, goals: { g1: document.getElementById('goal1').value, g2: document.getElementById('goal2').value, g3: document.getElementById('goal3').value } };
