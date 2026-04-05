@@ -6,7 +6,7 @@
     <title>Fee Portal | Paramount School</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Segoe+UI:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-     <link rel="icon" type="image/png" href="logo.png">
+    <link rel="icon" type="image/png" href="logo.png">
     <style>
         :root { --forest: #006633; --gold: #ffd700; --danger: #c62828; --light: #f4f7f6; --sky: #2196f3; --dark-green: #004d26; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; } 
@@ -29,20 +29,24 @@
         /* Content */
         .container { max-width: 650px; margin: 25px auto; padding: 0 15px; }
         .card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); border-top: 8px solid var(--forest); margin-bottom: 25px; }
-        h3 { color: var(--forest); margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; display: flex; align-items: center; gap: 8px; font-size: 1.1rem; text-transform: uppercase; font-weight: 800; }
+        h3 { color: var(--forest); margin: 0 0 20px 0; border-bottom: 1px solid #eee; padding-bottom: 10px; display: flex; align-items: center; gap: 8px; font-size: 1.1rem; text-transform: uppercase; font-weight: 800; }
         
+        label { font-size: 10px; font-weight: 800; color: #666; margin-bottom: 5px; display: block; text-transform: uppercase; }
+
         .goal-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px; }
-        .goal-input-box label { font-size: 9px; font-weight: 800; color: var(--forest); margin-bottom: 4px; display: block; }
-        .goal-input-box input { padding: 8px; font-size: 13px; border: 2px solid #eee; border-radius: 8px; width: 100%; outline: none; }
+        .goal-input-box input { padding: 10px; font-size: 14px; border: 2px solid #eee; border-radius: 8px; width: 100%; outline: none; font-weight: 700; }
+        
         .term-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 15px 0; }
         .term-card { background: #fff; border: 2px solid #eee; padding: 12px 5px; border-radius: 15px; text-align: center; cursor: pointer; transition: 0.3s; }
         .term-card.active { border-color: var(--forest); background: #e8f5e9; }
         .t-amt { font-size: 13px; font-weight: 800; color: var(--forest); margin-top: 4px; }
+        
         .due-box { background: #fff5f5; border: 1px solid #ffcdd2; padding: 15px; border-radius: 15px; text-align: center; margin-top: 20px; }
         .due-box strong { font-size: 24px; color: var(--danger); }
+        
         select, input { width: 100%; padding: 12px; border-radius: 10px; border: 2px solid #eee; font-size: 16px; margin-bottom: 10px; outline: none; background: #fafafa; font-weight: 600; }
 
-        /* Gauge */
+        /* Progress Gauge */
         .chart-container { display: flex; flex-direction: column; align-items: center; margin: 25px 0; background: #f9f9f9; padding: 20px; border-radius: 15px; border: 1px solid #eee; }
         .circular-progress { position: relative; width: 120px; height: 120px; display: flex; align-items: center; justify-content: center; }
         .circular-progress svg { width: 120px; height: 120px; transform: rotate(-90deg); }
@@ -53,8 +57,8 @@
         /* History Table */
         .history-table-wrapper { width: 100%; overflow-x: auto; margin-top: 10px; }
         .history-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; min-width: 500px; }
-        .history-table th { padding: 12px; background: #f8fafc; color: #64748b; font-size: 10px; text-transform: uppercase; border-bottom: 2px solid #eee; }
-        .history-table td { padding: 12px; border-bottom: 1px solid #eee; text-align: center; font-weight: 700; color: #333; }
+        .history-table th { padding: 12px; background: #f8fafc; color: #64748b; font-size: 10px; text-transform: uppercase; border-bottom: 2px solid #eee; text-align: left; }
+        .history-table td { padding: 12px; border-bottom: 1px solid #eee; font-weight: 700; color: #333; }
 
         .action-flex { display: flex; gap: 10px; margin-top: 25px; }
         .btn-action { color: white; border: none; padding: 16px; border-radius: 50px; font-weight: 700; cursor: pointer; flex: 1; text-transform: uppercase; font-size: 13px; }
@@ -112,25 +116,25 @@
                 <div><label>STUDENT NAME</label><select id="feeStudent" onchange="fetchFeeData()"><option value="">-- Select Student --</option></select></div>
             </div>
 
-            <p style="font-size: 10px; font-weight: 800; color: #666; margin-bottom: 5px;">STEP 1: ENTER TERM GOALS</p>
+            <label>STEP 1: ENTER TERM GOALS</label>
             <div class="goal-row">
-                <div class="goal-input-box"><label>TERM 1 GOAL</label><input type="number" id="goal1" placeholder="0" onfocus="checkSelection()" oninput="calculateTotalFromGoals()"></div>
-                <div class="goal-input-box"><label>TERM 2 GOAL</label><input type="number" id="goal2" placeholder="0" onfocus="checkSelection()" oninput="calculateTotalFromGoals()"></div>
-                <div class="goal-input-box"><label>TERM 3 GOAL</label><input type="number" id="goal3" placeholder="0" onfocus="checkSelection()" oninput="calculateTotalFromGoals()"></div>
+                <div class="goal-input-box"><label>T1 GOAL</label><input type="number" id="goal1" placeholder="0" oninput="calculateTotalFromGoals()"></div>
+                <div class="goal-input-box"><label>T2 GOAL</label><input type="number" id="goal2" placeholder="0" oninput="calculateTotalFromGoals()"></div>
+                <div class="goal-input-box"><label>T3 GOAL</label><input type="number" id="goal3" placeholder="0" oninput="calculateTotalFromGoals()"></div>
             </div>
 
             <label>TOTAL YEARLY FEE</label>
             <input type="number" id="totalFee" readonly style="background: #f0f0f0;">
 
-            <p style="font-size: 10px; font-weight: 800; color: #666; margin-top: 15px; margin-bottom: 5px;">STEP 2: SELECT TERM TO PAY</p>
+            <label>STEP 2: PAYMENT OVERVIEW (WATERFALL)</label>
             <div class="term-grid">
-                <div class="term-card" id="card-Term-1" onclick="selectTerm('Term-1')"><div class="t-label">Term 1</div><div class="t-amt" id="t1Amt">₹0</div></div>
-                <div class="term-card" id="card-Term-2" onclick="selectTerm('Term-2')"><div class="t-label">Term 2</div><div class="t-amt" id="t2Amt">₹0</div></div>
-                <div class="term-card" id="card-Term-3" onclick="selectTerm('Term-3')"><div class="t-label">Term 3</div><div class="t-amt" id="t3Amt">₹0</div></div>
+                <div class="term-card" id="card-Term-1"><div class="t-label">Term 1</div><div class="t-amt" id="t1Amt">₹0</div></div>
+                <div class="term-card" id="card-Term-2"><div class="t-label">Term 2</div><div class="t-amt" id="t2Amt">₹0</div></div>
+                <div class="term-card" id="card-Term-3"><div class="t-label">Term 3</div><div class="t-amt" id="t3Amt">₹0</div></div>
             </div>
 
-            <div id="paymentArea" style="display:none; border-top: 1px dashed #ccc; padding-top: 15px;">
-                <label id="payingForLabel" style="color: var(--forest); font-weight: 800; font-size: 12px; text-transform: uppercase;">PAYING NOW</label>
+            <div id="paymentArea" style="border-top: 1px dashed #ccc; padding-top: 15px;">
+                <label style="color: var(--forest); font-weight: 800;">MAKE A PAYMENT</label>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top:10px;">
                     <div><label>AMOUNT</label><input type="number" id="payAmt" oninput="updateDue()"></div>
                     <div><label>METHOD</label><select id="payMethod" onchange="handleMethodChange()"><option value="Cash">Cash</option><option value="Online">Online</option></select></div>
@@ -168,17 +172,20 @@
 </div>
 
 <script>
+    // Firebase Config
     const firebaseConfig = { apiKey: "AIzaSyDRYk9KOK-ga0c88dnYMsAoifW2NJTd_Y8", databaseURL: "https://paramount-school-d55bc-default-rtdb.firebaseio.com", projectId: "paramount-school-d55bc" };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
     const authorized = { "Mr. Ahmad": "Ahmad@123", "Ms. Roqiya": "Roqiya@123", "Ms. Jyothi": "Jyothi@123" };
-    let activeUser = "", paidTillNow = 0, termTotals = { "Term-1": 0, "Term-2": 0, "Term-3": 0 }, selectedTerm = "";
+    let activeUser = "", paidTillNow = 0, termTotals = { "Term-1": 0, "Term-2": 0, "Term-3": 0 };
 
     function unlockFees() {
         const n = document.getElementById('staffName').value, p = document.getElementById('staffPass').value;
-        if(p === authorized[n]) {
-            activeUser = n; document.getElementById('feeLoginScreen').style.display = 'none'; document.getElementById('feeApp').style.display = 'block';
+        if(p && p === authorized[n]) {
+            activeUser = n; 
+            document.getElementById('feeLoginScreen').style.display = 'none'; 
+            document.getElementById('feeApp').style.display = 'block';
             document.getElementById('staffDisplay').innerText = "OPERATOR: " + n;
         } else { Swal.fire('Error', 'Incorrect Password', 'error'); }
     }
@@ -186,124 +193,8 @@
     function checkSelection() {
         const cls = document.getElementById('feeClass').value;
         const stu = document.getElementById('feeStudent').value;
-        if (!cls && !stu) { Swal.fire('Selection Required', 'Select Class & Student.', 'warning'); document.activeElement.blur(); return false; }
-        if (!cls) { Swal.fire('Class Missing', 'Select Class first.', 'warning'); document.activeElement.blur(); return false; }
-        if (!stu) { Swal.fire('Student Missing', 'Select Student Name.', 'warning'); document.activeElement.blur(); return false; }
+        if (!cls || !stu) { Swal.fire('Selection Required', 'Select Class & Student.', 'warning'); return false; }
         return true;
-    }
-
-    // UPDATED: PASSWORD PROTECTED PERMANENT DATABASE WIPE
-    async function confirmWipe() {
-        const c = document.getElementById('feeClass').value;
-        const n = document.getElementById('feeStudent').value;
-
-        if (!c || !n) {
-            return Swal.fire('Error', 'Select Class and Student first to wipe records.', 'error');
-        }
-
-        const { value: password } = await Swal.fire({
-            title: 'Wipe Records Permanently?',
-            text: `This will delete ALL cloud data for ${n}. Confirm password for ${activeUser}:`,
-            input: 'password',
-            inputPlaceholder: 'Password',
-            showCancelButton: true,
-            confirmButtonColor: '#d32f2f',
-            confirmButtonText: 'Yes, DELETE from Database',
-            inputAttributes: { autocapitalize: 'off', autocorrect: 'off' }
-        });
-
-        if (password === authorized[activeUser]) {
-            // FIREBASE REMOVAL COMMAND
-            db.ref(`fee_records/${c}/${n}`).remove()
-                .then(() => {
-                    clearData();
-                    Swal.fire('Wiped', 'Data successfully removed from database.', 'success');
-                })
-                .catch((error) => {
-                    Swal.fire('Database Error', error.message, 'error');
-                });
-        } else if (password) {
-            Swal.fire('Access Denied', 'Incorrect password.', 'error');
-        }
-    }
-
-    function clearData() {
-        document.getElementById('feeClass').value = "";
-        document.getElementById('feeStudent').innerHTML = '<option value="">-- Select Student --</option>';
-        document.getElementById('goal1').value = "";
-        document.getElementById('goal2').value = "";
-        document.getElementById('goal3').value = "";
-        document.getElementById('totalFee').value = "";
-        document.getElementById('payAmt').value = "";
-        document.getElementById('paymentArea').style.display = 'none';
-        document.getElementById('historyCard').style.display = 'none';
-        document.querySelectorAll('.term-card').forEach(c => c.classList.remove('active'));
-        
-        // Reset Logic State
-        paidTillNow = 0;
-        termTotals = { "Term-1": 0, "Term-2": 0, "Term-3": 0 };
-        selectedTerm = "";
-        updateDue();
-    }
-
-    function selectTerm(term) {
-        if(!checkSelection()) return;
-        selectedTerm = term;
-        document.querySelectorAll('.term-card').forEach(c => c.classList.remove('active'));
-        document.getElementById('card-' + term).classList.add('active');
-        document.getElementById('paymentArea').style.display = 'block';
-        document.getElementById('payingForLabel').innerText = "PAYING FOR " + term.replace('-', ' ').toUpperCase();
-        document.getElementById('payAmt').value = "";
-        updateDue();
-    }
-
-    function calculateTotalFromGoals() {
-        if(!checkSelection()) { 
-            document.getElementById('goal1').value = ""; document.getElementById('goal2').value = ""; document.getElementById('goal3').value = "";
-            return;
-        }
-        const g1 = parseFloat(document.getElementById('goal1').value) || 0;
-        const g2 = parseFloat(document.getElementById('goal2').value) || 0;
-        const g3 = parseFloat(document.getElementById('goal3').value) || 0;
-        document.getElementById('totalFee').value = g1 + g2 + g3;
-        updateDue();
-    }
-
-function updateDue() {
-        const g1 = parseFloat(document.getElementById('goal1').value) || 0;
-        const g2 = parseFloat(document.getElementById('goal2').value) || 0;
-        const g3 = parseFloat(document.getElementById('goal3').value) || 0;
-        const totalYearlyGoal = g1 + g2 + g3;
-        
-        const pNow = parseFloat(document.getElementById('payAmt').value) || 0;
-        let runningTotalPaid = (paidTillNow || 0) + pNow;
-        
-        // Waterfall Logic: Fill Term 1, then 2, then 3
-        let t1Paid = Math.min(runningTotalPaid, g1);
-        runningTotalPaid = Math.max(0, runningTotalPaid - t1Paid);
-        
-        let t2Paid = Math.min(runningTotalPaid, g2);
-        runningTotalPaid = Math.max(0, runningTotalPaid - t2Paid);
-        
-        let t3Paid = Math.min(runningTotalPaid, g3);
-        
-        // Update the Term Cards UI
-        document.getElementById('t1Amt').innerText = `₹${Math.round(t1Paid)}`;
-        document.getElementById('t2Amt').innerText = `₹${Math.round(t2Paid)}`;
-        document.getElementById('t3Amt').innerText = `₹${Math.round(t3Paid)}`;
-        
-        // Highlight completed terms
-        document.getElementById('card-Term-1').style.background = (t1Paid >= g1 && g1 > 0) ? "#e8f5e9" : "#fff";
-        document.getElementById('card-Term-2').style.background = (t2Paid >= g2 && g2 > 0) ? "#e8f5e9" : "#fff";
-        document.getElementById('card-Term-3').style.background = (t3Paid >= g3 && g3 > 0) ? "#e8f5e9" : "#fff";
-        
-        // Update Progress Circle & Balance
-        const totalPaid = (paidTillNow || 0) + pNow;
-        document.getElementById('dueDisplay').innerText = "₹ " + (totalYearlyGoal - totalPaid);
-        
-        let pct = (totalYearlyGoal > 0) ? (totalPaid / totalYearlyGoal) * 100 : 0;
-        document.getElementById('progressCircle').style.strokeDashoffset = 314.15 - (314.15 * Math.min(pct, 100) / 100);
-        document.getElementById('percentText').innerText = Math.round(pct) + "%";
     }
 
     const studentData = { "Pre-KG": ["Hanish Macharla", "Arjun Vihaar Illandula", "Thanu sree Allakunta", "Aadhya Gangaraboina", "Aadhya Sri Oggula", "Aadhyasri Shivagoni", "Afraha Begum", "Aliya Sultana", "Anvika Bandi", "Aradana Devara konda", "Devansh Bandi", "Hanvitha Mulkalapelli", "Harsha Vardhan Seenapelli", "Hiranya Bandi", "Jashritha Boina", "Konreddy Shreyanvi", "Kriyansh Sammeta", "Mohammed Mohiuddin Sayyad", "Nethra Narkurthi", "Reeyansh Bandi", "Rishi Myakala", "Rudransh Bandi", "Sanvika Bandi", "Shanvith Khatha", "Shishira Jalagam", "Shiva Sai Mekala", "Shree Rudhraveer Chevvu", "Shreyansh Gangaraboina", "Sreeja Thalla", "Srikrithini Myakala", "Srivatsav Vanam", "Sriyansh Mekala", "Thanvika Lakka", "Thrilokansh Vudari", "Ujjwal Checkka", "Vaishnavi Lakka", "Vedansh Myakala", "Vishnu Priya Molugu", "Vyshnav Tej Boina", "Yafiah Mohammad"], "KG-1": ["Aadhya Sri Amaravadi", "Aditya Manda", "Aadhya Jella", "Advaita Gauri Bandi", "Aizah Amna Shaik", "Akshara Singaram", "Bhahuveer Raj Somishetti", "Gayathri Erroju", "Hanvika Mulkalapelli", "Manvith Kondoju", "Sayyad Vajeed", "Mekala Manu sri", "Oliva Grace Vallapu", "Rithwik Oggula", "Rithwika Kandagatla", "Srimahi Chevvu", "Thanvesh Thalla", "Trishul Nanduri", "Yoganshika Nanduri", "Yusra Mohammad", "Zainul Abideen Syed"], "KG-2": ["Deekshanth Sammeta", "Hanshith Erroju", "Harika Bandi", "Himarsha Naini", "Karthik Vallepu", "Kruthika Bandi", "Rajavardhan Gampala", "Roshan Kaitha", "Sri Anshu Ayaan Lyadala", "Srihansh Bandi", "Srikshitha Guduri", "Varshith Gonela", "Adyasri Makala", "Anvik Boini", "Anvith Pokanati", "Awais Ur Rehman Mohammad", "Dakshu Pothuganti", "Hansith Reddy Katukuri", "Harshith Pokanati", "Jella Aditya", "Krishank Nallabothula", "Kundana Katkuri", "Munukuntla Revanth Rudhra", "Niraja Nethri Siluveru", "Pranav Mattepelli", "Sreenith Yadav Naini", "Uvan Reddy Dasari", "Zayan Mohammad", "Zoya Mohammed"], "Grade-1": ["Dheeraj Gattu", "Preetham Sannayala", "Shiva nandu Gonela", "Shrayan Nuthanakanti", "Sriyanksha Mandala", "Advitha Garige", "Harika Bandi", "Himansi Kondoju", "Izhaan Rahamath Syed", "Jaisurya Myakala", "Khadeeja Fathima", "Manaswini Dandugula", "Manusri Bandi", "Rithwik krishna Amaravadi", "Rohan Bandi", "Shiva Junnu", "Shivanandh Bandi", "Sridha Thalla", "Srinika Chengelly", "Sriyanshi Oggula", "Vishwak Checkka"], "Grade-2": ["Aliza Manha Shaik", "Dhruvan Reddy Katukuri", "Druthika Enugala", "Manaswini Bandi", "Rakshith Macharla", "Sathwika Katkuri", "Shalini Uppala", "Chandu Devarakonda", "Gnaneshwar Pokanati", "Hasnain Syed", "Koushik Siluveru", "Senen Desabattula", "Shivarajan Pothuganti"], "Grade-3": ["Nagavelly Manikanta", "Mirja Ismail", "Bandi Aryan", "Dandugula Mahesh Babu", "Bandi Tejasri", "Bandi Harshavardhan", "Gampala Vyshnavi", "Gampala Laxmi", "Garige Harshith", "Katkuri Hanish", "Katukuri Manideep", "MD Abdul Quddus", "Muppa Sathwik Patel", "Nuthanakanti Sansita", "Pasarakonda Ritwin", "Pinninti Rakshith Rao", "Rayi Sriman Adithya"], "Grade-4": ["Abdul Saqib Mohammad", "Anudeep Chintha", "Bhavan Bandi", "Harshavardhan Gonela", "Jayadev Chiluveru", "Mahaboob Syed", "Nandith Reddy Enugala", "Sai Charan Goud Mandala", "Sai Prasanna Keerthi", "Ajmeri Shaik", "Akshara Chiluveru", "Jayasri Myakala", "Rahul Kanjarla", "Saketh Devarakonda"], "Grade-5": ["Adya Reddy Vangala", "Kowshik Patel Muppa", "Siri Singaram", "Srikar Mandala", "Abdus Salaam MD", "Akshith Ram Kalvacharla", "Jaffar Anas Shaik", "Khaja Azeemuddin Mohammed", "Nihan Mohammed", "Saif Shaik", "Saketh Renukuntla", "Sreeja Dasari", "Vidhaatri Sahani"], "Grade-6": ["Abdul Razzak Mohammad", "Anudeepthi Chintha", "Saketh Ranaveni", "Shiva Sri Katukuri", "Aklees Shaik", "Akshya Kalvacharla", "Prince Katkuri"], "Grade-7": ["Manikanta Sannayala", "Sreeyan Reddy Karra", "Jayadhithya Chiluveru"], "Grade-8": ["Sathwika Nagavelly", "Vyshnavi Uppala", "Akshaya Gampala", "Ganesh Oggula", "Gayathri Renukuntla", "Khaja Sadeemuddin Mohammed"] };
@@ -316,32 +207,75 @@ function updateDue() {
         if(studentData[cls]) studentData[cls].forEach(st => s.innerHTML += `<option value="${st}">${st}</option>`);
     }
 
+    function calculateTotalFromGoals() {
+        const g1 = parseFloat(document.getElementById('goal1').value) || 0;
+        const g2 = parseFloat(document.getElementById('goal2').value) || 0;
+        const g3 = parseFloat(document.getElementById('goal3').value) || 0;
+        document.getElementById('totalFee').value = g1 + g2 + g3;
+        updateDue();
+    }
+
     async function fetchFeeData() {
         const c = document.getElementById('feeClass').value, n = document.getElementById('feeStudent').value;
         if(!c || !n) return;
-        const snap = await db.ref(`fee_records/${c}/${n}`).once('value'), data = snap.val();
-        paidTillNow = 0; termTotals = { "Term-1": 0, "Term-2": 0, "Term-3": 0 };
+        
+        const snap = await db.ref(`fee_records/${c}/${n}`).once('value');
+        const data = snap.val();
+        
+        paidTillNow = 0; 
+        termTotals = { "Term-1": 0, "Term-2": 0, "Term-3": 0, "Excess/Other": 0 };
         let historyHtml = "", goals = {g1:0, g2:0, g3:0};
+        
         if(data) {
             Object.keys(data).forEach(k => {
                 const r = data[k]; 
-                paidTillNow += parseFloat(r.paid || 0);
-                if(r.term) termTotals[r.term] += parseFloat(r.paid || 0);
+                const amt = parseFloat(r.paid || 0);
+                paidTillNow += amt;
+                if(r.term) termTotals[r.term] = (termTotals[r.term] || 0) + amt;
                 if(r.goals) goals = r.goals;
-                historyHtml += `<tr><td>${r.date}</td><td>₹${r.paid}</td><td>${r.term}</td><td>${r.method}</td><td>${r.recordedBy}</td></tr>`;
+                historyHtml += `<tr><td>${r.date}</td><td>₹${amt}</td><td>${r.term}</td><td>${r.method}</td><td>${r.recordedBy}</td></tr>`;
             });
-            document.getElementById('goal1').value = goals.g1 || "";
-            document.getElementById('goal2').value = goals.g2 || "";
-            document.getElementById('goal3').value = goals.g3 || "";
+            document.getElementById('goal1').value = goals.g1 || 0;
+            document.getElementById('goal2').value = goals.g2 || 0;
+            document.getElementById('goal3').value = goals.g3 || 0;
             document.getElementById('historyList').innerHTML = historyHtml;
             document.getElementById('historyCard').style.display = 'block';
-            calculateTotalFromGoals();
         } else {
             document.getElementById('historyCard').style.display = 'none';
             document.getElementById('goal1').value = ""; document.getElementById('goal2').value = ""; document.getElementById('goal3').value = "";
-            document.getElementById('totalFee').value = 0;
         }
-        updateDue();
+        calculateTotalFromGoals();
+    }
+
+    function updateDue() {
+        const g1 = parseFloat(document.getElementById('goal1').value) || 0;
+        const g2 = parseFloat(document.getElementById('goal2').value) || 0;
+        const g3 = parseFloat(document.getElementById('goal3').value) || 0;
+        const totalYearlyGoal = g1 + g2 + g3;
+        
+        const pInput = parseFloat(document.getElementById('payAmt').value) || 0;
+        let virtualPaid = paidTillNow + pInput;
+        
+        // UI Waterfall Calculation
+        let t1 = Math.min(virtualPaid, g1); virtualPaid -= t1;
+        let t2 = Math.min(virtualPaid, g2); virtualPaid -= t2;
+        let t3 = Math.min(virtualPaid, g3);
+        
+        document.getElementById('t1Amt').innerText = `₹${Math.round(t1)}`;
+        document.getElementById('t2Amt').innerText = `₹${Math.round(t2)}`;
+        document.getElementById('t3Amt').innerText = `₹${Math.round(t3)}`;
+        
+        document.getElementById('card-Term-1').style.background = (t1 >= g1 && g1 > 0) ? "#e8f5e9" : "#fff";
+        document.getElementById('card-Term-2').style.background = (t2 >= g2 && g2 > 0) ? "#e8f5e9" : "#fff";
+        document.getElementById('card-Term-3').style.background = (t3 >= g3 && g3 > 0) ? "#e8f5e9" : "#fff";
+        
+        const totalPaid = paidTillNow + pInput;
+        const balance = totalYearlyGoal - totalPaid;
+        document.getElementById('dueDisplay').innerText = "₹ " + (balance < 0 ? 0 : balance);
+        
+        let pct = (totalYearlyGoal > 0) ? (totalPaid / totalYearlyGoal) * 100 : 0;
+        document.getElementById('progressCircle').style.strokeDashoffset = 314.15 - (314.15 * Math.min(pct, 100) / 100);
+        document.getElementById('percentText').innerText = Math.round(pct) + "%";
     }
 
     function saveRecord() {
@@ -353,71 +287,69 @@ function updateDue() {
         const pDate = document.getElementById('payDate').value;
         const pMethod = document.getElementById('payMethod').value;
         
-        if(pRemaining <= 0) return Swal.fire('Error', 'Enter a valid amount', 'warning');
+        if(pRemaining <= 0) return Swal.fire('Error', 'Enter amount', 'warning');
 
-        // Get Goals
         const goals = {
-            "Term-1": parseFloat(document.getElementById('goal1').value) || 0,
-            "Term-2": parseFloat(document.getElementById('goal2').value) || 0,
-            "Term-3": parseFloat(document.getElementById('goal3').value) || 0
+            g1: parseFloat(document.getElementById('goal1').value) || 0,
+            g2: parseFloat(document.getElementById('goal2').value) || 0,
+            g3: parseFloat(document.getElementById('goal3').value) || 0
         };
 
-        // Determine how much is ALREADY paid per term from the current state
-        // (This uses the termTotals variable already updated by fetchFeeData)
-        const terms = ["Term-1", "Term-2", "Term-3"];
         let updates = [];
+        const termSequence = [
+            { id: "Term-1", goal: goals.g1 },
+            { id: "Term-2", goal: goals.g2 },
+            { id: "Term-3", goal: goals.g3 }
+        ];
 
-        for (let term of terms) {
+        for (let t of termSequence) {
             if (pRemaining <= 0) break;
-
-            let currentTermPaid = termTotals[term] || 0;
-            let termGoal = goals[term];
-            let spaceInTerm = termGoal - currentTermPaid;
-
-            if (spaceInTerm > 0) {
-                let amountToAssign = Math.min(pRemaining, spaceInTerm);
-                
-                // Prepare the entry for this specific term
-                updates.push({
-                    paid: amountToAssign,
-                    term: term,
-                    method: pMethod,
-                    date: pDate,
-                    recordedBy: activeUser,
-                    goals: { 
-                        g1: goals["Term-1"], 
-                        g2: goals["Term-2"], 
-                        g3: goals["Term-3"] 
-                    }
-                });
-
-                pRemaining -= amountToAssign;
+            let currentPaid = termTotals[t.id] || 0;
+            let space = t.goal - currentPaid;
+            if (space > 0) {
+                let take = Math.min(pRemaining, space);
+                updates.push({ paid: take, term: t.id, date: pDate, method: pMethod, recordedBy: activeUser, goals: goals });
+                pRemaining -= take;
             }
         }
 
-        // Handle Case: If there's still money left after filling all goals
         if (pRemaining > 0) {
-            updates.push({
-                paid: pRemaining,
-                term: "Excess/Other",
-                method: pMethod,
-                date: pDate,
-                recordedBy: activeUser,
-                goals: { g1: goals["Term-1"], g2: goals["Term-2"], g3: goals["Term-3"] }
-            });
+            updates.push({ paid: pRemaining, term: "Excess/Other", date: pDate, method: pMethod, recordedBy: activeUser, goals: goals });
         }
 
-        // Save all split entries to Firebase
         const promises = updates.map(entry => db.ref(`fee_records/${c}/${n}`).push(entry));
-
         Promise.all(promises).then(() => {
-            Swal.fire('Success', `Payment split into ${updates.length} term records.`, 'success');
+            Swal.fire('Success', 'Payment Recorded', 'success');
             document.getElementById('payAmt').value = "";
-            fetchFeeData(); // This refreshes the history table to show the new rows
-        }).catch(err => Swal.fire('Error', err.message, 'error'));
+            fetchFeeData();
+        });
     }
 
-    function handleMethodChange() { document.getElementById('onlineField').style.display = (document.getElementById('payMethod').value === 'Online') ? 'block' : 'none'; }
+    async function confirmWipe() {
+        const c = document.getElementById('feeClass').value, n = document.getElementById('feeStudent').value;
+        if (!c || !n) return Swal.fire('Error', 'Select Student', 'error');
+
+        const { value: password } = await Swal.fire({
+            title: 'Wipe Cloud Data?',
+            text: `Delete all records for ${n}?`,
+            input: 'password',
+            inputPlaceholder: 'Staff Password',
+            showCancelButton: true,
+            confirmButtonColor: '#d32f2f'
+        });
+
+        if (password === authorized[activeUser]) {
+            db.ref(`fee_records/${c}/${n}`).remove().then(() => {
+                Swal.fire('Wiped', 'Data deleted.', 'success');
+                fetchFeeData();
+            });
+        } else if (password) { Swal.fire('Denied', 'Incorrect password.', 'error'); }
+    }
+
+    function handleMethodChange() { 
+        document.getElementById('onlineField').style.display = (document.getElementById('payMethod').value === 'Online') ? 'block' : 'none'; 
+    }
+    
     document.getElementById('payDate').valueAsDate = new Date();
 </script>
 </body>
