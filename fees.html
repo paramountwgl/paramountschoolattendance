@@ -269,19 +269,41 @@
         updateDue();
     }
 
-    function updateDue() {
-        const t = parseFloat(document.getElementById('totalFee').value) || 0;
+function updateDue() {
+        const g1 = parseFloat(document.getElementById('goal1').value) || 0;
+        const g2 = parseFloat(document.getElementById('goal2').value) || 0;
+        const g3 = parseFloat(document.getElementById('goal3').value) || 0;
+        const totalYearlyGoal = g1 + g2 + g3;
+        
         const pNow = parseFloat(document.getElementById('payAmt').value) || 0;
+        let runningTotalPaid = (paidTillNow || 0) + pNow;
+        
+        // Waterfall Logic: Fill Term 1, then 2, then 3
+        let t1Paid = Math.min(runningTotalPaid, g1);
+        runningTotalPaid = Math.max(0, runningTotalPaid - t1Paid);
+        
+        let t2Paid = Math.min(runningTotalPaid, g2);
+        runningTotalPaid = Math.max(0, runningTotalPaid - t2Paid);
+        
+        let t3Paid = Math.min(runningTotalPaid, g3);
+        
+        // Update the Term Cards UI
+        document.getElementById('t1Amt').innerText = `₹${Math.round(t1Paid)}`;
+        document.getElementById('t2Amt').innerText = `₹${Math.round(t2Paid)}`;
+        document.getElementById('t3Amt').innerText = `₹${Math.round(t3Paid)}`;
+        
+        // Highlight completed terms
+        document.getElementById('card-Term-1').style.background = (t1Paid >= g1 && g1 > 0) ? "#e8f5e9" : "#fff";
+        document.getElementById('card-Term-2').style.background = (t2Paid >= g2 && g2 > 0) ? "#e8f5e9" : "#fff";
+        document.getElementById('card-Term-3').style.background = (t3Paid >= g3 && g3 > 0) ? "#e8f5e9" : "#fff";
+        
+        // Update Progress Circle & Balance
         const totalPaid = (paidTillNow || 0) + pNow;
-        document.getElementById('dueDisplay').innerText = "₹ " + (t - totalPaid);
-        let pct = (t > 0) ? (totalPaid / t) * 100 : 0;
+        document.getElementById('dueDisplay').innerText = "₹ " + (totalYearlyGoal - totalPaid);
+        
+        let pct = (totalYearlyGoal > 0) ? (totalPaid / totalYearlyGoal) * 100 : 0;
         document.getElementById('progressCircle').style.strokeDashoffset = 314.15 - (314.15 * Math.min(pct, 100) / 100);
         document.getElementById('percentText').innerText = Math.round(pct) + "%";
-        ["Term-1", "Term-2", "Term-3"].forEach(term => {
-            const suffix = term.split('-')[1];
-            const displayEl = document.getElementById(`t${suffix}Amt`);
-            if(displayEl) displayEl.innerText = `₹${termTotals[term] || 0}`;
-        });
     }
 
     const studentData = { "Pre-KG": ["Hanish Macharla", "Arjun Vihaar Illandula", "Thanu sree Allakunta", "Aadhya Gangaraboina", "Aadhya Sri Oggula", "Aadhyasri Shivagoni", "Afraha Begum", "Aliya Sultana", "Anvika Bandi", "Aradana Devara konda", "Devansh Bandi", "Hanvitha Mulkalapelli", "Harsha Vardhan Seenapelli", "Hiranya Bandi", "Jashritha Boina", "Konreddy Shreyanvi", "Kriyansh Sammeta", "Mohammed Mohiuddin Sayyad", "Nethra Narkurthi", "Reeyansh Bandi", "Rishi Myakala", "Rudransh Bandi", "Sanvika Bandi", "Shanvith Khatha", "Shishira Jalagam", "Shiva Sai Mekala", "Shree Rudhraveer Chevvu", "Shreyansh Gangaraboina", "Sreeja Thalla", "Srikrithini Myakala", "Srivatsav Vanam", "Sriyansh Mekala", "Thanvika Lakka", "Thrilokansh Vudari", "Ujjwal Checkka", "Vaishnavi Lakka", "Vedansh Myakala", "Vishnu Priya Molugu", "Vyshnav Tej Boina", "Yafiah Mohammad"], "KG-1": ["Aadhya Sri Amaravadi", "Aditya Manda", "Aadhya Jella", "Advaita Gauri Bandi", "Aizah Amna Shaik", "Akshara Singaram", "Bhahuveer Raj Somishetti", "Gayathri Erroju", "Hanvika Mulkalapelli", "Manvith Kondoju", "Sayyad Vajeed", "Mekala Manu sri", "Oliva Grace Vallapu", "Rithwik Oggula", "Rithwika Kandagatla", "Srimahi Chevvu", "Thanvesh Thalla", "Trishul Nanduri", "Yoganshika Nanduri", "Yusra Mohammad", "Zainul Abideen Syed"], "KG-2": ["Deekshanth Sammeta", "Hanshith Erroju", "Harika Bandi", "Himarsha Naini", "Karthik Vallepu", "Kruthika Bandi", "Rajavardhan Gampala", "Roshan Kaitha", "Sri Anshu Ayaan Lyadala", "Srihansh Bandi", "Srikshitha Guduri", "Varshith Gonela", "Adyasri Makala", "Anvik Boini", "Anvith Pokanati", "Awais Ur Rehman Mohammad", "Dakshu Pothuganti", "Hansith Reddy Katukuri", "Harshith Pokanati", "Jella Aditya", "Krishank Nallabothula", "Kundana Katkuri", "Munukuntla Revanth Rudhra", "Niraja Nethri Siluveru", "Pranav Mattepelli", "Sreenith Yadav Naini", "Uvan Reddy Dasari", "Zayan Mohammad", "Zoya Mohammed"], "Grade-1": ["Dheeraj Gattu", "Preetham Sannayala", "Shiva nandu Gonela", "Shrayan Nuthanakanti", "Sriyanksha Mandala", "Advitha Garige", "Harika Bandi", "Himansi Kondoju", "Izhaan Rahamath Syed", "Jaisurya Myakala", "Khadeeja Fathima", "Manaswini Dandugula", "Manusri Bandi", "Rithwik krishna Amaravadi", "Rohan Bandi", "Shiva Junnu", "Shivanandh Bandi", "Sridha Thalla", "Srinika Chengelly", "Sriyanshi Oggula", "Vishwak Checkka"], "Grade-2": ["Aliza Manha Shaik", "Dhruvan Reddy Katukuri", "Druthika Enugala", "Manaswini Bandi", "Rakshith Macharla", "Sathwika Katkuri", "Shalini Uppala", "Chandu Devarakonda", "Gnaneshwar Pokanati", "Hasnain Syed", "Koushik Siluveru", "Senen Desabattula", "Shivarajan Pothuganti"], "Grade-3": ["Nagavelly Manikanta", "Mirja Ismail", "Bandi Aryan", "Dandugula Mahesh Babu", "Bandi Tejasri", "Bandi Harshavardhan", "Gampala Vyshnavi", "Gampala Laxmi", "Garige Harshith", "Katkuri Hanish", "Katukuri Manideep", "MD Abdul Quddus", "Muppa Sathwik Patel", "Nuthanakanti Sansita", "Pasarakonda Ritwin", "Pinninti Rakshith Rao", "Rayi Sriman Adithya"], "Grade-4": ["Abdul Saqib Mohammad", "Anudeep Chintha", "Bhavan Bandi", "Harshavardhan Gonela", "Jayadev Chiluveru", "Mahaboob Syed", "Nandith Reddy Enugala", "Sai Charan Goud Mandala", "Sai Prasanna Keerthi", "Ajmeri Shaik", "Akshara Chiluveru", "Jayasri Myakala", "Rahul Kanjarla", "Saketh Devarakonda"], "Grade-5": ["Adya Reddy Vangala", "Kowshik Patel Muppa", "Siri Singaram", "Srikar Mandala", "Abdus Salaam MD", "Akshith Ram Kalvacharla", "Jaffar Anas Shaik", "Khaja Azeemuddin Mohammed", "Nihan Mohammed", "Saif Shaik", "Saketh Renukuntla", "Sreeja Dasari", "Vidhaatri Sahani"], "Grade-6": ["Abdul Razzak Mohammad", "Anudeepthi Chintha", "Saketh Ranaveni", "Shiva Sri Katukuri", "Aklees Shaik", "Akshya Kalvacharla", "Prince Katkuri"], "Grade-7": ["Manikanta Sannayala", "Sreeyan Reddy Karra", "Jayadhithya Chiluveru"], "Grade-8": ["Sathwika Nagavelly", "Vyshnavi Uppala", "Akshaya Gampala", "Ganesh Oggula", "Gayathri Renukuntla", "Khaja Sadeemuddin Mohammed"] };
@@ -324,10 +346,39 @@
 
     function saveRecord() {
         if(!checkSelection()) return;
-        const c = document.getElementById('feeClass').value, n = document.getElementById('feeStudent').value, p = document.getElementById('payAmt').value;
-        if(!selectedTerm || !p) return Swal.fire('Error', 'Enter amount and select term', 'warning');
-        const entry = { total: document.getElementById('totalFee').value, paid: p, term: selectedTerm, method: document.getElementById('payMethod').value, date: document.getElementById('payDate').value, recordedBy: activeUser, goals: { g1: document.getElementById('goal1').value, g2: document.getElementById('goal2').value, g3: document.getElementById('goal3').value } };
-        db.ref(`fee_records/${c}/${n}`).push(entry).then(() => { Swal.fire('Success', 'Payment Logged', 'success'); fetchFeeData(); });
+        
+        const c = document.getElementById('feeClass').value;
+        const n = document.getElementById('feeStudent').value;
+        const p = parseFloat(document.getElementById('payAmt').value) || 0;
+        const pDate = document.getElementById('payDate').value;
+        const pMethod = document.getElementById('payMethod').value;
+        
+        if(p <= 0) return Swal.fire('Error', 'Enter a valid payment amount', 'warning');
+
+        const g1 = parseFloat(document.getElementById('goal1').value) || 0;
+        const g2 = parseFloat(document.getElementById('goal2').value) || 0;
+        const g3 = parseFloat(document.getElementById('goal3').value) || 0;
+        const totalYearlyGoal = g1 + g2 + g3;
+
+        // Prevent payment if already fully cleared
+        if (paidTillNow >= totalYearlyGoal && totalYearlyGoal > 0) {
+            return Swal.fire('Fully Paid', 'This student has already cleared the total yearly fee.', 'info');
+        }
+
+        const entry = { 
+            total: totalYearlyGoal, 
+            paid: p, 
+            method: pMethod, 
+            date: pDate, 
+            recordedBy: activeUser, 
+            goals: { g1, g2, g3 } 
+        };
+
+        db.ref(`fee_records/${c}/${n}`).push(entry).then(() => { 
+            Swal.fire('Success', 'Payment Logged & Distributed', 'success'); 
+            document.getElementById('payAmt').value = ""; // Clear input after save
+            fetchFeeData(); 
+        });
     }
 
     function handleMethodChange() { document.getElementById('onlineField').style.display = (document.getElementById('payMethod').value === 'Online') ? 'block' : 'none'; }
