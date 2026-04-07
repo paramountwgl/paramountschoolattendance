@@ -132,12 +132,12 @@
             <select id="feeStudent" onchange="fetchFeeData()"><option value="">-- Select Student --</option></select>
             
             <div class="calc-row">
-                <div><label>TOTAL FEE</label><input type="number" id="totalFee" oninput="updateDue()"></div>
-                <div><label>PAYING NOW</label><input type="number" id="payAmt" oninput="updateDue()"></div>
+                <div><label>TOTAL FEE</label><input type="number" id="totalFee" onfocus="validateInteraction(this)" oninput="updateDue()"></div>
+                <div><label>PAYING NOW</label><input type="number" id="payAmt" onfocus="validateInteraction(this)" oninput="updateDue()"></div>
             </div>
 
             <label>PAYMENT METHOD</label>
-            <select id="payMethod" onchange="handleMethodChange()">
+            <select id="payMethod" onfocus="validateInteraction(this)" onchange="handleMethodChange()">
                 <option value="Cash">Cash</option>
                 <option value="Online">Online Payment</option>
             </select>
@@ -148,7 +148,7 @@
             </div>
 
             <label>PAYMENT DATE</label>
-            <input type="date" id="payDate">
+            <input type="date" id="payDate" onfocus="validateInteraction(this)">
 
             <div id="dueBox" class="due-box"><span>BALANCE DUE</span><br><strong id="dueDisplay">₹ 0</strong></div>
 
@@ -190,7 +190,6 @@
     const recoveryPins = { "Mr. Ahmad": "Ahmad@07", "Ms. Roqiya": "Roqiya@07", "Ms. Jyothi": "Jyothi@07" };
     let activeUser = "", paidTillNow = 0, lastTx = null;
 
-    // FORCED CLEANUP ON LOAD TO PREVENT AUTOFILL
     window.onload = function() {
         document.getElementById('staffName').selectedIndex = 0;
         document.getElementById('staffPass').value = "";
@@ -198,6 +197,29 @@
 
     function updateClock() { document.getElementById('liveClock').innerText = new Date().toLocaleTimeString().toUpperCase(); }
     setInterval(updateClock, 1000); updateClock();
+
+    // SMART VALIDATION GUARD
+    function validateInteraction(el) {
+        const cls = document.getElementById('feeClass').value;
+        const stu = document.getElementById('feeStudent').value;
+        
+        let msg = "";
+        if (!cls && !stu) msg = "Please select Class and Student Name";
+        else if (!cls) msg = "Please select Class";
+        else if (!stu) msg = "Please select Student Name";
+
+        if (msg) {
+            Swal.fire({
+                title: 'Selection Required',
+                text: msg,
+                icon: 'warning',
+                confirmButtonColor: '#006633'
+            });
+            if (el) el.blur(); // Remove focus from input to prevent typing
+            return false;
+        }
+        return true;
+    }
 
     function handleMethodChange() {
         const m = document.getElementById('payMethod').value;
@@ -269,9 +291,11 @@
     }
 
     function saveRecord() {
+        if (!validateInteraction()) return; // Check selection before saving
         const c = document.getElementById('feeClass').value, n = document.getElementById('feeStudent').value;
         const t = document.getElementById('totalFee').value, p = document.getElementById('payAmt').value, meth = document.getElementById('payMethod').value, tid = document.getElementById('transId').value, d = document.getElementById('payDate').value;
-        if(!n || !p) return Swal.fire('Error', 'Missing Data', 'warning');
+        
+        if(!p) return Swal.fire('Error', 'Please enter payment amount', 'warning');
         if(meth === 'Online' && tid.length < 5) return Swal.fire('Error', 'Enter 5-digit Transaction ID', 'warning');
         
         const stamp = new Date().toLocaleDateString() + ", " + new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}).toUpperCase();
@@ -284,7 +308,7 @@
     }
 
     function printReceipt() {
-        if(!lastTx) return;
+        if(!lastTx) return Swal.fire('Note', 'Save a record first to print receipt', 'info');
         const { n, c, p, d, method, transId } = lastTx;
         const recId = "REC-" + Date.now().toString().slice(-6);
         const win = window.open('', '', 'height=700,width=600');
@@ -293,11 +317,13 @@
     }
 
     async function clearData() {
+        if (!validateInteraction()) return; // Check selection before wiping
         const c = document.getElementById('feeClass').value, n = document.getElementById('feeStudent').value;
-        if (!n) return;
         const { value: pass } = await Swal.fire({ title: 'Authorization', text: 'Enter Password to Delete', input: 'password' });
         if (pass === authorized[activeUser]) {
             db.ref(`fee_records/${c}/${n}`).remove().then(() => { fetchFeeData(); Swal.fire('Deleted', 'History Cleared', 'success'); });
+        } else if (pass) {
+            Swal.fire('Error', 'Incorrect Password', 'error');
         }
     }
 
