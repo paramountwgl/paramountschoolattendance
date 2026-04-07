@@ -26,12 +26,10 @@
         .divider-line { width: 2px; height: 35px; background-color: rgba(255,255,255,0.3); margin: 0 15px; flex-shrink: 0; }
         .portal-label { font-family: 'Montserrat', sans-serif; font-size: 1.4rem; font-weight: 800; text-transform: uppercase; color: white; white-space: nowrap; flex-shrink: 0; }
 
-        .nav-tools { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
         .live-clock { font-family: 'Montserrat', sans-serif; font-weight: 800; color: var(--gold); font-size: 13px; text-transform: uppercase; }
-        .btn-signout { background: rgba(255,255,255,0.1); border: 1.5px solid white; color: white; padding: 5px 18px; border-radius: 50px; font-size: 10px; font-weight: 800; text-transform: uppercase; cursor: pointer; transition: 0.3s; }
 
         .container { max-width: 650px; margin: 25px auto; padding: 0 15px; }
-        .card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); border-top: 8px solid var(--forest); margin-bottom: 25px; transition: border-color 0.3s; }
+        .card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); border-top: 8px solid var(--forest); margin-bottom: 25px; transition: 0.3s; }
         .card.bus-mode { border-top-color: var(--bus-orange); }
         
         h3 { color: var(--forest); margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; display: flex; align-items: center; gap: 8px; font-size: 1.1rem; text-transform: uppercase; font-weight: 800; }
@@ -75,13 +73,13 @@
     <div class="auth-box">
         <img src="logo.png" style="height:75px; margin-bottom:10px;">
         <h2>PARAMOUNT</h2>
-        <select id="staffName" class="auth-input" style="margin-top:20px;">
+        <select id="staffName" style="margin-top:20px;" autocomplete="off">
             <option value="">-- Select Staff --</option>
             <option value="Mr. Ahmad">Mr. Ahmad</option>
             <option value="Ms. Roqiya">Ms. Roqiya</option>
             <option value="Ms. Jyothi">Ms. Jyothi</option>
         </select>
-        <input type="password" id="staffPass" class="auth-input" placeholder="Password" onkeypress="if(event.key === 'Enter') unlockFees()">
+        <input type="password" id="staffPass" placeholder="Password" autocomplete="new-password" onkeypress="if(event.key === 'Enter') unlockFees()">
         <button onclick="unlockFees()" style="background:var(--forest); color:white; width:100%; padding:15px; border-radius:50px; font-weight:800; border:none; cursor:pointer;">UNLOCK PORTAL</button>
     </div>
 </div>
@@ -124,18 +122,20 @@
             <label>STUDENT NAME</label>
             <select id="feeStudent" onchange="fetchFeeData()"><option value="">-- Select Student --</option></select>
 
-            <label>PAYMENT FOR (TERM/MONTH)</label>
-            <select id="feeTerm">
-                <option value="TERM - 1">TERM - 1</option>
-                <option value="TERM - 2">TERM - 2</option>
-                <option value="TERM - 3">TERM - 3</option>
-                <option value="MONTHLY">MONTHLY INSTALLMENT</option>
-                <option value="FULL YEAR">FULL YEAR</option>
-            </select>
-            
-            <div class="calc-row">
-                <div><label>TOTAL PAYABLE</label><input type="number" id="actualFee" oninput="calculateDiscount()" placeholder="e.g. 5000"></div>
-                <div><label>DISCOUNT (%)</label><input type="number" id="discountPct" oninput="calculateDiscount()" value="0"></div>
+            <div id="schoolSpecificFields">
+                <label>PAYMENT FOR (TERM/MONTH)</label>
+                <select id="feeTerm">
+                    <option value="TERM - 1">TERM - 1</option>
+                    <option value="TERM - 2">TERM - 2</option>
+                    <option value="TERM - 3">TERM - 3</option>
+                    <option value="MONTHLY">MONTHLY INSTALLMENT</option>
+                    <option value="FULL YEAR">FULL YEAR</option>
+                </select>
+                
+                <div class="calc-row">
+                    <div><label>TOTAL PAYABLE</label><input type="number" id="actualFee" oninput="calculateDiscount()" placeholder="e.g. 5000"></div>
+                    <div><label>DISCOUNT (%)</label><input type="number" id="discountPct" oninput="calculateDiscount()" value="0"></div>
+                </div>
             </div>
 
             <div class="calc-row">
@@ -178,7 +178,6 @@
 </div>
 
 <script>
-    // Firebase Setup (Use your config)
     const firebaseConfig = { apiKey: "AIzaSyDRYk9KOK-ga0c88dnYMsAoifW2NJTd_Y8", databaseURL: "https://paramount-school-d55bc-default-rtdb.firebaseio.com", projectId: "paramount-school-d55bc" };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
@@ -186,12 +185,19 @@
     const authorized = { "Mr. Ahmad": "Ahmad@123", "Ms. Roqiya": "Roqiya@123", "Ms. Jyothi": "Jyothi@123" };
     let activeUser = "", paidTillNow = 0, lastTx = null;
 
-    // THEME TOGGLE: Change UI color based on selection
     function toggleTheme() {
         const isBus = document.getElementById('typeBus').checked;
         const card = document.getElementById('mainCard');
-        if(isBus) card.classList.add('bus-mode'); else card.classList.remove('bus-mode');
-        fetchFeeData(); // Refresh data when switching between School/Bus
+        const schoolFields = document.getElementById('schoolSpecificFields');
+        
+        if(isBus) {
+            card.classList.add('bus-mode');
+            schoolFields.style.display = 'none';
+        } else {
+            card.classList.remove('bus-mode');
+            schoolFields.style.display = 'block';
+        }
+        fetchFeeData(); 
     }
 
     function unlockFees() {
@@ -202,7 +208,7 @@
         } else { Swal.fire('Error', 'Invalid credentials', 'error'); }
     }
 
-    const studentData = { "Pre-KG": ["Hanish Macharla", "Arjun Vihaar Illandula", "Thanu sree Allakunta"], "KG-1": ["Aadhya Sri Amaravadi", "Aditya Manda"], "Grade-1": ["Dheeraj Gattu", "Preetham Sannayala"] }; // Add full list here
+    const studentData = { "Pre-KG": ["Hanish Macharla", "Arjun Vihaar Illandula", "Thanu sree Allakunta"], "KG-1": ["Aadhya Sri Amaravadi", "Aditya Manda"], "Grade-1": ["Dheeraj Gattu", "Preetham Sannayala"] };
     document.getElementById('feeClass').innerHTML = '<option value="">-- Class --</option>' + Object.keys(studentData).map(c => `<option value="${c}">${c}</option>`).join('');
 
     function populateStudents() {
@@ -213,11 +219,9 @@
 
     async function fetchFeeData() {
         const c = document.getElementById('feeClass').value, n = document.getElementById('feeStudent').value;
-        const type = document.querySelector('input[name="feeType"]:checked').value; // school_fees or bus_fees
-        
+        const type = document.querySelector('input[name="feeType"]:checked').value;
         if(!c || !n) return;
         
-        // PATH SEPARATION: We add /${type}/ to the database path
         const snap = await db.ref(`fee_records/${c}/${n}/${type}`).once('value');
         const data = snap.val();
         paidTillNow = 0; let rows = "";
@@ -264,17 +268,16 @@
         if(!p || !n) return Swal.fire('Error', 'Missing Student or Amount', 'warning');
 
         const entry = {
-            actual: document.getElementById('actualFee').value,
-            discount: document.getElementById('discountPct').value,
-            total: document.getElementById('totalFee').value,
+            actual: document.getElementById('actualFee').value || "N/A",
+            discount: document.getElementById('discountPct').value || 0,
+            total: document.getElementById('totalFee').value || p,
             paid: p,
-            term: document.getElementById('feeTerm').value,
+            term: (type === 'bus_fees') ? 'Bus Transport' : document.getElementById('feeTerm').value,
             method: document.getElementById('payMethod').value,
             recordedBy: activeUser,
             date: document.getElementById('payDate').value
         };
 
-        // SAVE TO SEPARATE FOLDER
         db.ref(`fee_records/${c}/${n}/${type}`).push(entry).then(() => {
             Swal.fire('Saved', `Entry added to ${type.replace('_',' ').toUpperCase()}`, 'success');
             document.getElementById('payAmt').value = '';
