@@ -12,32 +12,49 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; } 
         body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; padding-bottom: 50px; }
 
+        /* Navigation Bar */
         header { 
             background: var(--forest); color: white; padding: 12px 4%; border-bottom: 4px solid var(--gold); 
             box-shadow: 0 4px 12px rgba(0,0,0,0.15); position: sticky; top: 0; z-index: 100;
         }
         .header-content { display: flex; align-items: center; justify-content: space-between; max-width: 1400px; margin: 0 auto; width: 100%; }
-        .brand-group { display: flex; align-items: center; flex-wrap: nowrap; } 
+        .brand-group { display: flex; align-items: center; } 
         .header-left { display: flex; align-items: center; gap: 12px; }
-        .header-logo { height: 55px; width: auto; flex-shrink: 0; }
-        .school-branding { display: flex; flex-direction: column; line-height: 1.1; flex-shrink: 0; }
-        .school-name-main { font-family: 'Montserrat', sans-serif; font-size: 1.4rem; font-weight: 800; letter-spacing: 0.5px; color: white; }
+        .header-logo { height: 55px; width: auto; }
+        .school-branding { display: flex; flex-direction: column; line-height: 1.1; }
+        .school-name-main { font-family: 'Montserrat', sans-serif; font-size: 1.4rem; font-weight: 800; color: white; }
         .school-name-sub { font-family: 'Montserrat', sans-serif; font-size: 0.65rem; color: white; font-weight: 600; text-transform: uppercase; opacity: 0.9; }
-        .divider-line { width: 2px; height: 35px; background-color: rgba(255,255,255,0.3); margin: 0 15px; flex-shrink: 0; }
-        .portal-label { font-family: 'Montserrat', sans-serif; font-size: 1.4rem; font-weight: 800; text-transform: uppercase; color: white; white-space: nowrap; flex-shrink: 0; }
+        .divider-line { width: 2px; height: 35px; background-color: rgba(255,255,255,0.3); margin: 0 15px; }
+        .portal-label { font-family: 'Montserrat', sans-serif; font-size: 1.4rem; font-weight: 800; text-transform: uppercase; color: white; }
 
         .nav-tools { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
-        .live-clock { font-family: 'Montserrat', sans-serif; font-weight: 800; color: var(--gold); font-size: 13px; text-transform: uppercase; }
-        .btn-signout { background: rgba(255,255,255,0.1); border: 1.5px solid white; color: white; padding: 5px 18px; border-radius: 50px; font-size: 10px; font-weight: 800; text-transform: uppercase; cursor: pointer; transition: 0.3s; }
+        .live-clock { font-family: 'Montserrat', sans-serif; font-weight: 800; color: var(--gold); font-size: 13px; }
+        
+        /* Dashboard Button */
+        .btn-back-dashboard { 
+            background: rgba(255,255,255,0.1); border: 1.5px solid var(--gold); color: white; 
+            padding: 6px 15px; border-radius: 50px; font-size: 10px; font-weight: 800; 
+            text-transform: uppercase; cursor: pointer; text-decoration: none; transition: 0.3s;
+            display: inline-flex; align-items: center; gap: 5px;
+        }
+        .btn-back-dashboard:hover { background: var(--gold); color: var(--forest); }
 
+        /* Login Screen */
+        .overlay-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--light); z-index: 1000; display: flex; justify-content: center; align-items: center; }
+        .auth-box { background: white; padding: 40px 25px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); width: 100%; max-width: 420px; border-bottom: 5px solid var(--forest); text-align: center; position: relative; }
+        .auth-box.bus-theme { border-bottom-color: var(--bus-orange); }
+        
+        .dash-return-login { position: absolute; top: 15px; left: 15px; font-size: 12px; font-weight: 800; color: #666; text-decoration: none; display: flex; align-items: center; gap: 5px; }
+
+        /* Main UI Components */
         .container { max-width: 650px; margin: 25px auto; padding: 0 15px; }
-        .card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); border-top: 8px solid var(--forest); margin-bottom: 25px; transition: 0.3s; }
+        .card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); border-top: 8px solid var(--forest); margin-bottom: 25px; }
         .card.bus-mode { border-top-color: var(--bus-orange); }
         h3 { color: var(--forest); margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; display: flex; align-items: center; gap: 8px; font-size: 1.1rem; text-transform: uppercase; font-weight: 800; }
         .bus-mode h3 { color: var(--bus-orange); }
 
         .type-toggle { display: flex; background: #eee; padding: 5px; border-radius: 50px; margin-bottom: 20px; gap: 5px; }
-        .type-toggle label { flex: 1; text-align: center; padding: 10px; border-radius: 50px; cursor: pointer; font-weight: 800; font-size: 12px; margin: 0; transition: 0.3s; }
+        .type-toggle label { flex: 1; text-align: center; padding: 10px; border-radius: 50px; cursor: pointer; font-weight: 800; font-size: 11px; margin: 0; transition: 0.3s; }
         .type-toggle input { display: none; }
         .type-toggle input:checked + label.sch-lab { background: var(--forest); color: white; }
         .type-toggle input:checked + label.bus-lab { background: var(--bus-orange); color: white; }
@@ -50,27 +67,21 @@
         .due-box strong { font-size: 24px; color: var(--danger); }
 
         .chart-container { display: flex; flex-direction: column; align-items: center; margin-top: 25px; background: #f9f9f9; padding: 20px; border-radius: 15px; border: 1px solid #eee; }
-        .circular-progress { position: relative; width: 100px; height: 100px; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; }
+        .circular-progress { position: relative; width: 100px; height: 100px; display: flex; align-items: center; justify-content: center; }
         .circular-progress svg { width: 100px; height: 100px; transform: rotate(-90deg); }
         .circle-bg { fill: none; stroke: #eee; stroke-width: 8; cx: 50; cy: 50; r: 45; }
         .circle-bar { fill: none; stroke: var(--forest); stroke-width: 8; cx: 50; cy: 50; r: 45; stroke-dasharray: 282.7; stroke-dashoffset: 282.7; transition: 0.8s; stroke-linecap: round; }
         .bus-mode .circle-bar { stroke: var(--bus-orange); }
-        .percentage-text { position: absolute; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 1.1rem; color: #333; }
-
-        .audit-trail { font-size: 10px; font-weight: 700; color: #666; text-transform: uppercase; text-align: center; border-top: 1px dashed #ccc; padding-top: 10px; width: 100%; margin-top: 10px; display: none; }
-        .audit-trail span { color: var(--forest); }
+        .percentage-text { position: absolute; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 1.1rem; }
 
         .btn-action { color: white; border: none; padding: 16px; border-radius: 50px; font-weight: 700; cursor: pointer; width: 100%; text-transform: uppercase; font-size: 13px; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .btn-save { background: linear-gradient(135deg, var(--forest), #004d26); border: 2px solid var(--gold); }
         .bus-mode .btn-save { background: linear-gradient(135deg, var(--bus-orange), #e65100); }
         
-        .history-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; min-width: 550px; }
+        .history-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; min-width: 500px; }
         .history-table th { padding: 12px; background: #f8fafc; color: #64748b; font-size: 10px; text-transform: uppercase; }
         .history-table td { padding: 12px 10px; border-bottom: 1px solid #f1f5f9; font-weight: 700; text-align: center; }
 
-        .overlay-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--light); z-index: 1000; display: flex; justify-content: center; align-items: center; }
-        .auth-box { background: white; padding: 40px 25px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); width: 100%; max-width: 420px; border-bottom: 5px solid var(--forest); text-align: center; }
-        
         #onlineField { display: none; }
         @media (max-width: 600px) { .calc-row { grid-template-columns: 1fr; } .school-name-sub, .divider-line { display: none; } }
     </style>
@@ -82,18 +93,27 @@
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
 <div id="feeLoginScreen" class="overlay-screen">
-    <div class="auth-box">
-        <img src="logo.png" style="height:75px; margin-bottom:10px;">
-        <h2>PARAMOUNT</h2>
-        <select id="staffName" style="margin-top:20px;" autocomplete="off">
+    <div class="auth-box" id="authBox">
+        <a href="index.html" class="dash-return-login"><i class="fas fa-arrow-left"></i> Dashboard</a>
+        <img src="logo.png" style="height:70px; margin-bottom:10px;">
+        <h2 id="loginTitle">SCHOOL PORTAL</h2>
+        
+        <div class="type-toggle" style="margin-top:15px;">
+            <input type="radio" name="loginType" id="logSchool" checked onchange="updateLoginTheme()">
+            <label for="logSchool" class="sch-lab">SCHOOL LOGIN</label>
+            <input type="radio" name="loginType" id="logBus" onchange="updateLoginTheme()">
+            <label for="logBus" class="bus-lab">BUS LOGIN</label>
+        </div>
+
+        <select id="staffName" style="margin-top:10px;">
             <option value="">-- Select Staff --</option>
             <option value="Mr. Ahmad">Mr. Ahmad</option>
             <option value="Ms. Roqiya">Ms. Roqiya</option>
             <option value="Ms. Jyothi">Ms. Jyothi</option>
         </select>
-        <input type="password" id="staffPass" placeholder="Password" autocomplete="new-password" onkeypress="if(event.key === 'Enter') unlockFees()">
-        <button onclick="unlockFees()" style="background:var(--forest); color:white; width:100%; padding:15px; border-radius:50px; font-weight:800; border:none; cursor:pointer;">UNLOCK PORTAL</button>
-        <div style="margin-top:20px;"><a onclick="handleForgotPassword()" style="color:#999; font-size:12px; text-decoration:underline; cursor:pointer; font-weight:bold;">Forgot Password?</a></div>
+        <input type="password" id="staffPass" placeholder="Enter Password" onkeypress="if(event.key === 'Enter') unlockFees()">
+        <button id="unlockBtn" onclick="unlockFees()" style="background:var(--forest); color:white; width:100%; padding:15px; border-radius:50px; font-weight:800; border:none; cursor:pointer;">UNLOCK PORTAL</button>
+        <div style="margin-top:15px;"><a onclick="handleForgotPassword()" style="color:#999; font-size:11px; text-decoration:underline; cursor:pointer; font-weight:bold;">Forgot Password?</a></div>
     </div>
 </div>
 
@@ -109,11 +129,11 @@
                     </div>
                 </div>
                 <div class="divider-line"></div>
-                <div class="portal-label">FEE PORTAL</div>
+                <div class="portal-label" id="activePortalLabel">FEE PORTAL</div>
             </div>
             <div class="nav-tools">
                 <div id="liveClock" class="live-clock">00:00:00</div>
-                <button class="btn-signout" onclick="location.reload()">Exit</button>
+                <a href="index.html" class="btn-back-dashboard"><i class="fas fa-home"></i> Dashboard</a>
             </div>
         </div>
     </header>
@@ -122,71 +142,70 @@
         <div id="staffDisplay" style="text-align:center; font-weight:800; color:var(--forest); background:#e8f5e9; padding:10px; border-radius:12px; margin-bottom:15px; font-size:12px;"></div>
         
         <div class="card" id="mainCard">
-            <h3><i class="fas fa-coins"></i> Select Category</h3>
+            <h3><i class="fas fa-coins"></i> Manage Records</h3>
             
             <div class="type-toggle">
-                <input type="radio" name="feeType" id="typeSchool" value="school_fees" checked onchange="toggleTheme()">
+                <input type="radio" name="feeType" id="typeSchool" value="school_fees" onchange="syncUIWithSelection()">
                 <label for="typeSchool" class="sch-lab"><i class="fas fa-school"></i> SCHOOL FEES</label>
-                
-                <input type="radio" name="feeType" id="typeBus" value="bus_fees" onchange="toggleTheme()">
+                <input type="radio" name="feeType" id="typeBus" value="bus_fees" onchange="syncUIWithSelection()">
                 <label for="typeBus" class="bus-lab"><i class="fas fa-bus"></i> BUS FEES</label>
             </div>
 
-            <label>CLASS</label>
+            <label>SELECT CLASS</label>
             <select id="feeClass" onchange="populateStudents()"></select>
             
             <label>STUDENT NAME</label>
             <select id="feeStudent" onchange="fetchFeeData()"><option value="">-- Select Student --</option></select>
 
             <div id="schoolSpecificFields">
-                <label>PAYMENT FOR (TERM/MONTH)</label>
+                <label>TERM/MONTH</label>
                 <select id="feeTerm">
                     <option value="TERM - 1">TERM - 1</option>
                     <option value="TERM - 2">TERM - 2</option>
                     <option value="TERM - 3">TERM - 3</option>
-                
                 </select>
                 
                 <div class="calc-row">
-                    <div><label>TOTAL PAYABLE</label><input type="number" id="actualFee" oninput="calculateDiscount()" placeholder="e.g. 5000"></div>
-                    <div><label>DISCOUNT (%)</label><input type="number" id="discountPct" oninput="calculateDiscount()" value="0"></div>
+                    <div><label>ACTUAL FEE</label><input type="number" id="actualFee" oninput="calculateDiscount()"></div>
+                    <div><label>DISCOUNT %</label><input type="number" id="discountPct" oninput="calculateDiscount()" value="0"></div>
                 </div>
             </div>
 
             <div class="calc-row">
-                <div>
-                    <label id="totalLabel">FINAL TOTAL</label>
-                    <input type="number" id="totalFee" oninput="updateDue()" readonly style="background:#eee;">
-                </div>
-                <div><label>PAYING NOW</label><input type="number" id="payAmt" oninput="updateDue()" placeholder="Amount"></div>
+                <div><label id="totalLabel">TOTAL</label><input type="number" id="totalFee" oninput="updateDue()"></div>
+                <div><label>PAYING NOW</label><input type="number" id="payAmt" oninput="updateDue()"></div>
             </div>
 
-            <label>METHOD</label>
-            <select id="payMethod" onchange="handleMethodChange()">
-                <option value="Cash">Cash</option>
-                <option value="Online">Online Payment</option>
-            </select>
+            <div class="calc-row">
+                <div>
+                    <label>PAYMENT DATE</label>
+                    <input type="date" id="payDate">
+                </div>
+                <div>
+                    <label>METHOD</label>
+                    <select id="payMethod" onchange="handleMethodChange()">
+                        <option value="Cash">Cash</option>
+                        <option value="Online">Online</option>
+                    </select>
+                </div>
+            </div>
 
             <div id="onlineField">
-                <input type="text" id="transId" maxlength="5" placeholder="Transaction ID (Last 5)">
+                <input type="text" id="transId" maxlength="5" placeholder="Last 5 digits of Transaction ID">
             </div>
 
-            <label>DATE</label>
-            <input type="date" id="payDate">
-
-            <div id="dueBox" class="due-box"><span>BALANCE DUE</span><br><strong id="dueDisplay">₹ 0</strong></div>
+            <div id="dueBox" class="due-box"><span>OUTSTANDING BALANCE</span><br><strong id="dueDisplay">₹ 0</strong></div>
 
             <div class="chart-container">
                 <div class="circular-progress">
                     <svg viewBox="0 0 100 100"><circle class="circle-bg" cx="50" cy="50" r="45"></circle><circle id="progressCircle" class="circle-bar" cx="50" cy="50" r="45"></circle></svg>
                     <div id="percentText" class="percentage-text">0%</div>
                 </div>
-                <div id="auditTrail" class="audit-trail">LAST UPDATED BY: <span id="lastFaculty">---</span></div>
             </div>
 
-            <div class="action-flex" style="margin-top:20px; display:flex; gap:10px;">
-                <button class="btn-action btn-save" onclick="saveRecord()">Save Entry <i class="fas fa-save"></i></button>
-                <button class="btn-action" style="background:#607d8b;" onclick="printReceipt()">Receipt <i class="fas fa-print"></i></button>
+            <div style="margin-top:20px; display:flex; gap:10px;">
+                <button class="btn-action btn-save" onclick="saveRecord()">Save & Update <i class="fas fa-save"></i></button>
+                <button class="btn-action" style="background:#607d8b;" onclick="printReceipt()">Print <i class="fas fa-print"></i></button>
             </div>
         </div>
 
@@ -194,7 +213,7 @@
             <h3><i class="fas fa-history"></i> Payment History</h3>
             <div style="overflow-x:auto;">
                 <table class="history-table">
-                    <thead><tr><th>Date</th><th>Term</th><th>Amount</th><th>Staff</th></tr></thead>
+                    <thead><tr><th>Date</th><th>For</th><th>Amount</th><th>Staff</th></tr></thead>
                     <tbody id="historyList"></tbody>
                 </table>
             </div>
@@ -216,42 +235,66 @@
 
     document.getElementById('feeClass').innerHTML = '<option value="">-- Class --</option>' + Object.keys(studentData).map(c => `<option value="${c}">${c}</option>`).join('');
 
-    function toggleTheme() {
+    function updateLoginTheme() {
+        const isBus = document.getElementById('logBus').checked;
+        const authBox = document.getElementById('authBox');
+        const unlockBtn = document.getElementById('unlockBtn');
+        const loginTitle = document.getElementById('loginTitle');
+
+        if(isBus) {
+            authBox.classList.add('bus-theme');
+            unlockBtn.style.background = 'var(--bus-orange)';
+            loginTitle.innerText = "TRANSPORT PORTAL";
+        } else {
+            authBox.classList.remove('bus-theme');
+            unlockBtn.style.background = 'var(--forest)';
+            loginTitle.innerText = "SCHOOL PORTAL";
+        }
+    }
+
+    function syncUIWithSelection() {
         const isBus = document.getElementById('typeBus').checked;
         const card = document.getElementById('mainCard');
+        const label = document.getElementById('activePortalLabel');
         const schoolFields = document.getElementById('schoolSpecificFields');
-        const totalLabel = document.getElementById('totalLabel');
         const totalInput = document.getElementById('totalFee');
         
         if(isBus) {
             card.classList.add('bus-mode');
+            label.innerText = "BUS PORTAL";
             schoolFields.style.display = 'none';
-            totalLabel.innerText = "TOTAL PAYABLE FEE";
             totalInput.readOnly = false;
             totalInput.style.background = "#fafafa";
         } else {
             card.classList.remove('bus-mode');
+            label.innerText = "FEE PORTAL";
             schoolFields.style.display = 'block';
-            totalLabel.innerText = "FINAL TOTAL";
             totalInput.readOnly = true;
             totalInput.style.background = "#eee";
         }
         fetchFeeData(); 
     }
 
-    async function handleForgotPassword() {
-        const sel = document.getElementById('staffName').value;
-        if (!sel) return Swal.fire('Error', 'Select name first', 'warning');
-        const { value: pin } = await Swal.fire({ title: 'Recovery', text: `Enter PIN for ${sel}`, input: 'password' });
-        if (pin === recoveryPins[sel]) Swal.fire('Success', `Password: ${authorized[sel]}`, 'success');
-    }
-
     function unlockFees() {
         const n = document.getElementById('staffName').value, p = document.getElementById('staffPass').value;
+        const isBus = document.getElementById('logBus').checked;
+        
         if(p === authorized[n]) {
-            activeUser = n; document.getElementById('feeLoginScreen').style.display = 'none'; document.getElementById('feeApp').style.display = 'block';
+            activeUser = n;
+            document.getElementById('feeLoginScreen').style.display = 'none';
+            document.getElementById('feeApp').style.display = 'block';
             document.getElementById('staffDisplay').innerText = "LOGGED IN: " + n;
-        } else { Swal.fire('Error', 'Invalid credentials', 'error'); }
+            
+            // Set initial radio based on login choice
+            if(isBus) {
+                document.getElementById('typeBus').checked = true;
+            } else {
+                document.getElementById('typeSchool').checked = true;
+            }
+            syncUIWithSelection();
+        } else { 
+            Swal.fire('Error', 'Invalid credentials', 'error'); 
+        }
     }
 
     function populateStudents() {
@@ -267,7 +310,7 @@
         
         const snap = await db.ref(`fee_records/${c}/${n}/${type}`).once('value');
         const data = snap.val();
-        paidTillNow = 0; let rows = "", lastFac = "---";
+        paidTillNow = 0; let rows = "";
 
         if(data) {
             const keys = Object.keys(data), latest = data[keys[keys.length - 1]];
@@ -277,18 +320,14 @@
             
             keys.forEach(k => {
                 const r = data[k]; paidTillNow += parseFloat(r.paid || 0);
-                lastFac = r.recordedBy || "Unknown";
-                rows += `<tr><td>${r.date}</td><td>${r.term}</td><td>₹ ${r.paid}</td><td>${lastFac}</td></tr>`;
+                rows += `<tr><td>${r.date}</td><td>${r.term}</td><td>₹ ${r.paid}</td><td>${r.recordedBy}</td></tr>`;
             });
             document.getElementById('historyList').innerHTML = rows;
             document.getElementById('historyCard').style.display = 'block';
-            document.getElementById('lastFaculty').innerText = lastFac;
-            document.getElementById('auditTrail').style.display = 'block';
         } else {
             document.getElementById('actualFee').value = ""; 
             document.getElementById('totalFee').value = ""; 
             document.getElementById('historyCard').style.display = 'none';
-            document.getElementById('auditTrail').style.display = 'none';
         }
         updateDue();
     }
@@ -311,6 +350,7 @@
         if(pct > 100) pct = 100;
         document.getElementById('progressCircle').style.strokeDashoffset = 282.7 - (282.7 * pct / 100);
         document.getElementById('percentText').innerText = Math.round(pct) + "%";
+        document.getElementById('percentText').style.color = document.getElementById('typeBus').checked ? 'var(--bus-orange)' : 'var(--forest)';
     }
 
     function saveRecord() {
@@ -342,8 +382,9 @@
     function printReceipt() {
         if(!lastTx) return Swal.fire('Note', 'Save a record first', 'info');
         const win = window.open('', '', 'height=600,width=500');
-        win.document.write(`<html><body style="text-align:center; font-family:sans-serif; border:4px solid #006633; padding:20px;">
-            <h2>PARAMOUNT SCHOOL</h2>
+        const themeColor = lastTx.type === 'bus_fees' ? '#f57c00' : '#006633';
+        win.document.write(`<html><body style="text-align:center; font-family:sans-serif; border:4px solid ${themeColor}; padding:20px;">
+            <h2 style="color:${themeColor}">PARAMOUNT SCHOOL</h2>
             <p>Category: <b>${lastTx.type.replace('_',' ').toUpperCase()}</b></p>
             <p>Student: ${lastTx.n} (${lastTx.c})</p>
             <p>For: ${lastTx.term}</p>
@@ -357,7 +398,7 @@
     async function clearData() {
         const c = document.getElementById('feeClass').value, n = document.getElementById('feeStudent').value;
         const type = document.querySelector('input[name="feeType"]:checked').value;
-        const { value: pass } = await Swal.fire({ title: 'Auth', text: 'Password to Delete', input: 'password' });
+        const { value: pass } = await Swal.fire({ title: 'Auth Required', text: 'Password to Delete', input: 'password' });
         if (pass === authorized[activeUser]) {
             db.ref(`fee_records/${c}/${n}/${type}`).remove().then(() => { fetchFeeData(); Swal.fire('Cleared','','success'); });
         }
@@ -365,6 +406,13 @@
 
     function handleMethodChange() {
         document.getElementById('onlineField').style.display = (document.getElementById('payMethod').value === 'Online') ? 'block' : 'none';
+    }
+
+    async function handleForgotPassword() {
+        const sel = document.getElementById('staffName').value;
+        if (!sel) return Swal.fire('Error', 'Select name first', 'warning');
+        const { value: pin } = await Swal.fire({ title: 'Recovery', text: `Enter PIN for ${sel}`, input: 'password' });
+        if (pin === recoveryPins[sel]) Swal.fire('Success', `Password: ${authorized[sel]}`, 'success');
     }
 
     document.getElementById('payDate').valueAsDate = new Date();
