@@ -16,7 +16,6 @@
         .overlay-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--light); z-index: 1000; display: flex; justify-content: center; align-items: center; padding: 15px; }
         .auth-box { background: white; padding: 40px 25px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); width: 100%; max-width: 420px; border-bottom: 5px solid var(--forest); text-align: center; }
         .btn-access-back { display: inline-block; margin-top: 20px; color: #666; font-size: 11px; font-weight: 700; text-decoration: none; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid #ccc; padding-bottom: 2px; }
-        .btn-access-back:hover { color: var(--forest); border-color: var(--forest); }
 
         /* Header */
         header { background: var(--forest); color: white; padding: 12px 4%; border-bottom: 4px solid var(--gold); box-shadow: 0 4px 12px rgba(0,0,0,0.15); position: sticky; top: 0; z-index: 100; }
@@ -40,7 +39,6 @@
         .term-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 15px 0; }
         .term-card { background: #fff; border: 2px solid #eee; padding: 12px 5px; border-radius: 15px; text-align: center; cursor: pointer; transition: 0.3s; position: relative; }
         .term-card.selected { border: 3px solid var(--forest) !important; background: #e8f5e9; transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        .term-card.selected::after { content: '\f058'; font-family: 'Font Awesome 6 Free'; font-weight: 900; position: absolute; top: -10px; right: -5px; color: var(--forest); background: white; border-radius: 50%; font-size: 18px; }
         
         .t-amt { font-size: 13px; font-weight: 800; color: var(--forest); margin-top: 4px; }
         .due-box { background: #fff5f5; border: 1px solid #ffcdd2; padding: 15px; border-radius: 15px; text-align: center; margin-top: 20px; }
@@ -66,18 +64,14 @@
         <img src="logo.png" style="height:75px; margin-bottom:10px;">
         <h2 style="font-family:'Montserrat';">PARAMOUNT</h2>
         <p style="color:var(--forest); font-weight:800; font-size:11px; text-transform:uppercase;">Fee Entry Access</p>
-        
         <select id="staffName" onchange="clearPass()" style="margin-top:20px;">
             <option value="">-- Select Staff --</option>
             <option value="Mr. Ahmad">Mr. Ahmad</option>
             <option value="Ms. Roqiya">Ms. Roqiya</option>
             <option value="Ms. Jyothi">Ms. Jyothi</option>
         </select>
-        
         <input type="password" id="staffPass" placeholder="Password" autocomplete="new-password">
-        
         <button onclick="unlockFees()" style="background:var(--forest); color:white; border:none; width:100%; padding:15px; border-radius:50px; font-weight:800; cursor:pointer; margin-top:10px;">Unlock Portal</button>
-        
         <a href="index.html" class="btn-access-back"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
     </div>
 </div>
@@ -110,9 +104,9 @@
 
             <label>STEP 1: SET YEARLY GOALS</label>
             <div class="goal-row">
-                <div class="goal-input-box"><label>T1 Goal</label><input type="number" id="goal1" placeholder="0" oninput="calculateTotalFromGoals()"></div>
-                <div class="goal-input-box"><label>T2 Goal</label><input type="number" id="goal2" placeholder="0" oninput="calculateTotalFromGoals()"></div>
-                <div class="goal-input-box"><label>T3 Goal</label><input type="number" id="goal3" placeholder="0" oninput="calculateTotalFromGoals()"></div>
+                <div class="goal-input-box"><label>T1 Goal</label><input type="number" id="goal1" placeholder="0" onfocus="validateInteraction(this)" oninput="calculateTotalFromGoals()"></div>
+                <div class="goal-input-box"><label>T2 Goal</label><input type="number" id="goal2" placeholder="0" onfocus="validateInteraction(this)" oninput="calculateTotalFromGoals()"></div>
+                <div class="goal-input-box"><label>T3 Goal</label><input type="number" id="goal3" placeholder="0" onfocus="validateInteraction(this)" oninput="calculateTotalFromGoals()"></div>
             </div>
 
             <label>TOTAL YEARLY FEE</label>
@@ -127,7 +121,7 @@
 
             <div id="paymentArea">
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top:10px;">
-                    <div><label>AMOUNT</label><input type="number" id="payAmt" oninput="handleAmountInput()"></div>
+                    <div><label>AMOUNT</label><input type="number" id="payAmt" onfocus="validateInteraction(this)" oninput="updateDue()"></div>
                     <div><label>METHOD</label><select id="payMethod" onchange="handleMethodChange()"><option value="Cash">Cash</option><option value="Online">Online</option></select></div>
                 </div>
                 <div id="onlineField"><label>TRANS ID (LAST 5)</label><input type="text" id="transId" maxlength="5"></div>
@@ -153,10 +147,7 @@
     let activeUser = "", paidTillNow = 0, selectedTerm = "";
     let termTotals = { "Term 1": 0, "Term 2": 0, "Term 3": 0 };
 
-    // Clear password when staff selection changes
-    function clearPass() {
-        document.getElementById('staffPass').value = "";
-    }
+    function clearPass() { document.getElementById('staffPass').value = ""; }
 
     function unlockFees() {
         const n = document.getElementById('staffName').value, p = document.getElementById('staffPass').value;
@@ -167,6 +158,7 @@
         } else { Swal.fire('Error', 'Incorrect Password', 'error'); }
     }
 
+    // MANDATORY SELECTION CHECK
     function checkSelection() {
         const cls = document.getElementById('feeClass').value;
         const stu = document.getElementById('feeStudent').value;
@@ -177,19 +169,20 @@
         return true;
     }
 
+    // Validation for Inputs (Goals and Pay Amount)
+    function validateInteraction(el) {
+        if (!checkSelection()) {
+            el.blur(); // Remove focus so user cannot type
+            return false;
+        }
+        return true;
+    }
+
     function selectTerm(term) {
         if (!checkSelection()) return;
         selectedTerm = term;
         document.querySelectorAll('.term-card').forEach(card => card.classList.remove('selected'));
         document.getElementById(`card-${term.replace(' ', '-')}`).classList.add('selected');
-    }
-
-    function handleAmountInput() {
-        if (!checkSelection()) {
-            document.getElementById('payAmt').value = "";
-            return;
-        }
-        updateDue();
     }
 
     const studentData = { "Pre-KG": ["Hanish Macharla", "Arjun Vihaar Illandula", "Thanu sree Allakunta", "Aadhya Gangaraboina", "Aadhya Sri Oggula", "Aadhyasri Shivagoni", "Afraha Begum", "Aliya Sultana", "Anvika Bandi", "Aradana Devara konda", "Devansh Bandi", "Hanvitha Mulkalapelli", "Harsha Vardhan Seenapelli", "Hiranya Bandi", "Jashritha Boina", "Konreddy Shreyanvi", "Kriyansh Sammeta", "Mohammed Mohiuddin Sayyad", "Nethra Narkurthi", "Reeyansh Bandi", "Rishi Myakala", "Rudransh Bandi", "Sanvika Bandi", "Shanvith Khatha", "Shishira Jalagam", "Shiva Sai Mekala", "Shree Rudhraveer Chevvu", "Shreyansh Gangaraboina", "Sreeja Thalla", "Srikrithini Myakala", "Srivatsav Vanam", "Sriyansh Mekala", "Thanvika Lakka", "Thrilokansh Vudari", "Ujjwal Checkka", "Vaishnavi Lakka", "Vedansh Myakala", "Vishnu Priya Molugu", "Vyshnav Tej Boina", "Yafiah Mohammad"], "KG-1": ["Aadhya Sri Amaravadi", "Aditya Manda", "Aadhya Jella", "Advaita Gauri Bandi", "Aizah Amna Shaik", "Akshara Singaram", "Bhahuveer Raj Somishetti", "Gayathri Erroju", "Hanvika Mulkalapelli", "Manvith Kondoju", "Sayyad Vajeed", "Mekala Manu sri", "Oliva Grace Vallapu", "Rithwik Oggula", "Rithwika Kandagatla", "Srimahi Chevvu", "Thanvesh Thalla", "Trishul Nanduri", "Yoganshika Nanduri", "Yusra Mohammad", "Zainul Abideen Syed"], "KG-2": ["Deekshanth Sammeta", "Hanshith Erroju", "Harika Bandi", "Himarsha Naini", "Karthik Vallepu", "Kruthika Bandi", "Rajavardhan Gampala", "Roshan Kaitha", "Sri Anshu Ayaan Lyadala", "Srihansh Bandi", "Srikshitha Guduri", "Varshith Gonela", "Adyasri Makala", "Anvik Boini", "Anvith Pokanati", "Awais Ur Rehman Mohammad", "Dakshu Pothuganti", "Hansith Reddy Katukuri", "Harshith Pokanati", "Jella Aditya", "Krishank Nallabothula", "Kundana Katkuri", "Munukuntla Revanth Rudhra", "Niraja Nethri Siluveru", "Pranav Mattepelli", "Sreenith Yadav Naini", "Uvan Reddy Dasari", "Zayan Mohammad", "Zoya Mohammed"], "Grade-1": ["Dheeraj Gattu", "Preetham Sannayala", "Shiva nandu Gonela", "Shrayan Nuthanakanti", "Sriyanksha Mandala", "Advitha Garige", "Harika Bandi", "Himansi Kondoju", "Izhaan Rahamath Syed", "Jaisurya Myakala", "Khadeeja Fathima", "Manaswini Dandugula", "Manusri Bandi", "Rithwik krishna Amaravadi", "Rohan Bandi", "Shiva Junnu", "Shivanandh Bandi", "Sridha Thalla", "Srinika Chengelly", "Sriyanshi Oggula", "Vishwak Checkka"], "Grade-2": ["Aliza Manha Shaik", "Dhruvan Reddy Katukuri", "Druthika Enugala", "Manaswini Bandi", "Rakshith Macharla", "Sathwika Katkuri", "Shalini Uppala", "Chandu Devarakonda", "Gnaneshwar Pokanati", "Hasnain Syed", "Koushik Siluveru", "Senen Desabattula", "Shivarajan Pothuganti"], "Grade-3": ["Nagavelly Manikanta", "Mirja Ismail", "Bandi Aryan", "Dandugula Mahesh Babu", "Bandi Tejasri", "Bandi Harshavardhan", "Gampala Vyshnavi", "Gampala Laxmi", "Garige Harshith", "Katkuri Hanish", "Katukuri Manideep", "MD Abdul Quddus", "Muppa Sathwik Patel", "Nuthanakanti Sansita", "Pasarakonda Ritwin", "Pinninti Rakshith Rao", "Rayi Sriman Adithya"], "Grade-4": ["Abdul Saqib Mohammad", "Anudeep Chintha", "Bhavan Bandi", "Harshavardhan Gonela", "Jayadev Chiluveru", "Mahaboob Syed", "Nandith Reddy Enugala", "Sai Charan Goud Mandala", "Sai Prasanna Keerthi", "Ajmeri Shaik", "Akshara Chiluveru", "Jayasri Myakala", "Rahul Kanjarla", "Saketh Devarakonda"], "Grade-5": ["Adya Reddy Vangala", "Kowshik Patel Muppa", "Siri Singaram", "Srikar Mandala", "Abdus Salaam MD", "Akshith Ram Kalvacharla", "Jaffar Anas Shaik", "Khaja Azeemuddin Mohammed", "Nihan Mohammed", "Saif Shaik", "Saketh Renukuntla", "Sreeja Dasari", "Vidhaatri Sahani"], "Grade-6": ["Abdul Razzak Mohammad", "Anudeepthi Chintha", "Saketh Ranaveni", "Shiva Sri Katukuri", "Aklees Shaik", "Akshya Kalvacharla", "Prince Katkuri"], "Grade-7": ["Manikanta Sannayala", "Sreeyan Reddy Karra", "Jayadhithya Chiluveru"], "Grade-8": ["Sathwika Nagavelly", "Vyshnavi Uppala", "Akshaya Gampala", "Ganesh Oggula", "Gayathri Renukuntla", "Khaja Sadeemuddin Mohammed"] };
@@ -224,6 +217,8 @@
                 if(r.goals) goals = r.goals;
             });
             document.getElementById('goal1').value = goals.g1; document.getElementById('goal2').value = goals.g2; document.getElementById('goal3').value = goals.g3;
+        } else {
+            document.getElementById('goal1').value = ""; document.getElementById('goal2').value = ""; document.getElementById('goal3').value = "";
         }
         calculateTotalFromGoals();
         selectedTerm = ""; 
@@ -245,10 +240,8 @@
         if(!selectedTerm) return Swal.fire('Select Term', 'Please click on a Term card.', 'warning');
         let amt = parseFloat(document.getElementById('payAmt').value) || 0;
         if(amt <= 0) return Swal.fire('Error', 'Enter amount', 'warning');
-
         const goals = { g1: parseFloat(document.getElementById('goal1').value) || 0, g2: parseFloat(document.getElementById('goal2').value) || 0, g3: parseFloat(document.getElementById('goal3').value) || 0 };
         const entry = { paid: amt, term: selectedTerm, date: document.getElementById('payDate').value, method: document.getElementById('payMethod').value, recordedBy: activeUser, goals: goals };
-        
         const c = document.getElementById('feeClass').value, n = document.getElementById('feeStudent').value;
         db.ref(`fee_records/${c}/${n}`).push(entry).then(() => {
             Swal.fire('Success', 'Payment Recorded!', 'success');
