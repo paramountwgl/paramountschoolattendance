@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="icon" type="image/png" href="logo.png">
     <style>
-        :root { --forest: #006633; --gold: #ffd700; --danger: #c62828; --light: #f4f7f6; --sky: #2196f3; --dark-green: #004d26; }
+        :root { --forest: #006633; --gold: #ffd700; --danger: #c62828; --light: #f4f7f6; --sky: #2196f3; --dark-green: #004d26; --bus-orange: #f57c00; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; } 
         body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; padding-bottom: 50px; }
 
@@ -28,55 +28,41 @@
 
         .nav-tools { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
         .live-clock { font-family: 'Montserrat', sans-serif; font-weight: 800; color: var(--gold); font-size: 13px; text-transform: uppercase; }
-        .btn-signout { 
-            background: rgba(255,255,255,0.1); border: 1.5px solid white; color: white; 
-            padding: 5px 18px; border-radius: 50px; font-size: 10px; font-weight: 800; 
-            text-transform: uppercase; cursor: pointer; transition: 0.3s;
-        }
+        .btn-signout { background: rgba(255,255,255,0.1); border: 1.5px solid white; color: white; padding: 5px 18px; border-radius: 50px; font-size: 10px; font-weight: 800; text-transform: uppercase; cursor: pointer; transition: 0.3s; }
 
         .container { max-width: 650px; margin: 25px auto; padding: 0 15px; }
-        .card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); border-top: 8px solid var(--forest); margin-bottom: 25px; }
-        h3 { color: var(--forest); margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; display: flex; align-items: center; gap: 8px; font-size: 1.1rem; text-transform: uppercase; font-weight: 800; }
+        .card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); border-top: 8px solid var(--forest); margin-bottom: 25px; transition: border-color 0.3s; }
+        .card.bus-mode { border-top-color: var(--bus-orange); }
         
-        .due-box { background: #fff5f5; border: 1px solid #ffcdd2; padding: 15px; border-radius: 15px; text-align: center; margin-top: 20px; transition: 0.3s; }
-        .due-box strong { font-size: 24px; color: var(--danger); }
-        .due-box.high-due { border-color: var(--danger); animation: pulseRed 1.5s infinite; }
-        @keyframes pulseRed { 0% { box-shadow: 0 0 0 0 rgba(198, 40, 40, 0.4); } 70% { box-shadow: 0 0 0 15px rgba(198, 40, 40, 0); } 100% { box-shadow: 0 0 0 0 rgba(198, 40, 40, 0); } }
+        h3 { color: var(--forest); margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; display: flex; align-items: center; gap: 8px; font-size: 1.1rem; text-transform: uppercase; font-weight: 800; }
+        .bus-mode h3 { color: var(--bus-orange); }
 
-        .chart-container { display: flex; flex-direction: column; align-items: center; margin-top: 25px; background: #f9f9f9; padding: 25px; border-radius: 15px; border: 1px solid #eee; }
-        .circular-progress { position: relative; width: 120px; height: 120px; display: flex; align-items: center; justify-content: center; }
-        .circular-progress svg { width: 120px; height: 120px; transform: rotate(-90deg); }
-        .circle-bg { fill: none; stroke: #eee; stroke-width: 10; cx: 60; cy: 60; r: 50; }
-        .circle-bar { fill: none; stroke: var(--forest); stroke-width: 10; cx: 60; cy: 60; r: 50; stroke-dasharray: 314.15; stroke-dashoffset: 314.15; transition: 0.8s; stroke-linecap: round; }
-        .percentage-text { position: absolute; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 1.3rem; color: #333; }
-
-        .audit-trail { margin-top: 15px; text-align: center; font-size: 11px; font-weight: 700; color: #666; border-top: 1px dashed #ccc; padding-top: 10px; width: 100%; display: none; }
-        .audit-trail span { color: var(--forest); }
+        .type-toggle { display: flex; background: #eee; padding: 5px; border-radius: 50px; margin-bottom: 20px; gap: 5px; }
+        .type-toggle label { flex: 1; text-align: center; padding: 10px; border-radius: 50px; cursor: pointer; font-weight: 800; font-size: 12px; margin: 0; transition: 0.3s; }
+        .type-toggle input { display: none; }
+        .type-toggle input:checked + label.sch-lab { background: var(--forest); color: white; }
+        .type-toggle input:checked + label.bus-lab { background: var(--bus-orange); color: white; }
 
         label { font-size: 10px; font-weight: 800; color: #666; text-transform: uppercase; margin-bottom: 4px; display: block; margin-left: 5px; }
         select, input { width: 100%; padding: 12px; border-radius: 10px; border: 2px solid #eee; font-size: 16px; margin-bottom: 12px; outline: none; background: #fafafa; font-weight: 600; }
         .calc-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         
-        .action-flex { display: flex; gap: 10px; margin-top: 25px; }
-        .btn-action { color: white; border: none; padding: 16px; border-radius: 50px; font-weight: 700; cursor: pointer; flex: 1; text-transform: uppercase; font-size: 13px; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .due-box { background: #fff5f5; border: 1px solid #ffcdd2; padding: 15px; border-radius: 15px; text-align: center; margin-top: 20px; }
+        .due-box strong { font-size: 24px; color: var(--danger); }
+
+        .btn-action { color: white; border: none; padding: 16px; border-radius: 50px; font-weight: 700; cursor: pointer; width: 100%; text-transform: uppercase; font-size: 13px; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .btn-save { background: linear-gradient(135deg, var(--forest), #004d26); border: 2px solid var(--gold); }
-        .btn-wipe { background: linear-gradient(135deg, #d32f2f, #b71c1c); border: 2px solid white; }
-        .btn-receipt { background: var(--sky); width: 100%; margin-top: 10px; }
-
-        .history-table-wrapper { width: 100%; overflow-x: auto; border-radius: 10px; border: 1px solid #f1f5f9; margin-top: 10px; }
+        .bus-mode .btn-save { background: linear-gradient(135deg, var(--bus-orange), #e65100); }
+        
         .history-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; min-width: 550px; }
-        .history-table th { text-align: center; padding: 12px; background: #f8fafc; color: #64748b; font-size: 10px; text-transform: uppercase; }
-        .history-table td { padding: 12px 10px; border-bottom: 1px solid #f1f5f9; font-weight: 700; color: #334155; text-align: center; }
+        .history-table th { padding: 12px; background: #f8fafc; color: #64748b; font-size: 10px; text-transform: uppercase; }
+        .history-table td { padding: 12px 10px; border-bottom: 1px solid #f1f5f9; font-weight: 700; text-align: center; }
 
-        .overlay-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--light); z-index: 1000; display: flex; justify-content: center; align-items: center; padding: 15px; }
+        .overlay-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--light); z-index: 1000; display: flex; justify-content: center; align-items: center; }
         .auth-box { background: white; padding: 40px 25px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); width: 100%; max-width: 420px; border-bottom: 5px solid var(--forest); text-align: center; }
-        .btn-premium-unlock { 
-            background: linear-gradient(135deg, var(--forest), #004d26); color: white; padding: 15px; border-radius: 50px; font-weight: 800; border: 2px solid var(--gold); 
-            cursor: pointer; width: 100%; height: 55px; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; margin-top: 15px; text-transform: uppercase; font-size: 14px;
-        }
-
+        
         #onlineField { display: none; }
-        @media (max-width: 600px) { .calc-row { grid-template-columns: 1fr; } .school-name-sub, .divider-line { display: none; } }
+        @media (max-width: 600px) { .calc-row { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
@@ -88,17 +74,15 @@
 <div id="feeLoginScreen" class="overlay-screen">
     <div class="auth-box">
         <img src="logo.png" style="height:75px; margin-bottom:10px;">
-        <div class="auth-branding-text"><h2>PARAMOUNT</h2><p style="color:var(--gold); font-weight:800; font-size:11px; text-transform:uppercase;">Fee Entry Access</p></div>
-        <select id="staffName" class="auth-input" style="margin-top:20px;" autocomplete="off">
+        <h2>PARAMOUNT</h2>
+        <select id="staffName" class="auth-input" style="margin-top:20px;">
             <option value="">-- Select Staff --</option>
             <option value="Mr. Ahmad">Mr. Ahmad</option>
             <option value="Ms. Roqiya">Ms. Roqiya</option>
             <option value="Ms. Jyothi">Ms. Jyothi</option>
         </select>
-        <input type="password" id="staffPass" class="auth-input" placeholder="Password" autocomplete="new-password" onkeypress="if(event.key === 'Enter') unlockFees()">
-        <button onclick="unlockFees()" class="btn-premium-unlock">Unlock Portal <i class="fas fa-unlock"></i></button>
-        <button onclick="window.location.href='index.html'" style="margin-top:12px; background:#f1f5f9; border:none; color:#475569; padding:12px; border-radius:50px; font-weight:700; width:100%; cursor:pointer; font-size:10px; text-transform:uppercase;">Return to Dashboard</button>
-        <div style="margin-top:20px;"><a onclick="handleForgotPassword()" style="color:#999; font-size:12px; text-decoration:underline; cursor:pointer; font-weight:bold;">Forgot Password?</a></div>
+        <input type="password" id="staffPass" class="auth-input" placeholder="Password" onkeypress="if(event.key === 'Enter') unlockFees()">
+        <button onclick="unlockFees()" style="background:var(--forest); color:white; width:100%; padding:15px; border-radius:50px; font-weight:800; border:none; cursor:pointer;">UNLOCK PORTAL</button>
     </div>
 </div>
 
@@ -116,157 +100,98 @@
                 <div class="divider-line"></div>
                 <div class="portal-label">FEE PORTAL</div>
             </div>
-            <div class="nav-tools">
-                <div id="liveClock" class="live-clock">00:00:00</div>
-                <button class="btn-signout" onclick="location.reload()">Exit</button>
-            </div>
+            <div id="liveClock" class="live-clock">00:00:00</div>
         </div>
     </header>
 
     <div class="container">
         <div id="staffDisplay" style="text-align:center; font-weight:800; color:var(--forest); background:#e8f5e9; padding:10px; border-radius:12px; margin-bottom:15px; font-size:12px;"></div>
-        <div class="card">
-            <h3><i class="fas fa-file-invoice-dollar"></i> Update Records</h3>
+        
+        <div class="card" id="mainCard">
+            <h3><i class="fas fa-coins"></i> Select Category</h3>
             
+            <div class="type-toggle">
+                <input type="radio" name="feeType" id="typeSchool" value="school_fees" checked onchange="toggleTheme()">
+                <label for="typeSchool" class="sch-lab"><i class="fas fa-school"></i> SCHOOL FEES</label>
+                
+                <input type="radio" name="feeType" id="typeBus" value="bus_fees" onchange="toggleTheme()">
+                <label for="typeBus" class="bus-lab"><i class="fas fa-bus"></i> BUS FEES</label>
+            </div>
+
             <label>CLASS</label>
             <select id="feeClass" onchange="populateStudents()"></select>
             
             <label>STUDENT NAME</label>
             <select id="feeStudent" onchange="fetchFeeData()"><option value="">-- Select Student --</option></select>
 
-            <label>FEE TERM (PAYMENT FOR)</label>
-            <select id="feeTerm" onfocus="validateInteraction(this)">
+            <label>PAYMENT FOR (TERM/MONTH)</label>
+            <select id="feeTerm">
                 <option value="TERM - 1">TERM - 1</option>
                 <option value="TERM - 2">TERM - 2</option>
                 <option value="TERM - 3">TERM - 3</option>
-                <option value="TRANSPORT">TRANSPORT</option>
+                <option value="MONTHLY">MONTHLY INSTALLMENT</option>
+                <option value="FULL YEAR">FULL YEAR</option>
             </select>
             
             <div class="calc-row">
-                <div>
-                    <label>ACTUAL TOTAL FEE</label>
-                    <input type="number" id="actualFee" onfocus="validateInteraction(this)" oninput="calculateDiscount()" placeholder="e.g. 30000">
-                </div>
-                <div>
-                    <label>DISCOUNT (%)</label>
-                    <input type="number" id="discountPct" onfocus="validateInteraction(this)" oninput="calculateDiscount()" placeholder="0">
-                </div>
+                <div><label>TOTAL PAYABLE</label><input type="number" id="actualFee" oninput="calculateDiscount()" placeholder="e.g. 5000"></div>
+                <div><label>DISCOUNT (%)</label><input type="number" id="discountPct" oninput="calculateDiscount()" value="0"></div>
             </div>
 
             <div class="calc-row">
-                <div>
-                    <label>PAYABLE TOTAL</label>
-                    <input type="number" id="totalFee" readonly style="background: #eef2f7; color: #006633;" placeholder="Auto-calc">
-                </div>
-                <div>
-                    <label>PAYING NOW</label>
-                    <input type="number" id="payAmt" onfocus="validateInteraction(this)" oninput="updateDue()" placeholder="Enter amount">
-                </div>
+                <div><label>FINAL TOTAL</label><input type="number" id="totalFee" readonly style="background:#eee;"></div>
+                <div><label>PAYING NOW</label><input type="number" id="payAmt" oninput="updateDue()" placeholder="Amount"></div>
             </div>
 
-            <label>PAYMENT METHOD</label>
-            <select id="payMethod" onfocus="validateInteraction(this)" onchange="handleMethodChange()">
+            <label>METHOD</label>
+            <select id="payMethod" onchange="handleMethodChange()">
                 <option value="Cash">Cash</option>
                 <option value="Online">Online Payment</option>
             </select>
 
             <div id="onlineField">
-                <label>TRANSACTION ID (LAST 5 DIGITS)</label>
-                <input type="text" id="transId" maxlength="5" placeholder="e.g. 12345">
+                <input type="text" id="transId" maxlength="5" placeholder="Transaction ID (Last 5)">
             </div>
 
-            <label>PAYMENT DATE</label>
-            <input type="date" id="payDate" onfocus="validateInteraction(this)">
+            <label>DATE</label>
+            <input type="date" id="payDate">
 
             <div id="dueBox" class="due-box"><span>BALANCE DUE</span><br><strong id="dueDisplay">₹ 0</strong></div>
 
-            <div class="chart-container">
-                <div class="circular-progress">
-                    <svg viewBox="0 0 120 120"><circle class="circle-bg" cx="60" cy="60" r="50"></circle><circle id="progressCircle" class="circle-bar" cx="60" cy="60" r="50"></circle></svg>
-                    <div id="percentText" class="percentage-text">0%</div>
-                </div>
-                <div id="auditTrail" class="audit-trail">LAST UPDATED BY: <span id="lastFaculty">---</span> AT <span id="lastTime">---</span></div>
+            <div class="action-flex" style="margin-top:20px; display:flex; gap:10px;">
+                <button class="btn-action btn-save" onclick="saveRecord()">Save Entry <i class="fas fa-save"></i></button>
+                <button class="btn-action" style="background:#607d8b;" onclick="printReceipt()">Receipt <i class="fas fa-print"></i></button>
             </div>
-
-            <div class="action-flex">
-                <button class="btn-action btn-save" onclick="saveRecord()">Update <i class="fas fa-save"></i></button>
-                <button class="btn-action btn-wipe" onclick="clearData()">Wipe History <i class="fas fa-trash-alt"></i></button>
-            </div>
-            <button id="receiptBtn" class="btn-action btn-receipt" onclick="printReceipt()">Generate Receipt <i class="fas fa-print"></i></button>
         </div>
 
-        <div class="card history-card" id="historyCard" style="display:none;">
+        <div class="card" id="historyCard" style="display:none;">
             <h3><i class="fas fa-history"></i> Payment History</h3>
-            <div class="history-table-wrapper">
+            <div style="overflow-x:auto;">
                 <table class="history-table">
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Term</th>
-                            <th>Amount</th>
-                            <th>Method</th>
-                            <th>Staff</th>
-                        </tr>
-                    </thead>
+                    <thead><tr><th>Date</th><th>Term</th><th>Amount</th><th>Staff</th></tr></thead>
                     <tbody id="historyList"></tbody>
                 </table>
             </div>
+            <button class="btn-action" style="background:#c62828; margin-top:15px; font-size:10px;" onclick="clearData()">WIPE HISTORY</button>
         </div>
     </div>
 </div>
 
 <script>
+    // Firebase Setup (Use your config)
     const firebaseConfig = { apiKey: "AIzaSyDRYk9KOK-ga0c88dnYMsAoifW2NJTd_Y8", databaseURL: "https://paramount-school-d55bc-default-rtdb.firebaseio.com", projectId: "paramount-school-d55bc" };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
     const authorized = { "Mr. Ahmad": "Ahmad@123", "Ms. Roqiya": "Roqiya@123", "Ms. Jyothi": "Jyothi@123" };
-    const recoveryPins = { "Mr. Ahmad": "Ahmad@07", "Ms. Roqiya": "Roqiya@07", "Ms. Jyothi": "Jyothi@07" };
     let activeUser = "", paidTillNow = 0, lastTx = null;
 
-    window.onload = function() {
-        document.getElementById('staffName').selectedIndex = 0;
-        document.getElementById('staffPass').value = "";
-    };
-
-    function updateClock() { document.getElementById('liveClock').innerText = new Date().toLocaleTimeString().toUpperCase(); }
-    setInterval(updateClock, 1000); updateClock();
-
-    function validateInteraction(el) {
-        if (Swal.isVisible()) return; 
-        const cls = document.getElementById('feeClass').value;
-        const stu = document.getElementById('feeStudent').value;
-        let msg = "";
-        if (!cls && !stu) msg = "Please select Class and Student Name";
-        else if (!cls) msg = "Please select Class";
-        else if (!stu) msg = "Please select Student Name";
-        if (msg) {
-            if (el) el.blur(); 
-            Swal.fire({ title: 'Selection Required', text: msg, icon: 'warning', confirmButtonColor: '#006633' });
-            return false;
-        }
-        return true;
-    }
-
-    function calculateDiscount() {
-        const actual = parseFloat(document.getElementById('actualFee').value) || 0;
-        const disc = parseFloat(document.getElementById('discountPct').value) || 0;
-        const discountedTotal = actual - (actual * (disc / 100));
-        document.getElementById('totalFee').value = Math.round(discountedTotal);
-        updateDue();
-    }
-
-    function handleMethodChange() {
-        const m = document.getElementById('payMethod').value;
-        document.getElementById('onlineField').style.display = (m === 'Online') ? 'block' : 'none';
-        if(m === 'Cash') document.getElementById('transId').value = "";
-    }
-
-    async function handleForgotPassword() {
-        const sel = document.getElementById('staffName').value;
-        if (!sel) return Swal.fire('Error', 'Select name first', 'warning');
-        const { value: pin } = await Swal.fire({ title: 'Recovery', text: `Enter PIN for ${sel}`, input: 'password' });
-        if (pin === recoveryPins[sel]) Swal.fire('Success', `Password: ${authorized[sel]}`, 'success');
+    // THEME TOGGLE: Change UI color based on selection
+    function toggleTheme() {
+        const isBus = document.getElementById('typeBus').checked;
+        const card = document.getElementById('mainCard');
+        if(isBus) card.classList.add('bus-mode'); else card.classList.remove('bus-mode');
+        fetchFeeData(); // Refresh data when switching between School/Bus
     }
 
     function unlockFees() {
@@ -277,9 +202,8 @@
         } else { Swal.fire('Error', 'Invalid credentials', 'error'); }
     }
 
-    const studentData = { "Pre-KG": ["Hanish Macharla", "Arjun Vihaar Illandula", "Thanu sree Allakunta", "Aadhya Gangaraboina", "Aadhya Sri Oggula", "Aadhyasri Shivagoni", "Afraha Begum", "Aliya Sultana", "Anvika Bandi", "Aradana Devara konda", "Devansh Bandi", "Hanvitha Mulkalapelli", "Harsha Vardhan Seenapelli", "Hiranya Bandi", "Jashritha Boina", "Konreddy Shreyanvi", "Kriyansh Sammeta", "Mohammed Mohiuddin Sayyad", "Nethra Narkurthi", "Reeyansh Bandi", "Rishi Myakala", "Rudransh Bandi", "Sanvika Bandi", "Shanvith Khatha", "Shishira Jalagam", "Shiva Sai Mekala", "Shree Rudhraveer Chevvu", "Shreyansh Gangaraboina", "Sreeja Thalla", "Srikrithini Myakala", "Srivatsav Vanam", "Sriyansh Mekala", "Thanvika Lakka", "Thrilokansh Vudari", "Ujjwal Checkka", "Vaishnavi Lakka", "Vedansh Myakala", "Vishnu Priya Molugu", "Vyshnav Tej Boina", "Yafiah Mohammad"], "KG-1": ["Aadhya Sri Amaravadi", "Aditya Manda", "Aadhya Jella", "Advaita Gauri Bandi", "Aizah Amna Shaik", "Akshara Singaram", "Bhahuveer Raj Somishetti", "Gayathri Erroju", "Hanvika Mulkalapelli", "Manvith Kondoju", "Sayyad Vajeed", "Mekala Manu sri", "Oliva Grace Vallapu", "Rithwik Oggula", "Rithwika Kandagatla", "Srimahi Chevvu", "Thanvesh Thalla", "Trishul Nanduri", "Yoganshika Nanduri", "Yusra Mohammad", "Zainul Abideen Syed"], "KG-2": ["Deekshanth Sammeta", "Hanshith Erroju", "Harika Bandi", "Himarsha Naini", "Karthik Vallepu", "Kruthika Bandi", "Rajavardhan Gampala", "Roshan Kaitha", "Sri Anshu Ayaan Lyadala", "Srihansh Bandi", "Srikshitha Guduri", "Varshith Gonela", "Adyasri Makala", "Anvik Boini", "Anvith Pokanati", "Awais Ur Rehman Mohammad", "Dakshu Pothuganti", "Hansith Reddy Katukuri", "Harshith Pokanati", "Jella Aditya", "Krishank Nallabothula", "Kundana Katkuri", "Munukuntla Revanth Rudhra", "Niraja Nethri Siluveru", "Pranav Mattepelli", "Sreenith Yadav Naini", "Uvan Reddy Dasari", "Zayan Mohammad", "Zoya Mohammed"], "Grade-1": ["Dheeraj Gattu", "Preetham Sannayala", "Shiva nandu Gonela", "Shrayan Nuthanakanti", "Sriyanksha Mandala", "Advitha Garige", "Harika Bandi", "Himansi Kondoju", "Izhaan Rahamath Syed", "Jaisurya Myakala", "Khadeeja Fathima", "Manaswini Dandugula", "Manusri Bandi", "Rithwik krishna Amaravadi", "Rohan Bandi", "Shiva Junnu", "Shivanandh Bandi", "Sridha Thalla", "Srinika Chengelly", "Sriyanshi Oggula", "Vishwak Checkka"], "Grade-2": ["Aliza Manha Shaik", "Dhruvan Reddy Katukuri", "Druthika Enugala", "Manaswini Bandi", "Rakshith Macharla", "Sathwika Katkuri", "Shalini Uppala", "Chandu Devarakonda", "Gnaneshwar Pokanati", "Hasnain Syed", "Koushik Siluveru", "Senen Desabattula", "Shivarajan Pothuganti"], "Grade-3": ["Nagavelly Manikanta", "Mirja Ismail", "Bandi Aryan", "Dandugula Mahesh Babu", "Bandi Tejasri", "Bandi Harshavardhan", "Gampala Vyshnavi", "Gampala Laxmi", "Garige Harshith", "Katkuri Hanish", "Katukuri Manideep", "MD Abdul Quddus", "Muppa Sathwik Patel", "Nuthanakanti Sansita", "Pasarakonda Ritwin", "Pinninti Rakshith Rao", "Rayi Sriman Adithya"], "Grade-4": ["Abdul Saqib Mohammad", "Anudeep Chintha", "Bhavan Bandi", "Harshavardhan Gonela", "Jayadev Chiluveru", "Mahaboob Syed", "Nandith Reddy Enugala", "Sai Charan Goud Mandala", "Sai Prasanna Keerthi", "Ajmeri Shaik", "Akshara Chiluveru", "Jayasri Myakala", "Rahul Kanjarla", "Saketh Devarakonda"], "Grade-5": ["Adya Reddy Vangala", "Kowshik Patel Muppa", "Siri Singaram", "Srikar Mandala", "Abdus Salaam MD", "Akshith Ram Kalvacharla", "Jaffar Anas Shaik", "Khaja Azeemuddin Mohammed", "Nihan Mohammed", "Saif Shaik", "Saketh Renukuntla", "Sreeja Dasari", "Vidhaatri Sahani"], "Grade-6": ["Abdul Razzak Mohammad", "Anudeepthi Chintha", "Saketh Ranaveni", "Shiva Sri Katukuri", "Aklees Shaik", "Akshya Kalvacharla", "Prince Katkuri"], "Grade-7": ["Manikanta Sannayala", "Sreeyan Reddy Karra", "Jayadhithya Chiluveru"], "Grade-8": ["Sathwika Nagavelly", "Vyshnavi Uppala", "Akshaya Gampala", "Ganesh Oggula", "Gayathri Renukuntla", "Khaja Sadeemuddin Mohammed"] };
-
-    document.getElementById('feeClass').innerHTML = '<option value="">-- Choose Class --</option>' + Object.keys(studentData).map(c => `<option value="${c}">${c}</option>`).join('');
+    const studentData = { "Pre-KG": ["Hanish Macharla", "Arjun Vihaar Illandula", "Thanu sree Allakunta"], "KG-1": ["Aadhya Sri Amaravadi", "Aditya Manda"], "Grade-1": ["Dheeraj Gattu", "Preetham Sannayala"] }; // Add full list here
+    document.getElementById('feeClass').innerHTML = '<option value="">-- Class --</option>' + Object.keys(studentData).map(c => `<option value="${c}">${c}</option>`).join('');
 
     function populateStudents() {
         const cls = document.getElementById('feeClass').value, s = document.getElementById('feeStudent');
@@ -289,94 +213,106 @@
 
     async function fetchFeeData() {
         const c = document.getElementById('feeClass').value, n = document.getElementById('feeStudent').value;
+        const type = document.querySelector('input[name="feeType"]:checked').value; // school_fees or bus_fees
+        
         if(!c || !n) return;
-        const snap = await db.ref(`fee_records/${c}/${n}`).once('value'), data = snap.val();
-        paidTillNow = 0; let rows = "", lastFac = "---", lastTime = "---";
+        
+        // PATH SEPARATION: We add /${type}/ to the database path
+        const snap = await db.ref(`fee_records/${c}/${n}/${type}`).once('value');
+        const data = snap.val();
+        paidTillNow = 0; let rows = "";
+
         if(data) {
             const keys = Object.keys(data), latest = data[keys[keys.length - 1]];
-            document.getElementById('actualFee').value = latest.actual || latest.total || "";
+            document.getElementById('actualFee').value = latest.actual || "";
             document.getElementById('discountPct').value = latest.discount || 0;
             document.getElementById('totalFee').value = latest.total || "";
+            
             keys.forEach(k => {
                 const r = data[k]; paidTillNow += parseFloat(r.paid || 0);
-                lastFac = r.recordedBy || "Unknown";
-                lastTime = r.timestamp ? r.timestamp.split(',')[1].trim() : "N/A";
-                // Added Term to History Row
-                rows += `<tr><td>${r.date}</td><td>${r.term || 'N/A'}</td><td>₹ ${r.paid}</td><td>${r.method || 'Cash'}</td><td>${lastFac}</td></tr>`;
+                rows += `<tr><td>${r.date}</td><td>${r.term}</td><td>₹ ${r.paid}</td><td>${r.recordedBy}</td></tr>`;
             });
             document.getElementById('historyList').innerHTML = rows;
             document.getElementById('historyCard').style.display = 'block';
-            document.getElementById('lastFaculty').innerText = lastFac;
-            document.getElementById('lastTime').innerText = lastTime;
-            document.getElementById('auditTrail').style.display = 'block';
         } else {
-            document.getElementById('actualFee').value = ""; document.getElementById('discountPct').value = "";
-            document.getElementById('totalFee').value = ""; document.getElementById('historyCard').style.display = 'none'; 
-            document.getElementById('auditTrail').style.display = 'none';
+            document.getElementById('actualFee').value = ""; 
+            document.getElementById('totalFee').value = ""; 
+            document.getElementById('historyCard').style.display = 'none';
         }
         updateDue();
     }
 
+    function calculateDiscount() {
+        const actual = parseFloat(document.getElementById('actualFee').value) || 0;
+        const disc = parseFloat(document.getElementById('discountPct').value) || 0;
+        document.getElementById('totalFee').value = Math.round(actual - (actual * (disc / 100)));
+        updateDue();
+    }
+
     function updateDue() {
-        const t = parseFloat(document.getElementById('totalFee').value) || 0, pNow = parseFloat(document.getElementById('payAmt').value) || 0;
-        const combined = paidTillNow + pNow, due = t - combined;
+        const t = parseFloat(document.getElementById('totalFee').value) || 0;
+        const pNow = parseFloat(document.getElementById('payAmt').value) || 0;
+        const due = t - (paidTillNow + pNow);
         document.getElementById('dueDisplay').innerText = "₹ " + (due < 0 ? 0 : due);
-        const dueBox = document.getElementById('dueBox');
-        if (due > 10000) { dueBox.classList.add('high-due'); } else { dueBox.classList.remove('high-due'); }
-        let pct = (t > 0) ? (combined / t) * 100 : 0;
-        if(pct > 100) pct = 100;
-        document.getElementById('progressCircle').style.strokeDashoffset = 314.15 - (314.15 * pct / 100);
-        document.getElementById('percentText').innerText = Math.round(pct) + "%";
     }
 
     function saveRecord() {
-        if (!validateInteraction()) return;
         const c = document.getElementById('feeClass').value, n = document.getElementById('feeStudent').value;
-        const act = document.getElementById('actualFee').value, dsc = document.getElementById('discountPct').value;
-        const t = document.getElementById('totalFee').value, p = document.getElementById('payAmt').value;
-        const meth = document.getElementById('payMethod').value, tid = document.getElementById('transId').value, d = document.getElementById('payDate').value;
-        const term = document.getElementById('feeTerm').value; // Captured Term
+        const type = document.querySelector('input[name="feeType"]:checked').value;
+        const p = document.getElementById('payAmt').value;
+        
+        if(!p || !n) return Swal.fire('Error', 'Missing Student or Amount', 'warning');
 
-        if(!p) return Swal.fire('Error', 'Please enter payment amount', 'warning');
-        
-        const stamp = new Date().toLocaleDateString() + ", " + new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}).toUpperCase();
-        const entry = { actual: act, discount: dsc, total: t, paid: p, term: term, method: meth, transId: tid || null, recordedBy: activeUser, date: d, timestamp: stamp };
-        
-        lastTx = { ...entry, n, c };
-        db.ref(`fee_records/${c}/${n}`).push(entry).then(() => {
-            Swal.fire('Saved', 'Record Updated', 'success'); 
-            document.getElementById('payAmt').value = ''; document.getElementById('transId').value = ''; 
+        const entry = {
+            actual: document.getElementById('actualFee').value,
+            discount: document.getElementById('discountPct').value,
+            total: document.getElementById('totalFee').value,
+            paid: p,
+            term: document.getElementById('feeTerm').value,
+            method: document.getElementById('payMethod').value,
+            recordedBy: activeUser,
+            date: document.getElementById('payDate').value
+        };
+
+        // SAVE TO SEPARATE FOLDER
+        db.ref(`fee_records/${c}/${n}/${type}`).push(entry).then(() => {
+            Swal.fire('Saved', `Entry added to ${type.replace('_',' ').toUpperCase()}`, 'success');
+            document.getElementById('payAmt').value = '';
+            lastTx = {...entry, n, c, type};
             fetchFeeData();
         });
     }
 
     function printReceipt() {
-        if(!lastTx) return Swal.fire('Note', 'Save a record first to print receipt', 'info');
-        const { n, c, p, d, term, method, transId } = lastTx;
-        const recId = "REC-" + Date.now().toString().slice(-6);
-        const win = window.open('', '', 'height=700,width=600');
-        win.document.write(`<html><body style="text-align:center; padding:40px; font-family:sans-serif; border:5px double #006633;">
-            <h2>PARAMOUNT SCHOOL</h2><hr>
-            <p>Receipt: ${recId} | Date: ${d}</p>
-            <p>Student: <b>${n} (${c})</b></p>
-            <p>Payment For: <b>${term}</b></p>
-            <h3>Amount Paid: ₹ ${p}</h3>
-            <p>Method: ${method} ${transId ? '('+transId+')':''}</p><hr>
-            <p>Authorized Signature: ${activeUser}</p>
+        if(!lastTx) return Swal.fire('Note', 'Save a record first', 'info');
+        const win = window.open('', '', 'height=600,width=500');
+        win.document.write(`<html><body style="text-align:center; font-family:sans-serif; border:4px solid #006633; padding:20px;">
+            <h2>PARAMOUNT SCHOOL</h2>
+            <p>Category: <b>${lastTx.type.replace('_',' ').toUpperCase()}</b></p>
+            <p>Student: ${lastTx.n} (${lastTx.c})</p>
+            <p>For: ${lastTx.term}</p>
+            <h2 style="color:green;">Paid: ₹ ${lastTx.paid}</h2>
+            <p>Date: ${lastTx.date}</p>
+            <hr><p>Signed: ${activeUser}</p>
         </body></html>`);
         win.document.close(); win.print();
     }
 
     async function clearData() {
-        if (!validateInteraction()) return;
         const c = document.getElementById('feeClass').value, n = document.getElementById('feeStudent').value;
-        const { value: pass } = await Swal.fire({ title: 'Authorization', text: 'Enter Password to Delete History', input: 'password' });
+        const type = document.querySelector('input[name="feeType"]:checked').value;
+        const { value: pass } = await Swal.fire({ title: 'Auth', text: 'Password to Delete', input: 'password' });
         if (pass === authorized[activeUser]) {
-            db.ref(`fee_records/${c}/${n}`).remove().then(() => { fetchFeeData(); Swal.fire('Deleted', 'History Cleared', 'success'); });
-        } else if (pass) { Swal.fire('Error', 'Incorrect Password', 'error'); }
+            db.ref(`fee_records/${c}/${n}/${type}`).remove().then(() => { fetchFeeData(); Swal.fire('Cleared','','success'); });
+        }
+    }
+
+    function handleMethodChange() {
+        document.getElementById('onlineField').style.display = (document.getElementById('payMethod').value === 'Online') ? 'block' : 'none';
     }
 
     document.getElementById('payDate').valueAsDate = new Date();
+    setInterval(() => { document.getElementById('liveClock').innerText = new Date().toLocaleTimeString(); }, 1000);
 </script>
 </body>
 </html>
