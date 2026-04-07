@@ -132,9 +132,21 @@
             <select id="feeStudent" onchange="fetchFeeData()"><option value="">-- Select Student --</option></select>
             
             <div class="calc-row">
-                <div><label>TOTAL FEE</label><input type="number" id="totalFee" onfocus="validateInteraction(this)" oninput="updateDue()"></div>
-                <div><label>PAYING NOW</label><input type="number" id="payAmt" onfocus="validateInteraction(this)" oninput="updateDue()"></div>
+                <div>
+                    <label>ACTUAL TOTAL FEE</label>
+                    <input type="number" id="actualFee" onfocus="validateInteraction(this)" oninput="calculateDiscount()" placeholder="e.g. 30000">
+                </div>
+                <div>
+                    <label>DISCOUNT (%)</label>
+                    <input type="number" id="discountPct" onfocus="validateInteraction(this)" oninput="calculateDiscount()" placeholder="0">
+                </div>
             </div>
+
+            <label>PAYABLE TOTAL FEE (AFTER DISCOUNT)</label>
+            <input type="number" id="totalFee" readonly style="background: #eef2f7; color: #006633;" placeholder="Calculated automatically">
+
+            <label>PAYING NOW</label>
+            <input type="number" id="payAmt" onfocus="validateInteraction(this)" oninput="updateDue()">
 
             <label>PAYMENT METHOD</label>
             <select id="payMethod" onfocus="validateInteraction(this)" onchange="handleMethodChange()">
@@ -198,8 +210,10 @@
     function updateClock() { document.getElementById('liveClock').innerText = new Date().toLocaleTimeString().toUpperCase(); }
     setInterval(updateClock, 1000); updateClock();
 
-    // SMART VALIDATION GUARD
+    // SMART VALIDATION GUARD (FIXED DOUBLE POPUP)
     function validateInteraction(el) {
+        if (Swal.isVisible()) return; // Don't trigger if alert is already open
+
         const cls = document.getElementById('feeClass').value;
         const stu = document.getElementById('feeStudent').value;
         
@@ -209,16 +223,24 @@
         else if (!stu) msg = "Please select Student Name";
 
         if (msg) {
+            if (el) el.blur(); 
             Swal.fire({
                 title: 'Selection Required',
                 text: msg,
                 icon: 'warning',
                 confirmButtonColor: '#006633'
             });
-            if (el) el.blur(); // Remove focus from input to prevent typing
             return false;
         }
         return true;
+    }
+
+    function calculateDiscount() {
+        const actual = parseFloat(document.getElementById('actualFee').value) || 0;
+        const disc = parseFloat(document.getElementById('discountPct').value) || 0;
+        const discountedTotal = actual - (actual * (disc / 100));
+        document.getElementById('totalFee').value = Math.round(discountedTotal);
+        updateDue();
     }
 
     function handleMethodChange() {
@@ -256,22 +278,33 @@
         const c = document.getElementById('feeClass').value, n = document.getElementById('feeStudent').value;
         if(!c || !n) return;
         const snap = await db.ref(`fee_records/${c}/${n}`).once('value'), data = snap.val();
-        paidTillNow = 0; let totalV = "", rows = "", lastFac = "---", lastTime = "---";
+        paidTillNow = 0; let rows = "", lastFac = "---", lastTime = "---";
+        
         if(data) {
-            Object.keys(data).forEach(k => {
-                const r = data[k]; paidTillNow += parseFloat(r.paid || 0); totalV = r.total;
+            const keys = Object.keys(data);
+            const latest = data[keys[keys.length - 1]];
+            
+            document.getElementById('actualFee').value = latest.actual || latest.total || "";
+            document.getElementById('discountPct').value = latest.discount || 0;
+            document.getElementById('totalFee').value = latest.total || "";
+
+            keys.forEach(k => {
+                const r = data[k]; paidTillNow += parseFloat(r.paid || 0);
                 lastFac = r.recordedBy || "Unknown";
                 lastTime = r.timestamp ? r.timestamp.split(',')[1].trim() : "N/A";
                 rows += `<tr><td>${r.date}</td><td>₹ ${r.paid}</td><td>${r.method || 'Cash'}</td><td>${r.transId || '-'}</td><td>${lastFac}</td></tr>`;
             });
-            document.getElementById('totalFee').value = totalV;
             document.getElementById('historyList').innerHTML = rows;
             document.getElementById('historyCard').style.display = 'block';
             document.getElementById('lastFaculty').innerText = lastFac;
             document.getElementById('lastTime').innerText = lastTime;
             document.getElementById('auditTrail').style.display = 'block';
         } else {
-            document.getElementById('totalFee').value = ""; document.getElementById('historyCard').style.display = 'none'; document.getElementById('auditTrail').style.display = 'none';
+            document.getElementById('actualFee').value = ""; 
+            document.getElementById('discountPct').value = "";
+            document.getElementById('totalFee').value = ""; 
+            document.getElementById('historyCard').style.display = 'none'; 
+            document.getElementById('auditTrail').style.display = 'none';
         }
         updateDue();
     }
@@ -291,19 +324,27 @@
     }
 
     function saveRecord() {
-        if (!validateInteraction()) return; // Check selection before saving
+        if (!validateInteraction()) return;
         const c = document.getElementById('feeClass').value, n = document.getElementById('feeStudent').value;
-        const t = document.getElementById('totalFee').value, p = document.getElementById('payAmt').value, meth = document.getElementById('payMethod').value, tid = document.getElementById('transId').value, d = document.getElementById('payDate').value;
+        const act = document.getElementById('actualFee').value;
+        const dsc = document.getElementById('discountPct').value;
+        const t = document.getElementById('totalFee').value;
+        const p = document.getElementById('payAmt').value;
+        const meth = document.getElementById('payMethod').value;
+        const tid = document.getElementById('transId').value;
+        const d = document.getElementById('payDate').value;
         
         if(!p) return Swal.fire('Error', 'Please enter payment amount', 'warning');
-        if(meth === 'Online' && tid.length < 5) return Swal.fire('Error', 'Enter 5-digit Transaction ID', 'warning');
         
         const stamp = new Date().toLocaleDateString() + ", " + new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}).toUpperCase();
-        const entry = { total: t, paid: p, method: meth, transId: tid || null, recordedBy: activeUser, date: d, timestamp: stamp };
+        const entry = { actual: act, discount: dsc, total: t, paid: p, method: meth, transId: tid || null, recordedBy: activeUser, date: d, timestamp: stamp };
         lastTx = { ...entry, n, c };
         
         db.ref(`fee_records/${c}/${n}`).push(entry).then(() => {
-            Swal.fire('Saved', 'Record Updated', 'success'); document.getElementById('payAmt').value = ''; document.getElementById('transId').value = ''; fetchFeeData();
+            Swal.fire('Saved', 'Record Updated', 'success'); 
+            document.getElementById('payAmt').value = ''; 
+            document.getElementById('transId').value = ''; 
+            fetchFeeData();
         });
     }
 
@@ -317,7 +358,7 @@
     }
 
     async function clearData() {
-        if (!validateInteraction()) return; // Check selection before wiping
+        if (!validateInteraction()) return;
         const c = document.getElementById('feeClass').value, n = document.getElementById('feeStudent').value;
         const { value: pass } = await Swal.fire({ title: 'Authorization', text: 'Enter Password to Delete', input: 'password' });
         if (pass === authorized[activeUser]) {
