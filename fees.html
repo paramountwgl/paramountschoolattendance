@@ -15,7 +15,8 @@
         /* Access Page */
         .overlay-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--light); z-index: 1000; display: flex; justify-content: center; align-items: center; padding: 15px; }
         .auth-box { background: white; padding: 40px 25px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); width: 100%; max-width: 420px; border-bottom: 5px solid var(--forest); text-align: center; }
-        .btn-access-back { display: block; margin-top: 15px; color: #666; font-size: 12px; font-weight: 700; text-decoration: none; text-transform: uppercase; }
+        .btn-access-back { display: inline-block; margin-top: 20px; color: #666; font-size: 11px; font-weight: 700; text-decoration: none; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid #ccc; padding-bottom: 2px; }
+        .btn-access-back:hover { color: var(--forest); border-color: var(--forest); }
 
         /* Header */
         header { background: var(--forest); color: white; padding: 12px 4%; border-bottom: 4px solid var(--gold); box-shadow: 0 4px 12px rgba(0,0,0,0.15); position: sticky; top: 0; z-index: 100; }
@@ -47,14 +48,6 @@
         
         select, input { width: 100%; padding: 12px; border-radius: 10px; border: 2px solid #eee; font-size: 16px; margin-bottom: 10px; outline: none; background: #fafafa; font-weight: 600; }
 
-        /* Progress Circle */
-        .chart-container { display: flex; flex-direction: column; align-items: center; margin: 25px 0; background: #f9f9f9; padding: 20px; border-radius: 15px; border: 1px solid #eee; }
-        .circular-progress { position: relative; width: 120px; height: 120px; display: flex; align-items: center; justify-content: center; }
-        .circular-progress svg { width: 120px; height: 120px; transform: rotate(-90deg); }
-        .circle-bg { fill: none; stroke: #eee; stroke-width: 10; cx: 60; cy: 60; r: 50; }
-        .circle-bar { fill: none; stroke: var(--forest); stroke-width: 10; cx: 60; cy: 60; r: 50; stroke-dasharray: 314.15; stroke-dashoffset: 314.15; transition: 0.8s; stroke-linecap: round; }
-        .percentage-text { position: absolute; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 1.3rem; color: #333; }
-
         .action-flex { display: flex; gap: 10px; margin-top: 25px; }
         .btn-action { color: white; border: none; padding: 16px; border-radius: 50px; font-weight: 700; cursor: pointer; flex: 1; text-transform: uppercase; font-size: 13px; }
         .btn-save { background: var(--forest); border: 2px solid var(--gold); }
@@ -73,14 +66,19 @@
         <img src="logo.png" style="height:75px; margin-bottom:10px;">
         <h2 style="font-family:'Montserrat';">PARAMOUNT</h2>
         <p style="color:var(--forest); font-weight:800; font-size:11px; text-transform:uppercase;">Fee Entry Access</p>
-        <select id="staffName" style="margin-top:20px;">
+        
+        <select id="staffName" onchange="clearPass()" style="margin-top:20px;">
             <option value="">-- Select Staff --</option>
             <option value="Mr. Ahmad">Mr. Ahmad</option>
             <option value="Ms. Roqiya">Ms. Roqiya</option>
             <option value="Ms. Jyothi">Ms. Jyothi</option>
         </select>
-        <input type="password" id="staffPass" placeholder="Password">
+        
+        <input type="password" id="staffPass" placeholder="Password" autocomplete="new-password">
+        
         <button onclick="unlockFees()" style="background:var(--forest); color:white; border:none; width:100%; padding:15px; border-radius:50px; font-weight:800; cursor:pointer; margin-top:10px;">Unlock Portal</button>
+        
+        <a href="index.html" class="btn-access-back"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
     </div>
 </div>
 
@@ -128,7 +126,6 @@
             </div>
 
             <div id="paymentArea">
-                <label style="color: var(--forest); font-weight: 800;">PAYMENT DETAILS</label>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top:10px;">
                     <div><label>AMOUNT</label><input type="number" id="payAmt" oninput="handleAmountInput()"></div>
                     <div><label>METHOD</label><select id="payMethod" onchange="handleMethodChange()"><option value="Cash">Cash</option><option value="Online">Online</option></select></div>
@@ -139,26 +136,9 @@
 
             <div id="dueBox" class="due-box"><span>TOTAL BALANCE DUE</span><br><strong id="dueDisplay">₹ 0</strong></div>
 
-            <div class="chart-container">
-                <div class="circular-progress">
-                    <svg viewBox="0 0 120 120"><circle class="circle-bg" cx="60" cy="60" r="50"></circle><circle id="progressCircle" class="circle-bar" cx="60" cy="60" r="50"></circle></svg>
-                    <div id="percentText" class="percentage-text">0%</div>
-                </div>
-            </div>
-
             <div class="action-flex">
                 <button class="btn-action btn-save" onclick="saveRecord()">Update Record</button>
                 <button class="btn-action btn-wipe" onclick="confirmWipe()">Wipe</button>
-            </div>
-        </div>
-
-        <div class="card" id="historyCard" style="display:none;">
-            <h3><i class="fas fa-history"></i> Payment History</h3>
-            <div id="historyListWrapper">
-                <table class="history-table" style="width:100%; border-collapse: collapse;">
-                    <thead><tr style="text-align:left; font-size:10px; color:#666;"><th>Date</th><th>Amount</th><th>Term</th><th>By</th></tr></thead>
-                    <tbody id="historyList"></tbody>
-                </table>
             </div>
         </div>
     </div>
@@ -173,6 +153,11 @@
     let activeUser = "", paidTillNow = 0, selectedTerm = "";
     let termTotals = { "Term 1": 0, "Term 2": 0, "Term 3": 0 };
 
+    // Clear password when staff selection changes
+    function clearPass() {
+        document.getElementById('staffPass').value = "";
+    }
+
     function unlockFees() {
         const n = document.getElementById('staffName').value, p = document.getElementById('staffPass').value;
         if(p && p === authorized[n]) {
@@ -182,7 +167,6 @@
         } else { Swal.fire('Error', 'Incorrect Password', 'error'); }
     }
 
-    // MANDATORY SELECTION CHECK
     function checkSelection() {
         const cls = document.getElementById('feeClass').value;
         const stu = document.getElementById('feeStudent').value;
@@ -194,7 +178,7 @@
     }
 
     function selectTerm(term) {
-        if (!checkSelection()) return; // Trigger popup if no student selected
+        if (!checkSelection()) return;
         selectedTerm = term;
         document.querySelectorAll('.term-card').forEach(card => card.classList.remove('selected'));
         document.getElementById(`card-${term.replace(' ', '-')}`).classList.add('selected');
@@ -202,7 +186,7 @@
 
     function handleAmountInput() {
         if (!checkSelection()) {
-            document.getElementById('payAmt').value = ""; // Clear input if no student
+            document.getElementById('payAmt').value = "";
             return;
         }
         updateDue();
@@ -231,48 +215,36 @@
         if(!c || !n) return;
         const snap = await db.ref(`fee_records/${c}/${n}`).once('value'), data = snap.val();
         paidTillNow = 0; termTotals = { "Term 1": 0, "Term 2": 0, "Term 3": 0 };
-        let historyHtml = "", goals = {g1:0, g2:0, g3:0};
+        let goals = {g1:0, g2:0, g3:0};
         
         if(data) {
             Object.keys(data).forEach(k => {
                 const r = data[k]; paidTillNow += parseFloat(r.paid || 0);
                 if(r.term) termTotals[r.term] = (termTotals[r.term] || 0) + parseFloat(r.paid);
                 if(r.goals) goals = r.goals;
-                historyHtml += `<tr><td>${r.date}</td><td>₹${r.paid}</td><td>${r.term}</td><td>${r.recordedBy}</td></tr>`;
             });
             document.getElementById('goal1').value = goals.g1; document.getElementById('goal2').value = goals.g2; document.getElementById('goal3').value = goals.g3;
-            document.getElementById('historyList').innerHTML = historyHtml;
-            document.getElementById('historyCard').style.display = 'block';
-        } else {
-            document.getElementById('historyCard').style.display = 'none';
         }
         calculateTotalFromGoals();
-        selectedTerm = ""; // Clear selection for new student
+        selectedTerm = ""; 
         document.querySelectorAll('.term-card').forEach(card => card.classList.remove('selected'));
     }
 
     function updateDue() {
         const totalYearlyGoal = parseFloat(document.getElementById('totalFee').value) || 0;
         const pInput = parseFloat(document.getElementById('payAmt').value) || 0;
-        
         document.getElementById('t1Amt').innerText = `₹${termTotals["Term 1"]}`;
         document.getElementById('t2Amt').innerText = `₹${termTotals["Term 2"]}`;
         document.getElementById('t3Amt').innerText = `₹${termTotals["Term 3"]}`;
-        
         const balance = totalYearlyGoal - (paidTillNow + pInput);
         document.getElementById('dueDisplay').innerText = "₹ " + (balance < 0 ? 0 : balance);
-        
-        let pct = (totalYearlyGoal > 0) ? ((paidTillNow + pInput) / totalYearlyGoal) * 100 : 0;
-        document.getElementById('progressCircle').style.strokeDashoffset = 314.15 - (314.15 * Math.min(pct, 100) / 100);
-        document.getElementById('percentText').innerText = Math.round(pct) + "%";
     }
 
     function saveRecord() {
         if(!checkSelection()) return;
-        if(!selectedTerm) return Swal.fire('Select Term', 'Please click on Term 1, 2, or 3.', 'warning');
-        
+        if(!selectedTerm) return Swal.fire('Select Term', 'Please click on a Term card.', 'warning');
         let amt = parseFloat(document.getElementById('payAmt').value) || 0;
-        if(amt <= 0) return Swal.fire('Error', 'Enter payment amount', 'warning');
+        if(amt <= 0) return Swal.fire('Error', 'Enter amount', 'warning');
 
         const goals = { g1: parseFloat(document.getElementById('goal1').value) || 0, g2: parseFloat(document.getElementById('goal2').value) || 0, g3: parseFloat(document.getElementById('goal3').value) || 0 };
         const entry = { paid: amt, term: selectedTerm, date: document.getElementById('payDate').value, method: document.getElementById('payMethod').value, recordedBy: activeUser, goals: goals };
