@@ -6,6 +6,7 @@
     <title>Fee Portal | Paramount School</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Segoe+UI:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="logo.png">
     <style>
         :root { --forest: #006633; --gold: #ffd700; --danger: #c62828; --light: #f4f7f6; --sky: #2196f3; --dark-green: #004d26; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; } 
@@ -27,19 +28,35 @@
 
         .nav-tools { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
         .live-clock { font-family: 'Montserrat', sans-serif; font-weight: 800; color: var(--gold); font-size: 13px; text-transform: uppercase; }
-        .btn-signout { background: rgba(255,255,255,0.1); border: 1.5px solid white; color: white; padding: 5px 18px; border-radius: 50px; font-size: 10px; font-weight: 800; text-transform: uppercase; cursor: pointer; transition: 0.3s; }
+        .btn-signout { 
+            background: rgba(255,255,255,0.1); border: 1.5px solid white; color: white; 
+            padding: 5px 18px; border-radius: 50px; font-size: 10px; font-weight: 800; 
+            text-transform: uppercase; cursor: pointer; transition: 0.3s;
+        }
 
         .container { max-width: 650px; margin: 25px auto; padding: 0 15px; }
         .card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); border-top: 8px solid var(--forest); margin-bottom: 25px; }
         h3 { color: var(--forest); margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; display: flex; align-items: center; gap: 8px; font-size: 1.1rem; text-transform: uppercase; font-weight: 800; }
         
-        label { font-size: 11px; font-weight: 800; color: #666; text-transform: uppercase; margin-bottom: 5px; display: block; margin-left: 5px; }
-        select, input { width: 100%; padding: 12px; border-radius: 10px; border: 2px solid #eee; font-size: 16px; margin-bottom: 15px; outline: none; background: #fafafa; font-weight: 600; }
-        
-        .calc-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .due-box { background: #fff5f5; border: 1px solid #ffcdd2; padding: 15px; border-radius: 15px; text-align: center; margin-top: 20px; }
+        .due-box { background: #fff5f5; border: 1px solid #ffcdd2; padding: 15px; border-radius: 15px; text-align: center; margin-top: 20px; transition: 0.3s; }
         .due-box strong { font-size: 24px; color: var(--danger); }
+        .due-box.high-due { border-color: var(--danger); animation: pulseRed 1.5s infinite; }
+        @keyframes pulseRed { 0% { box-shadow: 0 0 0 0 rgba(198, 40, 40, 0.4); } 70% { box-shadow: 0 0 0 15px rgba(198, 40, 40, 0); } 100% { box-shadow: 0 0 0 0 rgba(198, 40, 40, 0); } }
 
+        .chart-container { display: flex; flex-direction: column; align-items: center; margin-top: 25px; background: #f9f9f9; padding: 25px; border-radius: 15px; border: 1px solid #eee; }
+        .circular-progress { position: relative; width: 120px; height: 120px; display: flex; align-items: center; justify-content: center; }
+        .circular-progress svg { width: 120px; height: 120px; transform: rotate(-90deg); }
+        .circle-bg { fill: none; stroke: #eee; stroke-width: 10; cx: 60; cy: 60; r: 50; }
+        .circle-bar { fill: none; stroke: var(--forest); stroke-width: 10; cx: 60; cy: 60; r: 50; stroke-dasharray: 314.15; stroke-dashoffset: 314.15; transition: 0.8s; stroke-linecap: round; }
+        .percentage-text { position: absolute; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 1.3rem; color: #333; }
+
+        .audit-trail { margin-top: 15px; text-align: center; font-size: 11px; font-weight: 700; color: #666; border-top: 1px dashed #ccc; padding-top: 10px; width: 100%; display: none; }
+        .audit-trail span { color: var(--forest); }
+
+        label { font-size: 10px; font-weight: 800; color: #666; text-transform: uppercase; margin-bottom: 4px; display: block; margin-left: 5px; }
+        select, input { width: 100%; padding: 12px; border-radius: 10px; border: 2px solid #eee; font-size: 16px; margin-bottom: 12px; outline: none; background: #fafafa; font-weight: 600; }
+        .calc-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        
         .action-flex { display: flex; gap: 10px; margin-top: 25px; }
         .btn-action { color: white; border: none; padding: 16px; border-radius: 50px; font-weight: 700; cursor: pointer; flex: 1; text-transform: uppercase; font-size: 13px; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .btn-save { background: linear-gradient(135deg, var(--forest), #004d26); border: 2px solid var(--gold); }
@@ -53,8 +70,12 @@
 
         .overlay-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--light); z-index: 1000; display: flex; justify-content: center; align-items: center; padding: 15px; }
         .auth-box { background: white; padding: 40px 25px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); width: 100%; max-width: 420px; border-bottom: 5px solid var(--forest); text-align: center; }
-        .btn-premium-unlock { background: linear-gradient(135deg, var(--forest), #004d26); color: white; padding: 15px; border-radius: 50px; font-weight: 800; border: 2px solid var(--gold); cursor: pointer; width: 100%; height: 55px; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; margin-top: 15px; text-transform: uppercase; font-size: 14px; }
+        .btn-premium-unlock { 
+            background: linear-gradient(135deg, var(--forest), #004d26); color: white; padding: 15px; border-radius: 50px; font-weight: 800; border: 2px solid var(--gold); 
+            cursor: pointer; width: 100%; height: 55px; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; margin-top: 15px; text-transform: uppercase; font-size: 14px;
+        }
 
+        #onlineField { display: none; }
         @media (max-width: 600px) { .calc-row { grid-template-columns: 1fr; } .school-name-sub, .divider-line { display: none; } }
     </style>
 </head>
@@ -68,14 +89,16 @@
     <div class="auth-box">
         <img src="logo.png" style="height:75px; margin-bottom:10px;">
         <div class="auth-branding-text"><h2>PARAMOUNT</h2><p style="color:var(--gold); font-weight:800; font-size:11px; text-transform:uppercase;">Fee Entry Access</p></div>
-        <select id="staffName" style="margin-top:20px;">
+        <select id="staffName" class="auth-input" style="margin-top:20px;" autocomplete="off">
             <option value="">-- Select Staff --</option>
             <option value="Mr. Ahmad">Mr. Ahmad</option>
             <option value="Ms. Roqiya">Ms. Roqiya</option>
             <option value="Ms. Jyothi">Ms. Jyothi</option>
         </select>
-        <input type="password" id="staffPass" placeholder="Password" onkeypress="if(event.key === 'Enter') unlockFees()">
+        <input type="password" id="staffPass" class="auth-input" placeholder="Password" autocomplete="new-password" onkeypress="if(event.key === 'Enter') unlockFees()">
         <button onclick="unlockFees()" class="btn-premium-unlock">Unlock Portal <i class="fas fa-unlock"></i></button>
+        <button onclick="window.location.href='index.html'" style="margin-top:12px; background:#f1f5f9; border:none; color:#475569; padding:12px; border-radius:50px; font-weight:700; width:100%; cursor:pointer; font-size:10px; text-transform:uppercase;">Return to Dashboard</button>
+        <div style="margin-top:20px;"><a onclick="handleForgotPassword()" style="color:#999; font-size:12px; text-decoration:underline; cursor:pointer; font-weight:bold;">Forgot Password?</a></div>
     </div>
 </div>
 
@@ -83,11 +106,20 @@
     <header>
         <div class="header-content">
             <div class="brand-group">
-                <div class="header-left"><img src="logo.png" class="header-logo"><div class="school-branding"><span class="school-name-main">PARAMOUNT</span><span class="school-name-sub">ENGLISH MEDIUM SCHOOL</span></div></div>
+                <div class="header-left">
+                    <img src="logo.png" class="header-logo">
+                    <div class="school-branding">
+                        <span class="school-name-main">PARAMOUNT</span>
+                        <span class="school-name-sub">ENGLISH MEDIUM SCHOOL</span>
+                    </div>
+                </div>
                 <div class="divider-line"></div>
                 <div class="portal-label">FEE PORTAL</div>
             </div>
-            <div class="nav-tools"><div id="liveClock" class="live-clock">00:00:00</div><button class="btn-signout" onclick="location.reload()">Exit</button></div>
+            <div class="nav-tools">
+                <div id="liveClock" class="live-clock">00:00:00</div>
+                <button class="btn-signout" onclick="location.reload()">Exit</button>
+            </div>
         </div>
     </header>
 
@@ -102,34 +134,60 @@
             <label>STUDENT NAME</label>
             <select id="feeStudent" onchange="fetchFeeData()"><option value="">-- Select Student --</option></select>
 
-            <label>PAYMENT FOR (TERM)</label>
-            <select id="feeTerm">
-                <option value="Term 1">Term 1 (First Installment)</option>
-                <option value="Term 2">Term 2 (Second Installment)</option>
-                <option value="Term 3">Term 3 (Final Installment)</option>
-                <option value="Full Year">Full Year Payment</option>
-                <option value="Other">Other / Misc</option>
+            <label>FEE TERM (PAYMENT FOR)</label>
+            <select id="feeTerm" onfocus="validateInteraction(this)">
+                <option value="TERM - 1">TERM - 1</option>
+                <option value="TERM - 2">TERM - 2</option>
+                <option value="TERM - 3">TERM - 3</option>
+                <option value="FULL YEAR">FULL YEAR / ADMISSION</option>
+                <option value="MISC">MISC / TRANSPORT</option>
             </select>
             
             <div class="calc-row">
-                <div><label>ACTUAL TOTAL FEE</label><input type="number" id="actualFee" oninput="calculateDiscount()" placeholder="30000"></div>
-                <div><label>DISCOUNT (%)</label><input type="number" id="discountPct" oninput="calculateDiscount()" placeholder="0"></div>
+                <div>
+                    <label>ACTUAL TOTAL FEE</label>
+                    <input type="number" id="actualFee" onfocus="validateInteraction(this)" oninput="calculateDiscount()" placeholder="e.g. 30000">
+                </div>
+                <div>
+                    <label>DISCOUNT (%)</label>
+                    <input type="number" id="discountPct" onfocus="validateInteraction(this)" oninput="calculateDiscount()" placeholder="0">
+                </div>
             </div>
 
             <div class="calc-row">
-                <div><label>PAYABLE TOTAL</label><input type="number" id="totalFee" readonly style="background: #eef2f7; color: #006633;"></div>
-                <div><label>PAYING NOW</label><input type="number" id="payAmt" oninput="updateDue()" placeholder="Enter amount"></div>
+                <div>
+                    <label>PAYABLE TOTAL</label>
+                    <input type="number" id="totalFee" readonly style="background: #eef2f7; color: #006633;" placeholder="Auto-calc">
+                </div>
+                <div>
+                    <label>PAYING NOW</label>
+                    <input type="number" id="payAmt" onfocus="validateInteraction(this)" oninput="updateDue()" placeholder="Enter amount">
+                </div>
             </div>
 
             <label>PAYMENT METHOD</label>
-            <select id="payMethod" onchange="handleMethodChange()"><option value="Cash">Cash</option><option value="Online">Online Payment</option></select>
+            <select id="payMethod" onfocus="validateInteraction(this)" onchange="handleMethodChange()">
+                <option value="Cash">Cash</option>
+                <option value="Online">Online Payment</option>
+            </select>
 
-            <div id="onlineField" style="display:none;"><label>TX ID (LAST 5)</label><input type="text" id="transId" maxlength="5"></div>
+            <div id="onlineField">
+                <label>TRANSACTION ID (LAST 5 DIGITS)</label>
+                <input type="text" id="transId" maxlength="5" placeholder="e.g. 12345">
+            </div>
 
             <label>PAYMENT DATE</label>
-            <input type="date" id="payDate">
+            <input type="date" id="payDate" onfocus="validateInteraction(this)">
 
             <div id="dueBox" class="due-box"><span>BALANCE DUE</span><br><strong id="dueDisplay">₹ 0</strong></div>
+
+            <div class="chart-container">
+                <div class="circular-progress">
+                    <svg viewBox="0 0 120 120"><circle class="circle-bg" cx="60" cy="60" r="50"></circle><circle id="progressCircle" class="circle-bar" cx="60" cy="60" r="50"></circle></svg>
+                    <div id="percentText" class="percentage-text">0%</div>
+                </div>
+                <div id="auditTrail" class="audit-trail">LAST UPDATED BY: <span id="lastFaculty">---</span> AT <span id="lastTime">---</span></div>
+            </div>
 
             <div class="action-flex">
                 <button class="btn-action btn-save" onclick="saveRecord()">Update <i class="fas fa-save"></i></button>
@@ -138,12 +196,18 @@
             <button id="receiptBtn" class="btn-action btn-receipt" onclick="printReceipt()">Generate Receipt <i class="fas fa-print"></i></button>
         </div>
 
-        <div class="card" id="historyCard" style="display:none;">
+        <div class="card history-card" id="historyCard" style="display:none;">
             <h3><i class="fas fa-history"></i> Payment History</h3>
             <div class="history-table-wrapper">
                 <table class="history-table">
                     <thead>
-                        <tr><th>Date</th><th>Term</th><th>Amount</th><th>Method</th><th>Staff</th></tr>
+                        <tr>
+                            <th>Date</th>
+                            <th>Term</th>
+                            <th>Amount</th>
+                            <th>Method</th>
+                            <th>Staff</th>
+                        </tr>
                     </thead>
                     <tbody id="historyList"></tbody>
                 </table>
@@ -158,7 +222,53 @@
     const db = firebase.database();
 
     const authorized = { "Mr. Ahmad": "Ahmad@123", "Ms. Roqiya": "Roqiya@123", "Ms. Jyothi": "Jyothi@123" };
+    const recoveryPins = { "Mr. Ahmad": "Ahmad@07", "Ms. Roqiya": "Roqiya@07", "Ms. Jyothi": "Jyothi@07" };
     let activeUser = "", paidTillNow = 0, lastTx = null;
+
+    window.onload = function() {
+        document.getElementById('staffName').selectedIndex = 0;
+        document.getElementById('staffPass').value = "";
+    };
+
+    function updateClock() { document.getElementById('liveClock').innerText = new Date().toLocaleTimeString().toUpperCase(); }
+    setInterval(updateClock, 1000); updateClock();
+
+    function validateInteraction(el) {
+        if (Swal.isVisible()) return; 
+        const cls = document.getElementById('feeClass').value;
+        const stu = document.getElementById('feeStudent').value;
+        let msg = "";
+        if (!cls && !stu) msg = "Please select Class and Student Name";
+        else if (!cls) msg = "Please select Class";
+        else if (!stu) msg = "Please select Student Name";
+        if (msg) {
+            if (el) el.blur(); 
+            Swal.fire({ title: 'Selection Required', text: msg, icon: 'warning', confirmButtonColor: '#006633' });
+            return false;
+        }
+        return true;
+    }
+
+    function calculateDiscount() {
+        const actual = parseFloat(document.getElementById('actualFee').value) || 0;
+        const disc = parseFloat(document.getElementById('discountPct').value) || 0;
+        const discountedTotal = actual - (actual * (disc / 100));
+        document.getElementById('totalFee').value = Math.round(discountedTotal);
+        updateDue();
+    }
+
+    function handleMethodChange() {
+        const m = document.getElementById('payMethod').value;
+        document.getElementById('onlineField').style.display = (m === 'Online') ? 'block' : 'none';
+        if(m === 'Cash') document.getElementById('transId').value = "";
+    }
+
+    async function handleForgotPassword() {
+        const sel = document.getElementById('staffName').value;
+        if (!sel) return Swal.fire('Error', 'Select name first', 'warning');
+        const { value: pin } = await Swal.fire({ title: 'Recovery', text: `Enter PIN for ${sel}`, input: 'password' });
+        if (pin === recoveryPins[sel]) Swal.fire('Success', `Password: ${authorized[sel]}`, 'success');
+    }
 
     function unlockFees() {
         const n = document.getElementById('staffName').value, p = document.getElementById('staffPass').value;
@@ -178,79 +288,95 @@
         if(studentData[cls]) studentData[cls].forEach(st => s.innerHTML += `<option value="${st}">${st}</option>`);
     }
 
-    function calculateDiscount() {
-        const actual = parseFloat(document.getElementById('actualFee').value) || 0;
-        const disc = parseFloat(document.getElementById('discountPct').value) || 0;
-        document.getElementById('totalFee').value = Math.round(actual - (actual * (disc / 100)));
-        updateDue();
-    }
-
     async function fetchFeeData() {
         const c = document.getElementById('feeClass').value, n = document.getElementById('feeStudent').value;
         if(!c || !n) return;
         const snap = await db.ref(`fee_records/${c}/${n}`).once('value'), data = snap.val();
-        paidTillNow = 0; let rows = "";
+        paidTillNow = 0; let rows = "", lastFac = "---", lastTime = "---";
         if(data) {
             const keys = Object.keys(data), latest = data[keys[keys.length - 1]];
-            document.getElementById('actualFee').value = latest.actual || "";
+            document.getElementById('actualFee').value = latest.actual || latest.total || "";
             document.getElementById('discountPct').value = latest.discount || 0;
             document.getElementById('totalFee').value = latest.total || "";
             keys.forEach(k => {
                 const r = data[k]; paidTillNow += parseFloat(r.paid || 0);
-                rows += `<tr><td>${r.date}</td><td>${r.term || '-'}</td><td>₹ ${r.paid}</td><td>${r.method}</td><td>${r.recordedBy}</td></tr>`;
+                lastFac = r.recordedBy || "Unknown";
+                lastTime = r.timestamp ? r.timestamp.split(',')[1].trim() : "N/A";
+                // Added Term to History Row
+                rows += `<tr><td>${r.date}</td><td>${r.term || 'N/A'}</td><td>₹ ${r.paid}</td><td>${r.method || 'Cash'}</td><td>${lastFac}</td></tr>`;
             });
             document.getElementById('historyList').innerHTML = rows;
             document.getElementById('historyCard').style.display = 'block';
+            document.getElementById('lastFaculty').innerText = lastFac;
+            document.getElementById('lastTime').innerText = lastTime;
+            document.getElementById('auditTrail').style.display = 'block';
         } else {
-            document.getElementById('historyCard').style.display = 'none';
+            document.getElementById('actualFee').value = ""; document.getElementById('discountPct').value = "";
+            document.getElementById('totalFee').value = ""; document.getElementById('historyCard').style.display = 'none'; 
+            document.getElementById('auditTrail').style.display = 'none';
         }
         updateDue();
     }
 
     function updateDue() {
         const t = parseFloat(document.getElementById('totalFee').value) || 0, pNow = parseFloat(document.getElementById('payAmt').value) || 0;
-        document.getElementById('dueDisplay').innerText = "₹ " + Math.max(0, t - (paidTillNow + pNow));
+        const combined = paidTillNow + pNow, due = t - combined;
+        document.getElementById('dueDisplay').innerText = "₹ " + (due < 0 ? 0 : due);
+        const dueBox = document.getElementById('dueBox');
+        if (due > 10000) { dueBox.classList.add('high-due'); } else { dueBox.classList.remove('high-due'); }
+        let pct = (t > 0) ? (combined / t) * 100 : 0;
+        if(pct > 100) pct = 100;
+        document.getElementById('progressCircle').style.strokeDashoffset = 314.15 - (314.15 * pct / 100);
+        document.getElementById('percentText').innerText = Math.round(pct) + "%";
     }
 
     function saveRecord() {
+        if (!validateInteraction()) return;
         const c = document.getElementById('feeClass').value, n = document.getElementById('feeStudent').value;
-        const p = document.getElementById('payAmt').value, term = document.getElementById('feeTerm').value;
-        if(!c || !n || !p) return Swal.fire('Error', 'Missing Fields', 'warning');
+        const act = document.getElementById('actualFee').value, dsc = document.getElementById('discountPct').value;
+        const t = document.getElementById('totalFee').value, p = document.getElementById('payAmt').value;
+        const meth = document.getElementById('payMethod').value, tid = document.getElementById('transId').value, d = document.getElementById('payDate').value;
+        const term = document.getElementById('feeTerm').value; // Captured Term
+
+        if(!p) return Swal.fire('Error', 'Please enter payment amount', 'warning');
         
-        const entry = { 
-            actual: document.getElementById('actualFee').value, 
-            discount: document.getElementById('discountPct').value, 
-            total: document.getElementById('totalFee').value, 
-            paid: p, term: term, 
-            method: document.getElementById('payMethod').value, 
-            date: document.getElementById('payDate').value,
-            recordedBy: activeUser 
-        };
+        const stamp = new Date().toLocaleDateString() + ", " + new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}).toUpperCase();
+        const entry = { actual: act, discount: dsc, total: t, paid: p, term: term, method: meth, transId: tid || null, recordedBy: activeUser, date: d, timestamp: stamp };
+        
         lastTx = { ...entry, n, c };
         db.ref(`fee_records/${c}/${n}`).push(entry).then(() => {
-            Swal.fire('Saved', 'Record Updated', 'success');
-            document.getElementById('payAmt').value = '';
+            Swal.fire('Saved', 'Record Updated', 'success'); 
+            document.getElementById('payAmt').value = ''; document.getElementById('transId').value = ''; 
             fetchFeeData();
         });
     }
 
     function printReceipt() {
-        if(!lastTx) return Swal.fire('Note', 'Save a record first', 'info');
-        const win = window.open('', '', 'height=600,width=500');
-        win.document.write(`<html><body style="text-align:center; padding:30px; font-family:sans-serif; border:4px solid #006633;">
+        if(!lastTx) return Swal.fire('Note', 'Save a record first to print receipt', 'info');
+        const { n, c, p, d, term, method, transId } = lastTx;
+        const recId = "REC-" + Date.now().toString().slice(-6);
+        const win = window.open('', '', 'height=700,width=600');
+        win.document.write(`<html><body style="text-align:center; padding:40px; font-family:sans-serif; border:5px double #006633;">
             <h2>PARAMOUNT SCHOOL</h2><hr>
-            <p>Student: <b>${lastTx.n}</b></p>
-            <p>Payment for: <b>${lastTx.term}</b></p>
-            <h3>Amount Paid: ₹ ${lastTx.paid}</h3>
-            <p>Method: ${lastTx.method} | Date: ${lastTx.date}</p>
-            <p>Received by: ${lastTx.recordedBy}</p>
+            <p>Receipt: ${recId} | Date: ${d}</p>
+            <p>Student: <b>${n} (${c})</b></p>
+            <p>Payment For: <b>${term}</b></p>
+            <h3>Amount Paid: ₹ ${p}</h3>
+            <p>Method: ${method} ${transId ? '('+transId+')':''}</p><hr>
+            <p>Authorized Signature: ${activeUser}</p>
         </body></html>`);
         win.document.close(); win.print();
     }
 
-    function handleMethodChange() { document.getElementById('onlineField').style.display = (document.getElementById('payMethod').value === 'Online') ? 'block' : 'none'; }
-    function updateClock() { document.getElementById('liveClock').innerText = new Date().toLocaleTimeString().toUpperCase(); }
-    setInterval(updateClock, 1000); updateClock();
+    async function clearData() {
+        if (!validateInteraction()) return;
+        const c = document.getElementById('feeClass').value, n = document.getElementById('feeStudent').value;
+        const { value: pass } = await Swal.fire({ title: 'Authorization', text: 'Enter Password to Delete History', input: 'password' });
+        if (pass === authorized[activeUser]) {
+            db.ref(`fee_records/${c}/${n}`).remove().then(() => { fetchFeeData(); Swal.fire('Deleted', 'History Cleared', 'success'); });
+        } else if (pass) { Swal.fire('Error', 'Incorrect Password', 'error'); }
+    }
+
     document.getElementById('payDate').valueAsDate = new Date();
 </script>
 </body>
