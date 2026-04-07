@@ -126,8 +126,10 @@
         <div id="staffDisplay" style="text-align:center; font-weight:800; color:var(--forest); background:#e8f5e9; padding:10px; border-radius:12px; margin-bottom:15px; font-size:12px;"></div>
         <div class="card">
             <h3><i class="fas fa-file-invoice-dollar"></i> Update Records</h3>
+            
             <label>CLASS</label>
             <select id="feeClass" onchange="populateStudents()"></select>
+            
             <label>STUDENT NAME</label>
             <select id="feeStudent" onchange="fetchFeeData()"><option value="">-- Select Student --</option></select>
             
@@ -142,11 +144,16 @@
                 </div>
             </div>
 
-            <label>PAYABLE TOTAL FEE (AFTER DISCOUNT)</label>
-            <input type="number" id="totalFee" readonly style="background: #eef2f7; color: #006633;" placeholder="Calculated automatically">
-
-            <label>PAYING NOW</label>
-            <input type="number" id="payAmt" onfocus="validateInteraction(this)" oninput="updateDue()">
+            <div class="calc-row">
+                <div>
+                    <label>PAYABLE TOTAL</label>
+                    <input type="number" id="totalFee" readonly style="background: #eef2f7; color: #006633;" placeholder="Auto-calc">
+                </div>
+                <div>
+                    <label>PAYING NOW</label>
+                    <input type="number" id="payAmt" onfocus="validateInteraction(this)" oninput="updateDue()" placeholder="Enter amount">
+                </div>
+            </div>
 
             <label>PAYMENT METHOD</label>
             <select id="payMethod" onfocus="validateInteraction(this)" onchange="handleMethodChange()">
@@ -210,26 +217,17 @@
     function updateClock() { document.getElementById('liveClock').innerText = new Date().toLocaleTimeString().toUpperCase(); }
     setInterval(updateClock, 1000); updateClock();
 
-    // SMART VALIDATION GUARD (FIXED DOUBLE POPUP)
     function validateInteraction(el) {
-        if (Swal.isVisible()) return; // Don't trigger if alert is already open
-
+        if (Swal.isVisible()) return; 
         const cls = document.getElementById('feeClass').value;
         const stu = document.getElementById('feeStudent').value;
-        
         let msg = "";
         if (!cls && !stu) msg = "Please select Class and Student Name";
         else if (!cls) msg = "Please select Class";
         else if (!stu) msg = "Please select Student Name";
-
         if (msg) {
             if (el) el.blur(); 
-            Swal.fire({
-                title: 'Selection Required',
-                text: msg,
-                icon: 'warning',
-                confirmButtonColor: '#006633'
-            });
+            Swal.fire({ title: 'Selection Required', text: msg, icon: 'warning', confirmButtonColor: '#006633' });
             return false;
         }
         return true;
@@ -279,15 +277,11 @@
         if(!c || !n) return;
         const snap = await db.ref(`fee_records/${c}/${n}`).once('value'), data = snap.val();
         paidTillNow = 0; let rows = "", lastFac = "---", lastTime = "---";
-        
         if(data) {
-            const keys = Object.keys(data);
-            const latest = data[keys[keys.length - 1]];
-            
+            const keys = Object.keys(data), latest = data[keys[keys.length - 1]];
             document.getElementById('actualFee').value = latest.actual || latest.total || "";
             document.getElementById('discountPct').value = latest.discount || 0;
             document.getElementById('totalFee').value = latest.total || "";
-
             keys.forEach(k => {
                 const r = data[k]; paidTillNow += parseFloat(r.paid || 0);
                 lastFac = r.recordedBy || "Unknown";
@@ -300,10 +294,8 @@
             document.getElementById('lastTime').innerText = lastTime;
             document.getElementById('auditTrail').style.display = 'block';
         } else {
-            document.getElementById('actualFee').value = ""; 
-            document.getElementById('discountPct').value = "";
-            document.getElementById('totalFee').value = ""; 
-            document.getElementById('historyCard').style.display = 'none'; 
+            document.getElementById('actualFee').value = ""; document.getElementById('discountPct').value = "";
+            document.getElementById('totalFee').value = ""; document.getElementById('historyCard').style.display = 'none'; 
             document.getElementById('auditTrail').style.display = 'none';
         }
         updateDue();
@@ -313,10 +305,8 @@
         const t = parseFloat(document.getElementById('totalFee').value) || 0, pNow = parseFloat(document.getElementById('payAmt').value) || 0;
         const combined = paidTillNow + pNow, due = t - combined;
         document.getElementById('dueDisplay').innerText = "₹ " + (due < 0 ? 0 : due);
-        
         const dueBox = document.getElementById('dueBox');
         if (due > 10000) { dueBox.classList.add('high-due'); } else { dueBox.classList.remove('high-due'); }
-
         let pct = (t > 0) ? (combined / t) * 100 : 0;
         if(pct > 100) pct = 100;
         document.getElementById('progressCircle').style.strokeDashoffset = 314.15 - (314.15 * pct / 100);
@@ -326,24 +316,16 @@
     function saveRecord() {
         if (!validateInteraction()) return;
         const c = document.getElementById('feeClass').value, n = document.getElementById('feeStudent').value;
-        const act = document.getElementById('actualFee').value;
-        const dsc = document.getElementById('discountPct').value;
-        const t = document.getElementById('totalFee').value;
-        const p = document.getElementById('payAmt').value;
-        const meth = document.getElementById('payMethod').value;
-        const tid = document.getElementById('transId').value;
-        const d = document.getElementById('payDate').value;
-        
+        const act = document.getElementById('actualFee').value, dsc = document.getElementById('discountPct').value;
+        const t = document.getElementById('totalFee').value, p = document.getElementById('payAmt').value;
+        const meth = document.getElementById('payMethod').value, tid = document.getElementById('transId').value, d = document.getElementById('payDate').value;
         if(!p) return Swal.fire('Error', 'Please enter payment amount', 'warning');
-        
         const stamp = new Date().toLocaleDateString() + ", " + new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}).toUpperCase();
         const entry = { actual: act, discount: dsc, total: t, paid: p, method: meth, transId: tid || null, recordedBy: activeUser, date: d, timestamp: stamp };
         lastTx = { ...entry, n, c };
-        
         db.ref(`fee_records/${c}/${n}`).push(entry).then(() => {
             Swal.fire('Saved', 'Record Updated', 'success'); 
-            document.getElementById('payAmt').value = ''; 
-            document.getElementById('transId').value = ''; 
+            document.getElementById('payAmt').value = ''; document.getElementById('transId').value = ''; 
             fetchFeeData();
         });
     }
@@ -363,9 +345,7 @@
         const { value: pass } = await Swal.fire({ title: 'Authorization', text: 'Enter Password to Delete', input: 'password' });
         if (pass === authorized[activeUser]) {
             db.ref(`fee_records/${c}/${n}`).remove().then(() => { fetchFeeData(); Swal.fire('Deleted', 'History Cleared', 'success'); });
-        } else if (pass) {
-            Swal.fire('Error', 'Incorrect Password', 'error');
-        }
+        } else if (pass) { Swal.fire('Error', 'Incorrect Password', 'error'); }
     }
 
     document.getElementById('payDate').valueAsDate = new Date();
