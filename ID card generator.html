@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paramount School ID Card Generator</title>
+  <link rel="icon" type="image/png" href="logo.png">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        /* --- Interface Styles (Left Side) --- */
+        .generator-container {
+            display: flex;
+            gap: 40px;
+            margin-bottom: 40px;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .controls {
+            flex: 1;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        select, input[type="text"], input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box; /* Crucial for padding to work correctly */
+        }
+
+        .dynamic-fields {
+            margin-top: 20px;
+            border-top: 2px solid #ddd;
+            padding-top: 15px;
+        }
+
+        button {
+            padding: 12px 24px;
+            background-color: #004d40;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #00332d;
+        }
+
+        /* --- ID Card Styles (Right Side and Print) --- */
+        .id-card-preview {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        /* Essential Print Styling */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            .id-card-to-print, .id-card-to-print * {
+                visibility: visible;
+            }
+            .id-card-to-print {
+                position: absolute;
+                left: 0;
+                top: 0;
+                transform: scale(1); /* Ensure it doesn't scale on print */
+                box-shadow: none; /* Clear screen-only effects */
+            }
+        }
+
+        /* Card Container - Correct Aspect Ratio */
+        .id-card {
+            width: 250px; /* Target width for a cr80 card */
+            height: 400px; /* Target height */
+            background-color: white;
+            border: 2px solid #444; /* Thicker for structure */
+            border-radius: 12px;
+            position: relative;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            overflow: hidden; /* Important for border-radius */
+        }
+
+        /* --- Inside the ID Card --- */
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            height: 60px;
+            border-bottom: 2px solid #aaa;
+        }
+
+        .card-logo {
+            width: 45px;
+            height: 45px;
+            object-fit: contain;
+        }
+
+        .card-school-info {
+            flex-grow: 1;
+            text-align: right;
+            line-height: 1.2;
+        }
+
+        .card-school-name {
+            font-size: 16px;
+            font-weight: bold;
+            color: #004d40;
+            text-transform: uppercase;
+        }
+
+        .card-school-desc {
+            font-size: 10px;
+            color: #e57373;
+        }
+
+        .card-address {
+            font-size: 8px;
+            color: #666;
+            margin-top: 3px;
+        }
+
+        .card-ay {
+            transform: rotate(-90deg);
+            position: absolute;
+            top: 130px;
+            left: 10px;
+            font-size: 11px;
+            color: #1976d2;
+            font-weight: bold;
+        }
+
+        .card-photo {
+            width: 120px;
+            height: 120px;
+            border: 2px solid #555;
+            position: absolute;
+            top: 75px;
+            right: 20px;
+            object-fit: cover;
+            object-position: top;
+        }
+
+        .card-details {
+            margin-top: 210px;
+            padding: 0 15px;
+            text-align: center;
+        }
+
+        .card-name {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .card-field-group {
+            margin-bottom: 3px;
+            font-size: 12px;
+            display: flex;
+            justify-content: flex-start;
+            text-align: left;
+        }
+
+        .card-field-label {
+            font-weight: bold;
+            color: #555;
+            width: 90px;
+            flex-shrink: 0;
+        }
+
+        .card-field-value {
+            color: #222;
+        }
+
+        .card-footer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50px;
+            background-color: #1a237e; /* Dark Blue */
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 0 15px;
+            box-sizing: border-box;
+            color: white;
+            font-size: 11px;
+        }
+
+        .card-footer-info {
+            display: flex;
+            flex-direction: column;
+            width: 60%;
+        }
+
+        .card-correspondent-info {
+            text-align: center;
+            flex-grow: 1;
+        }
+
+        .card-sig {
+            width: 50px;
+            height: 20px;
+            object-fit: contain;
+            margin-bottom: 2px;
+        }
+
+        .card-title-bottom {
+            font-weight: bold;
+        }
+
+        .card-bottom-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 10px;
+            background-color: #80deea; /* Light Blue */
+        }
+
+        /* --- Hide dynamic fields initially --- */
+        #teacherFields, #studentFields {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>ID Card Generator</h1>
+
+    <div class="generator-container">
+        <div class="controls">
+            <div class="form-group">
+                <label for="cardType">Generating for:</label>
+                <select id="cardType" onchange="toggleFields()">
+                    <option value="" disabled selected>Select...</option>
+                    <option value="student">Student</option>
+                    <option value="teacher">Teacher</option>
+                </select>
+            </div>
+
+            <div id="commonFields">
+                <div class="form-group">
+                    <label for="fullName">Full Name</label>
+                    <input type="text" id="fullName" placeholder="e.g., Jane Smith">
+                </div>
+            </div>
+
+            <div id="teacherFields" class="dynamic-fields">
+                <div class="form-group">
+                    <label for="empId">Employee ID (must match image filename, e.g., TCH001)</label>
+                    <input type="text" id="empId" placeholder="e.g., TCH001">
+                </div>
+                <div class="form-group">
+                    <label for="designation">Designation</label>
+                    <input type="text" id="designation" placeholder="e.g., Math Teacher">
+                </div>
+                <div class="form-group">
+                    <label for="teacherMobile">Mobile Number</label>
+                    <input type="text" id="teacherMobile" placeholder="e.g., 9876543210">
+                </div>
+            </div>
+
+            <div id="studentFields" class="dynamic-fields">
+                <div class="form-group">
+                    <label for="rollNumber">Roll Number (must match image filename, e.g., STUD001)</label>
+                    <input type="text" id="rollNumber" placeholder="e.g., STUD001">
+                </div>
+                <div class="form-group">
+                    <label for="class">Class</label>
+                    <input type="text" id="class" placeholder="e.g., 6th">
+                </div>
+                <div class="form-group">
+                    <label for="section">Section</label>
+                    <input type="text" id="section" placeholder="e.g., A">
+                </div>
+                <div class="form-group">
+                    <label for="parentNumber">Parent/Guardian Number</label>
+                    <input type="text" id="parentNumber" placeholder="e.g., 8887776665">
+                </div>
+            </div>
+
+            <button onclick="generatePreview()">Generate Preview</button>
+            <button onclick="window.print()">Print Card</button>
+        </div>
+
+        <div class="id-card-preview">
+            <div class="id-card id-card-to-print" id="idCard">
+                <div class="card-header">
+                    <img src="https://via.placeholder.com/45?text=LOGO" alt="School Logo" class="card-logo" id="cardSchoolLogo">
+                    <div class="card-school-info">
+                        <div class="card-school-name" id="cardSchoolName">Paramount</div>
+                        <div class="card-school-desc" id="cardSchoolDesc">ENGLISH MEDIUM SCHOOL</div>
+                        <div class="card-address" id="cardSchoolAddress">
+                            33-4-169, PENSIONPUR, THIMMAPUR (H), KHILA WARANGAL,<br>WARANGAL-506005
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-ay">AY:2025-26</div>
+
+                <img src="https://via.placeholder.com/120?text=Student+Photo" alt="Profile" class="card-photo" id="cardMainPhoto">
+
+                <div class="card-details">
+                    <div class="card-name" id="cardDetailsName">Raniya Zainab</div>
+                    
+                    <div id="cardDynamicContent">
+                        </div>
+                </div>
+
+                <div class="card-footer">
+                    <div class="card-footer-info">
+                        Pensionpur, Thimmapur (H), Wgl.
+                    </div>
+                    <div class="card-correspondent-info">
+                        <img src="https://via.placeholder.com/50x20?text=Sig" alt="Sign" class="card-sig" id="cardSig"><br>
+                        <span class="card-title-bottom">Correspondent</span>
+                    </div>
+                </div>
+
+                <div class="card-bottom-bar"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleFields() {
+            const cardType = document.getElementById('cardType').value;
+            document.getElementById('teacherFields').style.display = cardType === 'teacher' ? 'block' : 'none';
+            document.getElementById('studentFields').style.display = cardType === 'student' ? 'block' : 'none';
+        }
+
+        function generatePreview() {
+            const type = document.getElementById('cardType').value;
+            const name = document.getElementById('fullName').value;
+            
+            // Set the main photo and name
+            document.getElementById('cardDetailsName').innerText = name;
+            
+            const dynamicContentArea = document.getElementById('cardDynamicContent');
+            dynamicContentArea.innerHTML = ''; // Clear previous fields
+
+            let photoFilename = '';
+
+            if (type === 'teacher') {
+                const empId = document.getElementById('empId').value;
+                const designation = document.getElementById('designation').value;
+                const mobile = document.getElementById('teacherMobile').value;
+                photoFilename = empId; // Example: TCH001
+
+                // Create and insert Teacher-specific details
+                dynamicContentArea.innerHTML = `
+                    <div class="card-field-group"><span class="card-field-label">Employee ID:</span><span class="card-field-value">${empId}</span></div>
+                    <div class="card-field-group"><span class="card-field-label">Designation:</span><span class="card-field-value">${designation}</span></div>
+                    <div class="card-field-group"><span class="card-field-label">Mobile No:</span><span class="card-field-value">${mobile}</span></div>
+                `;
+            } else if (type === 'student') {
+                const rollNum = document.getElementById('rollNumber').value;
+                const classVal = document.getElementById('class').value;
+                const sectionVal = document.getElementById('section').value;
+                const parentNum = document.getElementById('parentNumber').value;
+                photoFilename = rollNum; // Example: STUD001
+
+                // Create and insert Student-specific details
+                dynamicContentArea.innerHTML = `
+                    <div class="card-field-group"><span class="card-field-label">Roll Number:</span><span class="card-field-value">${rollNum}</span></div>
+                    <div class="card-field-group"><span class="card-field-label">Class:</span><span class="card-field-value">${classVal}</span></div>
+                    <div class="card-field-group"><span class="card-field-label">Section:</span><span class="card-field-value">${sectionVal}</span></div>
+                    <div class="card-field-group"><span class="card-field-label">Parent No:</span><span class="card-field-value">${parentNum}</span></div>
+                `;
+            }
+
+            // SIMULATION FOR IMAGE LOADING:
+            // This line *tries* to set the photo URL based on the ID.
+            // Replace 'path/to/your/images/' with the actual directory.
+            // To prevent broken image icons in this simulation, I have hardcoded the student photo as a fallback.
+            
+            // To use your uploaded photos, uncomment the line below and comment out the hardcoded one.
+            // document.getElementById('cardMainPhoto').src = `path/to/your/images/${photoFilename}.png`;
+            
+            // For simulation purposes: Hardcode the student photo from the request
+            const studentPhotoSrc = "https://i.ibb.co/L5rKjTf/student-photo-simulation.png";
+            document.getElementById('cardMainPhoto').src = type === 'student' ? studentPhotoSrc : "https://via.placeholder.com/120?text=Profile+Photo";
+        }
+    </script>
+
+</body>
+</html>
