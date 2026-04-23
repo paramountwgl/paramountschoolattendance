@@ -2,210 +2,229 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Paramount ID Generator - Final</title>
+    <title>Paramount ID Generator</title>
     <link rel="icon" type="image/png" href="logo.png">
     <style>
-        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f7f6; display: flex; padding: 20px; gap: 40px; }
+        /* Screen Layout */
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #eef1f4; display: flex; padding: 20px; gap: 40px; justify-content: center; }
         
-        /* Input Panel Styling */
-        .input-panel { width: 320px; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); height: fit-content; }
-        .form-group { margin-bottom: 12px; }
-        label { display: block; font-size: 13px; font-weight: bold; margin-bottom: 4px; color: #444; }
-        input, select { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-        button { width: 100%; padding: 12px; background: #004d40; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; margin-top: 10px; }
+        .setup-panel { width: 350px; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); height: fit-content; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 13px; color: #444; }
+        input, select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
+        
+        button { width: 100%; padding: 12px; background: #004d40; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: 10px; transition: 0.2s; }
+        button:hover { background: #00332d; }
         .print-btn { background: #1a237e; }
+        .print-btn:hover { background: #0d145a; }
 
-        /* ID Card Layout - Matches Screenshot 2 */
-        .id-card {
+        /* --- ID Card Design --- */
+        .card-container {
             width: 325px;
-            height: 480px;
+            height: 500px;
             background: white;
-            border: 1px solid #ccc;
-            border-radius: 12px;
+            border: 1px solid #bbb;
+            border-radius: 15px;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            flex-shrink: 0;
         }
 
         /* Header Alignment */
-        .header {
-            display: flex;
-            align-items: center;
-            padding: 12px 15px;
-            border-bottom: 1.5px solid #eee;
+        .header { 
+            display: flex; 
+            align-items: center; 
+            padding: 15px; 
+            border-bottom: 1.5px solid #eee; 
+            height: 90px;
+            box-sizing: border-box;
         }
-        .logo-placeholder { width: 50px; height: 50px; background: #f0f0f0; border-radius: 50%; margin-right: 10px; flex-shrink: 0; }
-        .school-text { text-align: left; }
-        .school-name { color: #004d40; font-size: 19px; font-weight: 900; margin: 0; line-height: 1; letter-spacing: -0.5px; }
-        .school-desc { color: #d32f2f; font-size: 11px; font-weight: bold; margin: 2px 0; }
-        .address { font-size: 7.5px; color: #555; line-height: 1.2; }
+        .school-logo { width: 55px; height: 55px; object-fit: contain; margin-right: 12px; }
+        .school-info { text-align: left; }
+        .school-name { color: #004d40; font-size: 19px; font-weight: 900; margin: 0; line-height: 1; }
+        .school-desc { color: #d32f2f; font-size: 10.5px; font-weight: bold; margin: 3px 0; letter-spacing: 0.5px; }
+        .address { font-size: 7.5px; color: #555; line-height: 1.2; margin: 0; }
 
-        /* Photo and Vertical Text Section */
-        .middle-section {
-            position: relative;
-            height: 180px;
-            margin-top: 15px;
-        }
-        .ay-vertical {
+        /* Vertical Academic Year */
+        .ay-text {
             position: absolute;
             transform: rotate(-90deg);
-            left: -5px;
-            top: 75px;
+            left: -15px;
+            top: 180px;
             color: #1976d2;
             font-weight: bold;
             font-size: 13px;
             width: 100px;
         }
-        .logo-img { 
-    width: 55px;      /* Adjust size as needed */
-    height: 55px; 
-    object-fit: contain; 
-    margin-right: 12px; 
-    flex-shrink: 0; 
-}
-        .photo-frame {
+
+        /* Photo Area */
+        .photo-box {
             width: 140px;
             height: 165px;
-            border: 1.5px solid #333;
-            margin-left: 100px; /* Aligned right of the vertical text */
-            background: #fafafa;
+            border: 2px solid #333;
+            margin: 25px 0 15px 105px; /* Pushed right to clear AY text */
+            overflow: hidden;
+            background: #f9f9f9;
         }
-        .photo-frame img { width: 100%; height: 100%; object-fit: cover; }
+        .photo-box img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* Information Details */
-        .info-section {
-            padding: 15px 25px;
-            text-align: center;
-        }
-        .student-name { font-size: 20px; font-weight: bold; margin-bottom: 12px; color: #000; text-transform: uppercase; }
-        .data-row { display: flex; margin-bottom: 4px; font-size: 13px; text-align: left; }
-        .data-label { width: 100px; font-weight: bold; color: #444; }
-        .data-value { color: #000; }
+        /* Details Area */
+        .details { padding: 0 25px; text-align: center; }
+        .display-name { font-size: 20px; font-weight: bold; margin-bottom: 12px; color: #000; text-transform: uppercase; }
+        .info-row { display: flex; margin-bottom: 5px; font-size: 13px; text-align: left; }
+        .label-cell { width: 100px; font-weight: bold; color: #555; }
+        .value-cell { color: #000; flex: 1; }
 
-        /* Footer */
+        /* Bottom Footer */
         .footer {
             position: absolute;
             bottom: 0;
             width: 100%;
-            height: 60px;
+            height: 65px;
             background: #1a237e;
             color: white;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
             padding: 0 15px;
             box-sizing: border-box;
         }
-        .footer-address { font-size: 10px; width: 60%; line-height: 1.3; }
-        .sig-box { text-align: center; }
-        .sig-text { font-size: 10px; font-weight: bold; border-top: 1px solid rgba(255,255,255,0.5); padding-top: 2px; }
-        .bottom-accent { height: 8px; background: #80deea; position: absolute; bottom: 0; width: 100%; }
+        .footer-loc { font-size: 10px; width: 60%; line-height: 1.3; }
+        .sig-area { text-align: center; font-size: 10px; border-top: 1px solid rgba(255,255,255,0.4); padding-top: 3px; }
+        .bottom-strip { height: 8px; background: #80deea; position: absolute; bottom: 0; width: 100%; }
 
+        /* Print Logic */
         @media print {
-            .input-panel { display: none; }
-            body { background: white; padding: 0; }
-            .id-card { box-shadow: none; border: 1px solid #000; margin: 0; }
+            .setup-panel { display: none; }
+            body { background: white; padding: 0; display: block; }
+            .card-container { box-shadow: none; border: 1px solid #000; margin: auto; }
         }
     </style>
 </head>
 <body>
 
-<div class="input-panel">
+<div class="setup-panel">
     <h3>ID Configuration</h3>
     <div class="form-group">
-        <label>Type</label>
-        <select id="cardMode" onchange="toggleInputs()">
+        <label>Category:</label>
+        <select id="mode" onchange="updateForm()">
             <option value="student">Student</option>
             <option value="teacher">Teacher</option>
         </select>
     </div>
-    <div class="form-group"><label>Full Name</label><input type="text" id="inName" placeholder="Full Name"></div>
 
-    <div id="sFields">
-        <div class="form-group"><label>Roll Number (for Image)</label><input type="text" id="inRoll"></div>
-        <div class="form-group"><label>Class</label><input type="text" id="inClass"></div>
-        <div class="form-group"><label>Section</label><input type="text" id="inSection"></div>
-        <div class="form-group"><label>Parent Number</label><input type="text" id="inParent"></div>
+    <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" id="inName" placeholder="Enter Full Name">
     </div>
 
-    <div id="tFields" style="display:none;">
-        <div class="form-group"><label>Employee ID (for Image)</label><input type="text" id="inEmp"></div>
-        <div class="form-group"><label>Designation</label><input type="text" id="inDesig"></div>
-        <div class="form-group"><label>Mobile No</label><input type="text" id="inMob"></div>
+    <div id="studentInput">
+        <div class="form-group">
+            <label>Roll Number (Filenames: 123.png)</label>
+            <input type="text" id="inRoll" placeholder="e.g. 1298359">
+        </div>
+        <div class="form-group">
+            <label>Class & Section</label>
+            <input type="text" id="inClass" placeholder="e.g. 8th - B">
+        </div>
+        <div class="form-group">
+            <label>Parent Mobile</label>
+            <input type="text" id="inParent" placeholder="Mobile Number">
+        </div>
     </div>
 
-    <button onclick="generate()">Generate ID</button>
-    <button class="print-btn" onclick="window.print()">Print Now</button>
+    <div id="teacherInput" style="display:none;">
+        <div class="form-group">
+            <label>Employee ID (Filenames: PES...png)</label>
+            <input type="text" id="inEmpID" placeholder="e.g. PESEMP0003">
+        </div>
+        <div class="form-group">
+            <label>Designation</label>
+            <input type="text" id="inDesignation" placeholder="e.g. Teacher">
+        </div>
+        <div class="form-group">
+            <label>Mobile Number</label>
+            <input type="text" id="inTeacherMob" placeholder="Mobile Number">
+        </div>
+    </div>
+
+    <button onclick="updateCard()">Update Preview</button>
+    <button class="print-btn" onclick="window.print()">Print ID Card</button>
 </div>
 
-<div class="header">
-    <img src="logo.png" alt="Logo" class="logo-img"> 
-    
-    <div class="school-text">
-        <p class="school-name">PARAMOUNT</p>
-        <p class="school-desc">ENGLISH MEDIUM SCHOOL</p>
+<div class="card-container" id="printableCard">
+    <div class="header">
+        <img src="logo.png" alt="Logo" class="school-logo">
+        <div class="school-info">
+            <p class="school-name">PARAMOUNT</p>
+            <p class="school-desc">ENGLISH MEDIUM SCHOOL</p>
+            <p class="address">33-4-169, PENSIONPUR, THIMMAPUR (H), KHILA WARANGAL,<br>WARANGAL-506005</p>
         </div>
     </div>
 
-    <div class="middle-section">
-        <div class="ay-vertical">AY:2025-26</div>
-        <div class="photo-frame">
-            <img id="cardImg" src="" alt="Photo">
-        </div>
+    <div class="ay-text">AY:2025-26</div>
+
+    <div class="photo-box">
+        <img id="displayPhoto" src="placeholder.png" alt="ID Photo">
     </div>
 
-    <div class="info-section">
-        <div class="student-name" id="cardName">NAME PREVIEW</div>
-        <div id="detailsBox"></div>
+    <div class="details">
+        <div class="display-name" id="displayName">NAME PREVIEW</div>
+        <div id="dynamicRows">
+            </div>
     </div>
 
     <div class="footer">
-        <div class="footer-address">Pensionpur, Thimmapur (H), Wgl.</div>
-        <div class="sig-box">
-            <div style="height:20px"></div> <div class="sig-text">Correspondent</div>
+        <div class="footer-loc">Pensionpur, Thimmapur (H), Wgl.</div>
+        <div class="sig-area">
+            <div style="font-weight: bold;">Correspondent</div>
         </div>
     </div>
-    <div class="bottom-accent"></div>
+    <div class="bottom-strip"></div>
 </div>
 
 <script>
-    function toggleInputs() {
-        const isStudent = document.getElementById('cardMode').value === 'student';
-        document.getElementById('sFields').style.display = isStudent ? 'block' : 'none';
-        document.getElementById('tFields').style.display = isStudent ? 'none' : 'block';
+    function updateForm() {
+        const mode = document.getElementById('mode').value;
+        document.getElementById('studentInput').style.display = mode === 'student' ? 'block' : 'none';
+        document.getElementById('teacherInput').style.display = mode === 'teacher' ? 'block' : 'none';
     }
 
-    function generate() {
-        const mode = document.getElementById('cardMode').value;
+    function updateCard() {
+        const mode = document.getElementById('mode').value;
         const name = document.getElementById('inName').value;
-        const img = document.getElementById('cardImg');
-        const box = document.getElementById('detailsBox');
+        const rows = document.getElementById('dynamicRows');
+        const photo = document.getElementById('displayPhoto');
 
-        document.getElementById('cardName').innerText = name.toUpperCase() || "NAME HERE";
-        box.innerHTML = "";
+        document.getElementById('displayName').innerText = name || "NAME HERE";
+        rows.innerHTML = "";
 
-        if(mode === 'student') {
+        if (mode === "student") {
             const roll = document.getElementById('inRoll').value;
-            
-            // Looks in 'student images' folder for [roll].png
-            img.src = roll ? "Student images/" + roll + ".png" : "";
-            
-            box.innerHTML = `
-                <div class="data-row"><span class="data-label">Roll Number</span><span class="data-value">: ${roll}</span></div>
-                <div class="data-row"><span class="data-label">Class</span><span class="data-value">: ${document.getElementById('inClass').value}</span></div>
-                <div class="data-row"><span class="data-label">Section</span><span class="data-value">: ${document.getElementById('inSection').value}</span></div>
-                <div class="data-row"><span class="data-label">Parent No</span><span class="data-value">: ${document.getElementById('inParent').value}</span></div>
+            const cls = document.getElementById('inClass').value;
+            const parent = document.getElementById('inParent').value;
+
+            // Fetch from "student images" folder
+            photo.src = roll ? "student images/" + roll + ".png" : "placeholder.png";
+
+            rows.innerHTML = `
+                <div class="info-row"><span class="label-cell">Roll Number</span><span class="value-cell">: ${roll}</span></div>
+                <div class="info-row"><span class="label-cell">Class</span><span class="value-cell">: ${cls}</span></div>
+                <div class="info-row"><span class="label-cell">Parent No</span><span class="value-cell">: ${parent}</span></div>
             `;
         } else {
-            const emp = document.getElementById('inEmp').value;
-            
-            // Looks in 'employe images' folder for [empID].png
-            img.src = emp ? "employe images/" + emp + ".png" : "";
-            
-            box.innerHTML = `
-                <div class="data-row"><span class="data-label">Employee ID</span><span class="data-value">: ${emp}</span></div>
-                <div class="data-row"><span class="data-label">Designation</span><span class="data-value">: ${document.getElementById('inDesig').value}</span></div>
-                <div class="data-row"><span class="data-label">Mobile No</span><span class="data-value">: ${document.getElementById('inMob').value}</span></div>
+            const empId = document.getElementById('inEmpID').value;
+            const desig = document.getElementById('inDesignation').value;
+            const mob = document.getElementById('inTeacherMob').value;
+
+            // Fetch from "employe images" folder
+            photo.src = empId ? "employe images/" + empId + ".png" : "placeholder.png";
+
+            rows.innerHTML = `
+                <div class="info-row"><span class="label-cell">Employee ID</span><span class="value-cell">: ${empId}</span></div>
+                <div class="info-row"><span class="label-cell">Designation</span><span class="value-cell">: ${desig}</span></div>
+                <div class="info-row"><span class="label-cell">Mobile No</span><span class="value-cell">: ${mob}</span></div>
             `;
         }
     }
