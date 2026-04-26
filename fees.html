@@ -227,12 +227,16 @@
         const title = document.getElementById('portalTitle');
         const busReg = document.getElementById('busRegSection');
 
-        // Reset UI
         document.getElementById('feeStudent').innerHTML = '<option value="">-- Select Student --</option>';
         document.getElementById('historyCard').style.display = 'none';
         document.getElementById('totalFee').value = '';
         document.getElementById('payAmt').value = '';
         document.getElementById('studentDetailBox').style.display = 'none';
+        
+        // Reset inputs on mode switch
+        document.getElementById('busFather').value = '';
+        document.getElementById('busPhone').value = '';
+        
         updateDue();
 
         if(mode === 'tuition') {
@@ -249,95 +253,103 @@
         populateStudents();
     }
 
-function populateStudents() {
-    const cls = document.getElementById('feeClass').value, s = document.getElementById('feeStudent');
-    s.innerHTML = '<option value="">-- Select Student --</option>';
-    
-    if(!cls || !studentData[cls]) return;
+    function populateStudents() {
+        const cls = document.getElementById('feeClass').value, s = document.getElementById('feeStudent');
+        s.innerHTML = '<option value="">-- Select Student --</option>';
+        
+        if(!cls || !studentData[cls]) return;
 
-    if (currentMode === 'bus') {
-        // BUS MODE: Check database and add the Green (B) indicator
-        db.ref(`bus_students/${cls}`).once('value', (snap) => {
-            const busRegistered = snap.val() || {};
-            
+        if (currentMode === 'bus') {
+            db.ref(`bus_students/${cls}`).once('value', (snap) => {
+                const busRegistered = snap.val() || {};
+                studentData[cls].forEach(st => {
+                    const isBus = busRegistered[st] ? " 🟢 (B)" : ""; 
+                    const option = document.createElement('option');
+                    option.value = st;
+                    option.innerText = st + isBus;
+                    if(busRegistered[st]) {
+                        option.style.color = "#006633";
+                        option.style.fontWeight = "bold";
+                    }
+                    s.appendChild(option);
+                });
+            });
+        } else {
             studentData[cls].forEach(st => {
-                const isBus = busRegistered[st] ? " 🟢 (B)" : ""; 
                 const option = document.createElement('option');
                 option.value = st;
-                option.innerText = st + isBus;
-                
-                if(busRegistered[st]) {
-                    option.style.color = "#006633";
-                    option.style.fontWeight = "bold";
-                }
+                option.innerText = st;
                 s.appendChild(option);
             });
-        });
-    } else {
-        // TUITION MODE: Show standard clean list without markers
-        studentData[cls].forEach(st => {
-            const option = document.createElement('option');
-            option.value = st;
-            option.innerText = st;
-            s.appendChild(option);
-        });
-    }
-}
-   async function unregisterBusStudent() {
-    const cls = document.getElementById('feeClass').value;
-    const name = document.getElementById('feeStudent').value;
-
-    if(!cls || !name) return;
-
-    const result = await Swal.fire({
-        title: 'Are you sure?',
-        text: `Remove ${name} from the Bus Service?`,
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#c62828',
-        confirmButtonText: 'Yes, Remove'
-    });
-
-    if (result.isConfirmed) {
-        await db.ref(`bus_students/${cls}/${name}`).remove();
-        Swal.fire('Removed', 'Student is no longer registered for bus', 'success');
-        
-        // Reset the UI
-        document.getElementById('busFather').value = '';
-        document.getElementById('busPhone').value = '';
-        document.getElementById('btnUnregister').style.display = 'none';
-        
-        // Refresh the list to remove the green (B) marker
-        populateStudents();
-        fetchFeeData();
-    }
-}
-
-    async function fetchFeeData() {
-    const c = document.getElementById('feeClass').value, n = document.getElementById('feeStudent').value;
-    if(!c || !n) return;
-
-    const dataPath = currentMode === 'tuition' ? `fee_records/${c}/${n}` : `bus_records/${c}/${n}`;
-    
-    if(currentMode === 'bus') {
-        const studentInfo = await db.ref(`bus_students/${c}/${n}`).once('value');
-        if(studentInfo.val()) {
-            document.getElementById('dispFather').innerText = studentInfo.val().father;
-            document.getElementById('dispPhone').innerText = studentInfo.val().phone;
-            document.getElementById('studentDetailBox').style.display = 'block';
-            
-            // SHOW the Unregister button because they ARE registered
-            document.getElementById('btnUnregister').style.display = 'block';
-            document.getElementById('busFather').value = studentInfo.val().father;
-            document.getElementById('busPhone').value = studentInfo.val().phone;
-        } else {
-            document.getElementById('studentDetailBox').style.display = 'none';
-            // HIDE the Unregister button because they are NOT registered
-            document.getElementById('btnUnregister').style.display = 'none';
-            document.getElementById('busFather').value = '';
-            document.getElementById('busPhone').value = '';
         }
     }
+
+    async function registerBusStudent() {
+        const cls = document.getElementById('feeClass').value;
+        const name = document.getElementById('feeStudent').value;
+        const father = document.getElementById('busFather').value;
+        const phone = document.getElementById('busPhone').value;
+
+        if(!cls || !name || !father || !phone) {
+            return Swal.fire('Error', 'Please select student and fill details', 'warning');
+        }
+
+        await db.ref(`bus_students/${cls}/${name}`).set({ father, phone });
+        Swal.fire('Success', `${name} registered for Bus`, 'success');
+        
+        populateStudents(); // Refresh dropdown for the green (B)
+        fetchFeeData(); // Refresh info boxes
+    }
+
+    async function unregisterBusStudent() {
+        const cls = document.getElementById('feeClass').value;
+        const name = document.getElementById('feeStudent').value;
+        if(!cls || !name) return;
+
+        const result = await Swal.fire({
+            title: 'Unregister?',
+            text: `Remove ${name} from Bus Service?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#c62828',
+            confirmButtonText: 'Yes, Remove'
+        });
+
+        if (result.isConfirmed) {
+            await db.ref(`bus_students/${cls}/${name}`).remove();
+            Swal.fire('Removed', 'Status updated', 'success');
+            document.getElementById('busFather').value = '';
+            document.getElementById('busPhone').value = '';
+            document.getElementById('btnUnregister').style.display = 'none';
+            populateStudents();
+            fetchFeeData();
+        }
+    }
+
+    async function fetchFeeData() {
+        const c = document.getElementById('feeClass').value, n = document.getElementById('feeStudent').value;
+        if(!c || !n) return;
+
+        const dataPath = currentMode === 'tuition' ? `fee_records/${c}/${n}` : `bus_records/${c}/${n}`;
+        
+        if(currentMode === 'bus') {
+            const studentInfo = await db.ref(`bus_students/${c}/${n}`).once('value');
+            if(studentInfo.val()) {
+                // Fill if data exists
+                document.getElementById('dispFather').innerText = studentInfo.val().father;
+                document.getElementById('dispPhone').innerText = studentInfo.val().phone;
+                document.getElementById('studentDetailBox').style.display = 'block';
+                document.getElementById('btnUnregister').style.display = 'block';
+                document.getElementById('busFather').value = studentInfo.val().father;
+                document.getElementById('busPhone').value = studentInfo.val().phone;
+            } else {
+                // If student NOT in bus list, clear info display but DO NOT clear the input boxes
+                // so user can continue typing and register them.
+                document.getElementById('studentDetailBox').style.display = 'none';
+                document.getElementById('btnUnregister').style.display = 'none';
+            }
+        }
+
         const snap = await db.ref(dataPath).once('value'), data = snap.val();
         paidTillNow = 0; let totalV = "", rows = "", lastFac = "---", lastTime = "---";
         if(data) {
@@ -373,7 +385,7 @@ function populateStudents() {
         lastTx = { ...entry, n, c };
         
         db.ref(dataPath).push(entry).then(() => {
-            Swal.fire('Saved', `${currentMode.toUpperCase()} Record Updated`, 'success'); 
+            Swal.fire('Saved', `${currentMode.toUpperCase()} Updated`, 'success'); 
             document.getElementById('payAmt').value = ''; 
             document.getElementById('transId').value = ''; 
             fetchFeeData();
