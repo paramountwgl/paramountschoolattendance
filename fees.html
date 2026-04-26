@@ -257,23 +257,35 @@
         fetchFeeData();
     }
 
-    // --- EXISTING FUNCTIONS MODIFIED FOR DUAL PATHS ---
-    function populateStudents() {
-        const cls = document.getElementById('feeClass').value, s = document.getElementById('feeStudent');
-        s.innerHTML = '<option value="">-- Select Student --</option>';
-        if(currentMode === 'tuition') {
-            if(studentData[cls]) studentData[cls].forEach(st => s.innerHTML += `<option value="${st}">${st}</option>`);
-        } else {
-            // In Bus mode, only show students who have been registered for bus in Firebase
-            db.ref(`bus_students/${cls}`).once('value', (snap) => {
-                const data = snap.val();
-                if(data) {
-                    Object.keys(data).forEach(st => s.innerHTML += `<option value="${st}">${st}</option>`);
-                }
-            });
-        }
-    }
+  // Add this line inside your <style> tag at the top of the page
+// .bus-marker { color: #006633; font-weight: bold; }
 
+function populateStudents() {
+    const cls = document.getElementById('feeClass').value, s = document.getElementById('feeStudent');
+    s.innerHTML = '<option value="">-- Select Student --</option>';
+    
+    if(!cls || !studentData[cls]) return;
+
+    // We check the bus_students list in Firebase to see who is registered
+    db.ref(`bus_students/${cls}`).once('value', (snap) => {
+        const busRegistered = snap.val() || {};
+        
+        studentData[cls].forEach(st => {
+            const isBus = busRegistered[st] ? " 🟢 (B)" : ""; 
+            const option = document.createElement('option');
+            option.value = st;
+            option.innerText = st + isBus;
+            
+            // Highlight the text color if they are a bus student
+            if(busRegistered[st]) {
+                option.style.color = "#006633";
+                option.style.fontWeight = "bold";
+            }
+            
+            s.appendChild(option);
+        });
+    });
+}
     async function fetchFeeData() {
         const c = document.getElementById('feeClass').value, n = document.getElementById('feeStudent').value;
         if(!c || !n) return;
