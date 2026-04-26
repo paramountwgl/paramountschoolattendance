@@ -133,12 +133,16 @@
         <div class="card">
             <h3 id="portalTitle"><i class="fas fa-file-invoice-dollar"></i> Tuition Fee Records</h3>
             
-            <div id="busRegSection" style="display:none; background: #fffde7; padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 1px solid var(--gold);">
-                <p style="font-size: 10px; font-weight: 800; color: #856404; margin-bottom: 8px;">ADD NEW BUS STUDENT</p>
-                <input type="text" id="busFather" placeholder="Father's Name" style="font-size: 12px; margin-bottom: 5px;">
-                <input type="text" id="busPhone" placeholder="Phone Number" style="font-size: 12px; margin-bottom: 5px;">
-                <button onclick="registerBusStudent()" style="background: var(--forest); color: white; width: 100%; border: none; padding: 8px; border-radius: 5px; font-weight: 700; font-size: 11px;">REGISTER FOR BUS</button>
-            </div>
+           <div id="busRegSection" style="display:none; background: #fffde7; padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 1px solid var(--gold);">
+    <p style="font-size: 10px; font-weight: 800; color: #856404; margin-bottom: 8px;">BUS STUDENT MANAGEMENT</p>
+    <input type="text" id="busFather" placeholder="Father's Name" style="font-size: 12px; margin-bottom: 5px;">
+    <input type="text" id="busPhone" placeholder="Phone Number" style="font-size: 12px; margin-bottom: 5px;">
+    
+    <div style="display: flex; gap: 8px;">
+        <button onclick="registerBusStudent()" style="background: var(--forest); color: white; flex: 2; border: none; padding: 10px; border-radius: 8px; font-weight: 700; font-size: 11px; cursor: pointer;">REGISTER STUDENT</button>
+        <button id="btnUnregister" onclick="unregisterBusStudent()" style="background: var(--danger); color: white; flex: 1; border: none; padding: 10px; border-radius: 8px; font-weight: 700; font-size: 11px; cursor: pointer; display: none;">REMOVE</button>
+    </div>
+</div>
 
             <label>CLASS</label>
             <select id="feeClass" onchange="populateStudents()"></select>
@@ -251,61 +255,89 @@ function populateStudents() {
     
     if(!cls || !studentData[cls]) return;
 
-    // We check the bus_students list in Firebase to see who is registered
-    db.ref(`bus_students/${cls}`).once('value', (snap) => {
-        const busRegistered = snap.val() || {};
-        
+    if (currentMode === 'bus') {
+        // BUS MODE: Check database and add the Green (B) indicator
+        db.ref(`bus_students/${cls}`).once('value', (snap) => {
+            const busRegistered = snap.val() || {};
+            
+            studentData[cls].forEach(st => {
+                const isBus = busRegistered[st] ? " 🟢 (B)" : ""; 
+                const option = document.createElement('option');
+                option.value = st;
+                option.innerText = st + isBus;
+                
+                if(busRegistered[st]) {
+                    option.style.color = "#006633";
+                    option.style.fontWeight = "bold";
+                }
+                s.appendChild(option);
+            });
+        });
+    } else {
+        // TUITION MODE: Show standard clean list without markers
         studentData[cls].forEach(st => {
-            const isBus = busRegistered[st] ? " 🟢 (B)" : ""; 
             const option = document.createElement('option');
             option.value = st;
-            option.innerText = st + isBus;
-            
-            // Highlight the text color if they are a bus student
-            if(busRegistered[st]) {
-                option.style.color = "#006633";
-                option.style.fontWeight = "bold";
-            }
-            
+            option.innerText = st;
             s.appendChild(option);
         });
-    });
+    }
 }
-    async function registerBusStudent() {
-        const cls = document.getElementById('feeClass').value;
-        const name = document.getElementById('feeStudent').value;
-        const father = document.getElementById('busFather').value;
-        const phone = document.getElementById('busPhone').value;
+   async function unregisterBusStudent() {
+    const cls = document.getElementById('feeClass').value;
+    const name = document.getElementById('feeStudent').value;
 
-        if(!cls || !name || !father || !phone) return Swal.fire('Error', 'Fill all fields including Class & Student', 'warning');
+    if(!cls || !name) return;
 
-        await db.ref(`bus_students/${cls}/${name}`).set({ father, phone });
-        Swal.fire('Registered', `${name} added to Bus List`, 'success');
+    const result = await Swal.fire({
+        title: 'Are you sure?',
+        text: `Remove ${name} from the Bus Service?`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#c62828',
+        confirmButtonText: 'Yes, Remove'
+    });
+
+    if (result.isConfirmed) {
+        await db.ref(`bus_students/${cls}/${name}`).remove();
+        Swal.fire('Removed', 'Student is no longer registered for bus', 'success');
+        
+        // Reset the UI
         document.getElementById('busFather').value = '';
         document.getElementById('busPhone').value = '';
+        document.getElementById('btnUnregister').style.display = 'none';
+        
+        // Refresh the list to remove the green (B) marker
+        populateStudents();
         fetchFeeData();
     }
+}
 
     async function fetchFeeData() {
-        const c = document.getElementById('feeClass').value, n = document.getElementById('feeStudent').value;
-        if(!c || !n) return;
+    const c = document.getElementById('feeClass').value, n = document.getElementById('feeStudent').value;
+    if(!c || !n) return;
 
-        const dataPath = currentMode === 'tuition' ? `fee_records/${c}/${n}` : `bus_records/${c}/${n}`;
-        
-        // Load Student Details for Bus Mode
-        if(currentMode === 'bus') {
-            const studentInfo = await db.ref(`bus_students/${c}/${n}`).once('value');
-            if(studentInfo.val()) {
-                document.getElementById('dispFather').innerText = studentInfo.val().father;
-                document.getElementById('dispPhone').innerText = studentInfo.val().phone;
-                document.getElementById('studentDetailBox').style.display = 'block';
-            } else {
-                document.getElementById('studentDetailBox').style.display = 'none';
-            }
+    const dataPath = currentMode === 'tuition' ? `fee_records/${c}/${n}` : `bus_records/${c}/${n}`;
+    
+    if(currentMode === 'bus') {
+        const studentInfo = await db.ref(`bus_students/${c}/${n}`).once('value');
+        if(studentInfo.val()) {
+            document.getElementById('dispFather').innerText = studentInfo.val().father;
+            document.getElementById('dispPhone').innerText = studentInfo.val().phone;
+            document.getElementById('studentDetailBox').style.display = 'block';
+            
+            // SHOW the Unregister button because they ARE registered
+            document.getElementById('btnUnregister').style.display = 'block';
+            document.getElementById('busFather').value = studentInfo.val().father;
+            document.getElementById('busPhone').value = studentInfo.val().phone;
         } else {
             document.getElementById('studentDetailBox').style.display = 'none';
+            // HIDE the Unregister button because they are NOT registered
+            document.getElementById('btnUnregister').style.display = 'none';
+            document.getElementById('busFather').value = '';
+            document.getElementById('busPhone').value = '';
         }
-
+    }
         const snap = await db.ref(dataPath).once('value'), data = snap.val();
         paidTillNow = 0; let totalV = "", rows = "", lastFac = "---", lastTime = "---";
         if(data) {
