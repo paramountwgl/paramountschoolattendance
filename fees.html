@@ -155,9 +155,17 @@
             </div>
 
             <div class="calc-row">
-                <div><label>TOTAL FEE</label><input type="number" id="totalFee" oninput="updateDue()"></div>
-                <div><label>PAYING NOW</label><input type="number" id="payAmt" oninput="updateDue()"></div>
+                <div><label>TOTAL FEE (ACTUAL)</label><input type="number" id="totalFee" oninput="updateDue()"></div>
+                <div><label>DISCOUNT (%)</label><input type="number" id="discountPct" placeholder="0" oninput="updateDue()"></div>
             </div>
+
+            <div style="background: #e3f2fd; border: 1px solid #bbdefb; padding: 12px; border-radius: 12px; margin-bottom: 15px; text-align: center;">
+                <span style="font-size: 11px; font-weight: 800; color: #1976d2;">FINAL PAYABLE (AFTER DISCOUNT)</span><br>
+                <strong id="toBePaidDisplay" style="font-size: 20px; color: #0d47a1;">₹ 0</strong>
+            </div>
+
+            <label>PAYING NOW</label>
+            <input type="number" id="payAmt" oninput="updateDue()">
 
             <label>PAYMENT METHOD</label>
             <select id="payMethod" onchange="handleMethodChange()">
@@ -326,71 +334,102 @@
         }
     }
 
-    async function fetchFeeData() {
-        const c = document.getElementById('feeClass').value, n = document.getElementById('feeStudent').value;
-        if(!c || !n) return;
+   async function fetchFeeData() {
+    const c = document.getElementById('feeClass').value, n = document.getElementById('feeStudent').value;
+    if(!c || !n) return;
 
-        const dataPath = currentMode === 'tuition' ? `fee_records/${c}/${n}` : `bus_records/${c}/${n}`;
-        
-        if(currentMode === 'bus') {
-            const studentInfo = await db.ref(`bus_students/${c}/${n}`).once('value');
-            if(studentInfo.val()) {
-                // Fill if data exists
-                document.getElementById('dispFather').innerText = studentInfo.val().father;
-                document.getElementById('dispPhone').innerText = studentInfo.val().phone;
-                document.getElementById('studentDetailBox').style.display = 'block';
-                document.getElementById('btnUnregister').style.display = 'block';
-                document.getElementById('busFather').value = studentInfo.val().father;
-                document.getElementById('busPhone').value = studentInfo.val().phone;
-            } else {
-                // If student NOT in bus list, clear info display but DO NOT clear the input boxes
-                // so user can continue typing and register them.
-                document.getElementById('studentDetailBox').style.display = 'none';
-                document.getElementById('btnUnregister').style.display = 'none';
-            }
-        }
-
-        const snap = await db.ref(dataPath).once('value'), data = snap.val();
-        paidTillNow = 0; let totalV = "", rows = "", lastFac = "---", lastTime = "---";
-        if(data) {
-            Object.keys(data).forEach(k => {
-                const r = data[k]; paidTillNow += parseFloat(r.paid || 0); totalV = r.total;
-                lastFac = r.recordedBy || "Unknown";
-                lastTime = r.timestamp ? r.timestamp.split(',')[1].trim() : "N/A";
-                rows += `<tr><td>${r.date}</td><td>₹ ${r.paid}</td><td>${r.method || 'Cash'}</td><td>${r.transId || '-'}</td><td>${lastFac}</td></tr>`;
-            });
-            document.getElementById('totalFee').value = totalV;
-            document.getElementById('historyList').innerHTML = rows;
-            document.getElementById('historyCard').style.display = 'block';
-            document.getElementById('lastFaculty').innerText = lastFac;
-            document.getElementById('lastTime').innerText = lastTime;
-            document.getElementById('auditTrail').style.display = 'block';
+    const dataPath = currentMode === 'tuition' ? `fee_records/${c}/${n}` : `bus_records/${c}/${n}`;
+    
+    // --- PART 1: BUS REGISTRATION LOGIC ---
+    if(currentMode === 'bus') {
+        const studentInfo = await db.ref(`bus_students/${c}/${n}`).once('value');
+        if(studentInfo.val()) {
+            document.getElementById('dispFather').innerText = studentInfo.val().father;
+            document.getElementById('dispPhone').innerText = studentInfo.val().phone;
+            document.getElementById('studentDetailBox').style.display = 'block';
+            document.getElementById('btnUnregister').style.display = 'block';
+            document.getElementById('busFather').value = studentInfo.val().father;
+            document.getElementById('busPhone').value = studentInfo.val().phone;
         } else {
-            document.getElementById('totalFee').value = ""; 
-            document.getElementById('historyList').innerHTML = "";
-            document.getElementById('historyCard').style.display = 'none'; 
-            document.getElementById('auditTrail').style.display = 'none';
+            document.getElementById('studentDetailBox').style.display = 'none';
+            document.getElementById('btnUnregister').style.display = 'none';
+            // We do NOT clear busFather/Phone here so you can type and register new students
         }
-        updateDue();
     }
 
-    function saveRecord() {
-        const c = document.getElementById('feeClass').value, n = document.getElementById('feeStudent').value;
-        const t = document.getElementById('totalFee').value, p = document.getElementById('payAmt').value, meth = document.getElementById('payMethod').value, tid = document.getElementById('transId').value, d = document.getElementById('payDate').value;
-        if(!n || !p) return Swal.fire('Error', 'Missing Data', 'warning');
-        
-        const dataPath = currentMode === 'tuition' ? `fee_records/${c}/${n}` : `bus_records/${c}/${n}`;
-        const stamp = new Date().toLocaleDateString() + ", " + new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}).toUpperCase();
-        const entry = { total: t, paid: p, method: meth, transId: tid || null, recordedBy: activeUser, date: d, timestamp: stamp };
-        lastTx = { ...entry, n, c };
-        
-        db.ref(dataPath).push(entry).then(() => {
-            Swal.fire('Saved', `${currentMode.toUpperCase()} Updated`, 'success'); 
-            document.getElementById('payAmt').value = ''; 
-            document.getElementById('transId').value = ''; 
-            fetchFeeData();
+    // --- PART 2: PAYMENT HISTORY & DISCOUNT LOGIC ---
+    const snap = await db.ref(dataPath).once('value'), data = snap.val();
+    paidTillNow = 0; 
+    let totalV = ""; 
+    let lastDisc = 0; 
+    let rows = ""; 
+    let lastFac = "---", lastTime = "---";
+
+    if(data) {
+        Object.keys(data).forEach(k => {
+            const r = data[k]; 
+            paidTillNow += parseFloat(r.paid || 0); 
+            totalV = r.total;
+            lastDisc = r.discountPct || 0; // Retrieve the discount saved in the record
+            lastFac = r.recordedBy || "Unknown";
+            lastTime = r.timestamp ? r.timestamp.split(',')[1].trim() : "N/A";
+            
+            rows += `<tr>
+                <td>${r.date}</td>
+                <td>₹ ${r.paid}</td>
+                <td>${r.method || 'Cash'}</td>
+                <td>${r.transId || '-'}</td>
+                <td>${lastFac}</td>
+            </tr>`;
         });
+
+        // Auto-fill the tools with the most recent data
+        document.getElementById('totalFee').value = totalV;
+        document.getElementById('discountPct').value = lastDisc; 
+        
+        document.getElementById('historyList').innerHTML = rows;
+        document.getElementById('historyCard').style.display = 'block';
+        document.getElementById('lastFaculty').innerText = lastFac;
+        document.getElementById('lastTime').innerText = lastTime;
+        document.getElementById('auditTrail').style.display = 'block';
+    } else {
+        // Clear history if no data exists for this student
+        document.getElementById('totalFee').value = ""; 
+        document.getElementById('discountPct').value = ""; 
+        document.getElementById('historyList').innerHTML = "";
+        document.getElementById('historyCard').style.display = 'none'; 
+        document.getElementById('auditTrail').style.display = 'none';
     }
+
+    // PART 3: Trigger the visual updates (Gauge, Balance, Final Payable)
+    updateDue();
+}
+    function saveRecord() {
+    const c = document.getElementById('feeClass').value, n = document.getElementById('feeStudent').value;
+    const t = document.getElementById('totalFee').value;
+    const dPct = document.getElementById('discountPct').value || 0; // Capture Discount
+    const p = document.getElementById('payAmt').value;
+    const meth = document.getElementById('payMethod').value;
+    const tid = document.getElementById('transId').value;
+    const d = document.getElementById('payDate').value;
+
+    if(!n || !p) return Swal.fire('Error', 'Missing Data', 'warning');
+    
+    const dataPath = currentMode === 'tuition' ? `fee_records/${c}/${n}` : `bus_records/${c}/${n}`;
+    const stamp = new Date().toLocaleDateString() + ", " + new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}).toUpperCase();
+    
+    // Adding discountPct to the Firebase entry
+    const entry = { total: t, discountPct: dPct, paid: p, method: meth, transId: tid || null, recordedBy: activeUser, date: d, timestamp: stamp };
+    lastTx = { ...entry, n, c };
+    
+    db.ref(dataPath).push(entry).then(() => {
+        Swal.fire('Saved', `${currentMode.toUpperCase()} Updated`, 'success'); 
+        document.getElementById('payAmt').value = ''; 
+        document.getElementById('transId').value = ''; 
+        fetchFeeData();
+    });
+}
+
 
     window.onload = function() {
         document.getElementById('staffName').selectedIndex = 0;
@@ -423,16 +462,31 @@
     }
 
     function updateDue() {
-        const t = parseFloat(document.getElementById('totalFee').value) || 0, pNow = parseFloat(document.getElementById('payAmt').value) || 0;
-        const combined = paidTillNow + pNow, due = t - combined;
-        document.getElementById('dueDisplay').innerText = "₹ " + (due < 0 ? 0 : due);
-        const dueBox = document.getElementById('dueBox');
-        if (due > 10000) { dueBox.classList.add('high-due'); } else { dueBox.classList.remove('high-due'); }
-        let pct = (t > 0) ? (combined / t) * 100 : 0;
-        if(pct > 100) pct = 100;
-        document.getElementById('progressCircle').style.strokeDashoffset = 314.15 - (314.15 * pct / 100);
-        document.getElementById('percentText').innerText = Math.round(pct) + "%";
-    }
+    const total = parseFloat(document.getElementById('totalFee').value) || 0;
+    const discPct = parseFloat(document.getElementById('discountPct').value) || 0;
+    const pNow = parseFloat(document.getElementById('payAmt').value) || 0;
+
+    // 1. Calculate the Discounted Amount (To Be Paid)
+    const discountAmount = (total * discPct) / 100;
+    const toBePaid = total - discountAmount;
+    document.getElementById('toBePaidDisplay').innerText = "₹ " + Math.round(toBePaid);
+
+    // 2. Calculate Balance based on Discounted Total
+    const combinedPaid = paidTillNow + pNow;
+    const due = toBePaid - combinedPaid;
+    
+    document.getElementById('dueDisplay').innerText = "₹ " + (due < 0 ? 0 : Math.round(due));
+    
+    // UI Feedback
+    const dueBox = document.getElementById('dueBox');
+    if (due > 10000) { dueBox.classList.add('high-due'); } else { dueBox.classList.remove('high-due'); }
+
+    // Progress Circle based on Discounted Total
+    let pct = (toBePaid > 0) ? (combinedPaid / toBePaid) * 100 : 0;
+    if(pct > 100) pct = 100;
+    document.getElementById('progressCircle').style.strokeDashoffset = 314.15 - (314.15 * pct / 100);
+    document.getElementById('percentText').innerText = Math.round(pct) + "%";
+}
 
     function printReceipt() {
         if(!lastTx) return;
