@@ -244,6 +244,8 @@
     document.getElementById('totalFee').value = '';
     document.getElementById('payAmt').value = '';
     document.getElementById('discountPct').value = '';
+    document.getElementById('busFather').value = '';
+    document.getElementById('busPhone').value = '';
     updateDue();
 
     if(mode === 'tuition') {
@@ -300,22 +302,31 @@
     }
 
     async function registerBusStudent() {
-        const cls = document.getElementById('feeClass').value;
-        const name = document.getElementById('feeStudent').value;
-        const father = document.getElementById('busFather').value;
-        const phone = document.getElementById('busPhone').value;
+    const cls = document.getElementById('feeClass').value;
+    const name = document.getElementById('feeStudent').value;
+    const father = document.getElementById('busFather').value;
+    const phone = document.getElementById('busPhone').value;
 
-        if(!cls || !name || !father || !phone) {
-            return Swal.fire('Error', 'Please select student and fill details', 'warning');
-        }
-
-        await db.ref(`bus_students/${cls}/${name}`).set({ father, phone });
-        Swal.fire('Success', `${name} registered for Bus`, 'success');
-        
-        populateStudents(); // Refresh dropdown for the green (B)
-        fetchFeeData(); // Refresh info boxes
+    if(!cls || !name || !father || !phone) {
+        return Swal.fire('Error', 'Please select student and fill details', 'warning');
     }
 
+    // 1. Save to Firebase
+    await db.ref(`bus_students/${cls}/${name}`).set({ father, phone });
+    
+    // 2. Show Success Message
+    Swal.fire('Success', `${name} registered for Bus`, 'success');
+    
+    // 3. CLEAR THE DETAILS (The fix you requested)
+    document.getElementById('busFather').value = '';
+    document.getElementById('busPhone').value = '';
+    document.getElementById('studentDetailBox').style.display = 'none';
+    document.getElementById('btnUnregister').style.display = 'none';
+    
+    // 4. Refresh the dropdown and UI
+    populateStudents(); 
+    fetchFeeData(); 
+}
     async function unregisterBusStudent() {
         const cls = document.getElementById('feeClass').value;
         const name = document.getElementById('feeStudent').value;
