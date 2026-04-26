@@ -130,32 +130,62 @@
 
         <div id="staffDisplay" style="text-align:center; font-weight:800; color:var(--forest); background:#e8f5e9; padding:10px; border-radius:12px; margin-bottom:15px; font-size:12px;"></div>
         
-        <div class="card">
-            <h3 id="portalTitle"><i class="fas fa-file-invoice-dollar"></i> Tuition Fee Records</h3>
-            <div id="grandSummaryBar" style="display: flex; justify-content: space-between; background: var(--dark-green); color: white; padding: 15px; border-radius: 12px; margin-bottom: 20px; border-bottom: 3px solid var(--gold);">
-    <div>
-        <span style="font-size: 10px; opacity: 0.8; text-transform: uppercase; font-weight: 800;">Academic Year Total</span>
-        <div id="grandTotalDisplay" style="font-size: 18px; font-weight: 800;">₹ 0</div>
-    </div>
-    <div style="text-align: right;">
-        <span style="font-size: 10px; opacity: 0.8; text-transform: uppercase; font-weight: 800;">Overal Balance</span>
-        <div id="grandBalanceDisplay" style="font-size: 18px; font-weight: 800; color: var(--gold);">₹ 0</div>
-    </div>
-</div>
+       <div class="card">
+    <h3 id="portalTitle"><i class="fas fa-file-invoice-dollar"></i> Tuition Fee Records</h3>
 
-<label style="font-size: 10px; font-weight: 800; color: var(--forest); margin-bottom: 5px; display: block;">SELECT INSTALLMENT TERM</label>
-<div class="calc-row" style="margin-bottom: 20px; grid-template-columns: 1fr 1fr 1fr;">
-    <button onclick="setActiveTerm(1)" id="term1Btn" class="btn-action" style="background: white; color: var(--forest); border: 2px solid var(--forest); font-size: 11px; padding: 10px;">
-        TERM 1 <span id="dot1" style="color: #ccc;">●</span>
-    </button>
-    <button onclick="setActiveTerm(2)" id="term2Btn" class="btn-action" style="background: white; color: var(--forest); border: 2px solid var(--forest); font-size: 11px; padding: 10px;">
-        TERM 2 <span id="dot2" style="color: #ccc;">●</span>
-    </button>
-    <button onclick="setActiveTerm(3)" id="term3Btn" class="btn-action" style="background: white; color: var(--forest); border: 2px solid var(--forest); font-size: 11px; padding: 10px;">
-        TERM 3 <span id="dot3" style="color: #ccc;">●</span>
-    </button>
-</div>
-            
+    <label>CLASS</label>
+    <select id="feeClass" onchange="populateStudents()"></select>
+    
+    <label>STUDENT NAME</label>
+    <select id="feeStudent" onchange="fetchFeeData()"><option value="">-- Select Student --</option></select>
+    
+    <div id="studentDetailBox" style="display:none; font-size: 11px; background: #f1f5f9; padding: 10px; border-radius: 8px; margin-bottom: 10px; color: #475569;">
+        <strong>Father:</strong> <span id="dispFather"></span> | <strong>Phone:</strong> <span id="dispPhone"></span>
+    </div>
+
+    <div class="calc-row">
+        <div><label>TOTAL FEE (ACTUAL)</label><input type="number" id="totalFee" oninput="updateDue()"></div>
+        <div id="discountContainer"><label>DISCOUNT (%)</label><input type="number" id="discountPct" placeholder="0" oninput="updateDue()"></div>
+    </div>
+
+    <div id="finalPayableContainer" style="background: #e3f2fd; border: 1px solid #bbdefb; padding: 12px; border-radius: 12px; margin-bottom: 15px; text-align: center;">
+        <span style="font-size: 11px; font-weight: 800; color: #1976d2;">FINAL PAYABLE (TO BE PAID)</span><br>
+        <strong id="toBePaidDisplay" style="font-size: 20px; color: #0d47a1;">₹ 0</strong>
+    </div>
+
+    <label>PAYING NOW</label>
+    <input type="number" id="payAmt" oninput="updateDue()">
+
+    <label>PAYMENT METHOD</label>
+    <select id="payMethod" onchange="handleMethodChange()">
+        <option value="Cash">Cash</option>
+        <option value="Online">Online Payment</option>
+    </select>
+
+    <div id="onlineField">
+        <label>TRANSACTION ID (LAST 5 DIGITS)</label>
+        <input type="text" id="transId" maxlength="5" placeholder="e.g. 12345">
+    </div>
+
+    <label>PAYMENT DATE</label>
+    <input type="date" id="payDate">
+
+    <div id="dueBox" class="due-box"><span>BALANCE DUE</span><br><strong id="dueDisplay">₹ 0</strong></div>
+
+    <div class="chart-container">
+        <div class="circular-progress">
+            <svg viewBox="0 0 120 120"><circle class="circle-bg" cx="60" cy="60" r="50"></circle><circle id="progressCircle" class="circle-bar" cx="60" cy="60" r="50"></circle></svg>
+            <div id="percentText" class="percentage-text">0%</div>
+        </div>
+        <div id="auditTrail" class="audit-trail">LAST UPDATED BY: <span id="lastFaculty">---</span> AT <span id="lastTime">---</span></div>
+    </div>
+
+    <div class="action-flex">
+        <button class="btn-action btn-save" onclick="saveRecord()">Update <i class="fas fa-save"></i></button>
+        <button class="btn-action btn-wipe" onclick="clearData()">Wipe History <i class="fas fa-trash-alt"></i></button>
+    </div>
+    <button id="receiptBtn" class="btn-action btn-receipt" onclick="printReceipt()">Generate Receipt <i class="fas fa-print"></i></button>
+</div>            
            <div id="busRegSection" style="display:none; background: #fffde7; padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 1px solid var(--gold);">
     <p style="font-size: 10px; font-weight: 800; color: #856404; margin-bottom: 8px;">BUS STUDENT MANAGEMENT</p>
     <input type="text" id="busFather" placeholder="Father's Name" style="font-size: 12px; margin-bottom: 5px;">
@@ -532,65 +562,37 @@ function setActiveTerm(termNumber) {
     const pNow = parseFloat(document.getElementById('payAmt').value) || 0;
     let targetAmount = total;
 
+    // --- TUITION MODE: Apply Discount Logic ---
     if (currentMode === 'tuition') {
         const discPct = parseFloat(document.getElementById('discountPct').value) || 0;
         const discountAmt = (total * discPct) / 100;
-        const finalYearPayable = total - discountAmt;
-
-        // --- AUTOMATIC SPLIT LOGIC ---
-        // We divide the final payable by 3 for the terms
-        const splitAmount = finalYearPayable / 3;
+        targetAmount = total - discountAmt;
         
-        // Update the global data for all terms automatically
-        [1, 2, 3].forEach(num => {
-            termData[num].total = Math.round(splitAmount);
-        });
-
-        // Set the target amount for the CURRENT selected term
-        targetAmount = termData[selectedTerm].total;
-        
-        // Update UI Displays
+        // Update the "Final Payable" display box
         document.getElementById('toBePaidDisplay').innerText = "₹ " + Math.round(targetAmount);
-        document.getElementById('grandTotalDisplay').innerText = "₹ " + Math.round(finalYearPayable);
-        
-        let grandYearPaid = 0;
-        [1, 2, 3].forEach(num => grandYearPaid += (termData[num].paid || 0));
-        
-        const overallBalance = finalYearPayable - (grandYearPaid + pNow);
-        document.getElementById('grandBalanceDisplay').innerText = "₹ " + (overallBalance < 0 ? 0 : Math.round(overallBalance));
-
-        // --- STATUS INDICATORS (Dots) ---
-        [1, 2, 3].forEach(num => {
-            const dot = document.getElementById(`dot${num}`);
-            const tP = termData[num].paid || 0;
-            const tT = termData[num].total || 0;
-
-            if (tT > 0 && tP >= tT) {
-                dot.style.color = "#2e7d32"; // 🟢 Cleared
-            } else if (tP > 0) {
-                dot.style.color = "#fbc02d"; // 🟡 Partial
-            } else {
-                dot.style.color = "#c62828"; // 🔴 Pending
-            }
-        });
     }
 
-    // --- COMMON CALCULATION ---
+    // --- COMMON CALCULATION (Works for both Bus & Tuition) ---
     const combinedPaid = paidTillNow + pNow;
     const due = targetAmount - combinedPaid;
     
+    // Update the Balance Due display
     document.getElementById('dueDisplay').innerText = "₹ " + (due < 0 ? 0 : Math.round(due));
     
+    // UI Feedback: Red Pulse Alarm for high due amounts
     const dueBox = document.getElementById('dueBox');
-    if (due > 10000) { dueBox.classList.add('high-due'); } 
-    else { dueBox.classList.remove('high-due'); }
+    if (due > 10000) { 
+        dueBox.classList.add('high-due'); 
+    } else { 
+        dueBox.classList.remove('high-due'); 
+    }
 
+    // Circular Progress Gauge update
     let pct = (targetAmount > 0) ? (combinedPaid / targetAmount) * 100 : 0;
     if(pct > 100) pct = 100;
     document.getElementById('progressCircle').style.strokeDashoffset = 314.15 - (314.15 * pct / 100);
     document.getElementById('percentText').innerText = Math.round(pct) + "%";
 }
-
     function printReceipt() {
         if(!lastTx) return;
         const { n, c, p, d, method, transId } = lastTx;
