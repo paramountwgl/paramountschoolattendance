@@ -155,34 +155,33 @@
             </div>
 
             <div class="calc-row">
-                <div><label>TOTAL FEE (ACTUAL)</label><input type="number" id="totalFee" oninput="updateDue()"></div>
-                <div><label>DISCOUNT (%)</label><input type="number" id="discountPct" placeholder="0" oninput="updateDue()"></div>
-            </div>
+    <div><label>TOTAL FEE</label><input type="number" id="totalFee" oninput="updateDue()"></div>
+    <div id="discountContainer"><label>DISCOUNT (%)</label><input type="number" id="discountPct" placeholder="0" oninput="updateDue()"></div>
+</div>
 
-            <div style="background: #e3f2fd; border: 1px solid #bbdefb; padding: 12px; border-radius: 12px; margin-bottom: 15px; text-align: center;">
-                <span style="font-size: 11px; font-weight: 800; color: #1976d2;">FINAL PAYABLE (AFTER DISCOUNT)</span><br>
-                <strong id="toBePaidDisplay" style="font-size: 20px; color: #0d47a1;">₹ 0</strong>
-            </div>
+<div id="finalPayableContainer" style="background: #e3f2fd; border: 1px solid #bbdefb; padding: 12px; border-radius: 12px; margin-bottom: 15px; text-align: center;">
+    <span style="font-size: 11px; font-weight: 800; color: #1976d2;">FINAL PAYABLE (TO BE PAID)</span><br>
+    <strong id="toBePaidDisplay" style="font-size: 20px; color: #0d47a1;">₹ 0</strong>
+</div>
 
-            <label>PAYING NOW</label>
-            <input type="number" id="payAmt" oninput="updateDue()">
+<label>PAYING NOW</label>
+<input type="number" id="payAmt" oninput="updateDue()">
 
-            <label>PAYMENT METHOD</label>
-            <select id="payMethod" onchange="handleMethodChange()">
-                <option value="Cash">Cash</option>
-                <option value="Online">Online Payment</option>
-            </select>
+<label>PAYMENT METHOD</label>
+<select id="payMethod" onchange="handleMethodChange()">
+    <option value="Cash">Cash</option>
+    <option value="Online">Online Payment</option>
+</select>
 
-            <div id="onlineField">
-                <label>TRANSACTION ID (LAST 5 DIGITS)</label>
-                <input type="text" id="transId" maxlength="5" placeholder="e.g. 12345">
-            </div>
+<div id="onlineField">
+    <label>TRANSACTION ID (LAST 5 DIGITS)</label>
+    <input type="text" id="transId" maxlength="5" placeholder="e.g. 12345">
+</div>
 
-            <label>PAYMENT DATE</label>
-            <input type="date" id="payDate">
+<label>PAYMENT DATE</label>
+<input type="date" id="payDate">
 
-            <div id="dueBox" class="due-box"><span>BALANCE DUE</span><br><strong id="dueDisplay">₹ 0</strong></div>
-
+<div id="dueBox" class="due-box"><span>BALANCE DUE</span><br><strong id="dueDisplay">₹ 0</strong></div>
             <div class="chart-container">
                 <div class="circular-progress">
                     <svg viewBox="0 0 120 120"><circle class="circle-bg" cx="60" cy="60" r="50"></circle><circle id="progressCircle" class="circle-bar" cx="60" cy="60" r="50"></circle></svg>
@@ -229,37 +228,45 @@
     const studentData = { "Pre-KG": ["Hanish Macharla", "Arjun Vihaar Illandula", "Thanu sree Allakunta", "Aadhya Gangaraboina", "Aadhya Sri Oggula", "Aadhyasri Shivagoni", "Afraha Begum", "Aliya Sultana", "Anvika Bandi", "Aradana Devara konda", "Devansh Bandi", "Hanvitha Mulkalapelli", "Harsha Vardhan Seenapelli", "Hiranya Bandi", "Jashritha Boina", "Konreddy Shreyanvi", "Kriyansh Sammeta", "Mohammed Mohiuddin Sayyad", "Nethra Narkurthi", "Reeyansh Bandi", "Rishi Myakala", "Rudransh Bandi", "Sanvika Bandi", "Shanvith Khatha", "Shishira Jalagam", "Shiva Sai Mekala", "Shree Rudhraveer Chevvu", "Shreyansh Gangaraboina", "Sreeja Thalla", "Srikrithini Myakala", "Srivatsav Vanam", "Sriyansh Mekala", "Thanvika Lakka", "Thrilokansh Vudari", "Ujjwal Checkka", "Vaishnavi Lakka", "Vedansh Myakala", "Vishnu Priya Molugu", "Vyshnav Tej Boina", "Yafiah Mohammad"], "KG-1": ["Aadhya Sri Amaravadi", "Aditya Manda", "Aadhya Jella", "Advaita Gauri Bandi", "Aizah Amna Shaik", "Akshara Singaram", "Bhahuveer Raj Somishetti", "Gayathri Erroju", "Hanvika Mulkalapelli", "Manvith Kondoju", "Sayyad Vajeed", "Mekala Manu sri", "Oliva Grace Vallapu", "Rithwik Oggula", "Rithwika Kandagatla", "Srimahi Chevvu", "Thanvesh Thalla", "Trishul Nanduri", "Yoganshika Nanduri", "Yusra Mohammad", "Zainul Abideen Syed"], "KG-2": ["Deekshanth Sammeta", "Hanshith Erroju", "Harika Bandi", "Himarsha Naini", "Karthik Vallepu", "Kruthika Bandi", "Rajavardhan Gampala", "Roshan Kaitha", "Sri Anshu Ayaan Lyadala", "Srihansh Bandi", "Srikshitha Guduri", "Varshith Gonela", "Adyasri Makala", "Anvik Boini", "Anvith Pokanati", "Awais Ur Rehman Mohammad", "Dakshu Pothuganti", "Hansith Reddy Katukuri", "Harshith Pokanati", "Jella Aditya", "Krishank Nallabothula", "Kundana Katkuri", "Munukuntla Revanth Rudhra", "Niraja Nethri Siluveru", "Pranav Mattepelli", "Sreenith Yadav Naini", "Uvan Reddy Dasari", "Zayan Mohammad", "Zoya Mohammed"], "Grade-1": ["Dheeraj Gattu", "Preetham Sannayala", "Shiva nandu Gonela", "Shrayan Nuthanakanti", "Sriyanksha Mandala", "Advitha Garige", "Harika Bandi", "Himansi Kondoju", "Izhaan Rahamath Syed", "Jaisurya Myakala", "Khadeeja Fathima", "Manaswini Dandugula", "Manusri Bandi", "Rithwik krishna Amaravadi", "Rohan Bandi", "Shiva Junnu", "Shivanandh Bandi", "Sridha Thalla", "Srinika Chengelly", "Sriyanshi Oggula", "Vishwak Checkka"], "Grade-2": ["Aliza Manha Shaik", "Dhruvan Reddy Katukuri", "Druthika Enugala", "Manaswini Bandi", "Rakshith Macharla", "Sathwika Katkuri", "Shalini Uppala", "Chandu Devarakonda", "Gnaneshwar Pokanati", "Hasnain Syed", "Koushik Siluveru", "Senen Desabattula", "Shivarajan Pothuganti"], "Grade-3": ["Nagavelly Manikanta", "Mirja Ismail", "Bandi Aryan", "Dandugula Mahesh Babu", "Bandi Tejasri", "Bandi Harshavardhan", "Gampala Vyshnavi", "Gampala Laxmi", "Garige Harshith", "Katkuri Hanish", "Katukuri Manideep", "MD Abdul Quddus", "Muppa Sathwik Patel", "Nuthanakanti Sansita", "Pasarakonda Ritwin", "Pinninti Rakshith Rao", "Rayi Sriman Adithya"], "Grade-4": ["Abdul Saqib Mohammad", "Anudeep Chintha", "Bhavan Bandi", "Harshavardhan Gonela", "Jayadev Chiluveru", "Mahaboob Syed", "Nandith Reddy Enugala", "Sai Charan Goud Mandala", "Sai Prasanna Keerthi", "Ajmeri Shaik", "Akshara Chiluveru", "Jayasri Myakala", "Rahul Kanjarla", "Saketh Devarakonda"], "Grade-5": ["Adya Reddy Vangala", "Kowshik Patel Muppa", "Siri Singaram", "Srikar Mandala", "Abdus Salaam MD", "Akshith Ram Kalvacharla", "Jaffar Anas Shaik", "Khaja Azeemuddin Mohammed", "Nihan Mohammed", "Saif Shaik", "Saketh Renukuntla", "Sreeja Dasari", "Vidhaatri Sahani"], "Grade-6": ["Abdul Razzak Mohammad", "Anudeepthi Chintha", "Saketh Ranaveni", "Shiva Sri Katukuri", "Aklees Shaik", "Akshya Kalvacharla", "Prince Katkuri"], "Grade-7": ["Manikanta Sannayala", "Sreeyan Reddy Karra", "Jayadhithya Chiluveru"], "Grade-8": ["Sathwika Nagavelly", "Vyshnavi Uppala", "Akshaya Gampala", "Ganesh Oggula", "Gayathri Renukuntla", "Khaja Sadeemuddin Mohammed"] };
 
     function switchMode(mode) {
-        currentMode = mode;
-        const tBtn = document.getElementById('btnTuitionMode');
-        const bBtn = document.getElementById('btnBusMode');
-        const title = document.getElementById('portalTitle');
-        const busReg = document.getElementById('busRegSection');
+    currentMode = mode;
+    const tBtn = document.getElementById('btnTuitionMode');
+    const bBtn = document.getElementById('btnBusMode');
+    const title = document.getElementById('portalTitle');
+    const busReg = document.getElementById('busRegSection');
+    
+    // Elements to show/hide
+    const discInput = document.getElementById('discountContainer');
+    const finalPayBox = document.getElementById('finalPayableContainer');
 
-        document.getElementById('feeStudent').innerHTML = '<option value="">-- Select Student --</option>';
-        document.getElementById('historyCard').style.display = 'none';
-        document.getElementById('totalFee').value = '';
-        document.getElementById('payAmt').value = '';
-        document.getElementById('studentDetailBox').style.display = 'none';
-        
-        // Reset inputs on mode switch
-        document.getElementById('busFather').value = '';
-        document.getElementById('busPhone').value = '';
-        
-        updateDue();
+    // Reset Fields
+    document.getElementById('feeStudent').innerHTML = '<option value="">-- Select Student --</option>';
+    document.getElementById('historyCard').style.display = 'none';
+    document.getElementById('totalFee').value = '';
+    document.getElementById('payAmt').value = '';
+    document.getElementById('discountPct').value = '';
+    updateDue();
 
-        if(mode === 'tuition') {
-            tBtn.style.background = 'var(--forest)'; tBtn.style.color = 'white';
-            bBtn.style.background = 'white'; bBtn.style.color = 'var(--forest)';
-            title.innerHTML = '<i class="fas fa-file-invoice-dollar"></i> Tuition Fee Records';
-            busReg.style.display = 'none';
-        } else {
-            bBtn.style.background = 'var(--forest)'; bBtn.style.color = 'white';
-            tBtn.style.background = 'white'; tBtn.style.color = 'var(--forest)';
-            title.innerHTML = '<i class="fas fa-bus"></i> Bus Fee Records';
-            busReg.style.display = 'block';
-        }
-        populateStudents();
+    if(mode === 'tuition') {
+        tBtn.style.background = 'var(--forest)'; tBtn.style.color = 'white';
+        bBtn.style.background = 'white'; bBtn.style.color = 'var(--forest)';
+        title.innerHTML = '<i class="fas fa-file-invoice-dollar"></i> Tuition Fee Records';
+        busReg.style.display = 'none';
+        
+        // SHOW for Tuition
+        discInput.style.display = 'block';
+        finalPayBox.style.display = 'block';
+    } else {
+        bBtn.style.background = 'var(--forest)'; bBtn.style.color = 'white';
+        tBtn.style.background = 'white'; tBtn.style.color = 'var(--forest)';
+        title.innerHTML = '<i class="fas fa-bus"></i> Bus Fee Records';
+        busReg.style.display = 'block';
+        
+        // HIDE for Bus
+        discInput.style.display = 'none';
+        finalPayBox.style.display = 'none';
     }
+    populateStudents();
+}
 
     function populateStudents() {
         const cls = document.getElementById('feeClass').value, s = document.getElementById('feeStudent');
@@ -463,26 +470,27 @@
 
     function updateDue() {
     const total = parseFloat(document.getElementById('totalFee').value) || 0;
-    const discPct = parseFloat(document.getElementById('discountPct').value) || 0;
     const pNow = parseFloat(document.getElementById('payAmt').value) || 0;
+    let targetAmount = total;
 
-    // 1. Calculate the Discounted Amount (To Be Paid)
-    const discountAmount = (total * discPct) / 100;
-    const toBePaid = total - discountAmount;
-    document.getElementById('toBePaidDisplay').innerText = "₹ " + Math.round(toBePaid);
+    // Apply Discount logic ONLY in Tuition mode
+    if (currentMode === 'tuition') {
+        const discPct = parseFloat(document.getElementById('discountPct').value) || 0;
+        const discountAmt = (total * discPct) / 100;
+        targetAmount = total - discountAmt;
+        document.getElementById('toBePaidDisplay').innerText = "₹ " + Math.round(targetAmount);
+    }
 
-    // 2. Calculate Balance based on Discounted Total
     const combinedPaid = paidTillNow + pNow;
-    const due = toBePaid - combinedPaid;
+    const due = targetAmount - combinedPaid;
     
     document.getElementById('dueDisplay').innerText = "₹ " + (due < 0 ? 0 : Math.round(due));
     
-    // UI Feedback
+    // UI Feedback (Alarms & Gauge)
     const dueBox = document.getElementById('dueBox');
     if (due > 10000) { dueBox.classList.add('high-due'); } else { dueBox.classList.remove('high-due'); }
 
-    // Progress Circle based on Discounted Total
-    let pct = (toBePaid > 0) ? (combinedPaid / toBePaid) * 100 : 0;
+    let pct = (targetAmount > 0) ? (combinedPaid / targetAmount) * 100 : 0;
     if(pct > 100) pct = 100;
     document.getElementById('progressCircle').style.strokeDashoffset = 314.15 - (314.15 * pct / 100);
     document.getElementById('percentText').innerText = Math.round(pct) + "%";
