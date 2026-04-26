@@ -130,72 +130,19 @@
 
         <div id="staffDisplay" style="text-align:center; font-weight:800; color:var(--forest); background:#e8f5e9; padding:10px; border-radius:12px; margin-bottom:15px; font-size:12px;"></div>
         
-       <div class="card">
-    <h3 id="portalTitle"><i class="fas fa-file-invoice-dollar"></i> Tuition Fee Records</h3>
+        <div class="card">
+            <h3 id="portalTitle"><i class="fas fa-file-invoice-dollar"></i> Tuition Fee Records</h3>
 
-    <label>CLASS</label>
-    <select id="feeClass" onchange="populateStudents()"></select>
-    
-    <label>STUDENT NAME</label>
-    <select id="feeStudent" onchange="fetchFeeData()"><option value="">-- Select Student --</option></select>
-    
-    <div id="studentDetailBox" style="display:none; font-size: 11px; background: #f1f5f9; padding: 10px; border-radius: 8px; margin-bottom: 10px; color: #475569;">
-        <strong>Father:</strong> <span id="dispFather"></span> | <strong>Phone:</strong> <span id="dispPhone"></span>
-    </div>
-
-    <div class="calc-row">
-        <div><label>TOTAL FEE (ACTUAL)</label><input type="number" id="totalFee" oninput="updateDue()"></div>
-        <div id="discountContainer"><label>DISCOUNT (%)</label><input type="number" id="discountPct" placeholder="0" oninput="updateDue()"></div>
-    </div>
-
-    <div id="finalPayableContainer" style="background: #e3f2fd; border: 1px solid #bbdefb; padding: 12px; border-radius: 12px; margin-bottom: 15px; text-align: center;">
-        <span style="font-size: 11px; font-weight: 800; color: #1976d2;">FINAL PAYABLE (TO BE PAID)</span><br>
-        <strong id="toBePaidDisplay" style="font-size: 20px; color: #0d47a1;">₹ 0</strong>
-    </div>
-
-    <label>PAYING NOW</label>
-    <input type="number" id="payAmt" oninput="updateDue()">
-
-    <label>PAYMENT METHOD</label>
-    <select id="payMethod" onchange="handleMethodChange()">
-        <option value="Cash">Cash</option>
-        <option value="Online">Online Payment</option>
-    </select>
-
-    <div id="onlineField">
-        <label>TRANSACTION ID (LAST 5 DIGITS)</label>
-        <input type="text" id="transId" maxlength="5" placeholder="e.g. 12345">
-    </div>
-
-    <label>PAYMENT DATE</label>
-    <input type="date" id="payDate">
-
-    <div id="dueBox" class="due-box"><span>BALANCE DUE</span><br><strong id="dueDisplay">₹ 0</strong></div>
-
-    <div class="chart-container">
-        <div class="circular-progress">
-            <svg viewBox="0 0 120 120"><circle class="circle-bg" cx="60" cy="60" r="50"></circle><circle id="progressCircle" class="circle-bar" cx="60" cy="60" r="50"></circle></svg>
-            <div id="percentText" class="percentage-text">0%</div>
-        </div>
-        <div id="auditTrail" class="audit-trail">LAST UPDATED BY: <span id="lastFaculty">---</span> AT <span id="lastTime">---</span></div>
-    </div>
-
-    <div class="action-flex">
-        <button class="btn-action btn-save" onclick="saveRecord()">Update <i class="fas fa-save"></i></button>
-        <button class="btn-action btn-wipe" onclick="clearData()">Wipe History <i class="fas fa-trash-alt"></i></button>
-    </div>
-    <button id="receiptBtn" class="btn-action btn-receipt" onclick="printReceipt()">Generate Receipt <i class="fas fa-print"></i></button>
-</div>            
-           <div id="busRegSection" style="display:none; background: #fffde7; padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 1px solid var(--gold);">
-    <p style="font-size: 10px; font-weight: 800; color: #856404; margin-bottom: 8px;">BUS STUDENT MANAGEMENT</p>
-    <input type="text" id="busFather" placeholder="Father's Name" style="font-size: 12px; margin-bottom: 5px;">
-    <input type="text" id="busPhone" placeholder="Phone Number" style="font-size: 12px; margin-bottom: 5px;">
-    
-    <div style="display: flex; gap: 8px;">
-        <button onclick="registerBusStudent()" style="background: var(--forest); color: white; flex: 2; border: none; padding: 10px; border-radius: 8px; font-weight: 700; font-size: 11px; cursor: pointer;">REGISTER STUDENT</button>
-        <button id="btnUnregister" onclick="unregisterBusStudent()" style="background: var(--danger); color: white; flex: 1; border: none; padding: 10px; border-radius: 8px; font-weight: 700; font-size: 11px; cursor: pointer; display: none;">REMOVE</button>
-    </div>
-</div>
+            <div id="busRegSection" style="display:none; background: #fffde7; padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 1px solid var(--gold);">
+                <p style="font-size: 10px; font-weight: 800; color: #856404; margin-bottom: 8px;">BUS STUDENT MANAGEMENT</p>
+                <input type="text" id="busFather" placeholder="Father's Name" style="font-size: 12px; margin-bottom: 5px;">
+                <input type="text" id="busPhone" placeholder="Phone Number" style="font-size: 12px; margin-bottom: 5px;">
+                
+                <div style="display: flex; gap: 8px;">
+                    <button onclick="registerBusStudent()" style="background: var(--forest); color: white; flex: 2; border: none; padding: 10px; border-radius: 8px; font-weight: 700; font-size: 11px; cursor: pointer;">REGISTER STUDENT</button>
+                    <button id="btnUnregister" onclick="unregisterBusStudent()" style="background: var(--danger); color: white; flex: 1; border: none; padding: 10px; border-radius: 8px; font-weight: 700; font-size: 11px; cursor: pointer; display: none;">REMOVE</button>
+                </div>
+            </div>
 
             <label>CLASS</label>
             <select id="feeClass" onchange="populateStudents()"></select>
@@ -208,33 +155,34 @@
             </div>
 
             <div class="calc-row">
-    <div><label>TOTAL FEE</label><input type="number" id="totalFee" oninput="updateDue()"></div>
-    <div id="discountContainer"><label>DISCOUNT (%)</label><input type="number" id="discountPct" placeholder="0" oninput="updateDue()"></div>
-</div>
+                <div><label>TOTAL FEE</label><input type="number" id="totalFee" oninput="updateDue()"></div>
+                <div id="discountContainer"><label>DISCOUNT (%)</label><input type="number" id="discountPct" placeholder="0" oninput="updateDue()"></div>
+            </div>
 
-<div id="finalPayableContainer" style="background: #e3f2fd; border: 1px solid #bbdefb; padding: 12px; border-radius: 12px; margin-bottom: 15px; text-align: center;">
-    <span style="font-size: 11px; font-weight: 800; color: #1976d2;">FINAL PAYABLE (TO BE PAID)</span><br>
-    <strong id="toBePaidDisplay" style="font-size: 20px; color: #0d47a1;">₹ 0</strong>
-</div>
+            <div id="finalPayableContainer" style="background: #e3f2fd; border: 1px solid #bbdefb; padding: 12px; border-radius: 12px; margin-bottom: 15px; text-align: center;">
+                <span style="font-size: 11px; font-weight: 800; color: #1976d2;">FINAL PAYABLE (TO BE PAID)</span><br>
+                <strong id="toBePaidDisplay" style="font-size: 20px; color: #0d47a1;">₹ 0</strong>
+            </div>
 
-<label>PAYING NOW</label>
-<input type="number" id="payAmt" oninput="updateDue()">
+            <label>PAYING NOW</label>
+            <input type="number" id="payAmt" oninput="updateDue()">
 
-<label>PAYMENT METHOD</label>
-<select id="payMethod" onchange="handleMethodChange()">
-    <option value="Cash">Cash</option>
-    <option value="Online">Online Payment</option>
-</select>
+            <label>PAYMENT METHOD</label>
+            <select id="payMethod" onchange="handleMethodChange()">
+                <option value="Cash">Cash</option>
+                <option value="Online">Online Payment</option>
+            </select>
 
-<div id="onlineField">
-    <label>TRANSACTION ID (LAST 5 DIGITS)</label>
-    <input type="text" id="transId" maxlength="5" placeholder="e.g. 12345">
-</div>
+            <div id="onlineField">
+                <label>TRANSACTION ID (LAST 5 DIGITS)</label>
+                <input type="text" id="transId" maxlength="5" placeholder="e.g. 12345">
+            </div>
 
-<label>PAYMENT DATE</label>
-<input type="date" id="payDate">
+            <label>PAYMENT DATE</label>
+            <input type="date" id="payDate">
 
-<div id="dueBox" class="due-box"><span>BALANCE DUE</span><br><strong id="dueDisplay">₹ 0</strong></div>
+            <div id="dueBox" class="due-box"><span>BALANCE DUE</span><br><strong id="dueDisplay">₹ 0</strong></div>
+
             <div class="chart-container">
                 <div class="circular-progress">
                     <svg viewBox="0 0 120 120"><circle class="circle-bg" cx="60" cy="60" r="50"></circle><circle id="progressCircle" class="circle-bar" cx="60" cy="60" r="50"></circle></svg>
@@ -275,81 +223,51 @@
 
     const authorized = { "Mr. Ahmad": "Ahmad@123", "Ms. Roqiya": "Roqiya@123", "Ms. Jyothi": "Jyothi@123" };
     const recoveryPins = { "Mr. Ahmad": "Ahmad@07", "Ms. Roqiya": "Roqiya@07", "Ms. Jyothi": "Jyothi@07" };
-    let selectedTerm = 1; // Default to Term 1
-let termData = { 
-    1: { paid: 0, total: 0 }, 
-    2: { paid: 0, total: 0 }, 
-    3: { paid: 0, total: 0 } 
-};
+    
     let activeUser = "", paidTillNow = 0, lastTx = null;
     let currentMode = "tuition"; 
 
-    const studentData = { "Pre-KG": ["Hanish Macharla", "Arjun Vihaar Illandula", "Thanu sree Allakunta", "Aadhya Gangaraboina", "Aadhya Sri Oggula", "Aadhyasri Shivagoni", "Afraha Begum", "Aliya Sultana", "Anvika Bandi", "Aradana Devara konda", "Devansh Bandi", "Hanvitha Mulkalapelli", "Harsha Vardhan Seenapelli", "Hiranya Bandi", "Jashritha Boina", "Konreddy Shreyanvi", "Kriyansh Sammeta", "Mohammed Mohiuddin Sayyad", "Nethra Narkurthi", "Reeyansh Bandi", "Rishi Myakala", "Rudransh Bandi", "Sanvika Bandi", "Shanvith Khatha", "Shishira Jalagam", "Shiva Sai Mekala", "Shree Rudhraveer Chevvu", "Shreyansh Gangaraboina", "Sreeja Thalla", "Srikrithini Myakala", "Srivatsav Vanam", "Sriyansh Mekala", "Thanvika Lakka", "Thrilokansh Vudari", "Ujjwal Checkka", "Vaishnavi Lakka", "Vedansh Myakala", "Vishnu Priya Molugu", "Vyshnav Tej Boina", "Yafiah Mohammad"], "KG-1": ["Aadhya Sri Amaravadi", "Aditya Manda", "Aadhya Jella", "Advaita Gauri Bandi", "Aizah Amna Shaik", "Akshara Singaram", "Bhahuveer Raj Somishetti", "Gayathri Erroju", "Hanvika Mulkalapelli", "Manvith Kondoju", "Sayyad Vajeed", "Mekala Manu sri", "Oliva Grace Vallapu", "Rithwik Oggula", "Rithwika Kandagatla", "Srimahi Chevvu", "Thanvesh Thalla", "Trishul Nanduri", "Yoganshika Nanduri", "Yusra Mohammad", "Zainul Abideen Syed"], "KG-2": ["Deekshanth Sammeta", "Hanshith Erroju", "Harika Bandi", "Himarsha Naini", "Karthik Vallepu", "Kruthika Bandi", "Rajavardhan Gampala", "Roshan Kaitha", "Sri Anshu Ayaan Lyadala", "Srihansh Bandi", "Srikshitha Guduri", "Varshith Gonela", "Adyasri Makala", "Anvik Boini", "Anvith Pokanati", "Awais Ur Rehman Mohammad", "Dakshu Pothuganti", "Hansith Reddy Katukuri", "Harshith Pokanati", "Jella Aditya", "Krishank Nallabothula", "Kundana Katkuri", "Munukuntla Revanth Rudhra", "Niraja Nethri Siluveru", "Pranav Mattepelli", "Sreenith Yadav Naini", "Uvan Reddy Dasari", "Zayan Mohammad", "Zoya Mohammed"], "Grade-1": ["Dheeraj Gattu", "Preetham Sannayala", "Shiva nandu Gonela", "Shrayan Nuthanakanti", "Sriyanksha Mandala", "Advitha Garige", "Harika Bandi", "Himansi Kondoju", "Izhaan Rahamath Syed", "Jaisurya Myakala", "Khadeeja Fathima", "Manaswini Dandugula", "Manusri Bandi", "Rithwik krishna Amaravadi", "Rohan Bandi", "Shiva Junnu", "Shivanandh Bandi", "Sridha Thalla", "Srinika Chengelly", "Sriyanshi Oggula", "Vishwak Checkka"], "Grade-2": ["Aliza Manha Shaik", "Dhruvan Reddy Katukuri", "Druthika Enugala", "Manaswini Bandi", "Rakshith Macharla", "Sathwika Katkuri", "Shalini Uppala", "Chandu Devarakonda", "Gnaneshwar Pokanati", "Hasnain Syed", "Koushik Siluveru", "Senen Desabattula", "Shivarajan Pothuganti"], "Grade-3": ["Nagavelly Manikanta", "Mirja Ismail", "Bandi Aryan", "Dandugula Mahesh Babu", "Bandi Tejasri", "Bandi Harshavardhan", "Gampala Vyshnavi", "Gampala Laxmi", "Garige Harshith", "Katkuri Hanish", "Katukuri Manideep", "MD Abdul Quddus", "Muppa Sathwik Patel", "Nuthanakanti Sansita", "Pasarakonda Ritwin", "Pinninti Rakshith Rao", "Rayi Sriman Adithya"], "Grade-4": ["Abdul Saqib Mohammad", "Anudeep Chintha", "Bhavan Bandi", "Harshavardhan Gonela", "Jayadev Chiluveru", "Mahaboob Syed", "Nandith Reddy Enugala", "Sai Charan Goud Mandala", "Sai Prasanna Keerthi", "Ajmeri Shaik", "Akshara Chiluveru", "Jayasri Myakala", "Rahul Kanjarla", "Saketh Devarakonda"], "Grade-5": ["Adya Reddy Vangala", "Kowshik Patel Muppa", "Siri Singaram", "Srikar Mandala", "Abdus Salaam MD", "Akshith Ram Kalvacharla", "Jaffar Anas Shaik", "Khaja Azeemuddin Mohammed", "Nihan Mohammed", "Saif Shaik", "Saketh Renukuntla", "Sreeja Dasari", "Vidhaatri Sahani"], "Grade-6": ["Abdul Razzak Mohammad", "Anudeepthi Chintha", "Saketh Ranaveni", "Shiva Sri Katukuri", "Aklees Shaik", "Akshya Kalvacharla", "Prince Katkuri"], "Grade-7": ["Manikanta Sannayala", "Sreeyan Reddy Karra", "Jayadhithya Chiluveru"], "Grade-8": ["Sathwika Nagavelly", "Vyshnavi Uppala", "Akshaya Gampala", "Ganesh Oggula", "Gayathri Renukuntla", "Khaja Sadeemuddin Mohammed"] };
+    const studentData = { "Pre-KG": ["Hanish Macharla", "Arjun Vihaar Illandula", "Thanu sree Allakunta", "Aadhya Gangaraboina", "Aadhya Sri Oggula", "Aadhyasri Shivagoni", "Afraha Begum", "Aliya Sultana", "Anvika Bandi", "Aradana Devara konda", "Devansh Bandi", "Hanvitha Mulkalapelli", "Harsha Vardhan Seenapelli", "Hiranya Bandi", "Jashritha Boina", "Konreddy Shreyanvi", "Kriyansh Sammeta", "Mohammed Mohiuddin Sayyad", "Nethra Narkurthi", "Reeyansh Bandi", "Rishi Myakala", "Rudransh Bandi", "Sanvika Bandi", "Shanvith Khatha", "Shishira Jalagam", "Shiva Sai Mekala", "Shree Rudhraveer Chevvu", "Shreyansh Gangaraboina", "Sreeja Thalla", "Srikrithini Myakala", "Srivatsav Vanam", "Sriyansh Mekala", "Thanvika Lakka", "Thrilokansh Vudari", "Ujjwal Checkka", "Vaishnavi Lakka", "Vedansh Myakala", "Vishnu Priya Molugu", "Vyshnav Tej Boina", "Yafiah Mohammad"], "KG-1": ["Aadhya Sri Amaravadi", "Aditya Manda", "Aadhya Jella", "Advaita Gauri Bandi", "Aizah Amna Shaik", "Akshara Singaram", "Bhahuveer Raj Somishetti", "Gayathri Erroju", "Hanvika Mulkalapelli", "Manvith Kondoju", "Sayyad Vajeed", "Mekala Manu sri", "Oliva Grace Vallapu", "Rithwik Oggula", "Rithwika Kandagatla", "Srimahi Chevvu", "Thanvesh Thalla", "Trishul Nanduri", "Yoganshika Nanduri", "Yusra Mohammad", "Zainul Abideen Syed"], "KG-2": ["Deekshanth Sammeta", "Hanshith Erroju", "Harika Bandi", "Himarsha Naini", "Karthik Vallepu", "Kruthika Bandi", "Rajavardhan Gampala", "Roshan Kaitha", "Sri Anshu Ayaan Lyadala", "Srihansh Bandi", "Srikshitha Guduri", "Varshith Gonela", "Adyasri Makala", "Anvik Boini", "Anvith Pokanati", "Awais Ur Rehman Mohammad", "Dakshu Pothuganti", "Hansith Reddy Katukuri", "Harshith Pokanati", "Jella Aditya", "Krishank Nallabothula", "Kundana Katkuri", "Munukuntla Revanth Rudhra", "Niraja Nethri Siluveru", "Pranav Mattepelli", "Sreenith Yadav Naini", "Uvan Reddy Dasari", "Zayan Mohammad", "Zoya Mohammed"], "Grade-1": ["Dheeraj Gattu", "Preetham Sannayala", "Shiva nandu Gonela", "Shrayan Nuthanakanti", "Sriyanksha Mandala", "Advitha Garige", "Harika Bandi", "Himansi Kondoju", "Izhaan Rahamath Syed", "Jaisurya Myakala", "Khadeeja Fathima", "Manaswini Dandugula", "Manusri Bandi", "Rithwik krishna Amaravadi", "Rohan Bandi", "Shiva Junnu", "Shivanandh Bandi", "Sridha Thalla", "Srinika Chengelly", "Sriyanshi Oggula", "Vishwak Checkka"], "Grade-2": ["Aliza Manha Shaik", "Dhruvan Reddy Katukuri", "Druthika Enugala", "Manaswini Bandi", "Rakshith Macharla", "Sathwika Katkuri", "Shalini Uppala", "Chandu Devarakonda", "Gnaneshwar Pokanati", "Hasnain Syed", "Koushik Siluveru", "Senen Desabattula", "Shivarajan Pothuganti"], "Grade-3": ["Nagavelly Manikanta", "Mirja Ismail", "Bandi Aryan", "Dandugula Mahesh Babu", "Bandi Tejasri", "Bandi Harshavardhan", "Gampala Vyshnavi", "Gampala Laxmi", "Garige Harshith", "Katkuri Hanish", "Katukuri Manideep", "MD Abdul Quddus", "Muppa Sathwik Patel", "Nuthanakanti Sansita", "Pasarakonda Ritwin", "Pinninti Rakshith Rao", "Rayi Sriman Adithya"], "Grade-4": ["Abdul Saqib Mohammad", "Anudeep Chintha", "Bhavan Bandi", "Harshavardhan Gonela", "Jayadev Chiluveru", "Mahaboob Syed", "Nandith Reddy Enugala", "Sai Charan Goud Mandala", "Sai Prasanna Keerthi", "Ajmeri Shaik", "Akshara Chiluveru", "Jayasri Myakala", "Rahul Kanjarla", "Saketh Devarakonda"], "Grade-5": ["Adya Reddy Vangala", "Kowshik Patel Muppa", "Siri Singaram", "Srikar Mandala", "Abdus Salaam MD", "Akshith Ram Kalvacharla", "Jaffar Anas Shaik", "Khaja Azeemuddin Mohammed", "Nihan Mohammed", "Saif Shaik", "Saketh Renukuntla", "Sreeja Dasari", "Vidhaatri Sahani"], "Grade-6": ["Abdul Razzak Mohammad", "Anudeepthi Chintha", "Saketh Ranaveni", "Shiva Sri Katukuri", "Aklees Shaik", "Akshya Kalvacharla", "Prince <div class=\"action-flex\">\n        <button class=\"btn-action btn-save\" onclick=\"saveRecord()\">Update <i class=\"fas fa-save\"></i></button>\n        <button class=\"btn-action btn-wipe\" onclick=\"clearData()\">Wipe History <i class=\"fas fa-trash-alt\"></i></button>\n    </div>\n    <button id=\"receiptBtn\" class=\"btn-action btn-receipt\" onclick=\"printReceipt()\">Generate Receipt <i class=\"fas fa-print\"></i></button>\n</div>            Katkuri"], "Grade-7": ["Manikanta Sannayala", "Sreeyan Reddy Karra", "Jayadhithya Chiluveru"], "Grade-8": ["Sathwika Nagavelly", "Vyshnavi Uppala", "Akshaya Gampala", "Ganesh Oggula", "Gayathri Renukuntla", "Khaja Sadeemuddin Mohammed"] };
 
     function switchMode(mode) {
-    currentMode = mode;
-    const tBtn = document.getElementById('btnTuitionMode');
-    const bBtn = document.getElementById('btnBusMode');
-    const title = document.getElementById('portalTitle');
-    const busReg = document.getElementById('busRegSection');
-    
-    // Elements to show/hide
-    const discInput = document.getElementById('discountContainer');
-    const finalPayBox = document.getElementById('finalPayableContainer');
+        currentMode = mode;
+        const tBtn = document.getElementById('btnTuitionMode');
+        const bBtn = document.getElementById('btnBusMode');
+        const title = document.getElementById('portalTitle');
+        const busReg = document.getElementById('busRegSection');
+        const discInput = document.getElementById('discountContainer');
+        const finalPayBox = document.getElementById('finalPayableContainer');
 
-    // Reset Fields
-    document.getElementById('feeStudent').innerHTML = '<option value="">-- Select Student --</option>';
-    document.getElementById('historyCard').style.display = 'none';
-    document.getElementById('totalFee').value = '';
-    document.getElementById('payAmt').value = '';
-    document.getElementById('discountPct').value = '';
-    document.getElementById('busFather').value = '';
-    document.getElementById('busPhone').value = '';
-    updateDue();
+        document.getElementById('feeStudent').innerHTML = '<option value="">-- Select Student --</option>';
+        document.getElementById('historyCard').style.display = 'none';
+        document.getElementById('totalFee').value = '';
+        document.getElementById('payAmt').value = '';
+        document.getElementById('discountPct').value = '';
+        document.getElementById('busFather').value = '';
+        document.getElementById('busPhone').value = '';
+        updateDue();
 
-    if(mode === 'tuition') {
-        tBtn.style.background = 'var(--forest)'; tBtn.style.color = 'white';
-        bBtn.style.background = 'white'; bBtn.style.color = 'var(--forest)';
-        title.innerHTML = '<i class="fas fa-file-invoice-dollar"></i> Tuition Fee Records';
-        busReg.style.display = 'none';
-        
-        // SHOW for Tuition
-        discInput.style.display = 'block';
-        finalPayBox.style.display = 'block';
-    } else {
-        bBtn.style.background = 'var(--forest)'; bBtn.style.color = 'white';
-        tBtn.style.background = 'white'; tBtn.style.color = 'var(--forest)';
-        title.innerHTML = '<i class="fas fa-bus"></i> Bus Fee Records';
-        busReg.style.display = 'block';
-        
-        // HIDE for Bus
-        discInput.style.display = 'none';
-        finalPayBox.style.display = 'none';
-    }
-    populateStudents();
-}
-function setActiveTerm(termNumber) {
-    selectedTerm = termNumber;
-    
-    // UI Visual Switch
-    [1, 2, 3].forEach(num => {
-        const btn = document.getElementById(`term${num}Btn`);
-        if (num === termNumber) {
-            btn.style.background = "var(--forest)";
-            btn.style.color = "white";
+        if(mode === 'tuition') {
+            tBtn.style.background = 'var(--forest)'; tBtn.style.color = 'white';
+            bBtn.style.background = 'white'; bBtn.style.color = 'var(--forest)';
+            title.innerHTML = '<i class="fas fa-file-invoice-dollar"></i> Tuition Fee Records';
+            busReg.style.display = 'none';
+            discInput.style.display = 'block';
+            finalPayBox.style.display = 'block';
         } else {
-            btn.style.background = "white";
-            btn.style.color = "var(--forest)";
+            bBtn.style.background = 'var(--forest)'; bBtn.style.color = 'white';
+            tBtn.style.background = 'white'; tBtn.style.color = 'var(--forest)';
+            title.innerHTML = '<i class="fas fa-bus"></i> Bus Fee Records';
+            busReg.style.display = 'block';
+            discInput.style.display = 'none';
+            finalPayBox.style.display = 'none';
         }
-    });
+        populateStudents();
+    }
 
-    // Refresh the view for the selected term
-    fetchFeeData();
-}
     function populateStudents() {
         const cls = document.getElementById('feeClass').value, s = document.getElementById('feeStudent');
         s.innerHTML = '<option value="">-- Select Student --</option>';
-        
         if(!cls || !studentData[cls]) return;
 
         if (currentMode === 'bus') {
@@ -378,154 +296,128 @@ function setActiveTerm(termNumber) {
     }
 
     async function registerBusStudent() {
-    const cls = document.getElementById('feeClass').value;
-    const name = document.getElementById('feeStudent').value;
-    const father = document.getElementById('busFather').value;
-    const phone = document.getElementById('busPhone').value;
-
-    if(!cls || !name || !father || !phone) {
-        return Swal.fire('Error', 'Please select student and fill details', 'warning');
-    }
-
-    // 1. Save to Firebase
-    await db.ref(`bus_students/${cls}/${name}`).set({ father, phone });
-    
-    // 2. Show Success Message
-    Swal.fire('Success', `${name} registered for Bus`, 'success');
-    
-    // 3. CLEAR THE DETAILS (The fix you requested)
-    document.getElementById('busFather').value = '';
-    document.getElementById('busPhone').value = '';
-    document.getElementById('studentDetailBox').style.display = 'none';
-    document.getElementById('btnUnregister').style.display = 'none';
-    
-    // 4. Refresh the dropdown and UI
-    populateStudents(); 
-    fetchFeeData(); 
-}
-    async function unregisterBusStudent() {
         const cls = document.getElementById('feeClass').value;
         const name = document.getElementById('feeStudent').value;
+        const father = document.getElementById('busFather').value;
+        const phone = document.getElementById('busPhone').value;
+
+        if(!cls || !name || !father || !phone) return Swal.fire('Error', 'Fill details', 'warning');
+        await db.ref(`bus_students/${cls}/${name}`).set({ father, phone });
+        Swal.fire('Success', `${name} registered for Bus`, 'success');
+        document.getElementById('busFather').value = '';
+        document.getElementById('busPhone').value = '';
+        populateStudents(); 
+        fetchFeeData(); 
+    }
+
+    async function unregisterBusStudent() {
+        const cls = document.getElementById('feeClass').value, name = document.getElementById('feeStudent').value;
         if(!cls || !name) return;
-
-        const result = await Swal.fire({
-            title: 'Unregister?',
-            text: `Remove ${name} from Bus Service?`,
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#c62828',
-            confirmButtonText: 'Yes, Remove'
-        });
-
+        const result = await Swal.fire({ title: 'Unregister?', text: 'Remove from Bus?', icon: 'warning', showCancelButton: true });
         if (result.isConfirmed) {
             await db.ref(`bus_students/${cls}/${name}`).remove();
             Swal.fire('Removed', 'Status updated', 'success');
             document.getElementById('busFather').value = '';
             document.getElementById('busPhone').value = '';
-            document.getElementById('btnUnregister').style.display = 'none';
             populateStudents();
             fetchFeeData();
         }
     }
 
-   async function fetchFeeData() {
-    const c = document.getElementById('feeClass').value, n = document.getElementById('feeStudent').value;
-    if(!c || !n) return;
-
-    const dataPath = currentMode === 'tuition' ? `fee_records/${c}/${n}` : `bus_records/${c}/${n}`;
-    
-    // --- PART 1: BUS REGISTRATION LOGIC ---
-    if(currentMode === 'bus') {
-        const studentInfo = await db.ref(`bus_students/${c}/${n}`).once('value');
-        if(studentInfo.val()) {
-            document.getElementById('dispFather').innerText = studentInfo.val().father;
-            document.getElementById('dispPhone').innerText = studentInfo.val().phone;
-            document.getElementById('studentDetailBox').style.display = 'block';
-            document.getElementById('btnUnregister').style.display = 'block';
-            document.getElementById('busFather').value = studentInfo.val().father;
-            document.getElementById('busPhone').value = studentInfo.val().phone;
-        } else {
-            document.getElementById('studentDetailBox').style.display = 'none';
-            document.getElementById('btnUnregister').style.display = 'none';
-            // We do NOT clear busFather/Phone here so you can type and register new students
-        }
-    }
-
-    // --- PART 2: PAYMENT HISTORY & DISCOUNT LOGIC ---
-    const snap = await db.ref(dataPath).once('value'), data = snap.val();
-    paidTillNow = 0; 
-    let totalV = ""; 
-    let lastDisc = 0; 
-    let rows = ""; 
-    let lastFac = "---", lastTime = "---";
-
-    if(data) {
-        Object.keys(data).forEach(k => {
-            const r = data[k]; 
-            paidTillNow += parseFloat(r.paid || 0); 
-            totalV = r.total;
-            lastDisc = r.discountPct || 0; // Retrieve the discount saved in the record
-            lastFac = r.recordedBy || "Unknown";
-            lastTime = r.timestamp ? r.timestamp.split(',')[1].trim() : "N/A";
-            
-            rows += `<tr>
-                <td>${r.date}</td>
-                <td>₹ ${r.paid}</td>
-                <td>${r.method || 'Cash'}</td>
-                <td>${r.transId || '-'}</td>
-                <td>${lastFac}</td>
-            </tr>`;
-        });
-
-        // Auto-fill the tools with the most recent data
-        document.getElementById('totalFee').value = totalV;
-        document.getElementById('discountPct').value = lastDisc; 
+    async function fetchFeeData() {
+        const c = document.getElementById('feeClass').value, n = document.getElementById('feeStudent').value;
+        if(!c || !n) return;
+        const dataPath = currentMode === 'tuition' ? `fee_records/${c}/${n}` : `bus_records/${c}/${n}`;
         
-        document.getElementById('historyList').innerHTML = rows;
-        document.getElementById('historyCard').style.display = 'block';
-        document.getElementById('lastFaculty').innerText = lastFac;
-        document.getElementById('lastTime').innerText = lastTime;
-        document.getElementById('auditTrail').style.display = 'block';
-    } else {
-        // Clear history if no data exists for this student
-        document.getElementById('totalFee').value = ""; 
-        document.getElementById('discountPct').value = ""; 
-        document.getElementById('historyList').innerHTML = "";
-        document.getElementById('historyCard').style.display = 'none'; 
-        document.getElementById('auditTrail').style.display = 'none';
+        if(currentMode === 'bus') {
+            const studentInfo = await db.ref(`bus_students/${c}/${n}`).once('value');
+            if(studentInfo.val()) {
+                document.getElementById('dispFather').innerText = studentInfo.val().father;
+                document.getElementById('dispPhone').innerText = studentInfo.val().phone;
+                document.getElementById('studentDetailBox').style.display = 'block';
+                document.getElementById('btnUnregister').style.display = 'block';
+                document.getElementById('busFather').value = studentInfo.val().father;
+                document.getElementById('busPhone').value = studentInfo.val().phone;
+            } else {
+                document.getElementById('studentDetailBox').style.display = 'none';
+                document.getElementById('btnUnregister').style.display = 'none';
+            }
+        }
+
+        const snap = await db.ref(dataPath).once('value'), data = snap.val();
+        paidTillNow = 0; let totalV = "", lastDisc = 0, rows = "", lastFac = "---", lastTime = "---";
+
+        if(data) {
+            Object.keys(data).forEach(k => {
+                const r = data[k]; 
+                paidTillNow += parseFloat(r.paid || 0); 
+                totalV = r.total;
+                lastDisc = r.discountPct || 0;
+                lastFac = r.recordedBy || "Unknown";
+                lastTime = r.timestamp ? r.timestamp.split(',')[1].trim() : "N/A";
+                rows += `<tr><td>${r.date}</td><td>₹ ${r.paid}</td><td>${r.method || 'Cash'}</td><td>${r.transId || '-'}</td><td>${lastFac}</td></tr>`;
+            });
+            document.getElementById('totalFee').value = totalV;
+            document.getElementById('discountPct').value = lastDisc; 
+            document.getElementById('historyList').innerHTML = rows;
+            document.getElementById('historyCard').style.display = 'block';
+            document.getElementById('lastFaculty').innerText = lastFac;
+            document.getElementById('lastTime').innerText = lastTime;
+            document.getElementById('auditTrail').style.display = 'block';
+        } else {
+            document.getElementById('totalFee').value = ""; 
+            document.getElementById('discountPct').value = ""; 
+            document.getElementById('historyList').innerHTML = "";
+            document.getElementById('historyCard').style.display = 'none'; 
+            document.getElementById('auditTrail').style.display = 'none';
+        }
+        updateDue();
     }
 
-    // PART 3: Trigger the visual updates (Gauge, Balance, Final Payable)
-    updateDue();
-}
     function saveRecord() {
-    const c = document.getElementById('feeClass').value, n = document.getElementById('feeStudent').value;
-    const t = document.getElementById('totalFee').value;
-    const dPct = document.getElementById('discountPct').value || 0; // Capture Discount
-    const p = document.getElementById('payAmt').value;
-    const meth = document.getElementById('payMethod').value;
-    const tid = document.getElementById('transId').value;
-    const d = document.getElementById('payDate').value;
+        const c = document.getElementById('feeClass').value, n = document.getElementById('feeStudent').value;
+        const t = document.getElementById('totalFee').value, p = document.getElementById('payAmt').value;
+        const dPct = document.getElementById('discountPct').value || 0;
+        const meth = document.getElementById('payMethod').value, tid = document.getElementById('transId').value, d = document.getElementById('payDate').value;
+        if(!n || !p) return Swal.fire('Error', 'Missing Data', 'warning');
+        
+        const dataPath = currentMode === 'tuition' ? `fee_records/${c}/${n}` : `bus_records/${c}/${n}`;
+        const stamp = new Date().toLocaleDateString() + ", " + new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}).toUpperCase();
+        const entry = { total: t, discountPct: dPct, paid: p, method: meth, transId: tid || null, recordedBy: activeUser, date: d, timestamp: stamp };
+        lastTx = { ...entry, n, c };
+        
+        db.ref(dataPath).push(entry).then(() => {
+            Swal.fire('Saved', `${currentMode.toUpperCase()} Updated`, 'success'); 
+            document.getElementById('payAmt').value = ''; document.getElementById('transId').value = ''; 
+            fetchFeeData();
+        });
+    }
 
-    if(!n || !p) return Swal.fire('Error', 'Missing Data', 'warning');
-    
-    const dataPath = currentMode === 'tuition' 
-    ? `fee_records/${c}/${n}/term_${selectedTerm}` 
-    : `bus_records/${c}/${n}`;
-    const stamp = new Date().toLocaleDateString() + ", " + new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}).toUpperCase();
-    
-    // Adding discountPct to the Firebase entry
-    const entry = { total: t, discountPct: dPct, paid: p, method: meth, transId: tid || null, recordedBy: activeUser, date: d, timestamp: stamp };
-    lastTx = { ...entry, n, c };
-    
-    db.ref(dataPath).push(entry).then(() => {
-        Swal.fire('Saved', `${currentMode.toUpperCase()} Updated`, 'success'); 
-        document.getElementById('payAmt').value = ''; 
-        document.getElementById('transId').value = ''; 
-        fetchFeeData();
-    });
-}
+    function updateDue() {
+        const total = parseFloat(document.getElementById('totalFee').value) || 0;
+        const pNow = parseFloat(document.getElementById('payAmt').value) || 0;
+        let targetAmount = total;
 
+        if (currentMode === 'tuition') {
+            const discPct = parseFloat(document.getElementById('discountPct').value) || 0;
+            const discountAmt = (total * discPct) / 100;
+            targetAmount = total - discountAmt;
+            document.getElementById('toBePaidDisplay').innerText = "₹ " + Math.round(targetAmount);
+        }
+
+        const combinedPaid = paidTillNow + pNow;
+        const due = targetAmount - combinedPaid;
+        document.getElementById('dueDisplay').innerText = "₹ " + (due < 0 ? 0 : Math.round(due));
+        
+        const dueBox = document.getElementById('dueBox');
+        if (due > 10000) dueBox.classList.add('high-due'); 
+        else dueBox.classList.remove('high-due');
+
+        let pct = (targetAmount > 0) ? (combinedPaid / targetAmount) * 100 : 0;
+        if(pct > 100) pct = 100;
+        document.getElementById('progressCircle').style.strokeDashoffset = 314.15 - (314.15 * pct / 100);
+        document.getElementById('percentText').innerText = Math.round(pct) + "%";
+    }
 
     window.onload = function() {
         document.getElementById('staffName').selectedIndex = 0;
@@ -557,42 +449,6 @@ function setActiveTerm(termNumber) {
         } else { Swal.fire('Error', 'Invalid credentials', 'error'); }
     }
 
-   function updateDue() {
-    const total = parseFloat(document.getElementById('totalFee').value) || 0;
-    const pNow = parseFloat(document.getElementById('payAmt').value) || 0;
-    let targetAmount = total;
-
-    // --- TUITION MODE: Apply Discount Logic ---
-    if (currentMode === 'tuition') {
-        const discPct = parseFloat(document.getElementById('discountPct').value) || 0;
-        const discountAmt = (total * discPct) / 100;
-        targetAmount = total - discountAmt;
-        
-        // Update the "Final Payable" display box
-        document.getElementById('toBePaidDisplay').innerText = "₹ " + Math.round(targetAmount);
-    }
-
-    // --- COMMON CALCULATION (Works for both Bus & Tuition) ---
-    const combinedPaid = paidTillNow + pNow;
-    const due = targetAmount - combinedPaid;
-    
-    // Update the Balance Due display
-    document.getElementById('dueDisplay').innerText = "₹ " + (due < 0 ? 0 : Math.round(due));
-    
-    // UI Feedback: Red Pulse Alarm for high due amounts
-    const dueBox = document.getElementById('dueBox');
-    if (due > 10000) { 
-        dueBox.classList.add('high-due'); 
-    } else { 
-        dueBox.classList.remove('high-due'); 
-    }
-
-    // Circular Progress Gauge update
-    let pct = (targetAmount > 0) ? (combinedPaid / targetAmount) * 100 : 0;
-    if(pct > 100) pct = 100;
-    document.getElementById('progressCircle').style.strokeDashoffset = 314.15 - (314.15 * pct / 100);
-    document.getElementById('percentText').innerText = Math.round(pct) + "%";
-}
     function printReceipt() {
         if(!lastTx) return;
         const { n, c, p, d, method, transId } = lastTx;
