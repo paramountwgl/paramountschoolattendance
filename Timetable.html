@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Timetable | Paramount School</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Segoe+UI:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="logo.png">
+    <style>
+        :root { --forest: #006633; --gold: #ffd700; --danger: #c62828; --light: #f4f7f6; --sky: #2196f3; --dark-green: #004d26; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; } 
+        body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; padding-bottom: 50px; }
+
+        /* SHARED HEADER FROM FEE PORTAL */
+        header { 
+            background: var(--forest); color: white; padding: 12px 4%; border-bottom: 4px solid var(--gold); 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15); position: sticky; top: 0; z-index: 100;
+        }
+        .header-content { display: flex; align-items: center; justify-content: space-between; max-width: 1400px; margin: 0 auto; width: 100%; }
+        .brand-group { display: flex; align-items: center; flex-wrap: nowrap; } 
+        .header-left { display: flex; align-items: center; gap: 12px; }
+        .header-logo { height: 55px; width: auto; flex-shrink: 0; }
+        .school-branding { display: flex; flex-direction: column; line-height: 1.1; flex-shrink: 0; }
+        .school-name-main { font-family: 'Montserrat', sans-serif; font-size: 1.4rem; font-weight: 800; letter-spacing: 0.5px; color: white; }
+        .school-name-sub { font-family: 'Montserrat', sans-serif; font-size: 0.65rem; color: white; font-weight: 600; text-transform: uppercase; opacity: 0.9; }
+        .divider-line { width: 2px; height: 35px; background-color: rgba(255,255,255,0.3); margin: 0 15px; flex-shrink: 0; }
+        .portal-label { font-family: 'Montserrat', sans-serif; font-size: 1.4rem; font-weight: 800; text-transform: uppercase; color: white; white-space: nowrap; flex-shrink: 0; }
+
+        .nav-tools { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+        .live-clock { font-family: 'Montserrat', sans-serif; font-weight: 800; color: var(--gold); font-size: 13px; text-transform: uppercase; }
+        .btn-signout { background: rgba(255,255,255,0.1); border: 1.5px solid white; color: white; padding: 5px 18px; border-radius: 50px; font-size: 10px; font-weight: 800; text-transform: uppercase; cursor: pointer; transition: 0.3s; }
+
+        /* PAGE SPECIFIC STYLES */
+        .container { max-width: 800px; margin: 25px auto; padding: 0 15px; }
+        .card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); border-top: 8px solid var(--forest); margin-bottom: 25px; }
+        h3 { color: var(--forest); margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; display: flex; align-items: center; gap: 8px; font-size: 1.1rem; text-transform: uppercase; font-weight: 800; }
+        
+        select, input { width: 100%; padding: 12px; border-radius: 10px; border: 2px solid #eee; font-size: 14px; margin-bottom: 10px; outline: none; background: #fafafa; font-weight: 600; }
+        
+        .period-row { display: grid; grid-template-columns: 1.5fr 1.5fr 2fr 1fr 50px; gap: 10px; background: #f8fafc; padding: 15px; border-radius: 12px; margin-bottom: 10px; align-items: center; border: 1px solid #e2e8f0; }
+        .period-header { display: grid; grid-template-columns: 1.5fr 1.5fr 2fr 1fr 50px; gap: 10px; padding: 0 15px; font-size: 10px; font-weight: 800; color: #64748b; text-transform: uppercase; margin-bottom: 5px; }
+        
+        .btn-add { background: var(--forest); color: white; border: none; padding: 12px; border-radius: 10px; font-weight: 800; cursor: pointer; width: 100%; margin-top: 10px; text-transform: uppercase; }
+        .btn-save-all { background: linear-gradient(135deg, var(--forest), var(--dark-green)); color: white; border: 2px solid var(--gold); padding: 15px; border-radius: 50px; font-weight: 800; cursor: pointer; width: 100%; margin-top: 20px; text-transform: uppercase; }
+        .btn-del-row { color: var(--danger); background: none; border: none; font-size: 1.2rem; cursor: pointer; }
+
+        /* VIEW MODE TABLE */
+        .timetable-display { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        .timetable-display th { background: var(--forest); color: white; padding: 12px; font-size: 12px; text-transform: uppercase; text-align: left; }
+        .timetable-display td { padding: 15px 12px; border-bottom: 1px solid #eee; font-weight: 700; color: #334155; }
+        .time-tag { background: #e3f2fd; color: #1976d2; padding: 4px 8px; border-radius: 6px; font-size: 11px; }
+        .break-row { background: #fffde7 !important; text-align: center; font-style: italic; color: #856404; }
+
+        @media (max-width: 600px) {
+            .period-row { grid-template-columns: 1fr 1fr; }
+            .period-header { display: none; }
+            .school-name-sub, .divider-line { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-content">
+            <div class="brand-group">
+                <div class="header-left">
+                    <img src="logo.png" class="header-logo">
+                    <div class="school-branding">
+                        <span class="school-name-main">PARAMOUNT</span>
+                        <span class="school-name-sub">ENGLISH MEDIUM SCHOOL</span>
+                    </div>
+                </div>
+                <div class="divider-line"></div>
+                <div class="portal-label">TIMETABLE</div>
+            </div>
+            <div class="nav-tools">
+                <div id="liveClock" class="live-clock">00:00:00</div>
+                <button class="btn-signout" onclick="location.reload()">Refresh</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <h3><i class="fas fa-chalkboard"></i> Select Class & Section</h3>
+            <select id="classSelector" onchange="loadTimetable()">
+                <option value="">-- Choose Class --</option>
+                <option value="Pre-KG">Pre-KG</option>
+                <option value="KG-1">KG-1</option>
+                <option value="KG-2">KG-2</option>
+                <option value="Grade-1">Grade-1</option>
+                <option value="Grade-2">Grade-2</option>
+                <option value="Grade-3">Grade-3</option>
+                <option value="Grade-4">Grade-4</option>
+                <option value="Grade-5">Grade-5</option>
+                <option value="Grade-6">Grade-6</option>
+                <option value="Grade-7">Grade-7</option>
+                <option value="Grade-8">Grade-8</option>
+            </select>
+        </div>
+
+        <div class="card" id="editorCard">
+            <h3><i class="fas fa-edit"></i> Teacher Control Panel</h3>
+            <div class="period-header">
+                <span>Start Time</span>
+                <span>End Time</span>
+                <span>Subject / Activity</span>
+                <span>Teacher</span>
+                <span></span>
+            </div>
+            <div id="periodContainer">
+                </div>
+            <button class="btn-add" onclick="addNewRow()"><i class="fas fa-plus-circle"></i> Add New Period / Break</button>
+            <button class="btn-save-all" onclick="saveTimetable()">Update Timetable Live <i class="fas fa-broadcast-tower"></i></button>
+        </div>
+
+        <div class="card">
+            <h3><i class="fas fa-eye"></i> Live Student View</h3>
+            <div style="overflow-x: auto;">
+                <table class="timetable-display">
+                    <thead>
+                        <tr>
+                            <th>Time Slot</th>
+                            <th>Subject</th>
+                            <th>Teacher</th>
+                        </tr>
+                    </thead>
+                    <tbody id="liveViewBody">
+                        <tr><td colspan="3" style="text-align:center; color:#999;">Select a class to view timetable</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+<script>
+    // YOUR FIREBASE CONFIG
+    const firebaseConfig = { 
+        apiKey: "AIzaSyDRYk9KOK-ga0c88dnYMsAoifW2NJTd_Y8", 
+        databaseURL: "https://paramount-school-d55bc-default-rtdb.firebaseio.com", 
+        projectId: "paramount-school-d55bc" 
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    // Time Dropdown Generator (9:00 AM to 5:30 PM)
+    function generateTimeOptions() {
+        let options = '';
+        const times = [
+            "09:00 AM", "09:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM", 
+            "12:00 PM", "12:30 PM", "01:00 PM", "01:30 PM", "02:00 PM", "02:30 PM", 
+            "03:00 PM", "03:30 PM", "04:00 PM", "04:30 PM", "05:00 PM", "05:30 PM"
+        ];
+        times.forEach(t => {
+            options += `<option value="${t}">${t}</option>`;
+        });
+        return options;
+    }
+
+    // Add a new row to the editor
+    function addNewRow(data = {start: '09:00 AM', end: '09:30 AM', subject: '', teacher: ''}) {
+        const container = document.getElementById('periodContainer');
+        const row = document.createElement('div');
+        row.className = 'period-row';
+        row.innerHTML = `
+            <select class="start-time">${generateTimeOptions()}</select>
+            <select class="end-time">${generateTimeOptions()}</select>
+            <input type="text" class="subject-input" placeholder="e.g. Mathematics" value="${data.subject}">
+            <input type="text" class="teacher-input" placeholder="e.g. Mr. Rao" value="${data.teacher}">
+            <button class="btn-del-row" onclick="this.parentElement.remove()"><i class="fas fa-times-circle"></i></button>
+        `;
+        container.appendChild(row);
+        
+        // Set dropdown values
+        row.querySelector('.start-time').value = data.start;
+        row.querySelector('.end-time').value = data.end;
+    }
+
+    // Load timetable from Firebase
+    function loadTimetable() {
+        const className = document.getElementById('classSelector').value;
+        const container = document.getElementById('periodContainer');
+        const liveView = document.getElementById('liveViewBody');
+        
+        if (!className) {
+            container.innerHTML = '';
+            liveView.innerHTML = '<tr><td colspan="3" style="text-align:center;">Select a class</td></tr>';
+            return;
+        }
+
+        db.ref(`timetables/${className}`).on('value', (snapshot) => {
+            const data = snapshot.val();
+            container.innerHTML = '';
+            liveView.innerHTML = '';
+
+            if (data) {
+                data.forEach(item => {
+                    // Update Editor
+                    addNewRow(item);
+                    
+                    // Update Live View
+                    const isBreak = item.subject.toLowerCase().includes('break') || item.subject.toLowerCase().includes('lunch');
+                    const rowClass = isBreak ? 'class="break-row"' : '';
+                    liveView.innerHTML += `
+                        <tr ${rowClass}>
+                            <td><span class="time-tag">${item.start} - ${item.end}</span></td>
+                            <td>${item.subject}</td>
+                            <td>${item.teacher || '-'}</td>
+                        </tr>
+                    `;
+                });
+            } else {
+                liveView.innerHTML = '<tr><td colspan="3" style="text-align:center;">No timetable set for this class.</td></tr>';
+            }
+        });
+    }
+
+    // Save to Firebase
+    function saveTimetable() {
+        const className = document.getElementById('classSelector').value;
+        if (!className) return Swal.fire('Error', 'Please select a class first', 'warning');
+
+        const rows = document.querySelectorAll('.period-row');
+        const timetableData = [];
+
+        rows.forEach(row => {
+            timetableData.push({
+                start: row.querySelector('.start-time').value,
+                end: row.querySelector('.end-time').value,
+                subject: row.querySelector('.subject-input').value,
+                teacher: row.querySelector('.teacher-input').value
+            });
+        });
+
+        db.ref(`timetables/${className}`).set(timetableData).then(() => {
+            Swal.fire({
+                title: 'Success!',
+                text: 'Timetable updated for ' + className,
+                icon: 'success',
+                confirmButtonColor: '#006633'
+            });
+        });
+    }
+
+    // Clock and UI Init
+    function updateClock() { 
+        document.getElementById('liveClock').innerText = new Date().toLocaleTimeString().toUpperCase(); 
+    }
+    setInterval(updateClock, 1000); 
+    updateClock();
+
+</script>
+</body>
+</html>
