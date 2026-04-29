@@ -418,7 +418,7 @@
     }
     
     // ... rest of your code (combinedPaid, due calculation, etc.)
-}
+
         const combinedPaid = paidTillNow + pNow;
         const due = targetAmount - combinedPaid;
         document.getElementById('dueDisplay').innerText = "₹ " + (due < 0 ? 0 : Math.round(due));
@@ -437,6 +437,7 @@
         document.getElementById('staffName').selectedIndex = 0;
         document.getElementById('staffPass').value = "";
         document.getElementById('feeClass').innerHTML = '<option value="">-- Choose Class --</option>' + Object.keys(studentData).map(c => `<option value="${c}">${c}</option>`).join('');
+   }
     };
 
     function updateClock() { document.getElementById('liveClock').innerText = new Date().toLocaleTimeString().toUpperCase(); }
