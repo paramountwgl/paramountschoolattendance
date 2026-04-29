@@ -196,6 +196,18 @@
                 <button class="btn-main" style="background: var(--p-blue); margin-bottom: 10px;" onclick="generateMonthlyReport()">
     <i class="fas fa-chart-pie"></i> VIEW MONTHLY REPORT
 </button>
+                <div class="report-header">
+    <div>
+        <h2 style="margin:0; font-family:'Cinzel'; font-size:1.2rem;">Monthly Analysis</h2>
+        <p id="reportSub" style="margin:0; font-size:0.7rem; color:var(--p-gold);"></p>
+    </div>
+    <div style="display: flex; gap: 15px; align-items: center;">
+        <button onclick="deleteMonthlyData()" style="background: rgba(229, 57, 53, 0.2); border: 1px solid #ff9999; color: #ff9999; padding: 5px 10px; border-radius: 8px; font-size: 10px; font-weight: 800; cursor: pointer;">
+            <i class="fas fa-calendar-times"></i> DELETE MONTH
+        </button>
+        <i class="fas fa-times-circle" style="font-size:1.5rem; cursor:pointer;" onclick="closeReport()"></i>
+    </div>
+</div>
             </div>
         </div>
     </div>
@@ -236,6 +248,58 @@
             document.getElementById('teacherSelect').value = "";
         }
     }
+    async function deleteMonthlyData() {
+    const c = document.getElementById('attClass').value;
+    const d = document.getElementById('attDate').value;
+    const monthYear = d.substring(0, 7); // Gets YYYY-MM
+
+    // 1. High-Level Security Confirmation
+    const { value: confirmWord } = await Swal.fire({
+        title: 'CRITICAL ACTION',
+        html: `You are about to delete <b>ALL</b> attendance records for <b>${c}</b> in the month of <b>${monthYear}</b>.<br><br>Type <b>DELETE</b> to confirm:`,
+        input: 'text',
+        icon: 'error',
+        showCancelButton: true,
+        confirmButtonColor: '#e53935',
+        confirmButtonText: 'Permanently Erase Month',
+        inputValidator: (value) => {
+            if (!value || value !== 'DELETE') {
+                return 'You must type DELETE to proceed!';
+            }
+        }
+    });
+
+    if (confirmWord === 'DELETE') {
+        Swal.fire({ title: 'Processing Bulk Erasure...', didOpen: () => Swal.showLoading() });
+
+        try {
+            // Get all days in the database
+            const snap = await db.ref(`daily_attendance`).once('value');
+            const allDays = snap.val() || {};
+            
+            let deletePromises = [];
+
+            // Loop through days and find matches for the month
+            Object.keys(allDays).forEach(day => {
+                if(day.startsWith(monthYear) && allDays[day][c]) {
+                    // Prepare the deletion of this class for this day
+                    deletePromises.push(db.ref(`daily_attendance/${day}/${c}`).remove());
+                }
+            });
+
+            if(deletePromises.length > 0) {
+                await Promise.all(deletePromises);
+                Swal.fire('Success', `Deleted ${deletePromises.length} days of data for ${c}.`, 'success');
+                closeReport(); // Close the modal
+                loadStudents(); // Refresh main list
+            } else {
+                Swal.fire('No Data', 'No records were found to delete for this month.', 'info');
+            }
+        } catch (error) {
+            Swal.fire('System Error', error.message, 'error');
+        }
+    }
+}
     async function generateMonthlyReport() {
     const c = document.getElementById('attClass').value;
     const d = document.getElementById('attDate').value;
