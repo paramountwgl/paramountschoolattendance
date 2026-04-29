@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Paramount School | Teacher Portal</title>
+    <title>Paramount School | Teacher Hub</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Segoe+UI:wght@400;700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/png" href="logo.png">
@@ -19,33 +19,19 @@
         .school-name-main { font-family: 'Montserrat', sans-serif; font-size: clamp(1.1rem, 5vw, 2rem); font-weight: 800; letter-spacing: 1px; }
         .school-name-sub { font-family: 'Montserrat', sans-serif; font-size: clamp(0.6rem, 2.5vw, 0.9rem); color: var(--gold); font-weight: 700; text-transform: uppercase; }
 
-        .portal-nav-container { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin: 15px auto; padding: 0 10px; max-width: 950px; }
-        .btn-premium-nav { padding: 12px 5px; border-radius: 12px; text-decoration: none; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 9px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); background: linear-gradient(135deg, #004d26 0%, var(--forest) 100%); color: white; border: 1.5px solid var(--gold); transition: 0.2s; text-align: center; }
-        .btn-premium-nav:hover { transform: translateY(-2px); border-color: white; }
-        .btn-premium-nav i { font-size: 1.1rem; }
+        /* THE HUB TITLE */
+        .hub-title { text-align: center; margin: 30px 0 10px; color: var(--forest); font-family: 'Montserrat', sans-serif; }
 
-        .container { max-width: 850px; margin: 0 auto; padding: 0 15px; }
-        .card { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 20px; border-top: 8px solid var(--forest); }
-        h3 { color: var(--forest); margin: 0 0 20px; font-size: 1.3rem; text-align: center; border-bottom: 2px solid #f0f0f0; padding-bottom: 12px; text-transform: uppercase; font-weight: 800; }
-        label { display: block; font-size: 10px; font-weight: 900; color: #777; margin: 10px 0 5px; text-transform: uppercase; letter-spacing: 1px; }
-        .row-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 10px; width: 100%; margin-bottom: 10px; }
-        select, input[type="date"], textarea { width: 100%; padding: 10px; border-radius: 10px; border: 2px solid #eee; font-size: 14px; outline: none; background: #fafafa; height: 45px; }
-        textarea { height: auto; min-height: 100px; }
-
-        .btn { width: 100%; background: linear-gradient(135deg, var(--forest), #004d26); color: white; border: 2px solid var(--gold); padding: 14px; border-radius: 50px; font-weight: bold; cursor: pointer; font-size: 14px; margin-top: 15px; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .btn.warning { background: linear-gradient(135deg, #fb8c00, #ef6c00); border-color: white; }
-
-        .student-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 15px; border-bottom: 1px solid #eee; }
-        input[type="checkbox"] { width: 24px; height: 24px; accent-color: var(--forest); }
-        .info-bar { font-size: 11px; color: #555; margin-top: 8px; font-style: italic; padding: 8px; background: #f0f4f2; border-radius: 8px; border-left: 4px solid var(--gold); display: none; }
+        .portal-nav-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 20px auto; padding: 0 15px; max-width: 950px; }
+        .btn-premium-nav { padding: 20px 10px; border-radius: 18px; text-decoration: none; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 11px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); background: linear-gradient(135deg, #004d26 0%, var(--forest) 100%); color: white; border: 2px solid var(--gold); transition: 0.3s; text-align: center; }
+        .btn-premium-nav:hover { transform: translateY(-5px); border-color: white; box-shadow: 0 12px 25px rgba(0, 102, 51, 0.2); }
+        .btn-premium-nav i { font-size: 1.8rem; }
 
         @media (max-width: 480px) {
-            .portal-nav-container { grid-template-columns: repeat(3, 1fr); }
+            .portal-nav-container { grid-template-columns: repeat(2, 1fr); }
+            .btn-premium-nav { font-size: 10px; }
         }
     </style>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 </head>
 <body>
 
@@ -59,169 +45,22 @@
     </div>
 </header>
 
+<div class="hub-title">
+    <h2 style="font-weight: 800; text-transform: uppercase; letter-spacing: 2px;">Faculty Hub</h2>
+    <p style="font-size: 12px; color: #666; font-weight: 600;">Welcome, Academic Staff</p>
+</div>
+
 <div class="portal-nav-container">
-    <a href="admin.html" class="btn-premium-nav"><i class="fas fa-user-shield"></i> Admin</a>
-    <a href="Parents Checkbox.html" class="btn-premium-nav"><i class="fas fa-users"></i> Parents</a>
-    <a href="syllabus-admin.html" class="btn-premium-nav"><i class="fas fa-book-open"></i> Syllabus</a>
-    <a href="fees.html" class="btn-premium-nav"><i class="fas fa-file-invoice-dollar"></i> Fees</a>
-    <a href="marks.html" class="btn-premium-nav"><i class="fas fa-chart-line"></i> Marks</a>
-    <a href="halltickets.html" class="btn-premium-nav"><i class="fas fa-ticket-alt"></i> Hall Ticket</a>
-    <a href="id_card_generator.html" class="btn-premium-nav"><i class="fas fa-id-card"></i> ID Card Generator</a>
-    <a href="Timetable.html" class="btn-premium-nav"><i class="fas fa-calendar-alt"></i> Time Table Generator</a>
     <a href="attendance.html" class="btn-premium-nav"><i class="fas fa-clipboard-check"></i> Attendance Registry</a>
-    <a href="homework.html" class="btn-premium-nav"><i class="fas fa-book-reader"></i>Homework Publisher</a>
+    <a href="homework-admin.html" class="btn-premium-nav"><i class="fas fa-book-reader"></i> Homework Publisher</a>
+    <a href="admin.html" class="btn-premium-nav"><i class="fas fa-user-shield"></i> Admin Control</a>
+    <a href="marks.html" class="btn-premium-nav"><i class="fas fa-chart-line"></i> Marks Entry</a>
+    <a href="syllabus-admin.html" class="btn-premium-nav"><i class="fas fa-book-open"></i> Syllabus</a>
+    <a href="fees.html" class="btn-premium-nav"><i class="fas fa-file-invoice-dollar"></i> Fees Dept</a>
+    <a href="id_card_generator.html" class="btn-premium-nav"><i class="fas fa-id-card"></i> ID Generator</a>
+    <a href="Timetable.html" class="btn-premium-nav"><i class="fas fa-calendar-alt"></i> Time Table</a>
+    <a href="index.html" class="btn-premium-nav" style="background: var(--p-blue);"><i class="fas fa-home"></i> Home Portal</a>
 </div>
 
-<div class="container">
-    <div class="card">
-        <h3><i class="fas fa-id-badge"></i> Staff Login</h3>
-        <label>Teacher Name</label>
-        <select id="teacherSelect" onchange="verifyAccess()">
-            <option value="">-- Choose Name --</option>
-            <option value="Mr. Shaik Ahmad">Mr. Shaik Ahmad</option>
-            <option value="Ms. Riha">Ms. Riha (IIT)</option>
-            <option value="Ms. Raniya Zainab">Ms. Raniya Zainab (Physics)</option>
-            <option value="Ms. Roqiya Begum">Ms. Roqiya Begum</option>
-            <option value="Ms. G.Rajitha">Ms. G.Rajitha</option>
-            <option value="Ms. Ameena Tabassum">Ms. Ameena Tabassum</option>
-            <option value="Ms. Shaik Shabana">Ms. Shaik Shabana</option>
-            <option value="Ms. B.Ravali">Ms. B.Ravali</option>
-            <option value="Ms. L.Kalyani">Ms. L.Kalyani</option>
-            <option value="Ms. J.Alaya Sree">Ms. J.Alaya Sree</option>
-            <option value="Ms. S.Sujatha">Ms. S.Sujatha</option>
-            <option value="Ms. J.Prathibha">Ms. J.Prathibha</option>
-            <option value="Ms. P.Shailaja">Ms. P.Shailaja</option>
-            <option value="Ms. A.Jhansi Rani">Ms. A.Jhansi Rani</option>
-            <option value="Ms. S. Neelima">Ms. S. Neelima</option>
-        </select>
-    </div>
-
-    
-
-    <div class="card" id="hwCard" style="border-top-color: var(--gold); display:none;">
-        <h3>Daily Homework</h3>
-        <div class="row-grid">
-            <div><label>Class</label><select id="hwClass" onchange="updateHWSubjects()"></select></div>
-            <div><label>Date</label><input type="date" id="hwDate" onchange="fetchExistingHW()"></div>
-        </div>
-        <label>Subject</label><select id="hwSubSelect" onchange="fetchExistingHW()"></select>
-        <label>Task Details</label><textarea id="hwTask" placeholder="Instructions..."></textarea>
-        <div id="hwAuditTrail" class="info-bar"><i class="fas fa-history"></i> <span id="hwAuditText"></span></div>
-        <div style="display:flex; gap:10px; margin-top:15px;">
-            <button class="btn" onclick="postHomework()" style="flex:2;">Publish</button>
-            <button class="btn warning" onclick="clearHomework()" style="flex:1;"><i class="fas fa-trash"></i></button>
-        </div>
-    </div>
-</div>
-
-<script>
-    const firebaseConfig = { 
-        apiKey: "AIzaSyDRYk9KOK-ga0c88dnYMsAoifW2NJTd_Y8", 
-        databaseURL: "https://paramount-school-d55bc-default-rtdb.firebaseio.com", 
-        projectId: "paramount-school-d55bc" 
-    };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
-
-    let authenticatedTeacher = "";
-    const registry = { "Mr. Shaik Ahmad": "Ahmad@123", "Ms. Riha": "Riha@123", "Ms. Raniya Zainab": "Raniya@123", "Ms. Roqiya Begum": "Roqiya@123", "Ms. G.Rajitha": "Rajitha@123", "Ms. Ameena Tabassum": "Ameena@123", "Ms. Shaik Shabana": "Shabana@123", "Ms. B.Ravali": "Ravali@123", "Ms. L.Kalyani": "Kalyani@123", "Ms. J.Alaya Sree": "Alaya@123", "Ms. S.Sujatha": "Sujatha@123", "Ms. J.Prathibha": "Prathibha@123", "Ms. P.Shailaja": "Phailaja@123", "Ms. A.Jhansi Rani": "Jhansi@123", "Ms. S. Neelima": "Neelima@123" };
-    
-    
-   
-   async function verifyAccess() {
-    const name = document.getElementById('teacherSelect').value;
-    if(!name) return;
-    const { value: pw } = await Swal.fire({ 
-        title: `Staff Login`, text: `Enter password for ${name}`, 
-        input: 'password', showCancelButton: true, confirmButtonColor: '#006633'
-    });
-    if(pw === registry[name]) { 
-        authenticatedTeacher = name;
-        // Removed attCard line
-        document.getElementById('hwCard').style.display = 'block'; 
-        Swal.fire('Welcome', `Hello ${authenticatedTeacher}`, 'success');
-        updateHWSubjects(); 
-    } else if(pw) { 
-        Swal.fire('Error', 'Incorrect Password', 'error'); 
-        document.getElementById('teacherSelect').value = ""; 
-    }
-}
-
-    function updateHWSubjects() { 
-        const cls = document.getElementById('hwClass').value; 
-        const common = ["TELUGU", "HINDI", "ENGLISH", "MATHS", "SCIENCE ","SOCIAL STUDIES"]; 
-        let subs = (["Grade-6", "Grade-7", "Grade-8"].includes(cls)) ? [...common, "PHYSICS", "BIOLOGY"] : (cls && !cls.includes("KG")) ? [...common, "SCIENCE"] : common;
-        document.getElementById('hwSubSelect').innerHTML = subs.map(s => `<option value="${s}">${s}</option>`).join(''); 
-        fetchExistingHW(); 
-    }
-    
-    function fetchExistingHW() { 
-        const d = document.getElementById('hwDate').value; 
-        const c = document.getElementById('hwClass').value; 
-        const s = document.getElementById('hwSubSelect').value; 
-        if(!d || !c || !s) return; 
-        
-        db.ref(`homework/${d}/${c}/${s}`).once('value', (snap) => { 
-            const data = snap.val(); 
-            const auditDiv = document.getElementById('hwAuditTrail');
-            if(data && typeof data === 'object') {
-                document.getElementById('hwTask').value = data.task || "";
-                auditDiv.style.display = "block"; 
-                document.getElementById('hwAuditText').innerText = `Updated by ${data.updatedBy} at ${data.updatedAt}`;
-            } else {
-                document.getElementById('hwTask').value = data || ""; 
-                auditDiv.style.display = data ? "block" : "none"; 
-                document.getElementById('hwAuditText').innerText = "Historical entry.";
-            }
-        }); 
-    }
-
-    // FIXED: Added validation to ensure all fields are ready before publishing
-    function postHomework() { 
-        const d = document.getElementById('hwDate').value; 
-        const c = document.getElementById('hwClass').value; 
-        const s = document.getElementById('hwSubSelect').value; 
-        const t = document.getElementById('hwTask').value; 
-
-        if(!authenticatedTeacher) {
-            Swal.fire('Login Required', 'Please select your name from Staff Login first.', 'warning');
-            return;
-        }
-
-        if(!d || !c || !s || !t.trim()) {
-            Swal.fire('Error', 'Please fill Date, Class, Subject, and Task Details!', 'error');
-            return;
-        }
-
-        const now = new Date(); 
-        const timeStamp = now.toLocaleDateString() + " " + now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-        
-        db.ref(`homework/${d}/${c}/${s}`).set({ 
-            task: t, 
-            updatedBy: authenticatedTeacher, 
-            updatedAt: timeStamp 
-        }).then(() => {
-            Swal.fire('Updated!', 'Homework saved successfully.', 'success'); 
-            fetchExistingHW();
-        }).catch(err => {
-            Swal.fire('Database Error', err.message, 'error');
-        }); 
-    }
-
-    async function clearHomework() {
-        const d = document.getElementById('hwDate').value; const c = document.getElementById('hwClass').value; const s = document.getElementById('hwSubSelect').value;
-        if (!d || !c || !s) return;
-        const result = await Swal.fire({ title: 'Delete?', text: `Remove ${s} homework?`, icon: 'warning', showCancelButton: true, confirmButtonColor: '#d33', confirmButtonText: 'Yes, Delete' });
-        if (result.isConfirmed) {
-            db.ref(`homework/${d}/${c}/${s}`).remove().then(() => {
-                document.getElementById('hwTask').value = ''; 
-                document.getElementById('hwAuditTrail').style.display = 'none';
-                Swal.fire('Deleted', 'Entry removed.', 'success');
-            });
-        }
-    }
-
-    document.getElementById('hwDate').valueAsDate = new Date();
-</script>
 </body>
 </html>
