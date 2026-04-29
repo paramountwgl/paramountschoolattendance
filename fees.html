@@ -432,13 +432,31 @@
         document.getElementById('progressCircle').style.strokeDashoffset = 314.15 - (314.15 * pct / 100);
         document.getElementById('percentText').innerText = Math.round(pct) + "%";
     
+window.onload = function() {
+    console.log("Initializing Class Dropdown...");
+    const classDropdown = document.getElementById('feeClass');
+    
+    // Clear existing options
+    classDropdown.innerHTML = '<option value="">-- Choose Class --</option>';
+    
+    // Check if studentData exists before trying to loop
+    if (typeof studentData !== 'undefined') {
+        const classes = Object.keys(studentData);
+        classes.forEach(cls => {
+            const option = document.createElement('option');
+            option.value = cls;
+            option.innerText = cls;
+            classDropdown.appendChild(option);
+        });
+        console.log("Classes loaded: " + classes.join(", "));
+    } else {
+        console.error("Error: studentData is not defined!");
+    }
 
-    window.onload = function() {
-        document.getElementById('staffName').selectedIndex = 0;
-        document.getElementById('staffPass').value = "";
-        document.getElementById('feeClass').innerHTML = '<option value="">-- Choose Class --</option>' + Object.keys(studentData).map(c => `<option value="${c}">${c}</option>`).join('');
-   }
-    };
+    // Reset Login fields
+    document.getElementById('staffName').selectedIndex = 0;
+    document.getElementById('staffPass').value = "";
+};
 
     function updateClock() { document.getElementById('liveClock').innerText = new Date().toLocaleTimeString().toUpperCase(); }
     setInterval(updateClock, 1000); updateClock();
