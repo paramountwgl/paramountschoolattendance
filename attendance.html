@@ -256,14 +256,14 @@
     // 1. High-Level Security Confirmation
     const { value: confirmWord } = await Swal.fire({
         title: 'CRITICAL ACTION',
-        html: `You are about to delete <b>ALL</b> attendance records for <b>${c}</b> in the month of <b>${monthYear}</b>.<br><br>Type <b>DELETE</b> to confirm:`,
+        html: `You are about to delete <b>ALL</b> attendance records for <b>${c}</b> in the month of <b>${monthYear}</b>.<br><br>Type <b> Admin password</b> to confirm:`,
         input: 'text',
         icon: 'error',
         showCancelButton: true,
         confirmButtonColor: '#e53935',
         confirmButtonText: 'Permanently Erase Month',
         inputValidator: (value) => {
-            if (!value || value !== 'DELETE') {
+            if (!value || value !== 'Ahmad@07') {
                 return 'You must type DELETE to proceed!';
             }
         }
