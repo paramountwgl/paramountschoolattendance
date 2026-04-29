@@ -35,9 +35,9 @@
     background: var(--p-green); color: white; padding: 20px;
     display: flex; justify-content: space-between; align-items: center;
 }
-.report-body { padding: 20px; overflow-y: auto; flex: 1; }
-.report-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-.report-table th { background: #f4f7f6; position: sticky; top: 0; padding: 12px; text-align: left; color: var(--p-blue); border-bottom: 2px solid var(--p-gold); }
+.report-body { padding: 10px; overflow: auto; flex: 1; } /* Allow scrolling */
+.report-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; text-align: center; white-space: nowrap; }
+.report-table th, .report-table td { border: 1px solid #eee; padding: 8px; }
 .report-table td { padding: 12px; border-bottom: 1px solid #eee; font-weight: 600; }
 .rep-present { color: #2e7d32; }
 .rep-absent { color: #c62828; }
@@ -305,49 +305,56 @@
     const d = document.getElementById('attDate').value;
     if(!c || !d) { Swal.fire('Wait', 'Select Class & Date first', 'info'); return; }
 
-    const monthYear = d.substring(0, 7); // YYYY-MM
-    const monthSnap = await db.ref(`daily_attendance`).once('value');
-    const allDays = monthSnap.val() || {};
-    
-    document.getElementById('reportSub').innerText = `${c} | ${monthYear}`;
-    const tbody = document.getElementById('reportTableBody');
-    tbody.innerHTML = "";
+    const monthYear = d.substring(0, 7);
+    const snap = await db.ref(`daily_attendance`).once('value');
+    const allData = snap.val() || {};
 
+    document.getElementById('repClassName').innerText = `CLASS: ${c}`;
+    document.getElementById('repDateRange').innerText = `REPORT FOR: ${monthYear}`;
+
+    // Find all days in this month where THIS class has records
+    const monthDays = Object.keys(allData).filter(day => 
+        day.startsWith(monthYear) && allData[day][c] && allData[day][c].records
+    ).sort();
+
+    // 1. Build Header Row (Name + Dates + Stats)
+    let headHTML = `<tr><th style="text-align:left;">Student Name</th>`;
+    monthDays.forEach(day => { headHTML += `<th>${day.split('-')[2]}</th>`; }); // Just show Day number
+    headHTML += `<th>Days</th><th>P</th><th>A</th><th>%</th></tr>`;
+    document.getElementById('reportHead').innerHTML = headHTML;
+
+    // 2. Build Student Rows
+    let bodyHTML = "";
     const students = studentData[c] || [];
-    
+
     students.forEach(name => {
-        let totalWorking = 0, present = 0;
+        let pCount = 0, tCount = 0;
+        let row = `<tr><td style="text-align:left; font-weight:800;">${name}</td>`;
         
-        Object.keys(allDays).forEach(day => {
-            if(day.startsWith(monthYear) && allDays[day][c] && allDays[day][c].records && allDays[day][c].records[name] !== undefined) {
-                totalWorking++;
-                if(allDays[day][c].records[name]) present++;
+        monthDays.forEach(day => {
+            const status = allData[day][c].records[name];
+            if(status !== undefined) {
+                tCount++;
+                if(status) { pCount++; row += `<td style="color:#2e7d32">P</td>`; }
+                else { row += `<td style="color:#e53935">A</td>`; }
+            } else {
+                row += `<td>-</td>`;
             }
         });
 
-        if(totalWorking > 0) {
-            const absent = totalWorking - present;
-            const percent = Math.round((present/totalWorking)*100);
-            
-            tbody.innerHTML += `
-                <tr>
-                    <td>${name}</td>
-                    <td>${totalWorking}</td>
-                    <td class="rep-present">${present}</td>
-                    <td class="rep-absent">${absent}</td>
-                    <td style="color:${percent < 75 ? '#c62828' : '#333'}">${percent}%</td>
-                </tr>
-            `;
-        }
+        const absent = tCount - pCount;
+        const per = tCount > 0 ? Math.round((pCount/tCount)*100) : 0;
+        
+        row += `<td>${tCount}</td>
+                <td style="color:#2e7d32">${pCount}</td>
+                <td style="color:#e53935">${absent}</td>
+                <td style="font-weight:900; color:${per < 75 ? 'red' : 'black'}">${per}%</td></tr>`;
+        bodyHTML += row;
     });
 
-    if(tbody.innerHTML === "") {
-        tbody.innerHTML = "<tr><td colspan='5' style='text-align:center;'>No data recorded for this month.</td></tr>";
-    }
-
+    document.getElementById('reportTableBody').innerHTML = bodyHTML || "<tr><td colspan='100%'>No data found.</td></tr>";
     document.getElementById('reportOverlay').style.display = 'flex';
 }
-
 function closeReport() {
     document.getElementById('reportOverlay').style.display = 'none';
 }
@@ -464,27 +471,23 @@ function closeReport() {
         if(res.isConfirmed) db.ref(`daily_attendance/${d}/${c}`).remove().then(() => loadStudents());
     }
 </script>
-    <div id="reportOverlay" class="report-overlay">
+   <div id="reportOverlay" class="report-overlay">
     <div class="report-content">
         <div class="report-header">
             <div>
-                <h2 style="margin:0; font-family:'Cinzel'; font-size:1.2rem;">Monthly Analysis</h2>
-                <p id="reportSub" style="margin:0; font-size:0.7rem; color:var(--p-gold);"></p>
+                <h2 id="repClassName" style="margin:0; font-family:'Cinzel';">MONTHLY DATA</h2>
+                <p id="repDateRange" style="margin:0; font-size:0.7rem; color:var(--p-gold);"></p>
             </div>
-            <i class="fas fa-times-circle" style="font-size:1.5rem; cursor:pointer;" onclick="closeReport()"></i>
+            <div style="display:flex; gap:10px; align-items:center;">
+                <button onclick="deleteMonthlyData()" style="background:rgba(255,0,0,0.2); color:white; border:1px solid white; padding:5px 10px; border-radius:5px; font-size:10px; cursor:pointer; font-weight:bold;">
+                    <i class="fas fa-calendar-times"></i> DELETE MONTH
+                </button>
+                <i class="fas fa-times-circle" style="font-size:1.5rem; cursor:pointer;" onclick="closeReport()"></i>
+            </div>
         </div>
         <div class="report-body">
             <table class="report-table">
-                <thead>
-                    <tr>
-                        <th>Student Name</th>
-                        <th>Days</th>
-                        <th class="rep-present">P</th>
-                        <th class="rep-absent">A</th>
-                        <th>%</th>
-                    </tr>
-                </thead>
-                <tbody id="reportTableBody"></tbody>
+                <thead id="reportHead"></thead> <tbody id="reportTableBody"></tbody>
             </table>
         </div>
     </div>
