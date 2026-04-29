@@ -95,16 +95,7 @@
         </select>
     </div>
 
-    <div class="card" id="attCard" style="display:none;">
-        <h3>Daily Attendance</h3>
-        <div class="row-grid">
-            <div><label>Class</label><select id="attClass" onchange="checkExistingAttendance()"></select></div>
-            <div><label>Date</label><input type="date" id="attDate" onchange="checkExistingAttendance()"></div>
-        </div>
-        <div id="attAuditTrail" class="info-bar"><i class="fas fa-history"></i> <span id="attAuditText"></span></div>
-        <div id="studentList" style="margin-top:10px; border-radius: 10px; border: 1px solid #eee;"></div>
-        <button id="submitAtt" class="btn" style="display:none;" onclick="saveAttendance()">Update Attendance <i class="fas fa-check-double"></i></button>
-    </div>
+    
 
     <div class="card" id="hwCard" style="border-top-color: var(--gold); display:none;">
         <h3>Daily Homework</h3>
@@ -134,102 +125,26 @@
     let authenticatedTeacher = "";
     const registry = { "Mr. Shaik Ahmad": "Ahmad@123", "Ms. Riha": "Riha@123", "Ms. Raniya Zainab": "Raniya@123", "Ms. Roqiya Begum": "Roqiya@123", "Ms. G.Rajitha": "Rajitha@123", "Ms. Ameena Tabassum": "Ameena@123", "Ms. Shaik Shabana": "Shabana@123", "Ms. B.Ravali": "Ravali@123", "Ms. L.Kalyani": "Kalyani@123", "Ms. J.Alaya Sree": "Alaya@123", "Ms. S.Sujatha": "Sujatha@123", "Ms. J.Prathibha": "Prathibha@123", "Ms. P.Shailaja": "Phailaja@123", "Ms. A.Jhansi Rani": "Jhansi@123", "Ms. S. Neelima": "Neelima@123" };
     
-    const studentData = { "Pre-KG": ["Hanish Macharla", "Arjun Vihaar Illandula", "Thanu sree Allakunta", "Aadhya Gangaraboina", "Aadhya Sri Oggula", "Aadhyasri Shivagoni", "Afraha Begum", "Aliya Sultana", "Anvika Bandi", "Aradana Devara konda", "Devansh Bandi", "Hanvitha Mulkalapelli", "Harsha Vardhan Seenapelli", "Hiranya Bandi", "Jashritha Boina", "Konreddy Shreyanvi", "Kriyansh Sammeta", "Mohammed Mohiuddin Sayyad", "Nethra Narkurthi", "Reeyansh Bandi", "Rishi Manupati", "Rudransh Bandi", "Sanvika Bandi", "Shanvith Khatha", "Shishira Jalagam", "Shiva Sai Mekala", "Shree Rudhraveer Chevvu", "Shreyansh Gangaraboina", "Sreeja Thalla", "Srikrithini Myakala", "Srivatsav Vanam", "Sriyansh Mekala", "Thanvika Lakka", "Thrilokansh Vudari", "Ujjwal Chekka", "Vaishnavi Lakka", "Vedansh Myakala", "Vishnu Priya Molugu", "Vyshnav Tej Boina", "Yafiah Mohammad"], "KG-1": ["Aadhya Sri Amaravadi", "Aditya Manda", "Aadhya Jella", "Advaita Gauri Bandi", "Aizah Amna Shaik", "Akshara Singaram", "Bhahuveer Raj Somishetti", "Gayathri Erroju", "Hanvika Mulkalapelli", "Manvith Kondoju", "Sayyad Vajeed", "Mekala Manu sri", "Oliva Grace Vallapu", "Rithwik Oggula", "Rithwika Kandagatla", "Srimahi Chevvu", "Thanvesh Thalla", "Trishul Nanduri", "Yoganshika Nanduri", "Yusra Mohammad", "Zainul Abideen Syed"], "KG-2": ["Deekshanth Sammeta", "Hanshith Erroju", "Harika Bandi", "Himarsha Naini", "Karthik Vallepu", "Kruthika Bandi", "Rajavardhan Gampala", "Roshan Kaitha", "Sri Anshu Ayaan Lyadala", "Srihansh Bandi", "Srikshitha Guduri", "Varshith Gonela", "Adyasri Makala", "Anvik Boini", "Anvith Pokanati", "Awais Ur Rehman Mohammad", "Dakshu Pothuganti", "Hansith Reddy Katukuri", "Harshith Pokanati", "Jella Aditya", "Krishank Nallabothula", "Kundana Katkuri", "Munukuntla Revanth Rudhra", "Niraja Nethri Siluveru", "Pranav Mattepelli", "Sreenith Yadav Naini", "Uvan Reddy Dasari", "Zayan Mohammad", "Zoya Mohammed"], "Grade-1": ["Dheeraj Gattu", "Preetham Sannayala", "Shiva nandu Gonela", "Shrayan Nuthanakanti", "Sriyanksha Mandala", "Advitha Garige", "Harika Bandi", "Himansi Kondoju", "Izhaan Rahamath Syed", "Jaisurya Myakala", "Khadeeja Fathima", "Manaswini Dandugula", "Manusri Bandi", "Rithwik krishna Amaravadi", "Rohan Bandi", "Shiva Junnu", "Shivanandh Bandi", "Sridha Thalla", "Srinika Chengelly", "Sriyanshi Oggula", "Vishwak Chekka"], "Grade-2": ["Aliza Manha Shaik", "Dhruvan Reddy Katukuri", "Druthika Enugala", "Manaswini Bandi", "Rakshith Macharla", "Sathwika Katkuri", "Shalini Uppala", "Chandu Devarakonda", "Gnaneshwar Pokanati", "Hasnain Syed", "Koushik Siluveru", "Senen Erasabattula", "Shivarajan Pothuganti"], "Grade-3": ["Nagavelly Manikanta", "Mirja Ismail", "Bandi Aryan", "Dandugula Mahesh Babu", "Bandi Tejasri", "Bandi Harshavardhan", "Gampala Vyshnavi", "Gampala Laxmi", "Garige Harshith", "Katkuri Hanish", "Katukuri Manideep", "MD Abdul Quddus", "Muppa Sathwik Patel", "Nuthanakanti Sansita", "Pasarakonda Ritwin", "Pinninti Rakshith Rao", "Rayi Sriman Adithya"], "Grade-4": ["Abdul Saqib Mohammad", "Anudeep Chintha", "Bhavan Bandi", "Harshavardhan Gonela", "Jayadev Chiluveru", "Mahaboob Syed", "Nandith Reddy Enugala", "Sai Charan Goud Mandala", "Sai Prasanna Keerthi", "Ajmeri Shaik", "Akshara Chiluveru", "Jayasri Myakala", "Rahul Kanjarla", "Saketh Devarakonda"], "Grade-5": ["Adya Reddy Vangala", "Kowshik Patel Muppa", "Siri Singaram", "Srikar Mandala", "Abdus Salaam MD", "Akshith Ram Kalvacharla", "Jaffar Anas Shaik", "Khaja Azeemuddin Mohammed", "Nihan Mohammed", "Saif Shaik", "Saketh Renukuntla", "Sreeja Dasari", "Vidhaatri Sahani"], "Grade-6": ["Abdul Razzak Mohammad", "Anudeepthi Chintha", "Saketh Ranaveni", "Shiva Sri Katukuri", "Aklees Shaik", "Akshya Kalvacharla", "Prince Katkuri"], "Grade-7": ["Manikanta Sannayala", "Sreeyan Reddy Karra", "Jayadhithya Chiluveru"], "Grade-8": ["Sathwika Nagavelly", "Vyshnavi Uppala", "Akshaya Gampala", "Ganesh Oggula", "Gayathri Renukuntla", "Khaja Sadeemuddin Mohammed"] };
-
-    const classOpts = '<option value="">-- Select --</option>' + Object.keys(studentData).map(c => `<option value="${c}">${c}</option>`).join('');
-    document.getElementById('attClass').innerHTML = classOpts;
-    document.getElementById('hwClass').innerHTML = classOpts;
-
-    async function verifyAccess() {
-        const name = document.getElementById('teacherSelect').value;
-        if(!name) return;
-        const { value: pw } = await Swal.fire({ 
-            title: `Staff Login`, text: `Enter password for ${name}`, 
-            input: 'password', showCancelButton: true, confirmButtonColor: '#006633'
-        });
-        if(pw === registry[name]) { 
-            authenticatedTeacher = name;
-            document.getElementById('attCard').style.display = 'block';
-            document.getElementById('hwCard').style.display = 'block';
-            Swal.fire('Welcome', `Hello ${authenticatedTeacher}`, 'success');
-            updateHWSubjects(); 
-        } else if(pw) { 
-            Swal.fire('Error', 'Incorrect Password', 'error'); 
-            document.getElementById('teacherSelect').value = ""; 
-        }
+    
+   
+   async function verifyAccess() {
+    const name = document.getElementById('teacherSelect').value;
+    if(!name) return;
+    const { value: pw } = await Swal.fire({ 
+        title: `Staff Login`, text: `Enter password for ${name}`, 
+        input: 'password', showCancelButton: true, confirmButtonColor: '#006633'
+    });
+    if(pw === registry[name]) { 
+        authenticatedTeacher = name;
+        // Removed attCard line
+        document.getElementById('hwCard').style.display = 'block'; 
+        Swal.fire('Welcome', `Hello ${authenticatedTeacher}`, 'success');
+        updateHWSubjects(); 
+    } else if(pw) { 
+        Swal.fire('Error', 'Incorrect Password', 'error'); 
+        document.getElementById('teacherSelect').value = ""; 
     }
-
-    async function checkExistingAttendance() {
-        const cls = document.getElementById('attClass').value;
-        const date = document.getElementById('attDate').value;
-        if(!cls || !date) return;
-
-        const snap = await db.ref(`daily_attendance/${date}/${cls}`).once('value');
-        if(snap.exists()) {
-            const res = await Swal.fire({
-                title: 'Attendance Already Taken',
-                text: `Records for ${cls} on ${date} already exist. Update them?`,
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Yes, Update',
-                cancelButtonText: 'Cancel'
-            });
-            if(res.isConfirmed) { loadStudents(snap.val()); }
-            else { 
-                document.getElementById('attClass').value = "";
-                document.getElementById('studentList').innerHTML = ""; 
-                document.getElementById('submitAtt').style.display = 'none'; 
-            }
-        } else {
-            loadStudents(null);
-        }
-    }
-
-    async function loadStudents(existingData) {
-        const cls = document.getElementById('attClass').value;
-        const list = document.getElementById('studentList');
-        const auditDiv = document.getElementById('attAuditTrail');
-        
-        list.innerHTML = (studentData[cls] || []).map(n => {
-            let isP = "checked";
-            if(existingData && existingData.records && existingData.records[n] !== undefined) {
-                isP = existingData.records[n] ? "checked" : "";
-            }
-            return `<div class="student-item"><span>${n}</span><input type="checkbox" class="att-check" data-name="${n}" ${isP}></div>`;
-        }).join('');
-
-        if(existingData && existingData.updatedBy) {
-            auditDiv.style.display = "block";
-            document.getElementById('attAuditText').innerText = `Last updated by ${existingData.updatedBy} at ${existingData.updatedAt}`;
-        } else {
-            auditDiv.style.display = "none";
-        }
-        document.getElementById('submitAtt').style.display = 'flex';
-    }
-
-    function saveAttendance() {
-        const cls = document.getElementById('attClass').value; 
-        const date = document.getElementById('attDate').value;
-        if(!cls || !date) { Swal.fire('Error', 'Please select class and date', 'error'); return; }
-
-        const now = new Date();
-        const timeStamp = now.toLocaleDateString() + " " + now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-        
-        const records = {};
-        document.querySelectorAll('.att-check').forEach(cb => { records[cb.getAttribute('data-name')] = cb.checked; });
-        
-        const finalData = {
-            records: records,
-            updatedBy: authenticatedTeacher,
-            updatedAt: timeStamp
-        };
-
-        db.ref(`daily_attendance/${date}/${cls}`).set(finalData).then(() => {
-            Swal.fire({ title: 'Success', text: 'Attendance Saved!', icon: 'success', timer: 1500 });
-            document.getElementById('studentList').innerHTML = "";
-            document.getElementById('submitAtt').style.display = 'none';
-        });
-    }
+}
 
     function updateHWSubjects() { 
         const cls = document.getElementById('hwClass').value; 
@@ -306,7 +221,6 @@
     }
 
     document.getElementById('hwDate').valueAsDate = new Date();
-    document.getElementById('attDate').valueAsDate = new Date();
 </script>
 </body>
 </html>
