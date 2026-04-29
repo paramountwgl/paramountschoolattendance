@@ -264,12 +264,12 @@
         confirmButtonText: 'Permanently Erase Month',
         inputValidator: (value) => {
             if (!value || value !== 'Ahmad@07') {
-                return 'You must type DELETE to proceed!';
+                return 'You must type Admin password to proceed!';
             }
         }
     });
 
-    if (confirmWord === 'DELETE') {
+    if (confirmWord === 'Ahmad@07') {
         Swal.fire({ title: 'Processing Bulk Erasure...', didOpen: () => Swal.showLoading() });
 
         try {
