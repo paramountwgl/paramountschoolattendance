@@ -412,7 +412,9 @@ function closeReport() {
         }).join('');
 
         document.getElementById('bulkStrip').style.display = 'flex';
-        document.getElementById('auditText').innerText = data ? `Synced by ${data.updatedBy}` : "Pending Today's Registry";
+        document.getElementById('auditText').innerHTML = data ? 
+    `<i class="fas fa-history"></i> Last Sync: <b>${data.updatedBy}</b> <span style="margin-left:8px; opacity:0.8;">(${data.updatedAt})</span>` : 
+    `<i class="fas fa-info-circle"></i> Awaiting initial registry for today.`;
         document.getElementById('delBtn').style.display = data ? 'block' : 'none';
         document.getElementById('waNotifyBtn').style.display = data ? 'block' : 'none';
         document.getElementById('actionBar').style.display = 'flex';
