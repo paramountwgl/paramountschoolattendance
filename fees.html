@@ -352,7 +352,7 @@
                 const r = data[k]; 
                 paidTillNow += parseFloat(r.paid || 0); 
                 totalV = r.total;
-                lastDisc = r.discountPct || 0;
+                lastDisc = r.discount || r.discountPct || 0;
                 lastFac = r.recordedBy || "Unknown";
                 lastTime = r.timestamp ? r.timestamp.split(',')[1].trim() : "N/A";
                 rows += `<tr><td>${r.date}</td><td>₹ ${r.paid}</td><td>${r.method || 'Cash'}</td><td>${r.transId || '-'}</td><td>${lastFac}</td></tr>`;
@@ -383,7 +383,16 @@
         
         const dataPath = currentMode === 'tuition' ? `fee_records/${c}/${n}` : `bus_records/${c}/${n}`;
         const stamp = new Date().toLocaleDateString() + ", " + new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}).toUpperCase();
-        const entry = { total: t, discountPct: dPct, paid: p, method: meth, transId: tid || null, recordedBy: activeUser, date: d, timestamp: stamp };
+        const entry = { 
+    total: t, 
+    discount: dPct, // Changed from discountPct to discount
+    paid: p, 
+    method: meth, 
+    transId: tid || null, 
+    recordedBy: activeUser, 
+    date: d, 
+    timestamp: stamp 
+};
         lastTx = { ...entry, n, c };
         
         db.ref(dataPath).push(entry).then(() => {
@@ -394,17 +403,22 @@
     }
 
     function updateDue() {
-        const total = parseFloat(document.getElementById('totalFee').value) || 0;
-        const pNow = parseFloat(document.getElementById('payAmt').value) || 0;
-        let targetAmount = total;
+    const total = parseFloat(document.getElementById('totalFee').value) || 0;
+    const pNow = parseFloat(document.getElementById('payAmt').value) || 0;
+    let targetAmount = total;
 
-        if (currentMode === 'tuition') {
-            const discPct = parseFloat(document.getElementById('discountPct').value) || 0;
-            const discountAmt = (total * discPct) / 100;
-            targetAmount = total - discountAmt;
-            document.getElementById('toBePaidDisplay').innerText = "₹ " + Math.round(targetAmount);
-        }
-
+    if (currentMode === 'tuition') {
+        const discPct = parseFloat(document.getElementById('discountPct').value) || 0;
+        // Calculation: 30000 - (30000 * 15 / 100) = 25500
+        const discountAmt = (total * discPct) / 100;
+        targetAmount = total - discountAmt;
+        
+        // Update the "Final Payable" display for the Admin
+        document.getElementById('toBePaidDisplay').innerText = "₹ " + Math.round(targetAmount).toLocaleString();
+    }
+    
+    // ... rest of your code (combinedPaid, due calculation, etc.)
+}
         const combinedPaid = paidTillNow + pNow;
         const due = targetAmount - combinedPaid;
         document.getElementById('dueDisplay').innerText = "₹ " + (due < 0 ? 0 : Math.round(due));
