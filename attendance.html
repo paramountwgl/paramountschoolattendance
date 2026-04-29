@@ -222,8 +222,8 @@
         const list = document.getElementById('studentList');
         list.innerHTML = '<div style="text-align:center; padding:30px;"><i class="fas fa-spinner fa-spin"></i> Analyzing...</div>';
 
-        // Load Smart Analytics (Current Month)
-        const monthYear = d.substring(0, 7); // YYYY-MM
+        // Load Analytics
+        const monthYear = d.substring(0, 7); 
         const monthSnap = await db.ref(`daily_attendance`).once('value');
         const allDays = monthSnap.val() || {};
 
@@ -236,19 +236,28 @@
             // Calculate Monthly %
             let totalMonth = 0, presentMonth = 0;
             Object.keys(allDays).forEach(day => {
-                if(day.startsWith(monthYear) && allDays[day][c] && allDays[day][c].records[name] !== undefined) {
+                if(day.startsWith(monthYear) && allDays[day][c] && allDays[day][c].records && allDays[day][c].records[name] !== undefined) {
                     totalMonth++;
                     if(allDays[day][c].records[name]) presentMonth++;
                 }
             });
-            const percent = totalMonth > 0 ? Math.round((presentMonth/totalMonth)*100) : 100;
-            const trendClass = percent < 75 ? 'trend-bad' : 'trend-good';
+
+            // LOGIC FIX: Check if data exists before calculating %
+            let badgeHTML = '';
+            if (totalMonth > 0) {
+                const percent = Math.round((presentMonth / totalMonth) * 100);
+                const trendClass = percent < 75 ? 'trend-bad' : 'trend-good';
+                badgeHTML = `<span class="trend-badge ${trendClass}">${percent}% Monthly Attendance</span>`;
+            } else {
+                // Neutral state for new months or new students
+                badgeHTML = `<span class="trend-badge" style="background:#eee; color:#666;">No History Yet</span>`;
+            }
 
             return `
                 <div class="student-item">
                     <div class="student-info">
                         <span class="student-name">${name}</span>
-                        <span class="trend-badge ${trendClass}">${percent}% Monthly Attendance</span>
+                        ${badgeHTML}
                     </div>
                     <label class="switch">
                         <input type="checkbox" class="tgl" data-name="${name}" ${p?'checked':''} onchange="liveCount()">
