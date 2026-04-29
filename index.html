@@ -3,66 +3,191 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Paramount School | Teacher Hub</title>
+    <title>Paramount | Executive Hub</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Segoe+UI:wght@400;700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/png" href="logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
-        :root { --forest: #006633; --gold: #ffd700; --danger: #e53935; --light: #f4f7f6; }
+        :root { 
+            --p-green: #004d26; 
+            --p-gold: #ffd700; 
+            --p-blue: #003366;
+            --white: #ffffff;
+        }
+
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; padding-bottom: 50px; overflow-x: hidden; }
         
-        header { background: var(--forest); color: white; padding: 15px 3%; box-shadow: 0 4px 15px rgba(0,0,0,0.15); position: sticky; top: 0; z-index: 1000; }
-        .header-content { display: flex; align-items: center; justify-content: center; gap: 15px; max-width: 1400px; margin: 0 auto; width: 100%; }
-        .header-logo { height: clamp(45px, 10vw, 75px); width: auto; flex-shrink: 0; }
-        .school-text { display: flex; flex-direction: column; line-height: 1.1; text-align: left; }
-        .school-name-main { font-family: 'Montserrat', sans-serif; font-size: clamp(1.1rem, 5vw, 2rem); font-weight: 800; letter-spacing: 1px; }
-        .school-name-sub { font-family: 'Montserrat', sans-serif; font-size: clamp(0.6rem, 2.5vw, 0.9rem); color: var(--gold); font-weight: 700; text-transform: uppercase; }
+        body { 
+            font-family: 'Montserrat', sans-serif; 
+            margin: 0; 
+            background: #f4f7f6;
+            min-height: 100vh;
+        }
 
-        /* THE HUB TITLE */
-        .hub-title { text-align: center; margin: 30px 0 10px; color: var(--forest); font-family: 'Montserrat', sans-serif; }
+        /* RESPONSIVE HEADER */
+        header { 
+            background: linear-gradient(135deg, var(--p-green), #002b12);
+            padding: 15px 5%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            border-bottom: 4px solid var(--p-gold);
+            position: sticky; top: 0; z-index: 1000;
+        }
+        .logo-img { height: clamp(40px, 12vw, 60px); }
+        .header-title h1 { font-family: 'Cinzel', serif; color: white; margin: 0; font-size: clamp(0.9rem, 4vw, 1.4rem); letter-spacing: 1px; }
+        .header-title p { color: var(--p-gold); margin: 0; font-size: 0.6rem; font-weight: 700; text-transform: uppercase; }
 
-        .portal-nav-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 20px auto; padding: 0 15px; max-width: 950px; }
-        .btn-premium-nav { padding: 20px 10px; border-radius: 18px; text-decoration: none; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 11px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); background: linear-gradient(135deg, #004d26 0%, var(--forest) 100%); color: white; border: 2px solid var(--gold); transition: 0.3s; text-align: center; }
-        .btn-premium-nav:hover { transform: translateY(-5px); border-color: white; box-shadow: 0 12px 25px rgba(0, 102, 51, 0.2); }
-        .btn-premium-nav i { font-size: 1.8rem; }
+        /* FLUID HUB GRID */
+        .hub-grid {
+            display: grid;
+            /* Desktop: 4 columns | Tablet: 3 columns | Mobile: 2 columns */
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 15px;
+            max-width: 1100px;
+            margin: 20px auto;
+            padding: 15px;
+        }
 
+        /* PREMIUM BUTTON CARDS */
+        .hub-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 25px 10px;
+            text-align: center;
+            text-decoration: none;
+            border: 1px solid #eee;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+            transition: 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .hub-card:active { transform: scale(0.95); background: #f0f0f0; }
+
+        .hub-card i {
+            font-size: 2.2rem;
+            color: var(--p-green);
+            filter: drop-shadow(0 4px 8px rgba(0, 77, 38, 0.1));
+        }
+
+        .hub-card span {
+            font-family: 'Cinzel', serif;
+            font-size: 0.85rem;
+            font-weight: 800;
+            color: var(--p-green);
+            line-height: 1.2;
+        }
+
+        .hub-card small {
+            font-size: 0.55rem;
+            font-weight: 700;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* HOME BUTTON HIGHLIGHT */
+        .home-card {
+            background: var(--p-blue);
+            border-color: var(--p-gold);
+            grid-column: span 1; /* Keeps it in the grid flow */
+        }
+        .home-card i, .home-card span { color: var(--p-gold) !important; }
+
+        /* MOBILE SPECIFIC OVERRIDES */
         @media (max-width: 480px) {
-            .portal-nav-container { grid-template-columns: repeat(2, 1fr); }
-            .btn-premium-nav { font-size: 10px; }
+            .hub-grid {
+                grid-template-columns: 1fr 1fr; /* Forces exactly 2 columns */
+                gap: 12px;
+                padding: 12px;
+            }
+            .hub-card { padding: 20px 5px; }
+            .hub-card i { font-size: 1.8rem; }
+            .hub-card span { font-size: 0.75rem; }
         }
     </style>
 </head>
 <body>
 
 <header>
-    <div class="header-content">
-        <img src="logo.png" class="header-logo">
-        <div class="school-text">
-            <span class="school-name-main">PARAMOUNT</span>
-            <span class="school-name-sub">ENGLISH MEDIUM SCHOOL</span>
+    <div style="display:flex; align-items:center; gap:10px;">
+        <img src="logo.png" class="logo-img">
+        <div class="header-title">
+            <h1>PARAMOUNT</h1>
+            <p>Faculty Suite</p>
         </div>
     </div>
 </header>
 
-<div class="hub-title">
-    <h2 style="font-weight: 800; text-transform: uppercase; letter-spacing: 2px;">Faculty Hub</h2>
-    <p style="font-size: 12px; color: #666; font-weight: 600;">Welcome, Academic Staff</p>
-</div>
+<div class="hub-grid">
+    <a href="attendance.html" class="hub-card">
+        <i class="fas fa-clipboard-check"></i>
+        <span>Attendance</span>
+        <small>Registry</small>
+    </a>
 
-<div class="portal-nav-container">
-    <a href="attendance.html" class="btn-premium-nav"><i class="fas fa-clipboard-check"></i> Attendance Registry</a>
-    <a href="homework-admin.html" class="btn-premium-nav"><i class="fas fa-book-reader"></i> Homework Publisher</a>
-    <a href="admin.html" class="btn-premium-nav"><i class="fas fa-user-shield"></i> Admin Control</a>
-    <a href="marks.html" class="btn-premium-nav"><i class="fas fa-chart-line"></i> Marks Entry</a>
-    <a href="syllabus-admin.html" class="btn-premium-nav"><i class="fas fa-book-open"></i> Syllabus</a>
-    <a href="fees.html" class="btn-premium-nav"><i class="fas fa-file-invoice-dollar"></i> Fees Dept</a>
-    <a href="id_card_generator.html" class="btn-premium-nav"><i class="fas fa-id-card"></i> ID Generator</a>
-    <a href="Timetable.html" class="btn-premium-nav"><i class="fas fa-calendar-alt"></i> Time Table</a>
-    <a href="Parents Checkbox.html" class="btn-premium-nav"><i class="fas fa-tasks-alt"></i> Parents HM checker</a>
-    <a href="halltickets.html" class="btn-premium-nav"><i class="fas fa-ticket-alt"></i> Halltickets </a>
-    
-    <a href="index.html" class="btn-premium-nav" style="background: var(--p-blue);"><i class="fas fa-home"></i> Home Portal</a>
+    <a href="homework-admin.html" class="hub-card">
+        <i class="fas fa-book-open"></i>
+        <span>Homework</span>
+        <small>Publisher</small>
+    </a>
+
+    <a href="admin.html" class="hub-card">
+        <i class="fas fa-user-shield"></i>
+        <span>Admin</span>
+        <small>Control</small>
+    </a>
+
+    <a href="marks.html" class="hub-card">
+        <i class="fas fa-chart-line"></i>
+        <span>Marks Entry</span>
+        <small>Academic</small>
+    </a>
+
+    <a href="syllabus-admin.html" class="hub-card">
+        <i class="fas fa-layer-group"></i>
+        <span>Syllabus</span>
+        <small>Tracker</small>
+    </a>
+
+    <a href="fees.html" class="hub-card">
+        <i class="fas fa-file-invoice-dollar"></i>
+        <span>Fees Dept</span>
+        <small>Finance</small>
+    </a>
+
+    <a href="id_card_generator.html" class="hub-card">
+        <i class="fas fa-id-card"></i>
+        <span>ID Generator</span>
+        <small>Printing</small>
+    </a>
+
+    <a href="Timetable.html" class="hub-card">
+        <i class="fas fa-calendar-alt"></i>
+        <span>Time Table</span>
+        <small>Schedules</small>
+    </a>
+
+    <a href="Parents Checkbox.html" class="hub-card">
+        <i class="fas fa-tasks"></i>
+        <span>HM Checker</span>
+        <small>Verification</small>
+    </a>
+
+    <a href="halltickets.html" class="hub-card">
+        <i class="fas fa-ticket-alt"></i>
+        <span>Hall Tickets</span>
+        <small>Exam Entry</small>
+    </a>
+
+    <a href="index.html" class="hub-card home-card">
+        <i class="fas fa-home"></i>
+        <span>Home Portal</span>
+        <small>Exit Hub</small>
+    </a>
 </div>
 
 </body>
