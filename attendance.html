@@ -6,6 +6,7 @@
     <title>Paramount | Attendance Registry</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="logo.png">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -38,7 +39,11 @@
         .header-logo { height: 50px; filter: drop-shadow(0 0 10px rgba(255,215,0,0.2)); }
         .header-title h1 { font-family: 'Cinzel', serif; color: white; margin: 0; font-size: 1.2rem; font-weight: 900; letter-spacing: 1.5px; }
         .header-title p { color: var(--p-gold); margin: 0; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; }
-        #teacherStatus { color: white; font-size: 0.7rem; text-align: right; opacity: 0.9; font-weight: 700; }
+        
+        .header-right { display: flex; align-items: center; gap: 15px; color: white; }
+        #teacherStatus { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.5px; }
+        .btn-logout-icon { color: var(--p-gold); cursor: pointer; font-size: 1.2rem; transition: 0.3s; display: none; }
+        .btn-logout-icon:hover { transform: scale(1.2); color: #ff4d4d; }
 
         .container { max-width: 600px; margin: 20px auto; padding: 0 15px; }
 
@@ -125,7 +130,6 @@
 
         @media (max-width: 480px) {
             .header-title h1 { font-size: 1rem; }
-            .p-name-main { font-size: 2rem; }
             .section { padding: 40px 5%; }
         }
     </style>
@@ -140,7 +144,10 @@
             <p>Registry System</p>
         </div>
     </div>
-    <div id="teacherStatus">OFFLINE</div>
+    <div class="header-right">
+        <div id="teacherStatus">OFFLINE</div>
+        <i class="fas fa-power-off btn-logout-icon" id="logoutIcon" onclick="logout()" title="Logout"></i>
+    </div>
 </header>
 
 <div class="container">
@@ -227,11 +234,38 @@
             activeTeacher = val;
             document.getElementById('loginCard').style.display = 'none';
             document.getElementById('registryUI').style.display = 'block';
+            document.getElementById('logoutIcon').style.display = 'block';
             document.getElementById('teacherStatus').innerHTML = `<span style="color:var(--p-gold)">●</span> ${val.split(' ')[1]}`;
         } else {
             Swal.fire('Error', 'Invalid PIN', 'error');
             document.getElementById('teacherSelect').value = "";
         }
+    }
+
+    function logout() {
+        Swal.fire({
+            title: 'Logout?',
+            text: "Another staff member will need to sign in.",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#004d26',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, Sign Out'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Reset State
+                activeTeacher = "";
+                document.getElementById('loginCard').style.display = 'block';
+                document.getElementById('registryUI').style.display = 'none';
+                document.getElementById('logoutIcon').style.display = 'none';
+                document.getElementById('teacherStatus').innerText = "OFFLINE";
+                document.getElementById('teacherSelect').value = "";
+                document.getElementById('studentList').innerHTML = "";
+                document.getElementById('presentCount').innerText = "0";
+                document.getElementById('absentCount').innerText = "0";
+                document.getElementById('auditText').innerText = "";
+            }
+        });
     }
 
     async function loadStudents() {
@@ -267,6 +301,8 @@
     function saveData() {
         const c = document.getElementById('attClass').value;
         const d = document.getElementById('attDate').value;
+        if(!c || !d) { Swal.fire('Error', 'Select class and date', 'error'); return; }
+        
         const now = new Date();
         const stamp = now.toLocaleDateString() + " " + now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
 
