@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Paramount | Attendance Registry</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+    <style>
+        :root { 
+            --p-green: #004d26; 
+            --p-gold: #ffd700; 
+            --p-blue: #003366;
+            --bg: #f8faf9;
+            --white: #ffffff;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Montserrat', sans-serif; background: var(--bg); margin: 0; padding-bottom: 40px; color: #333; overflow-x: hidden; }
+
+        /* PRESTIGIOUS HEADER */
+        header { 
+            background: var(--p-green); 
+            padding: 20px 5%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-bottom: 4px solid var(--p-gold);
+            position: sticky; top: 0; z-index: 1000;
+        }
+        .header-logo { height: 50px; }
+        .header-title { text-align: right; }
+        .header-title h1 { color: white; margin: 0; font-size: 1.2rem; font-weight: 800; letter-spacing: 1px; }
+        .header-title p { color: var(--p-gold); margin: 0; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; }
+
+        .container { max-width: 600px; margin: 20px auto; padding: 0 15px; }
+
+        /* PREMIUM LOGIN CARD */
+        #loginCard {
+            background: var(--white);
+            padding: 40px 30px;
+            border-radius: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+            text-align: center;
+            border: 1px solid #eee;
+        }
+        #loginCard i { font-size: 3rem; color: var(--p-green); margin-bottom: 20px; }
+        .login-select {
+            width: 100%; padding: 15px; border-radius: 15px; border: 2px solid #eee;
+            font-size: 1rem; font-weight: 600; margin-bottom: 20px; outline: none;
+            background: #fdfdfd; color: var(--p-blue);
+        }
+
+        /* DASHBOARD SECTION */
+        .dashboard-stats {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;
+        }
+        .stat-box {
+            background: white; padding: 20px; border-radius: 20px; text-align: center;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.02); border-bottom: 4px solid var(--p-gold);
+        }
+        .stat-box h4 { margin: 0; font-size: 0.7rem; color: #777; text-transform: uppercase; }
+        .stat-box span { font-size: 1.8rem; font-weight: 800; color: var(--p-green); }
+
+        /* CLASS & DATE SELECTORS */
+        .selection-card {
+            background: var(--white); padding: 20px; border-radius: 25px;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px;
+        }
+        .selection-card select, .selection-card input {
+            width: 100%; padding: 12px; border-radius: 12px; border: 1.5px solid #eee; font-weight: 600;
+        }
+
+        /* STUDENT LIST DESIGN */
+        .student-list-container { background: white; border-radius: 30px; overflow: hidden; box-shadow: 0 15px 30px rgba(0,0,0,0.05); }
+        .student-item {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 18px 25px; border-bottom: 1px solid #f5f5f5; transition: 0.3s;
+        }
+        .student-item:last-child { border: none; }
+        .student-name { font-weight: 600; color: var(--p-blue); font-size: 0.95rem; }
+
+        /* THE TOGGLE SWITCH */
+        .switch {
+            position: relative; display: inline-block; width: 60px; height: 34px;
+        }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #ff4d4d; transition: .4s; border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute; content: "A"; height: 26px; width: 26px; left: 4px; bottom: 4px;
+            background-color: white; transition: .4s; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; color: #ff4d4d;
+        }
+        input:checked + .slider { background-color: var(--p-green); }
+        input:checked + .slider:before {
+            transform: translateX(26px); content: "P"; color: var(--p-green);
+        }
+
+        .btn-save {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            width: 90%; max-width: 500px; background: var(--p-green); color: white;
+            padding: 18px; border-radius: 50px; font-weight: 800; border: 2px solid var(--p-gold);
+            box-shadow: 0 10px 25px rgba(0, 102, 51, 0.3); z-index: 100; display: none;
+        }
+
+        .audit-info { font-size: 0.7rem; text-align: center; color: #999; margin-top: 15px; font-style: italic; }
+    </style>
+</head>
+<body>
+
+<header>
+    <img src="logo.png" class="header-logo">
+    <div class="header-title">
+        <h1>Attendance Portal</h1>
+        <p>Paramount High Excellence</p>
+    </div>
+</header>
+
+<div class="container">
+    <div id="loginCard">
+        <i class="fas fa-fingerprint"></i>
+        <h2 style="font-family: 'Cinzel'; color: var(--p-blue);">Staff Verification</h2>
+        <p style="font-size: 0.8rem; color: #777; margin-bottom: 25px;">Select your name to begin academic registry</p>
+        <select id="teacherSelect" class="login-select" onchange="initAuth()">
+            <option value="">-- Identify Yourself --</option>
+            <option value="Mr. Shaik Ahmad">Mr. Shaik Ahmad</option>
+            <option value="Ms. Riha">Ms. Riha (IIT)</option>
+            <option value="Ms. Raniya Zainab">Ms. Raniya Zainab (Physics)</option>
+            <option value="Ms. Roqiya Begum">Ms. Roqiya Begum</option>
+            <option value="Ms. G.Rajitha">Ms. G.Rajitha</option>
+            <option value="Ms. Ameena Tabassum">Ms. Ameena Tabassum</option>
+            <option value="Ms. Shaik Shabana">Ms. Shaik Shabana</option>
+            <option value="Ms. B.Ravali">Ms. B.Ravali</option>
+            <option value="Ms. L.Kalyani">Ms. L.Kalyani</option>
+            <option value="Ms. J.Alaya Sree">Ms. J.Alaya Sree</option>
+            <option value="Ms. S.Sujatha">Ms. S.Sujatha</option>
+            <option value="Ms. J.Prathibha">Ms. J.Prathibha</option>
+            <option value="Ms. P.Shailaja">Ms. P.Shailaja</option>
+            <option value="Ms. A.Jhansi Rani">Ms. A.Jhansi Rani</option>
+            <option value="Ms. S. Neelima">Ms. S. Neelima</option>
+        </select>
+    </div>
+
+    <div id="attendanceInterface" style="display:none;">
+        <div class="dashboard-stats">
+            <div class="stat-box">
+                <h4>Present</h4>
+                <span id="presentCount">0</span>
+            </div>
+            <div class="stat-box">
+                <h4>Absent</h4>
+                <span id="absentCount">0</span>
+            </div>
+        </div>
+
+        <div class="selection-card">
+            <select id="attClass" onchange="loadClassList()">
+                <option value="">-- Class --</option>
+            </select>
+            <input type="date" id="attDate" onchange="loadClassList()">
+        </div>
+
+        <div id="auditTrail" class="audit-info"></div>
+
+        <div class="student-list-container" id="studentList">
+            </div>
+    </div>
+</div>
+
+<button id="saveBtn" class="btn-save" onclick="saveData()">
+    <i class="fas fa-cloud-upload-alt"></i> COMMIT ATTENDANCE
+</button>
+
+<script>
+    const firebaseConfig = { 
+        apiKey: "AIzaSyDRYk9KOK-ga0c88dnYMsAoifW2NJTd_Y8", 
+        databaseURL: "https://paramount-school-d55bc-default-rtdb.firebaseio.com", 
+        projectId: "paramount-school-d55bc" 
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    const registry = { 
+        "Mr. Shaik Ahmad": "Ahmad@123", "Ms. Riha": "Riha@123", "Ms. Raniya Zainab": "Raniya@123", 
+        "Ms. Roqiya Begum": "Roqiya@123", "Ms. G.Rajitha": "Rajitha@123", "Ms. Ameena Tabassum": "Ameena@123", 
+        "Ms. Shaik Shabana": "Shabana@123", "Ms. B.Ravali": "Ravali@123", "Ms. L.Kalyani": "Kalyani@123", 
+        "Ms. J.Alaya Sree": "Alaya@123", "Ms. S.Sujatha": "Sujatha@123", "Ms. J.Prathibha": "Prathibha@123", 
+        "Ms. P.Shailaja": "Phailaja@123", "Ms. A.Jhansi Rani": "Jhansi@123", "Ms. S. Neelima": "Neelima@123" 
+    };
+
+    const studentData = { "Pre-KG": ["Hanish Macharla", "Arjun Vihaar Illandula", "Thanu sree Allakunta", "Aadhya Gangaraboina", "Aadhya Sri Oggula", "Aadhyasri Shivagoni", "Afraha Begum", "Aliya Sultana", "Anvika Bandi", "Aradana Devara konda", "Devansh Bandi", "Hanvitha Mulkalapelli", "Harsha Vardhan Seenapelli", "Hiranya Bandi", "Jashritha Boina", "Konreddy Shreyanvi", "Kriyansh Sammeta", "Mohammed Mohiuddin Sayyad", "Nethra Narkurthi", "Reeyansh Bandi", "Rishi Manupati", "Rudransh Bandi", "Sanvika Bandi", "Shanvith Khatha", "Shishira Jalagam", "Shiva Sai Mekala", "Shree Rudhraveer Chevvu", "Shreyansh Gangaraboina", "Sreeja Thalla", "Srikrithini Myakala", "Srivatsav Vanam", "Sriyansh Mekala", "Thanvika Lakka", "Thrilokansh Vudari", "Ujjwal Chekka", "Vaishnavi Lakka", "Vedansh Myakala", "Vishnu Priya Molugu", "Vyshnav Tej Boina", "Yafiah Mohammad"], "KG-1": ["Aadhya Sri Amaravadi", "Aditya Manda", "Aadhya Jella", "Advaita Gauri Bandi", "Aizah Amna Shaik", "Akshara Singaram", "Bhahuveer Raj Somishetti", "Gayathri Erroju", "Hanvika Mulkalapelli", "Manvith Kondoju", "Sayyad Vajeed", "Mekala Manu sri", "Oliva Grace Vallapu", "Rithwik Oggula", "Rithwika Kandagatla", "Srimahi Chevvu", "Thanvesh Thalla", "Trishul Nanduri", "Yoganshika Nanduri", "Yusra Mohammad", "Zainul Abideen Syed"], "KG-2": ["Deekshanth Sammeta", "Hanshith Erroju", "Harika Bandi", "Himarsha Naini", "Karthik Vallepu", "Kruthika Bandi", "Rajavardhan Gampala", "Roshan Kaitha", "Sri Anshu Ayaan Lyadala", "Srihansh Bandi", "Srikshitha Guduri", "Varshith Gonela", "Adyasri Makala", "Anvik Boini", "Anvith Pokanati", "Awais Ur Rehman Mohammad", "Dakshu Pothuganti", "Hansith Reddy Katukuri", "Harshith Pokanati", "Jella Aditya", "Krishank Nallabothula", "Kundana Katkuri", "Munukuntla Revanth Rudhra", "Niraja Nethri Siluveru", "Pranav Mattepelli", "Sreenith Yadav Naini", "Uvan Reddy Dasari", "Zayan Mohammad", "Zoya Mohammed"], "Grade-1": ["Dheeraj Gattu", "Preetham Sannayala", "Shiva nandu Gonela", "Shrayan Nuthanakanti", "Sriyanksha Mandala", "Advitha Garige", "Harika Bandi", "Himansi Kondoju", "Izhaan Rahamath Syed", "Jaisurya Myakala", "Khadeeja Fathima", "Manaswini Dandugula", "Manusri Bandi", "Rithwik krishna Amaravadi", "Rohan Bandi", "Shiva Junnu", "Shivanandh Bandi", "Sridha Thalla", "Srinika Chengelly", "Sriyanshi Oggula", "Vishwak Chekka"], "Grade-2": ["Aliza Manha Shaik", "Dhruvan Reddy Katukuri", "Druthika Enugala", "Manaswini Bandi", "Rakshith Macharla", "Sathwika Katkuri", "Shalini Uppala", "Chandu Devarakonda", "Gnaneshwar Pokanati", "Hasnain Syed", "Koushik Siluveru", "Senen Erasabattula", "Shivarajan Pothuganti"], "Grade-3": ["Nagavelly Manikanta", "Mirja Ismail", "Bandi Aryan", "Dandugula Mahesh Babu", "Bandi Tejasri", "Bandi Harshavardhan", "Gampala Vyshnavi", "Gampala Laxmi", "Garige Harshith", "Katkuri Hanish", "Katukuri Manideep", "MD Abdul Quddus", "Muppa Sathwik Patel", "Nuthanakanti Sansita", "Pasarakonda Ritwin", "Pinninti Rakshith Rao", "Rayi Sriman Adithya"], "Grade-4": ["Abdul Saqib Mohammad", "Anudeep Chintha", "Bhavan Bandi", "Harshavardhan Gonela", "Jayadev Chiluveru", "Mahaboob Syed", "Nandith Reddy Enugala", "Sai Charan Goud Mandala", "Sai Prasanna Keerthi", "Ajmeri Shaik", "Akshara Chiluveru", "Jayasri Myakala", "Rahul Kanjarla", "Saketh Devarakonda"], "Grade-5": ["Adya Reddy Vangala", "Kowshik Patel Muppa", "Siri Singaram", "Srikar Mandala", "Abdus Salaam MD", "Akshith Ram Kalvacharla", "Jaffar Anas Shaik", "Khaja Azeemuddin Mohammed", "Nihan Mohammed", "Saif Shaik", "Saketh Renukuntla", "Sreeja Dasari", "Vidhaatri Sahani"], "Grade-6": ["Abdul Razzak Mohammad", "Anudeepthi Chintha", "Saketh Ranaveni", "Shiva Sri Katukuri", "Aklees Shaik", "Akshya Kalvacharla", "Prince Katkuri"], "Grade-7": ["Manikanta Sannayala", "Sreeyan Reddy Karra", "Jayadhithya Chiluveru"], "Grade-8": ["Sathwika Nagavelly", "Vyshnavi Uppala", "Akshaya Gampala", "Ganesh Oggula", "Gayathri Renukuntla", "Khaja Sadeemuddin Mohammed"] };
+
+    let currentTeacher = "";
+    document.getElementById('attDate').valueAsDate = new Date();
+
+    // Populate Class List
+    const classSelect = document.getElementById('attClass');
+    Object.keys(studentData).forEach(cls => {
+        let opt = document.createElement('option');
+        opt.value = cls; opt.innerText = cls;
+        classSelect.appendChild(opt);
+    });
+
+    async function initAuth() {
+        const name = document.getElementById('teacherSelect').value;
+        if(!name) return;
+
+        const { value: pass } = await Swal.fire({
+            title: 'Verify Access',
+            input: 'password',
+            inputPlaceholder: 'Enter Security PIN',
+            confirmButtonColor: '#004d26'
+        });
+
+        if(pass === registry[name]) {
+            currentTeacher = name;
+            document.getElementById('loginCard').style.display = 'none';
+            document.getElementById('attendanceInterface').style.display = 'block';
+            Swal.fire({ icon: 'success', title: 'Identity Verified', text: `Welcome, ${name}`, timer: 1500, showConfirmButton: false });
+        } else {
+            Swal.fire('Denied', 'Incorrect Security PIN', 'error');
+            document.getElementById('teacherSelect').value = "";
+        }
+    }
+
+    async function loadClassList() {
+        const cls = document.getElementById('attClass').value;
+        const date = document.getElementById('attDate').value;
+        if(!cls || !date) return;
+
+        const listDiv = document.getElementById('studentList');
+        listDiv.innerHTML = '<p style="text-align:center; padding:20px;">Fetching records...</p>';
+
+        const snap = await db.ref(`daily_attendance/${date}/${cls}`).once('value');
+        const existingData = snap.val();
+
+        listDiv.innerHTML = "";
+        const students = studentData[cls] || [];
+
+        students.forEach(name => {
+            let isPresent = true;
+            if(existingData && existingData.records && existingData.records[name] !== undefined) {
+                isPresent = existingData.records[name];
+            }
+
+            const item = document.createElement('div');
+            item.className = 'student-item';
+            item.innerHTML = `
+                <span class="student-name">${name}</span>
+                <label class="switch">
+                    <input type="checkbox" class="att-toggle" data-name="${name}" ${isPresent ? 'checked' : ''} onchange="updateLiveCount()">
+                    <span class="slider"></span>
+                </label>
+            `;
+            listDiv.appendChild(item);
+        });
+
+        if(existingData && existingData.updatedBy) {
+            document.getElementById('auditTrail').innerText = `Updated by ${existingData.updatedBy} at ${existingData.updatedAt}`;
+        } else {
+            document.getElementById('auditTrail').innerText = "New entry for today";
+        }
+
+        updateLiveCount();
+        document.getElementById('saveBtn').style.display = 'block';
+    }
+
+    function updateLiveCount() {
+        const toggles = document.querySelectorAll('.att-toggle');
+        let p = 0, a = 0;
+        toggles.forEach(t => t.checked ? p++ : a++);
+        document.getElementById('presentCount').innerText = p;
+        document.getElementById('absentCount').innerText = a;
+    }
+
+    function saveData() {
+        const cls = document.getElementById('attClass').value;
+        const date = document.getElementById('attDate').value;
+        const now = new Date();
+        const stamp = now.toLocaleDateString() + " " + now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+
+        const records = {};
+        document.querySelectorAll('.att-toggle').forEach(t => {
+            records[t.getAttribute('data-name')] = t.checked;
+        });
+
+        Swal.fire({ title: 'Saving...', didOpen: () => Swal.showLoading() });
+
+        db.ref(`daily_attendance/${date}/${cls}`).set({
+            records: records,
+            updatedBy: currentTeacher,
+            updatedAt: stamp
+        }).then(() => {
+            Swal.fire({ icon: 'success', title: 'Synced with Cloud', timer: 1500 });
+        });
+    }
+</script>
+</body>
+</html>
