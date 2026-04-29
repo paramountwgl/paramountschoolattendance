@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Paramount | Elite Homework Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Montserrat:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+    <style>
+        :root { 
+            --p-green: #004d26; 
+            --p-dark: #002412;
+            --p-gold: #ffd700; 
+            --p-blue: #003366;
+            --bg: #f0f2f0;
+            --white: #ffffff;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Montserrat', sans-serif; background: var(--bg); margin: 0; padding-bottom: 60px; color: #333; overflow-x: hidden; }
+
+        /* CINEMATIC HEADER */
+        header { 
+            background: linear-gradient(135deg, var(--p-green) 0%, var(--p-dark) 100%);
+            padding: 20px 6%; display: flex; align-items: center; justify-content: space-between; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2); border-bottom: 4px solid var(--p-gold);
+            position: sticky; top: 0; z-index: 1000;
+        }
+        .header-left { display: flex; align-items: center; gap: 15px; }
+        .logo-img { height: 60px; filter: drop-shadow(0 0 10px rgba(255,215,0,0.3)); }
+        .header-title h1 { font-family: 'Cinzel', serif; color: white; margin: 0; font-size: 1.4rem; letter-spacing: 2px; }
+        .header-title p { color: var(--p-gold); margin: 0; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 3px; }
+
+        .container { max-width: 800px; margin: 30px auto; padding: 0 20px; }
+
+        /* GLASS CARD DESIGN */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px);
+            border-radius: 30px; border: 1px solid rgba(255,255,255,0.4);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.08); padding: 40px; margin-bottom: 30px;
+        }
+
+        h2 { font-family: 'Cinzel', serif; color: var(--p-green); text-align: center; margin-top: 0; font-size: 1.8rem; }
+        
+        .premium-label { font-size: 10px; font-weight: 800; color: #888; text-transform: uppercase; letter-spacing: 2px; margin: 15px 0 8px 5px; display: block; }
+
+        /* INPUT STYLES */
+        select, input, textarea {
+            width: 100%; padding: 15px; border-radius: 15px; border: 2px solid #eef2f0;
+            font-size: 1rem; font-weight: 600; background: #fafdfb; color: var(--p-blue);
+            transition: 0.3s; outline: none;
+        }
+        select:focus, input:focus, textarea:focus { border-color: var(--p-green); box-shadow: 0 0 15px rgba(0,102,51,0.1); }
+        
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+        /* LUXURY BUTTONS */
+        .btn-group { display: flex; gap: 15px; margin-top: 30px; }
+        .btn-luxury {
+            flex: 2; background: linear-gradient(135deg, var(--p-green), var(--p-dark));
+            color: white; border: 2px solid var(--p-gold); padding: 18px; border-radius: 50px;
+            font-weight: 800; text-transform: uppercase; letter-spacing: 2px; cursor: pointer;
+            transition: 0.4s; display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+        .btn-luxury:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,77,38,0.3); }
+        
+        .btn-delete {
+            flex: 1; background: #fff; color: #e53935; border: 2px solid #f8d7da;
+            padding: 18px; border-radius: 50px; font-weight: 800; cursor: pointer; transition: 0.3s;
+        }
+        .btn-delete:hover { background: #fee; border-color: #e53935; }
+
+        /* ACTIVITY BAR */
+        .info-pill {
+            background: #f0f4f2; border-left: 5px solid var(--p-gold); padding: 15px;
+            border-radius: 12px; font-size: 0.8rem; font-weight: 600; color: #555;
+            margin-top: 20px; display: none; animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        @media (max-width: 600px) {
+            .grid-2 { grid-template-columns: 1fr; }
+            .header-title h1 { font-size: 1.1rem; }
+            .glass-card { padding: 25px; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-left">
+        <img src="logo.png" class="logo-img">
+        <div class="header-title">
+            <h1>Paramount</h1>
+            <p>Homework Management</p>
+        </div>
+    </div>
+    <a href="index.html" style="color: white; text-decoration: none; font-weight: 800; font-size: 0.8rem; border: 1px solid var(--p-gold); padding: 8px 15px; border-radius: 50px;">
+        <i class="fas fa-home"></i> PORTAL
+    </a>
+</header>
+
+<div class="container">
+    <div class="glass-card" id="authCard">
+        <h2><i class="fas fa-user-shield"></i> Faculty Login</h2>
+        <span class="premium-label">Select Staff Profile</span>
+        <select id="teacherSelect" onchange="verifyAccess()">
+            <option value="">-- Choose Name --</option>
+            <option value="Mr. Shaik Ahmad">Mr. Shaik Ahmad</option>
+            <option value="Ms. Riha">Ms. Riha (IIT)</option>
+            <option value="Ms. Raniya Zainab">Ms. Raniya Zainab (Physics)</option>
+            <option value="Ms. Roqiya Begum">Ms. Roqiya Begum</option>
+            <option value="Ms. G.Rajitha">Ms. G.Rajitha</option>
+            <option value="Ms. Ameena Tabassum">Ms. Ameena Tabassum</option>
+            <option value="Ms. Shaik Shabana">Ms. Shaik Shabana</option>
+            <option value="Ms. B.Ravali">Ms. B.Ravali</option>
+            <option value="Ms. L.Kalyani">Ms. L.Kalyani</option>
+            <option value="Ms. J.Alaya Sree">Ms. J.Alaya Sree</option>
+            <option value="Ms. S.Sujatha">Ms. S.Sujatha</option>
+            <option value="Ms. J.Prathibha">Ms. J.Prathibha</option>
+            <option value="Ms. P.Shailaja">Ms. P.Shailaja</option>
+            <option value="Ms. A.Jhansi Rani">Ms. A.Jhansi Rani</option>
+            <option value="Ms. S. Neelima">Ms. S. Neelima</option>
+        </select>
+    </div>
+
+    <div class="glass-card" id="hwWorkspace" style="display:none; animation: fadeIn 0.8s;">
+        <h2><i class="fas fa-pen-nib"></i> Publish Assignment</h2>
+        
+        <div class="grid-2">
+            <div>
+                <span class="premium-label">Target Class</span>
+                <select id="hwClass" onchange="updateHWSubjects()">
+                    <option value="">-- Class --</option>
+                </select>
+            </div>
+            <div>
+                <span class="premium-label">Assignment Date</span>
+                <input type="date" id="hwDate" onchange="fetchExistingHW()">
+            </div>
+        </div>
+
+        <span class="premium-label">Academic Subject</span>
+        <select id="hwSubSelect" onchange="fetchExistingHW()"></select>
+
+        <span class="premium-label">Task Instructions</span>
+        <textarea id="hwTask" placeholder="Enter detailed homework instructions for students..." rows="5"></textarea>
+
+        <div id="hwAuditTrail" class="info-pill">
+            <i class="fas fa-history"></i> <span id="hwAuditText"></span>
+        </div>
+
+        <div class="btn-group">
+            <button class="btn-luxury" onclick="postHomework()">
+                <i class="fas fa-paper-plane"></i> Publish Now
+            </button>
+            <button class="btn-delete" onclick="clearHomework()">
+                <i class="fas fa-trash-alt"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const firebaseConfig = { 
+        apiKey: "AIzaSyDRYk9KOK-ga0c88dnYMsAoifW2NJTd_Y8", 
+        databaseURL: "https://paramount-school-d55bc-default-rtdb.firebaseio.com", 
+        projectId: "paramount-school-d55bc" 
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    let authenticatedTeacher = "";
+    const registry = { "Mr. Shaik Ahmad": "Ahmad@123", "Ms. Riha": "Riha@123", "Ms. Raniya Zainab": "Raniya@123", "Ms. Roqiya Begum": "Roqiya@123", "Ms. G.Rajitha": "Rajitha@123", "Ms. Ameena Tabassum": "Ameena@123", "Ms. Shaik Shabana": "Shabana@123", "Ms. B.Ravali": "Ravali@123", "Ms. L.Kalyani": "Kalyani@123", "Ms. J.Alaya Sree": "Alaya@123", "Ms. S.Sujatha": "Sujatha@123", "Ms. J.Prathibha": "Prathibha@123", "Ms. P.Shailaja": "Phailaja@123", "Ms. A.Jhansi Rani": "Jhansi@123", "Ms. S. Neelima": "Neelima@123" };
+    
+    const classes = ["Pre-KG", "KG-1", "KG-2", "Grade-1", "Grade-2", "Grade-3", "Grade-4", "Grade-5", "Grade-6", "Grade-7", "Grade-8"];
+    
+    // Init Class Options
+    document.getElementById('hwClass').innerHTML += classes.map(c => `<option value="${c}">${c}</option>`).join('');
+    document.getElementById('hwDate').valueAsDate = new Date();
+
+    async function verifyAccess() {
+        const name = document.getElementById('teacherSelect').value;
+        if(!name) return;
+        const { value: pw } = await Swal.fire({ 
+            title: `Staff Access`, text: `Identify PIN for ${name}`, 
+            input: 'password', confirmButtonColor: '#004d26', background: '#fff'
+        });
+        if(pw === registry[name]) { 
+            authenticatedTeacher = name;
+            document.getElementById('authCard').style.display = 'none';
+            document.getElementById('hwWorkspace').style.display = 'block'; 
+            Swal.fire({ icon: 'success', title: 'Identity Verified', timer: 1500, showConfirmButton: false });
+            updateHWSubjects(); 
+        } else { 
+            Swal.fire('Error', 'Invalid PIN', 'error'); 
+            document.getElementById('teacherSelect').value = ""; 
+        }
+    }
+
+    function updateHWSubjects() { 
+        const cls = document.getElementById('hwClass').value; 
+        const common = ["TELUGU", "HINDI", "ENGLISH", "MATHS", "SCIENCE ","SOCIAL STUDIES"]; 
+        let subs = (["Grade-6", "Grade-7", "Grade-8"].includes(cls)) ? [...common, "PHYSICS", "BIOLOGY"] : (cls && !cls.includes("KG")) ? [...common, "SCIENCE"] : common;
+        document.getElementById('hwSubSelect').innerHTML = subs.map(s => `<option value="${s}">${s}</option>`).join(''); 
+        fetchExistingHW(); 
+    }
+    
+    function fetchExistingHW() { 
+        const d = document.getElementById('hwDate').value; 
+        const c = document.getElementById('hwClass').value; 
+        const s = document.getElementById('hwSubSelect').value; 
+        if(!d || !c || !s) return; 
+        
+        db.ref(`homework/${d}/${c}/${s}`).once('value', (snap) => { 
+            const data = snap.val(); 
+            const auditDiv = document.getElementById('hwAuditTrail');
+            if(data && typeof data === 'object') {
+                document.getElementById('hwTask').value = data.task || "";
+                auditDiv.style.display = "block"; 
+                document.getElementById('hwAuditText').innerText = `Sync: Updated by ${data.updatedBy} at ${data.updatedAt}`;
+            } else {
+                document.getElementById('hwTask').value = data || ""; 
+                auditDiv.style.display = data ? "block" : "none"; 
+                document.getElementById('hwAuditText').innerText = "Historical legacy entry.";
+            }
+        }); 
+    }
+
+    function postHomework() { 
+        const d = document.getElementById('hwDate').value; 
+        const c = document.getElementById('hwClass').value; 
+        const s = document.getElementById('hwSubSelect').value; 
+        const t = document.getElementById('hwTask').value; 
+
+        if(!d || !c || !s || !t.trim()) {
+            Swal.fire('Incomplete', 'Please fill all academic details.', 'warning');
+            return;
+        }
+
+        const now = new Date(); 
+        const timeStamp = now.toLocaleDateString() + " " + now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        
+        Swal.fire({ title: 'Publishing...', didOpen: () => Swal.showLoading() });
+
+        db.ref(`homework/${d}/${c}/${s}`).set({ 
+            task: t, 
+            updatedBy: authenticatedTeacher, 
+            updatedAt: timeStamp 
+        }).then(() => {
+            Swal.fire({ icon: 'success', title: 'Assignment Published', text: `Broadcasted to ${c} for ${s}`, timer: 2000 }); 
+            fetchExistingHW();
+        }); 
+    }
+
+    async function clearHomework() {
+        const d = document.getElementById('hwDate').value; const c = document.getElementById('hwClass').value; const s = document.getElementById('hwSubSelect').value;
+        if (!d || !c || !s) return;
+        const result = await Swal.fire({ title: 'Delete Entry?', text: `This will remove the assignment for ${s}.`, icon: 'warning', showCancelButton: true, confirmButtonColor: '#d33' });
+        if (result.isConfirmed) {
+            db.ref(`homework/${d}/${c}/${s}`).remove().then(() => {
+                document.getElementById('hwTask').value = ''; 
+                document.getElementById('hwAuditTrail').style.display = 'none';
+                Swal.fire('Deleted', 'Record removed from cloud.', 'success');
+            });
+        }
+    }
+</script>
+</body>
+</html>
