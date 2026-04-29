@@ -212,7 +212,7 @@
     </div>
 </div>
 
-<script>
+<<script>
     const firebaseConfig = { 
         apiKey: "AIzaSyDRYk9KOK-ga0c88dnYMsAoifW2NJTd_Y8", 
         databaseURL: "https://paramount-school-d55bc-default-rtdb.firebaseio.com", 
@@ -227,8 +227,20 @@
     let activeUser = "", paidTillNow = 0, lastTx = null;
     let currentMode = "tuition"; 
 
-    const studentData = { "Pre-KG": ["Hanish Macharla", "Arjun Vihaar Illandula", "Thanu sree Allakunta", "Aadhya Gangaraboina", "Aadhya Sri Oggula", "Aadhyasri Shivagoni", "Afraha Begum", "Aliya Sultana", "Anvika Bandi", "Aradana Devara konda", "Devansh Bandi", "Hanvitha Mulkalapelli", "Harsha Vardhan Seenapelli", "Hiranya Bandi", "Jashritha Boina", "Konreddy Shreyanvi", "Kriyansh Sammeta", "Mohammed Mohiuddin Sayyad", "Nethra Narkurthi", "Reeyansh Bandi", "Rishi Myakala", "Rudransh Bandi", "Sanvika Bandi", "Shanvith Khatha", "Shishira Jalagam", "Shiva Sai Mekala", "Shree Rudhraveer Chevvu", "Shreyansh Gangaraboina", "Sreeja Thalla", "Srikrithini Myakala", "Srivatsav Vanam", "Sriyansh Mekala", "Thanvika Lakka", "Thrilokansh Vudari", "Ujjwal Checkka", "Vaishnavi Lakka", "Vedansh Myakala", "Vishnu Priya Molugu", "Vyshnav Tej Boina", "Yafiah Mohammad"], "KG-1": ["Aadhya Sri Amaravadi", "Aditya Manda", "Aadhya Jella", "Advaita Gauri Bandi", "Aizah Amna Shaik", "Akshara Singaram", "Bhahuveer Raj Somishetti", "Gayathri Erroju", "Hanvika Mulkalapelli", "Manvith Kondoju", "Sayyad Vajeed", "Mekala Manu sri", "Oliva Grace Vallapu", "Rithwik Oggula", "Rithwika Kandagatla", "Srimahi Chevvu", "Thanvesh Thalla", "Trishul Nanduri", "Yoganshika Nanduri", "Yusra Mohammad", "Zainul Abideen Syed"], "KG-2": ["Deekshanth Sammeta", "Hanshith Erroju", "Harika Bandi", "Himarsha Naini", "Karthik Vallepu", "Kruthika Bandi", "Rajavardhan Gampala", "Roshan Kaitha", "Sri Anshu Ayaan Lyadala", "Srihansh Bandi", "Srikshitha Guduri", "Varshith Gonela", "Adyasri Makala", "Anvik Boini", "Anvith Pokanati", "Awais Ur Rehman Mohammad", "Dakshu Pothuganti", "Hansith Reddy Katukuri", "Harshith Pokanati", "Jella Aditya", "Krishank Nallabothula", "Kundana Katkuri", "Munukuntla Revanth Rudhra", "Niraja Nethri Siluveru", "Pranav Mattepelli", "Sreenith Yadav Naini", "Uvan Reddy Dasari", "Zayan Mohammad", "Zoya Mohammed"], "Grade-1": ["Dheeraj Gattu", "Preetham Sannayala", "Shiva nandu Gonela", "Shrayan Nuthanakanti", "Sriyanksha Mandala", "Advitha Garige", "Harika Bandi", "Himansi Kondoju", "Izhaan Rahamath Syed", "Jaisurya Myakala", "Khadeeja Fathima", "Manaswini Dandugula", "Manusri Bandi", "Rithwik krishna Amaravadi", "Rohan Bandi", "Shiva Junnu", "Shivanandh Bandi", "Sridha Thalla", "Srinika Chengelly", "Sriyanshi Oggula", "Vishwak Checkka"], "Grade-2": ["Aliza Manha Shaik", "Dhruvan Reddy Katukuri", "Druthika Enugala", "Manaswini Bandi", "Rakshith Macharla", "Sathwika Katkuri", "Shalini Uppala", "Chandu Devarakonda", "Gnaneshwar Pokanati", "Hasnain Syed", "Koushik Siluveru", "Senen Desabattula", "Shivarajan Pothuganti"], "Grade-3": ["Nagavelly Manikanta", "Mirja Ismail", "Bandi Aryan", "Dandugula Mahesh Babu", "Bandi Tejasri", "Bandi Harshavardhan", "Gampala Vyshnavi", "Gampala Laxmi", "Garige Harshith", "Katkuri Hanish", "Katukuri Manideep", "MD Abdul Quddus", "Muppa Sathwik Patel", "Nuthanakanti Sansita", "Pasarakonda Ritwin", "Pinninti Rakshith Rao", "Rayi Sriman Adithya"], "Grade-4": ["Abdul Saqib Mohammad", "Anudeep Chintha", "Bhavan Bandi", "Harshavardhan Gonela", "Jayadev Chiluveru", "Mahaboob Syed", "Nandith Reddy Enugala", "Sai Charan Goud Mandala", "Sai Prasanna Keerthi", "Ajmeri Shaik", "Akshara Chiluveru", "Jayasri Myakala", "Rahul Kanjarla", "Saketh Devarakonda"], "Grade-5": ["Adya Reddy Vangala", "Kowshik Patel Muppa", "Siri Singaram", "Srikar Mandala", "Abdus Salaam MD", "Akshith Ram Kalvacharla", "Jaffar Anas Shaik", "Khaja Azeemuddin Mohammed", "Nihan Mohammed", "Saif Shaik", "Saketh Renukuntla", "Sreeja Dasari", "Vidhaatri Sahani"], "Grade-6": ["Abdul Razzak Mohammad", "Anudeepthi Chintha", "Saketh Ranaveni", "Shiva Sri Katukuri", "Aklees Shaik", "Akshya Kalvacharla", "Prince Katkuri"], "Grade-7": ["Manikanta Sannayala", "Sreeyan Reddy Karra", "Jayadhithya Chiluveru"], "Grade-8": ["Sathwika Nagavelly", "Vyshnavi Uppala", "Akshaya Gampala", "Ganesh Oggula", "Gayathri Renukuntla", "Khaja Sadeemuddin Mohammed"] 
-                        };
+    const studentData = { 
+        "Pre-KG": ["Hanish Macharla", "Arjun Vihaar Illandula", "Thanu sree Allakunta", "Aadhya Gangaraboina", "Aadhya Sri Oggula", "Aadhyasri Shivagoni", "Afraha Begum", "Aliya Sultana", "Anvika Bandi", "Aradana Devara konda", "Devansh Bandi", "Hanvitha Mulkalapelli", "Harsha Vardhan Seenapelli", "Hiranya Bandi", "Jashritha Boina", "Konreddy Shreyanvi", "Kriyansh Sammeta", "Mohammed Mohiuddin Sayyad", "Nethra Narkurthi", "Reeyansh Bandi", "Rishi Myakala", "Rudransh Bandi", "Sanvika Bandi", "Shanvith Khatha", "Shishira Jalagam", "Shiva Sai Mekala", "Shree Rudhraveer Chevvu", "Shreyansh Gangaraboina", "Sreeja Thalla", "Srikrithini Myakala", "Srivatsav Vanam", "Sriyansh Mekala", "Thanvika Lakka", "Thrilokansh Vudari", "Ujjwal Checkka", "Vaishnavi Lakka", "Vedansh Myakala", "Vishnu Priya Molugu", "Vyshnav Tej Boina", "Yafiah Mohammad"], 
+        "KG-1": ["Aadhya Sri Amaravadi", "Aditya Manda", "Aadhya Jella", "Advaita Gauri Bandi", "Aizah Amna Shaik", "Akshara Singaram", "Bhahuveer Raj Somishetti", "Gayathri Erroju", "Hanvika Mulkalapelli", "Manvith Kondoju", "Sayyad Vajeed", "Mekala Manu sri", "Oliva Grace Vallapu", "Rithwik Oggula", "Rithwika Kandagatla", "Srimahi Chevvu", "Thanvesh Thalla", "Trishul Nanduri", "Yoganshika Nanduri", "Yusra Mohammad", "Zainul Abideen Syed"], 
+        "KG-2": ["Deekshanth Sammeta", "Hanshith Erroju", "Harika Bandi", "Himarsha Naini", "Karthik Vallepu", "Kruthika Bandi", "Rajavardhan Gampala", "Roshan Kaitha", "Sri Anshu Ayaan Lyadala", "Srihansh Bandi", "Srikshitha Guduri", "Varshith Gonela", "Adyasri Makala", "Anvik Boini", "Anvith Pokanati", "Awais Ur Rehman Mohammad", "Dakshu Pothuganti", "Hansith Reddy Katukuri", "Harshith Pokanati", "Jella Aditya", "Krishank Nallabothula", "Kundana Katkuri", "Munukuntla Revanth Rudhra", "Niraja Nethri Siluveru", "Pranav Mattepelli", "Sreenith Yadav Naini", "Uvan Reddy Dasari", "Zayan Mohammad", "Zoya Mohammed"], 
+        "Grade-1": ["Dheeraj Gattu", "Preetham Sannayala", "Shiva nandu Gonela", "Shrayan Nuthanakanti", "Sriyanksha Mandala", "Advitha Garige", "Harika Bandi", "Himansi Kondoju", "Izhaan Rahamath Syed", "Jaisurya Myakala", "Khadeeja Fathima", "Manaswini Dandugula", "Manusri Bandi", "Rithwik krishna Amaravadi", "Rohan Bandi", "Shiva Junnu", "Shivanandh Bandi", "Sridha Thalla", "Srinika Chengelly", "Sriyanshi Oggula", "Vishwak Checkka"], 
+        "Grade-2": ["Aliza Manha Shaik", "Dhruvan Reddy Katukuri", "Druthika Enugala", "Manaswini Bandi", "Rakshith Macharla", "Sathwika Katkuri", "Shalini Uppala", "Chandu Devarakonda", "Gnaneshwar Pokanati", "Hasnain Syed", "Koushik Siluveru", "Senen Desabattula", "Shivarajan Pothuganti"], 
+        "Grade-3": ["Nagavelly Manikanta", "Mirja Ismail", "Bandi Aryan", "Dandugula Mahesh Babu", "Bandi Tejasri", "Bandi Harshavardhan", "Gampala Vyshnavi", "Gampala Laxmi", "Garige Harshith", "Katkuri Hanish", "Katukuri Manideep", "MD Abdul Quddus", "Muppa Sathwik Patel", "Nuthanakanti Sansita", "Pasarakonda Ritwin", "Pinninti Rakshith Rao", "Rayi Sriman Adithya"], 
+        "Grade-4": ["Abdul Saqib Mohammad", "Anudeep Chintha", "Bhavan Bandi", "Harshavardhan Gonela", "Jayadev Chiluveru", "Mahaboob Syed", "Nandith Reddy Enugala", "Sai Charan Goud Mandala", "Sai Prasanna Keerthi", "Ajmeri Shaik", "Akshara Chiluveru", "Jayasri Myakala", "Rahul Kanjarla", "Saketh Devarakonda"], 
+        "Grade-5": ["Adya Reddy Vangala", "Kowshik Patel Muppa", "Siri Singaram", "Srikar Mandala", "Abdus Salaam MD", "Akshith Ram Kalvacharla", "Jaffar Anas Shaik", "Khaja Azeemuddin Mohammed", "Nihan Mohammed", "Saif Shaik", "Saketh Renukuntla", "Sreeja Dasari", "Vidhaatri Sahani"], 
+        "Grade-6": ["Abdul Razzak Mohammad", "Anudeepthi Chintha", "Saketh Ranaveni", "Shiva Sri Katukuri", "Aklees Shaik", "Akshya Kalvacharla", "Prince Katkuri"], 
+        "Grade-7": ["Manikanta Sannayala", "Sreeyan Reddy Karra", "Jayadhithya Chiluveru"], 
+        "Grade-8": ["Sathwika Nagavelly", "Vyshnavi Uppala", "Akshaya Gampala", "Ganesh Oggula", "Gayathri Renukuntla", "Khaja Sadeemuddin Mohammed"] 
+    };
+
     function switchMode(mode) {
         currentMode = mode;
         const tBtn = document.getElementById('btnTuitionMode');
@@ -383,16 +395,7 @@
         
         const dataPath = currentMode === 'tuition' ? `fee_records/${c}/${n}` : `bus_records/${c}/${n}`;
         const stamp = new Date().toLocaleDateString() + ", " + new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}).toUpperCase();
-        const entry = { 
-    total: t, 
-    discount: dPct, // Changed from discountPct to discount
-    paid: p, 
-    method: meth, 
-    transId: tid || null, 
-    recordedBy: activeUser, 
-    date: d, 
-    timestamp: stamp 
-};
+        const entry = { total: t, discount: dPct, paid: p, method: meth, transId: tid || null, recordedBy: activeUser, date: d, timestamp: stamp };
         lastTx = { ...entry, n, c };
         
         db.ref(dataPath).push(entry).then(() => {
@@ -403,25 +406,20 @@
     }
 
     function updateDue() {
-    const total = parseFloat(document.getElementById('totalFee').value) || 0;
-    const pNow = parseFloat(document.getElementById('payAmt').value) || 0;
-    let targetAmount = total;
+        const total = parseFloat(document.getElementById('totalFee').value) || 0;
+        const pNow = parseFloat(document.getElementById('payAmt').value) || 0;
+        let targetAmount = total;
 
-    if (currentMode === 'tuition') {
-        const discPct = parseFloat(document.getElementById('discountPct').value) || 0;
-        // Calculation: 30000 - (30000 * 15 / 100) = 25500
-        const discountAmt = (total * discPct) / 100;
-        targetAmount = total - discountAmt;
-        
-        // Update the "Final Payable" display for the Admin
-        document.getElementById('toBePaidDisplay').innerText = "₹ " + Math.round(targetAmount).toLocaleString();
-    }
-    
-    // ... rest of your code (combinedPaid, due calculation, etc.)
+        if (currentMode === 'tuition') {
+            const discPct = parseFloat(document.getElementById('discountPct').value) || 0;
+            const discountAmt = (total * discPct) / 100;
+            targetAmount = total - discountAmt;
+            document.getElementById('toBePaidDisplay').innerText = "₹ " + Math.round(targetAmount).toLocaleString();
+        }
 
         const combinedPaid = paidTillNow + pNow;
         const due = targetAmount - combinedPaid;
-        document.getElementById('dueDisplay').innerText = "₹ " + (due < 0 ? 0 : Math.round(due));
+        document.getElementById('dueDisplay').innerText = "₹ " + (due < 0 ? 0 : Math.round(due).toLocaleString());
         
         const dueBox = document.getElementById('dueBox');
         if (due > 10000) dueBox.classList.add('high-due'); 
@@ -431,32 +429,36 @@
         if(pct > 100) pct = 100;
         document.getElementById('progressCircle').style.strokeDashoffset = 314.15 - (314.15 * pct / 100);
         document.getElementById('percentText').innerText = Math.round(pct) + "%";
-    
-window.onload = function() {
-    console.log("Initializing Class Dropdown...");
-    const classDropdown = document.getElementById('feeClass');
-    
-    // Clear existing options
-    classDropdown.innerHTML = '<option value="">-- Choose Class --</option>';
-    
-    // Check if studentData exists before trying to loop
-    if (typeof studentData !== 'undefined') {
-        const classes = Object.keys(studentData);
-        classes.forEach(cls => {
-            const option = document.createElement('option');
-            option.value = cls;
-            option.innerText = cls;
-            classDropdown.appendChild(option);
-        });
-        console.log("Classes loaded: " + classes.join(", "));
-    } else {
-        console.error("Error: studentData is not defined!");
     }
 
-    // Reset Login fields
-    document.getElementById('staffName').selectedIndex = 0;
-    document.getElementById('staffPass').value = "";
-};
+    window.onload = function() {
+        console.log("Initializing Class Dropdown...");
+        const classDropdown = document.getElementById('feeClass');
+        classDropdown.innerHTML = '<option value="">-- Choose Class --</option>';
+        if (typeof studentData !== 'undefined') {
+            Object.keys(studentData).forEach(cls => {
+                const option = document.createElement('option');
+                option.value = cls;
+                option.innerText = cls;
+                classDropdown.appendChild(option);
+            });
+        }
+        document.getElementById('staffName').selectedIndex = 0;
+        document.getElementById('staffPass').value = "";
+    };
+
+    function unlockFees() {
+        const n = document.getElementById('staffName').value;
+        const p = document.getElementById('staffPass').value;
+        if (p === authorized[n]) {
+            activeUser = n;
+            document.getElementById('feeLoginScreen').style.display = 'none';
+            document.getElementById('feeApp').style.display = 'block';
+            document.getElementById('staffDisplay').innerText = "LOGGED IN: " + n;
+        } else {
+            Swal.fire('Error', 'Invalid Password', 'error');
+        }
+    }
 
     function updateClock() { document.getElementById('liveClock').innerText = new Date().toLocaleTimeString().toUpperCase(); }
     setInterval(updateClock, 1000); updateClock();
@@ -474,30 +476,6 @@ window.onload = function() {
         if (pin === recoveryPins[sel]) Swal.fire('Success', `Password: ${authorized[sel]}`, 'success');
     }
 
-function unlockFees() {
-    console.log("Attempting login..."); // This will show in F12
-    const n = document.getElementById('staffName').value;
-    const p = document.getElementById('staffPass').value;
-
-    if (!n || !p) {
-        Swal.fire('Login Required', 'Select name and enter password', 'warning');
-        return;
-    }
-
-    if (p === authorized[n]) {
-        activeUser = n;
-        
-        // Hide the login box
-        document.getElementById('feeLoginScreen').style.display = 'none';
-        // Show the actual app
-        document.getElementById('feeApp').style.display = 'block';
-        
-        document.getElementById('staffDisplay').innerText = "LOGGED IN: " + n;
-        console.log("Login Successful!");
-    } else {
-        Swal.fire('Error', 'Invalid Password', 'error');
-    }
-}
     function printReceipt() {
         if(!lastTx) return;
         const { n, c, p, d, method, transId } = lastTx;
@@ -517,6 +495,6 @@ function unlockFees() {
         }
     }
     document.getElementById('payDate').valueAsDate = new Date();
-        </script>
+</script>
 </body>
 </html>
