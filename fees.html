@@ -430,7 +430,7 @@
         let pct = (targetAmount > 0) ? (combinedPaid / targetAmount) * 100 : 0;
         if(pct > 100) pct = 100;
         document.getElementById('progressCircle').style.strokeDashoffset = 314.15 - (314.15 * pct / 100);
-        document.getElementById('percentText').innerText = Math.round(pct) + "%"};
+        document.getElementById('percentText').innerText = Math.round(pct) + "%");
     
 
     window.onload = function() {
