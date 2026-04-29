@@ -22,7 +22,7 @@
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { font-family: 'Montserrat', sans-serif; background: var(--bg); margin: 0; padding-bottom: 100px; color: #333; overflow-x: hidden; width: 100%; }
+        body { font-family: 'Montserrat', sans-serif; background: var(--bg); margin: 0; padding-bottom: 120px; color: #333; overflow-x: hidden; width: 100%; }
 
         /* ULTRA-PREMIUM HEADER */
         header { 
@@ -42,96 +42,68 @@
         
         .header-right { display: flex; align-items: center; gap: 15px; color: white; }
         #teacherStatus { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.5px; }
-        .btn-logout-icon { color: var(--p-gold); cursor: pointer; font-size: 1.2rem; transition: 0.3s; display: none; }
-        .btn-logout-icon:hover { transform: scale(1.2); color: #ff4d4d; }
+
+        /* LOGOUT PILL */
+        .logout-wrapper {
+            display: none; align-items: center; gap: 8px; cursor: pointer;
+            background: rgba(255, 255, 255, 0.1); padding: 8px 15px; border-radius: 50px;
+            border: 1px solid var(--p-gold); transition: 0.3s;
+        }
+        .logout-wrapper i { font-size: 0.9rem; color: var(--p-gold); }
+        .logout-wrapper span { font-size: 0.7rem; font-weight: 800; color: white; text-transform: uppercase; }
+        .logout-wrapper:hover { background: #e53935; border-color: white; }
 
         .container { max-width: 600px; margin: 20px auto; padding: 0 15px; }
 
         /* PREMIUM CARDS */
         #loginCard, .selection-card, .student-list-container {
-            background: var(--white);
-            border-radius: 25px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.05);
-            border: 1px solid #f0f0f0;
+            background: var(--white); border-radius: 25px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.05); border: 1px solid #f0f0f0;
         }
-
         #loginCard { padding: 45px 25px; text-align: center; }
         #loginCard i { font-size: 3.5rem; color: var(--p-green); margin-bottom: 20px; }
-        
-        .login-select {
-            width: 100%; padding: 15px; border-radius: 15px; border: 2px solid #eee;
-            font-size: 1rem; font-weight: 700; outline: none; background: #fdfdfd; color: var(--p-blue);
-        }
+        .login-select { width: 100%; padding: 15px; border-radius: 15px; border: 2px solid #eee; font-size: 1rem; font-weight: 700; outline: none; background: #fdfdfd; color: var(--p-blue); }
 
         /* DASHBOARD */
         .dashboard-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
-        .stat-box {
-            background: white; padding: 15px; border-radius: 20px; text-align: center;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.03); border-bottom: 4px solid var(--p-gold);
-        }
+        .stat-box { background: white; padding: 15px; border-radius: 20px; text-align: center; box-shadow: 0 8px 20px rgba(0,0,0,0.03); border-bottom: 4px solid var(--p-gold); }
         .stat-box h4 { margin: 0; font-size: 0.65rem; color: #888; text-transform: uppercase; letter-spacing: 1px; }
         .stat-box span { font-size: 1.8rem; font-weight: 900; color: var(--p-green); }
 
         .selection-card { padding: 20px; display: grid; grid-template-columns: 1.2fr 1fr; gap: 12px; margin-bottom: 20px; }
-        .selection-card select, .selection-card input {
-            width: 100%; padding: 12px; border-radius: 12px; border: 1.5px solid #eee; font-weight: 700; color: var(--p-blue); outline: none;
-        }
+        .selection-card select, .selection-card input { width: 100%; padding: 12px; border-radius: 12px; border: 1.5px solid #eee; font-weight: 700; color: var(--p-blue); outline: none; }
 
-        /* STUDENT LIST */
-        .student-item {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 18px 20px; border-bottom: 1px solid #f9f9f9;
-        }
-        .student-name { font-weight: 700; color: var(--p-blue); font-size: 0.9rem; max-width: 70%; }
+        .student-item { display: flex; align-items: center; justify-content: space-between; padding: 18px 20px; border-bottom: 1px solid #f9f9f9; }
+        .student-name { font-weight: 700; color: var(--p-blue); font-size: 0.9rem; }
 
         /* P/A TOGGLE */
         .switch { position: relative; display: inline-block; width: 65px; height: 36px; }
         .switch input { opacity: 0; width: 0; height: 0; }
-        .slider {
-            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
-            background-color: #ff4d4d; transition: .4s; border-radius: 34px;
-        }
-        .slider:before {
-            position: absolute; content: "A"; height: 28px; width: 28px; left: 4px; bottom: 4px;
-            background-color: white; transition: .4s; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 900; color: #ff4d4d;
-        }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ff4d4d; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: "A"; height: 28px; width: 28px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 900; color: #ff4d4d; }
         input:checked + .slider { background-color: var(--p-green); }
         input:checked + .slider:before { transform: translateX(29px); content: "P"; color: var(--p-green); }
 
-        /* ACTION BUTTONS */
         .action-bar { display: none; gap: 10px; margin-top: 25px; }
-        .btn-main {
-            flex: 3; background: linear-gradient(135deg, var(--p-green), var(--p-dark-green));
-            color: white; padding: 16px; border-radius: 15px; font-weight: 800;
-            border: 1.5px solid var(--p-gold); box-shadow: 0 10px 20px rgba(0, 102, 51, 0.2);
-            cursor: pointer; letter-spacing: 1px;
-        }
-        .btn-danger {
-            flex: 1; background: #e53935; color: white; border-radius: 15px; border: none;
-            box-shadow: 0 10px 20px rgba(229, 57, 53, 0.2); cursor: pointer;
-        }
+        .btn-main { flex: 3; background: linear-gradient(135deg, var(--p-green), var(--p-dark-green)); color: white; padding: 16px; border-radius: 15px; font-weight: 800; border: 1.5px solid var(--p-gold); box-shadow: 0 10px 20px rgba(0, 102, 51, 0.2); cursor: pointer; }
+        .btn-danger { flex: 1; background: #e53935; color: white; border-radius: 15px; border: none; cursor: pointer; }
 
-        /* PREMIUM APP FOOTER */
-        .app-footer {
-            position: fixed; bottom: 0; left: 0; width: 100%; height: 75px;
-            background: rgba(255,255,255,0.95); backdrop-filter: blur(15px);
-            display: flex; justify-content: space-around; align-items: center;
-            border-top: 1px solid #eee; z-index: 2000; padding-bottom: env(safe-area-inset-bottom);
+        /* BACK TO PORTAL FOOTER */
+        .portal-footer {
+            position: fixed; bottom: 0; left: 0; width: 100%; padding: 20px;
+            background: rgba(255,255,255,0.9); backdrop-filter: blur(10px);
+            border-top: 1px solid #eee; display: flex; justify-content: center; z-index: 1000;
         }
-        .nav-item {
-            display: flex; flex-direction: column; align-items: center; gap: 5px;
-            color: #aaa; text-decoration: none; font-size: 0.65rem; font-weight: 700; text-transform: uppercase;
+        .btn-back-portal {
+            width: 100%; max-width: 500px; padding: 15px; background: var(--p-blue);
+            color: white; text-decoration: none; border-radius: 50px; text-align: center;
+            font-weight: 800; font-size: 0.9rem; letter-spacing: 1px; text-transform: uppercase;
+            box-shadow: 0 8px 20px rgba(0, 51, 102, 0.2); border: 2px solid var(--p-gold);
+            transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px;
         }
-        .nav-item.active { color: var(--p-green); }
-        .nav-item i { font-size: 1.4rem; }
+        .btn-back-portal:hover { transform: translateY(-3px); background: var(--p-dark-green); }
 
         .audit-trail { font-size: 0.7rem; text-align: center; color: #999; margin: 15px 0; font-style: italic; }
-
-        @media (max-width: 480px) {
-            .header-title h1 { font-size: 1rem; }
-            .section { padding: 40px 5%; }
-        }
     </style>
 </head>
 <body>
@@ -146,17 +118,20 @@
     </div>
     <div class="header-right">
         <div id="teacherStatus">OFFLINE</div>
-        <i class="fas fa-power-off btn-logout-icon" id="logoutIcon" onclick="logout()" title="Logout"></i>
+        <div class="logout-wrapper" id="logoutIcon" onclick="logout()">
+            <i class="fas fa-power-off"></i>
+            <span>Logout</span>
+        </div>
     </div>
 </header>
 
 <div class="container">
     <div id="loginCard">
-        <i class="fas fa-id-card-alt"></i>
-        <h2 style="font-family:'Cinzel'; color:var(--p-blue); margin:0;">Staff Access</h2>
-        <p style="color:#888; font-size:0.8rem; margin:10px 0 25px;">Select your profile to start attendance</p>
+        <i class="fas fa-fingerprint"></i>
+        <h2 style="font-family:'Cinzel'; color:var(--p-blue); margin:0;">Identity Sync</h2>
+        <p style="color:#888; font-size:0.8rem; margin:10px 0 25px;">Verified Personnel Only</p>
         <select id="teacherSelect" class="login-select" onchange="authenticateTeacher()">
-            <option value="">-- Identify Staff --</option>
+            <option value="">-- Choose Profile --</option>
             <option value="Mr. Shaik Ahmad">Mr. Shaik Ahmad</option>
             <option value="Ms. Riha">Ms. Riha (IIT)</option>
             <option value="Ms. Raniya Zainab">Ms. Raniya Zainab (Physics)</option>
@@ -190,22 +165,20 @@
 
         <div id="auditText" class="audit-trail"></div>
 
-        <div class="student-list-container" id="studentList">
-            </div>
+        <div class="student-list-container" id="studentList"></div>
 
         <div class="action-bar" id="actionBar">
-            <button class="btn-main" onclick="saveData()">COMMIT REGISTRY <i class="fas fa-check-circle"></i></button>
+            <button class="btn-main" onclick="saveData()">SYNC DATA <i class="fas fa-cloud-upload-alt"></i></button>
             <button class="btn-danger" id="delBtn" onclick="deleteEntry()" style="display:none;"><i class="fas fa-trash"></i></button>
         </div>
     </div>
 </div>
 
-<nav class="app-footer">
-    <a href="index.html" class="nav-item"><i class="fas fa-home"></i><span>Home</span></a>
-    <a href="teacher.html" class="nav-item"><i class="fas fa-user-tie"></i><span>Portal</span></a>
-    <a href="#" class="nav-item active"><i class="fas fa-clipboard-list"></i><span>Registry</span></a>
-    <a href="tel:+919652188807" class="nav-item"><i class="fas fa-headset"></i><span>Support</span></a>
-</nav>
+<footer class="portal-footer">
+    <a href="index.html" class="btn-back-portal">
+        <i class="fas fa-arrow-left"></i> Back to Main Portal
+    </a>
+</footer>
 
 <script>
     const firebaseConfig = { 
@@ -229,43 +202,26 @@
     async function authenticateTeacher() {
         const val = document.getElementById('teacherSelect').value;
         if(!val) return;
-        const { value: pin } = await Swal.fire({ title: 'Security PIN', input: 'password', confirmButtonColor: '#004d26' });
+        const { value: pin } = await Swal.fire({ title: 'Staff PIN', input: 'password', confirmButtonColor: '#004d26', background: '#fff' });
         if(pin === registry[val]) {
             activeTeacher = val;
             document.getElementById('loginCard').style.display = 'none';
             document.getElementById('registryUI').style.display = 'block';
-            document.getElementById('logoutIcon').style.display = 'block';
+            document.getElementById('logoutIcon').style.display = 'flex';
             document.getElementById('teacherStatus').innerHTML = `<span style="color:var(--p-gold)">●</span> ${val.split(' ')[1]}`;
         } else {
-            Swal.fire('Error', 'Invalid PIN', 'error');
+            Swal.fire('Error', 'Invalid Access PIN', 'error');
             document.getElementById('teacherSelect').value = "";
         }
     }
 
     function logout() {
-        Swal.fire({
-            title: 'Logout?',
-            text: "Another staff member will need to sign in.",
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonColor: '#004d26',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, Sign Out'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // Reset State
-                activeTeacher = "";
-                document.getElementById('loginCard').style.display = 'block';
-                document.getElementById('registryUI').style.display = 'none';
-                document.getElementById('logoutIcon').style.display = 'none';
-                document.getElementById('teacherStatus').innerText = "OFFLINE";
-                document.getElementById('teacherSelect').value = "";
-                document.getElementById('studentList').innerHTML = "";
-                document.getElementById('presentCount').innerText = "0";
-                document.getElementById('absentCount').innerText = "0";
-                document.getElementById('auditText').innerText = "";
-            }
-        });
+        activeTeacher = "";
+        document.getElementById('loginCard').style.display = 'block';
+        document.getElementById('registryUI').style.display = 'none';
+        document.getElementById('logoutIcon').style.display = 'none';
+        document.getElementById('teacherStatus').innerText = "OFFLINE";
+        document.getElementById('teacherSelect').value = "";
     }
 
     async function loadStudents() {
@@ -274,7 +230,7 @@
         if(!c || !d) return;
 
         const list = document.getElementById('studentList');
-        list.innerHTML = '<div style="text-align:center; padding:30px;"><i class="fas fa-spinner fa-spin"></i> Loading...</div>';
+        list.innerHTML = '<div style="text-align:center; padding:30px;"><i class="fas fa-spinner fa-spin"></i> Syncing...</div>';
 
         const snap = await db.ref(`daily_attendance/${d}/${c}`).once('value');
         const data = snap.val();
@@ -284,7 +240,7 @@
             return `<div class="student-item"><span class="student-name">${name}</span><label class="switch"><input type="checkbox" class="tgl" data-name="${name}" ${p?'checked':''} onchange="liveCount()"><span class="slider"></span></label></div>`;
         }).join('');
 
-        document.getElementById('auditText').innerText = data ? `Last sync by ${data.updatedBy} at ${data.updatedAt}` : "No records found for this selection.";
+        document.getElementById('auditText').innerText = data ? `Synced by ${data.updatedBy} at ${data.updatedAt}` : "Awaiting initial registry for today.";
         document.getElementById('delBtn').style.display = data ? 'block' : 'none';
         document.getElementById('actionBar').style.display = 'flex';
         liveCount();
@@ -301,17 +257,15 @@
     function saveData() {
         const c = document.getElementById('attClass').value;
         const d = document.getElementById('attDate').value;
-        if(!c || !d) { Swal.fire('Error', 'Select class and date', 'error'); return; }
-        
         const now = new Date();
         const stamp = now.toLocaleDateString() + " " + now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
 
         const recs = {};
         document.querySelectorAll('.tgl').forEach(i => recs[i.getAttribute('data-name')] = i.checked);
 
-        Swal.fire({ title: 'Syncing...', didOpen: () => Swal.showLoading() });
+        Swal.fire({ title: 'Securing Cloud Data...', didOpen: () => Swal.showLoading() });
         db.ref(`daily_attendance/${d}/${c}`).set({ records: recs, updatedBy: activeTeacher, updatedAt: stamp }).then(() => {
-            Swal.fire({ icon: 'success', title: 'Data Secured', timer: 1000 });
+            Swal.fire({ icon: 'success', title: 'Registry Secured', timer: 1000 });
             loadStudents();
         });
     }
@@ -319,7 +273,7 @@
     async function deleteEntry() {
         const c = document.getElementById('attClass').value;
         const d = document.getElementById('attDate').value;
-        const res = await Swal.fire({ title: 'Erase Data?', text: 'This will remove the day\'s record.', icon: 'warning', showCancelButton: true, confirmButtonColor: '#e53935' });
+        const res = await Swal.fire({ title: 'Wipe Data?', text: 'Delete this record permanently?', icon: 'warning', showCancelButton: true, confirmButtonColor: '#e53935' });
         if(res.isConfirmed) {
             db.ref(`daily_attendance/${d}/${c}`).remove().then(() => {
                 Swal.fire('Deleted', 'Record removed.', 'success');
