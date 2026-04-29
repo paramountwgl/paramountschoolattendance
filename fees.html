@@ -455,14 +455,34 @@
         if (pin === recoveryPins[sel]) Swal.fire('Success', `Password: ${authorized[sel]}`, 'success');
     }
 
-    function unlockFees() {
-        const n = document.getElementById('staffName').value, p = document.getElementById('staffPass').value;
-        if(p === authorized[n]) {
-            activeUser = n; document.getElementById('feeLoginScreen').style.display = 'none'; document.getElementById('feeApp').style.display = 'block';
-            document.getElementById('staffDisplay').innerText = "LOGGED IN: " + n;
-        } else { Swal.fire('Error', 'Invalid credentials', 'error'); }
+  function unlockFees() {
+    const n = document.getElementById('staffName').value;
+    const p = document.getElementById('staffPass').value;
+
+    if (!n) {
+        Swal.fire('Error', 'Please select a Staff member', 'warning');
+        return;
     }
 
+    if (p === authorized[n]) {
+        activeUser = n;
+        // This is the missing part:
+        document.getElementById('feeLoginScreen').style.display = 'none'; // Hide Login
+        document.getElementById('feeApp').style.display = 'block';         // Show App
+        document.getElementById('staffDisplay').innerText = "LOGGED IN: " + n;
+        
+        Swal.fire({
+            icon: 'success',
+            title: 'Access Granted',
+            text: 'Welcome to Paramount Fee Portal',
+            timer: 1500,
+            showConfirmButton: false
+        });
+    } else {
+        Swal.fire('Error', 'Invalid Password', 'error');
+        document.getElementById('staffPass').value = "";
+    }
+}
     function printReceipt() {
         if(!lastTx) return;
         const { n, c, p, d, method, transId } = lastTx;
