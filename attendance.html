@@ -21,6 +21,26 @@
             --white: #ffffff;
             --danger: #e53935;
         }
+        /* PREMIUM REPORT MODAL */
+.report-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.8); backdrop-filter: blur(10px);
+    z-index: 3000; display: none; align-items: center; justify-content: center;
+}
+.report-content {
+    background: white; width: 95%; max-width: 800px; height: 80vh;
+    border-radius: 25px; overflow: hidden; display: flex; flex-direction: column;
+}
+.report-header {
+    background: var(--p-green); color: white; padding: 20px;
+    display: flex; justify-content: space-between; align-items: center;
+}
+.report-body { padding: 20px; overflow-y: auto; flex: 1; }
+.report-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+.report-table th { background: #f4f7f6; position: sticky; top: 0; padding: 12px; text-align: left; color: var(--p-blue); border-bottom: 2px solid var(--p-gold); }
+.report-table td { padding: 12px; border-bottom: 1px solid #eee; font-weight: 600; }
+.rep-present { color: #2e7d32; }
+.rep-absent { color: #c62828; }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: 'Montserrat', sans-serif; background: var(--bg); margin: 0; padding-bottom: 120px; color: #333; overflow-x: hidden; width: 100%; }
@@ -173,6 +193,9 @@
                 <button class="btn-danger" id="delBtn" onclick="deleteEntry()" style="display:none;">
                     <i class="fas fa-trash"></i> Wipe Day
                 </button>
+                <button class="btn-main" style="background: var(--p-blue); margin-bottom: 10px;" onclick="generateMonthlyReport()">
+    <i class="fas fa-chart-pie"></i> VIEW MONTHLY REPORT
+</button>
             </div>
         </div>
     </div>
@@ -213,6 +236,57 @@
             document.getElementById('teacherSelect').value = "";
         }
     }
+    async function generateMonthlyReport() {
+    const c = document.getElementById('attClass').value;
+    const d = document.getElementById('attDate').value;
+    if(!c || !d) { Swal.fire('Wait', 'Select Class & Date first', 'info'); return; }
+
+    const monthYear = d.substring(0, 7); // YYYY-MM
+    const monthSnap = await db.ref(`daily_attendance`).once('value');
+    const allDays = monthSnap.val() || {};
+    
+    document.getElementById('reportSub').innerText = `${c} | ${monthYear}`;
+    const tbody = document.getElementById('reportTableBody');
+    tbody.innerHTML = "";
+
+    const students = studentData[c] || [];
+    
+    students.forEach(name => {
+        let totalWorking = 0, present = 0;
+        
+        Object.keys(allDays).forEach(day => {
+            if(day.startsWith(monthYear) && allDays[day][c] && allDays[day][c].records && allDays[day][c].records[name] !== undefined) {
+                totalWorking++;
+                if(allDays[day][c].records[name]) present++;
+            }
+        });
+
+        if(totalWorking > 0) {
+            const absent = totalWorking - present;
+            const percent = Math.round((present/totalWorking)*100);
+            
+            tbody.innerHTML += `
+                <tr>
+                    <td>${name}</td>
+                    <td>${totalWorking}</td>
+                    <td class="rep-present">${present}</td>
+                    <td class="rep-absent">${absent}</td>
+                    <td style="color:${percent < 75 ? '#c62828' : '#333'}">${percent}%</td>
+                </tr>
+            `;
+        }
+    });
+
+    if(tbody.innerHTML === "") {
+        tbody.innerHTML = "<tr><td colspan='5' style='text-align:center;'>No data recorded for this month.</td></tr>";
+    }
+
+    document.getElementById('reportOverlay').style.display = 'flex';
+}
+
+function closeReport() {
+    document.getElementById('reportOverlay').style.display = 'none';
+}
 
     async function loadStudents() {
         const c = document.getElementById('attClass').value;
@@ -326,5 +400,30 @@
         if(res.isConfirmed) db.ref(`daily_attendance/${d}/${c}`).remove().then(() => loadStudents());
     }
 </script>
+    <div id="reportOverlay" class="report-overlay">
+    <div class="report-content">
+        <div class="report-header">
+            <div>
+                <h2 style="margin:0; font-family:'Cinzel'; font-size:1.2rem;">Monthly Analysis</h2>
+                <p id="reportSub" style="margin:0; font-size:0.7rem; color:var(--p-gold);"></p>
+            </div>
+            <i class="fas fa-times-circle" style="font-size:1.5rem; cursor:pointer;" onclick="closeReport()"></i>
+        </div>
+        <div class="report-body">
+            <table class="report-table">
+                <thead>
+                    <tr>
+                        <th>Student Name</th>
+                        <th>Days</th>
+                        <th class="rep-present">P</th>
+                        <th class="rep-absent">A</th>
+                        <th>%</th>
+                    </tr>
+                </thead>
+                <tbody id="reportTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
 </body>
 </html>
