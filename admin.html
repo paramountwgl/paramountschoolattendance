@@ -263,24 +263,32 @@
             const m = document.getElementById('monthInput').value;
             if(type === 'monthly' && !m) return Swal.fire('Error', 'Pick Month', 'warning');
 
-            db.ref(`daily_attendance`).once('value', (snap) => {
-                const allData = snap.val() || {};
-                const stats = {};
-                studentDataMaster[cls].forEach(n => stats[n] = { p: 0, t: 0 });
+            // --- UPDATE FOR DAILY VIEW ---
+db.ref(`daily_attendance/${date}/${cls}/records`).once('value', (snap) => { // Added /records
+    const data = snap.val() || {};
+    body.innerHTML = studentDataMaster[cls].map(n => {
+        let text = '-', color = '#888';
+        if(data[n] === true) { text = 'PRESENT'; color = 'green'; }
+        else if(data[n] === false) { text = 'ABSENT'; color = 'red'; }
+        return `<tr><td>${n}</td><td colspan="4" style="color:${color}; font-weight:bold">${text}</td></tr>`;
+    }).join('');
+});
 
-                Object.keys(allData).forEach(date => {
-                    if(type === 'monthly' && !date.startsWith(m)) return; 
-                    const classData = allData[date][cls];
-                    if(classData) {
-                        Object.keys(classData).forEach(student => {
-                            if(stats[student] !== undefined) {
-                                stats[student].t++;
-                                if(classData[student] === true) stats[student].p++;
-                            }
-                        });
-                    }
-                });
-
+// --- UPDATE FOR MONTHLY/OVERALL VIEW ---
+Object.keys(allData).forEach(date => {
+    if(date.startsWith(m)) {
+        // Access the records sub-node
+        const classData = allData[date][cls] ? allData[date][cls].records : null; // Added .records
+        if(classData) {
+            Object.keys(classData).forEach(student => {
+                if(stats[student] !== undefined) {
+                    stats[student].t++;
+                    if(classData[student] === true) stats[student].p++;
+                }
+            });
+        }
+    }
+});
                 body.innerHTML = studentDataMaster[cls].map(n => {
                     const p = stats[n].p; const t = stats[n].t; const a = t - p;
                     const pct = t > 0 ? Math.round((p/t)*100) : 0;
