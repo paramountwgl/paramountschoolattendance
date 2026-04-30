@@ -488,6 +488,7 @@ async function fetchAllData() {
             });
         }
         // --- UI UPDATES ---
+        // --- UI UPDATES ---
         document.getElementById('vName').innerText = name;
         document.getElementById('vSub').innerText = `${cls} | Roll: ${roll}`;
         document.getElementById('vImg').src = `Student images/${roll}.png`;
@@ -497,18 +498,22 @@ async function fetchAllData() {
         document.getElementById('vDOB').innerText = student.DOB || 'N/A';
         document.getElementById('vAdmExtended').innerText = student.Adm;
 
-        let fPct = tFee > 0 ? Math.round((tPaid/tFee)*100) : 0;
-        document.getElementById('vTotalFee').innerText = `₹ ${tFee}`;
-        document.getElementById('vPaidFee').innerText = `₹ ${tPaid}`;
-        document.getElementById('vDueFee').innerText = `₹ ${Math.max(0, tFee - tPaid)}`;
-        document.getElementById('vFeeCircle').style.strokeDashoffset = 251 - (fPct/100)*251;
+        // FIXED: Using netPayable (which includes the 15% discount) instead of tFee
+        let fPct = netPayable > 0 ? Math.round((tPaid / netPayable) * 100) : 0;
+        
+        document.getElementById('vTotalFee').innerText = `₹ ${Math.round(netPayable).toLocaleString()}`;
+        document.getElementById('vPaidFee').innerText = `₹ ${tPaid.toLocaleString()}`;
+        document.getElementById('vDueFee').innerText = `₹ ${Math.max(0, Math.round(netPayable - tPaid)).toLocaleString()}`;
+        
+        // Update circular progress (using 251 as the circumference)
+        document.getElementById('vFeeCircle').style.strokeDashoffset = 251 - (Math.min(fPct, 100) / 100) * 251;
         document.getElementById('vFeePercent').innerText = fPct + "%";
         
         document.getElementById('hwList').innerHTML = hwDetailHTML;
         document.getElementById('vTotalDays').innerText = tDays;
         document.getElementById('vPresent').innerText = pDays;
         document.getElementById('vAbsent').innerText = tDays - pDays;
-        document.getElementById('vAttPercent').innerText = tDays > 0 ? Math.round((pDays/tDays)*100) + "%" : "0%";
+        document.getElementById('vAttPercent').innerText = tDays > 0 ? Math.round((pDays / tDays) * 100) + "%" : "0%";
         document.getElementById('vFather').innerText = student.Father;
         document.getElementById('vPhone').innerText = student.Phone;
         document.getElementById('vAdm').innerText = student.Adm;
