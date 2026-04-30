@@ -388,15 +388,27 @@ async function fetchAllData() {
         const dateISO = now.toLocaleDateString('en-CA'); 
         const dateIN = now.toLocaleDateString('en-GB').replace(/\//g, '-'); 
 
-        // 1. FEES
-        let tPaid = 0, tFee = 0;
+     // 1. FEES (UPDATED WITH PERCENTAGE DISCOUNT MATH)
+        let tPaid = 0, baseFee = 0, discountPercent = 0;
         const feeSnap = await db.ref(`fee_records/${dbClass}/${name}`).once('value');
+        
         if(feeSnap.exists()){
             feeSnap.forEach(c => { 
                 const d = c.val(); 
-                if(d) { tPaid += parseFloat(d.paid || 0); tFee = parseFloat(d.total || 0); }
+                if(d) { 
+                    tPaid += parseFloat(d.paid || 0); 
+                    // Get highest values to ensure we have the full fee and discount %
+                    if(parseFloat(d.total || 0) > baseFee) baseFee = parseFloat(d.total);
+                    // Check for new 'discount' key or old 'discountPct'
+                    let dVal = parseFloat(d.discount || d.discountPct || 0);
+                    if(dVal > discountPercent) discountPercent = dVal;
+                }
             });
         }
+
+        // Apply 15% discount math
+        const discountAmount = (baseFee * (discountPercent / 100));
+        const netPayable = baseFee - discountAmount;
 
         // 2. HOMEWORK
         let hwDetailHTML = "";
@@ -456,16 +468,22 @@ async function fetchAllData() {
                 }
             }
         }
-// 4. ATTENDANCE (RE-ADD THIS SECTION)
+// 4. ATTENDANCE (FIXED TO READ FROM /records SUB-NODE)
         let tDays = 0, pDays = 0;
         const attSnap = await db.ref('daily_attendance').once('value');
+        
         if(attSnap.exists()){
-            const all = attSnap.val();
-            Object.keys(all).forEach(d => {
-                // Ensure the class and student exist in this day's record
-                if(all[d][dbClass] && all[d][dbClass][name] !== undefined) { 
+            const allDays = attSnap.val();
+            Object.keys(allDays).forEach(dateKey => {
+                // Access: daily_attendance -> Date -> Class -> records
+                const classNode = allDays[dateKey][dbClass];
+                
+                // We must check if the class exists and then look inside the 'records' folder
+                if(classNode && classNode.records && classNode.records[name] !== undefined) { 
                     tDays++; 
-                    if(all[d][dbClass][name] === true) pDays++; 
+                    if(classNode.records[name] === true) {
+                        pDays++;
+                    }
                 }
             });
         }
