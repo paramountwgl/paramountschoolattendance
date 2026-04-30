@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paramount | Quizz Live Control Room</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="logo.png">
+    <style>
+        :root {
+            --primary: #1a237e;
+            --accent: #6200ea;
+            --success: #00c853;
+            --warning: #ffd600;
+            --danger: #ff5252;
+            --bg: #0f172a; /* Darker, premium dashboard feel */
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Side Navigation */
+        .side-nav {
+            width: 80px;
+            background: rgba(0,0,0,0.3);
+            border-right: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        /* Main Workspace */
+        .workspace {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .live-indicator {
+            background: var(--danger);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 25px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        /* Control Panel */
+        .current-question-box {
+            margin-bottom: 20px;
+        }
+
+        .q-text {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin: 15px 0;
+        }
+
+        .control-btns {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .btn-push { background: var(--success); color: white; width: 100%; }
+        .btn-end { background: var(--danger); color: white; }
+
+        /* Real-time Participation List */
+        .student-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .student-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: rgba(255,255,255,0.03);
+            margin-bottom: 8px;
+            border-radius: 8px;
+        }
+
+        .score-badge {
+            background: var(--accent);
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+
+        .status-dot {
+            height: 10px;
+            width: 10px;
+            background: var(--success);
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="side-nav">
+        <div style="font-weight: bold; color: var(--accent);">P</div>
+    </div>
+
+    <div class="workspace">
+        <div class="header">
+            <div>
+                <h1 style="margin:0;">Quiz Session: Science Unit 1</h1>
+                <p style="opacity:0.6; margin-top:5px;">Room Code: <strong>PM-4022</strong></p>
+            </div>
+            <div class="live-indicator">● LIVE</div>
+        </div>
+
+        <div class="grid">
+            <!-- Left Side: Controls -->
+            <div class="left-col">
+                <div class="card current-question-box">
+                    <span style="color: var(--accent); font-weight: bold;">NOW PRESENTING: Question 3/10</span>
+                    <p class="q-text" id="activeQ">Which planet is known as the Red Planet?</p>
+                    
+                    <div class="control-btns">
+                        <button class="btn btn-push" onclick="nextQuestion()">Push Next Question to Students</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Participation Analytics</h3>
+                    <div style="display: flex; justify-content: space-around; text-align: center;">
+                        <div>
+                            <h2 style="color: var(--success);">24</h2>
+                            <p>Answering</p>
+                        </div>
+                        <div>
+                            <h2 style="color: var(--warning);">2</h2>
+                            <p>No Response</p>
+                        </div>
+                        <div>
+                            <h2 style="color: var(--accent);">100%</h2>
+                            <p>Focus Rate</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side: Student Tracker -->
+            <div class="right-col">
+                <div class="card">
+                    <h3>Student Progress</h3>
+                    <ul class="student-list">
+                        <li class="student-row">
+                            <span><span class="status-dot"></span>Rahul Sharma</span>
+                            <span class="score-badge">3/3</span>
+                        </li>
+                        <li class="student-row">
+                            <span><span class="status-dot"></span>Ananya V.</span>
+                            <span class="score-badge">2/3</span>
+                        </li>
+                        <li class="student-row">
+                            <span><span class="status-dot" style="background:var(--warning)"></span>Kiran Kumar</span>
+                            <span class="score-badge">1/3</span>
+                        </li>
+                    </ul>
+                    <button class="btn btn-end" style="width:100%; margin-top:20px;">End & Send Results to Parents</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mock data to demonstrate transition
+        const questions = [
+            "Which planet is known as the Red Planet?",
+            "What is the chemical symbol for water?",
+            "How many continents are there on Earth?"
+        ];
+        let currentIdx = 0;
+
+        function nextQuestion() {
+            currentIdx++;
+            if(currentIdx < questions.length) {
+                document.getElementById('activeQ').innerText = questions[currentIdx];
+                // In a real app, this is where you update Firebase:
+                // db.ref('live_session/current_q').set(currentIdx);
+            } else {
+                alert("Quiz finished! You can now generate the Parent PDF reports.");
+            }
+        }
+    </script>
+</body>
+</html>
