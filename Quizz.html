@@ -167,9 +167,22 @@
             </div>
             <div style="display: flex; gap: 20px;">
                 <div class="input-group" style="flex: 1;">
-                    <label>Class / Grade</label>
-                    <input type="text" id="quizGrade" placeholder="e.g. Grade 5">
-                </div>
+    <label>Publish to Class</label>
+    <select id="quizGrade">
+        <option value="" disabled selected>Select Class</option>
+        <option value="Pre-KG">Pre-KG</option>
+        <option value="LKG">LKG</option>
+        <option value="UKG">UKG</option>
+        <option value="Grade 1">Grade 1</option>
+        <option value="Grade 2">Grade 2</option>
+        <option value="Grade 3">Grade 3</option>
+        <option value="Grade 4">Grade 4</option>
+        <option value="Grade 5">Grade 5</option>
+        <option value="Grade 6">Grade 6</option>
+        <option value="Grade 7">Grade 7</option>
+        <option value="Grade 8">Grade 8</option>
+    </select>
+</div>
                 <div class="input-group" style="flex: 1;">
                     <label>Passing Percentage (%)</label>
                     <input type="number" id="passPercent" value="40">
@@ -232,17 +245,27 @@
                 </div>`;
             container.insertAdjacentHTML('beforeend', qHtml);
         }
-      function goToControlCenter() {
-    // Check if the teacher has at least given the quiz a title
+     function goToControlCenter() {
     const title = document.getElementById('quizTitle').value;
+    const selectedClass = document.getElementById('quizGrade').value;
     
+    // Validate that both title and class are selected
     if (!title) {
-        alert("Please enter a Quiz Title before opening the Control Center.");
+        alert("Please enter a Quiz Title.");
+        return;
+    }
+    if (!selectedClass) {
+        alert("Please select a target Class to publish the quiz.");
         return;
     }
 
-    // Redirect to your second file (make sure the filename matches exactly)
-    window.location.href = "live-dashboard.html";
+    // Logic: In a real system, you'd save the 'selectedClass' to the database here
+    // so the student page knows to only show it to that specific class.
+
+    console.log("Publishing quiz to: " + selectedClass);
+    
+    // Redirect to the live dashboard
+    window.location.href = "live-quizz-dashboard.html";
 }
 
         function saveQuiz() {
