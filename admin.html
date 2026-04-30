@@ -248,7 +248,8 @@
             if(!date) return Swal.fire('Error', 'Pick Date', 'warning');
             head.innerHTML = `<tr><th>Student Name</th><th colspan="4">Status</th></tr>`;
             
-            db.ref(`daily_attendance/${date}/${cls}`).once('value', (snap) => {
+            // Fixed path to include /records
+            db.ref(`daily_attendance/${date}/${cls}/records`).once('value', (snap) => {
                 const data = snap.val() || {};
                 body.innerHTML = studentDataMaster[cls].map(n => {
                     let text = '-', color = '#888';
@@ -263,32 +264,29 @@
             const m = document.getElementById('monthInput').value;
             if(type === 'monthly' && !m) return Swal.fire('Error', 'Pick Month', 'warning');
 
-            // --- UPDATE FOR DAILY VIEW ---
-db.ref(`daily_attendance/${date}/${cls}/records`).once('value', (snap) => { // Added /records
-    const data = snap.val() || {};
-    body.innerHTML = studentDataMaster[cls].map(n => {
-        let text = '-', color = '#888';
-        if(data[n] === true) { text = 'PRESENT'; color = 'green'; }
-        else if(data[n] === false) { text = 'ABSENT'; color = 'red'; }
-        return `<tr><td>${n}</td><td colspan="4" style="color:${color}; font-weight:bold">${text}</td></tr>`;
-    }).join('');
-});
+            db.ref(`daily_attendance`).once('value', (snap) => {
+                const allData = snap.val() || {};
+                const stats = {};
+                studentDataMaster[cls].forEach(n => stats[n] = { p: 0, t: 0 });
 
-// --- UPDATE FOR MONTHLY/OVERALL VIEW ---
-Object.keys(allData).forEach(date => {
-    if(date.startsWith(m)) {
-        // Access the records sub-node
-        const classData = allData[date][cls] ? allData[date][cls].records : null; // Added .records
-        if(classData) {
-            Object.keys(classData).forEach(student => {
-                if(stats[student] !== undefined) {
-                    stats[student].t++;
-                    if(classData[student] === true) stats[student].p++;
-                }
-            });
-        }
-    }
-});
+                Object.keys(allData).forEach(date => {
+                    // Month filter logic
+                    if(type === 'monthly' && !date.startsWith(m)) return; 
+                    
+                    // Fixed path to check for .records
+                    const classNode = allData[date][cls];
+                    const classData = classNode ? classNode.records : null;
+                    
+                    if(classData) {
+                        Object.keys(classData).forEach(student => {
+                            if(stats[student] !== undefined) {
+                                stats[student].t++;
+                                if(classData[student] === true) stats[student].p++;
+                            }
+                        });
+                    }
+                });
+
                 body.innerHTML = studentDataMaster[cls].map(n => {
                     const p = stats[n].p; const t = stats[n].t; const a = t - p;
                     const pct = t > 0 ? Math.round((p/t)*100) : 0;
@@ -313,12 +311,6 @@ Object.keys(allData).forEach(date => {
         h.fill = { type:'pattern', pattern:'solid', fgColor:{argb:'006633'} }; h.font = {color:{argb:'FFFFFF'}, bold:true, size:16};
         h.alignment = {vertical:'middle', horizontal:'center'};
 
-        sheet.mergeCells('A4:F5');
-        const subH = sheet.getCell('A4');
-        subH.value = `MONTHLY ATTENDANCE SUMMARY - ${m} (${cls})`;
-        subH.fill = { type:'pattern', pattern:'solid', fgColor:{argb:'FFD700'} }; subH.font = {color:{argb:'000000'}, bold:true};
-        subH.alignment = {vertical:'middle', horizontal:'center'};
-
         sheet.getRow(7).values = ['S.No', 'Student Name', 'Present', 'Absent', 'Total', '%'];
         sheet.getRow(7).font = {bold:true};
         
@@ -329,7 +321,9 @@ Object.keys(allData).forEach(date => {
 
         Object.keys(allData).forEach(date => {
             if(date.startsWith(m)) {
-                const classData = allData[date][cls];
+                // Fixed path to check for .records
+                const classNode = allData[date][cls];
+                const classData = classNode ? classNode.records : null;
                 if(classData) {
                     Object.keys(classData).forEach(student => {
                         if(stats[student] !== undefined) {
@@ -356,24 +350,9 @@ Object.keys(allData).forEach(date => {
     async function secureReset(mode) {
         const { value: pass } = await Swal.fire({ title: 'Authentication', text: 'Enter Admin Password to Backup & Clear.', input: 'password', showCancelButton: true });
         if(pass === "Ahmad@07") {
-            Swal.fire({title: 'Processing...', text: 'Generating spreadsheet backup.', icon: 'info', showConfirmButton: false});
-
             const workbook = new ExcelJS.Workbook();
             const sheet = workbook.addWorksheet('System Backup');
-            sheet.mergeCells('A1:F3');
-            const h = sheet.getCell('A1'); h.value = 'PARAMOUNT ENGLISH MEDIUM SCHOOL';
-            h.fill = { type:'pattern', pattern:'solid', fgColor:{argb:'006633'} }; h.font = {color:{argb:'FFFFFF'}, bold:true, size:16};
-            h.alignment = {vertical:'middle', horizontal:'center'};
-
-            sheet.mergeCells('A4:F5');
-            const subH = sheet.getCell('A4');
-            subH.value = mode === 'master' ? 'FULL SYSTEM BACKUP' : 'MONTHLY DATA BACKUP';
-            subH.fill = { type:'pattern', pattern:'solid', fgColor:{argb:'FFD700'} }; subH.font = {color:{argb:'000000'}, bold:true};
-            subH.alignment = {vertical:'middle', horizontal:'center'};
-
-            sheet.getRow(7).values = ['Class', 'Student Name', 'Present', 'Absent', 'Total', '%'];
-            sheet.getRow(7).font = {bold:true};
-
+            
             const snap = await db.ref('daily_attendance').once('value');
             const allData = snap.val() || {};
             const monthFilter = document.getElementById('monthInput').value;
@@ -383,33 +362,31 @@ Object.keys(allData).forEach(date => {
                     let p=0, t=0;
                     Object.keys(allData).forEach(date => {
                         if(mode === 'monthly' && !date.startsWith(monthFilter)) return;
-                        if(allData[date][c] && allData[date][c][n] !== undefined) {
+                        const node = allData[date][c];
+                        const classData = node ? node.records : null;
+                        if(classData && classData[n] !== undefined) {
                             t++;
-                            if(allData[date][c][n] === true) p++;
+                            if(classData[n] === true) p++;
                         }
                     });
                     sheet.addRow([c, n, p, t-p, t, t>0?Math.round((p/t)*100)+'%':'0%']);
                 });
             });
 
-            sheet.getColumn(2).width = 30;
             const buffer = await workbook.xlsx.writeBuffer();
-            saveAs(new Blob([buffer]), `Paramount_Backup_${new Date().toISOString().slice(0,10)}.xlsx`);
+            saveAs(new Blob([buffer]), `Paramount_Backup.xlsx`);
 
             if(mode === 'master') { 
                 await db.ref('daily_attendance').remove(); 
             } else {
-                if(!monthFilter) { Swal.fire('Error', 'Pick Month to reset first', 'error'); return; }
+                if(!monthFilter) return Swal.fire('Error', 'Pick Month', 'error');
                 const updates = {};
                 Object.keys(allData).forEach(date => {
                     if(date.startsWith(monthFilter)) updates[`daily_attendance/${date}`] = null;
                 });
                 await db.ref().update(updates);
             }
-            
-            Swal.fire('Complete!', 'Database cleared and backed up successfully.', 'success');
-        } else if (pass) {
-            Swal.fire('Error', 'Incorrect Password', 'error');
+            Swal.fire('Complete!', 'Database updated.', 'success');
         }
     }
 </script>
