@@ -73,7 +73,7 @@ body {
         .content-section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .premium-card { 
+       .premium-card { 
     background: var(--white); 
     border-radius: 20px; 
     padding: 40px; 
@@ -81,9 +81,6 @@ body {
     margin-bottom: 25px; 
     border: 1px solid #f1f5f9;
     width: 100%;
-    box-sizing: border-box;
-    /* Prevents content from leaking outside the rounded border */
-    overflow: hidden; 
 }
 
         h2 { 
@@ -94,14 +91,18 @@ body {
     letter-spacing: -0.02em;
 }
 
-    .grid-row { 
+   .grid-row { 
     display: grid; 
-    grid-template-columns: 0.6fr 1.4fr; 
-    gap: 35px; /* Increased gap to ensure boxes never touch */
+    /* Two equal columns for a balanced, premium feel */
+    grid-template-columns: 1fr 1fr; 
+    /* Strictly separate boxes with a 35px gap */
+    gap: 35px; 
     margin-bottom: 35px; 
     width: 100%;
     align-items: flex-end;
+    box-sizing: border-box;
 }
+        
         label { 
     display: block; 
     font-weight: 700; 
@@ -240,41 +241,47 @@ input:focus {
             </table>
         </div>
     </section>
-
- <!-- BUILDER SECTION -->
 <section id="builder" class="content-section">
     <h2>Assessment Designer</h2>
     <div class="premium-card">
-        <!-- Row 1: Subject (Small) and Title (Big) -->
-        <div class="grid-row">
-            <div class="input-group">
-                <label>Assessment Subject</label>
-                <input type="text" id="quizSubject" placeholder="e.g. Math">
-            </div>
-            <div class="input-group">
-                <label>Quiz Title (Visible to Students)</label>
-                <input type="text" id="quizTitle" placeholder="e.g. End of Term Final Excellence Assessment">
-            </div>
-        </div>
-
-        <!-- Row 2: Grade (Small) and Publish Button (Big) -->
+        <!-- Row 1: Dropdowns for Grade and Subject -->
         <div class="grid-row">
             <div class="input-group">
                 <label>Target Class</label>
                 <select id="quizGrade">
-                     <option value="" disabled selected>Select Grade</option>
-                            <option value="Pre-KG">Pre-KG</option>
-                            <option value="LKG">LKG</option>
-                            <option value="UKG">UKG</option>
-                            <option value="Grade 1">Grade 1</option>
-                            <option value="Grade 2">Grade 2</option>
-                            <option value="Grade 3">Grade 3</option>
-                            <option value="Grade 4">Grade 4</option>
-                            <option value="Grade 5">Grade 5</option>
-                            <option value="Grade 6">Grade 6</option>
-                            <option value="Grade 7">Grade 7</option>
-                            <option value="Grade 8">Grade 8</option>
+                    <option value="" disabled selected>Select Grade</option>
+                    <option value="Pre-KG">Pre-KG</option>
+                    <option value="LKG">LKG</option>
+                    <option value="UKG">UKG</option>
+                    <option value="Grade 1">Grade 1</option>
+                    <option value="Grade 2">Grade 2</option>
+                    <option value="Grade 3">Grade 3</option>
+                    <option value="Grade 4">Grade 4</option>
+                    <option value="Grade 5">Grade 5</option>
                 </select>
+            </div>
+            <div class="input-group">
+                <label>Assessment Subject</label>
+                <select id="quizSubject">
+                    <option value="" disabled selected>Select Subject</option>
+                    <option value="Telugu">Telugu</option>
+                    <option value="Hindi">Hindi</option>
+                    <option value="English">English</option>
+                    <option value="Mathematics">Mathematics</option>
+                    <option value="Science">Science</option>
+                    <option value="Social Studies">Social Studies</option>
+                    <option value="General Knowledge">General Knowledge</option>
+                    <option value="physics">Physics</option>
+                    <option value="Biology">Biology</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Row 2: Title and Publish Button -->
+        <div class="grid-row">
+            <div class="input-group">
+                <label>Quiz Title (Visible to Students)</label>
+                <input type="text" id="quizTitle" placeholder="e.g. Mid-Term Excellence Assessment">
             </div>
             <div class="input-group">
                 <button class="btn btn-gold" onclick="publishQuiz()">
@@ -294,7 +301,6 @@ input:focus {
         </button>
     </div>
 </section>
-</div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
