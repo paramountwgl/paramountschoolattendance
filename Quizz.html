@@ -245,9 +245,20 @@
     });
 });
 
-        window.deleteQuiz = async (id) => {
-            if(confirm("Delete this quiz?")) await deleteDoc(doc(db, "live_quizzes", id));
-        };
+       window.deleteQuiz = async (targetClass) => {
+    if(confirm(`Are you sure? This will delete the ${targetClass} quiz AND all student records/times.`)) {
+        try {
+            // 1. Delete the main quiz document
+            await deleteDoc(doc(db, "live_quizzes", targetClass));
+            
+            // 2. Clear local session for the teacher view
+            alert("Quiz deleted. To fully clear student 'Start Times' for a new session, ensure you also clear the 'start_times' sub-collection in your Firebase Console.");
+        } catch (e) {
+            console.error("Error deleting quiz:", e);
+        }
+    }
+};       
+        
         window.viewQuiz = (quiz) => {
     // 1. Set the Modal Header to the Quiz Title
     document.getElementById('modalQuizTitle').innerText = quiz.title;
