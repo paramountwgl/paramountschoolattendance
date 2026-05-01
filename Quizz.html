@@ -3,74 +3,192 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Paramount | Quiz Builder</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/png" href="logo.png">
+    <title>Paramount Admin | Elite Assessment Builder</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary: #1a237e; --accent: #00c853; --bg: #f4f7fe;
-            --white: #ffffff; --text: #2c3e50; --shadow: 0 10px 30px rgba(0,0,0,0.08);
+            --forest: #064e3b;
+            --forest-light: #065f46;
+            --gold: #d4af37;
+            --gold-soft: #fdfaf0;
+            --bg: #fdfdfb;
+            --white: #ffffff;
+            --danger: #991b1b;
+            --shadow-premium: 0 20px 40px rgba(6, 78, 59, 0.12);
         }
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg); margin: 0; display: flex; }
-        .sidebar { width: 260px; background: var(--primary); height: 100vh; color: white; position: fixed; padding: 30px 20px; }
-        .main-content { margin-left: 300px; padding: 40px; width: calc(100% - 340px); }
-        .header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-        .premium-card { background: var(--white); border-radius: 16px; padding: 30px; box-shadow: var(--shadow); margin-bottom: 25px; }
-        .input-group { margin-bottom: 20px; }
-        label { display: block; font-weight: 600; margin-bottom: 8px; color: var(--primary); }
-        input, select, textarea { width: 100%; padding: 12px; border: 1.5px solid #e0e0e0; border-radius: 8px; font-size: 1rem; box-sizing: border-box; }
-        .question-block { border-left: 5px solid var(--primary); position: relative; margin-bottom: 20px; }
-        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px; }
-        .option-item { display: flex; align-items: center; background: #f9f9f9; padding: 10px; border-radius: 8px; }
-        .btn { padding: 12px 25px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; transition: 0.3s; }
-        .btn-primary { background: var(--primary); color: white; }
-        .btn-outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
 
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            color: #111827;
+        }
+
+        /* --- ULTRA PREMIUM HEADER (No Border on Logo) --- */
+        header {
+            background: linear-gradient(135deg, var(--forest), #022c22);
+            padding: 18px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 4px solid var(--gold);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .brand { display: flex; align-items: center; gap: 15px; }
+        .logo-img { width: 55px; height: auto; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2)); }
+        .brand h1 { 
+            font-family: 'Playfair Display', serif; 
+            font-size: 1.6rem; margin: 0; color: var(--white);
+            letter-spacing: 2px; text-transform: uppercase;
+        }
+
+        /* --- MAIN LAYOUT --- */
+        .main-content {
+            flex: 1;
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+            width: 100%;
+        }
+
+        .header-flex {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 35px;
+        }
+
+        .header-flex h2 { font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--forest); margin: 0; }
+
+        .premium-card {
+            background: var(--white);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: var(--shadow-premium);
+            margin-bottom: 30px;
+            border: 1px solid rgba(6, 78, 59, 0.05);
+        }
+
+        /* --- INPUTS --- */
+        label { display: block; font-weight: 700; margin-bottom: 10px; color: var(--forest); font-size: 0.85rem; letter-spacing: 0.5px; }
+        input, select, textarea {
+            width: 100%; padding: 14px; border: 2px solid #e5e7eb; border-radius: 12px;
+            font-size: 1rem; transition: 0.3s; background: #f9fafb; font-family: inherit;
+        }
+        input:focus, select:focus, textarea:focus { border-color: var(--gold); background: var(--white); outline: none; box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.1); }
+
+        /* --- QUESTION BLOCKS --- */
+        .question-block {
+            border-left: 6px solid var(--gold);
+            position: relative;
+            padding-top: 50px;
+        }
+        .remove-q-btn {
+            position: absolute;
+            top: 15px; right: 20px;
+            color: var(--danger);
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.8rem;
+            display: flex; align-items: center; gap: 5px;
+            opacity: 0.7; transition: 0.3s;
+        }
+        .remove-q-btn:hover { opacity: 1; }
+
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px; }
+        .option-item {
+            display: flex; align-items: center; background: #f8fafc;
+            padding: 10px 15px; border-radius: 12px; border: 1.5px solid #f1f5f9;
+        }
+        .option-item input[type="radio"] { width: auto; margin-right: 12px; accent-color: var(--gold); }
+
+        /* --- BUTTONS --- */
+        .btn {
+            padding: 14px 28px; border-radius: 12px; border: none;
+            font-weight: 700; cursor: pointer; transition: 0.4s;
+            display: inline-flex; align-items: center; gap: 10px; font-size: 0.95rem;
+        }
+        .btn-gold { background: linear-gradient(135deg, var(--gold), #b8860b); color: white; box-shadow: 0 8px 20px rgba(184, 134, 11, 0.3); }
+        .btn-gold:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(184, 134, 11, 0.4); }
+        
+        .btn-outline { background: transparent; border: 2px solid var(--forest); color: var(--forest); }
+        .btn-outline:hover { background: var(--gold-soft); border-color: var(--gold); color: var(--gold); }
+
+        .btn-danger { background: #fef2f2; color: var(--danger); border: 2px solid #fecaca; }
+        .btn-danger:hover { background: var(--danger); color: white; }
+
+        /* --- TOAST --- */
         #success-toast {
-            visibility: hidden; min-width: 300px; background-color: var(--accent);
+            visibility: hidden; min-width: 300px; background-color: var(--gold);
             color: #fff; text-align: center; border-radius: 12px; padding: 16px;
-            position: fixed; z-index: 1000; right: 30px; top: 30px; font-weight: 600;
+            position: fixed; z-index: 1000; right: 30px; top: 30px; font-weight: 700;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
         #success-toast.show { visibility: visible; animation: fadein 0.5s; }
         @keyframes fadein { from {top: 0; opacity: 0;} to {top: 30px; opacity: 1;} }
+
+        /* --- FOOTER --- */
+        footer {
+            background: #022c22; color: var(--white); padding: 40px 6%;
+            text-align: center; border-top: 5px solid var(--gold);
+        }
+        .footer-line { width: 40px; height: 2px; background: var(--gold); margin: 20px auto; }
     </style>
 </head>
 <body>
 
-    <div id="success-toast">The quiz is now live in the student portal! ✅</div>
+    <div id="success-toast">Assessment Published Successfully! ✅</div>
 
-    <div class="sidebar">
-        <h2>PARAMOUNT</h2>
-        <p style="opacity: 0.7;">Quiz Admin</p>
-    </div>
+    <header>
+        <div class="brand">
+            <img src="logo.png" alt="Paramount" class="logo-img">
+            <h1>Paramount Admin</h1>
+        </div>
+        <div style="display: flex; gap: 15px;">
+            <button class="btn btn-outline" style="color:white; border-color:white;" onclick="window.openCenter()">
+                <i class="fa-solid fa-gauge-high"></i> Control Center
+            </button>
+        </div>
+    </header>
 
-    <div class="main-content">
+    <main class="main-content">
         <div class="header-flex">
-            <h1>Create Assessment</h1>
-            <div style="display: flex; gap: 10px;">
-                <!-- Using onclick again but pointing to window functions -->
-                <button class="btn btn-outline" onclick="window.publishQuiz()">Publish Quiz</button>
-                <button class="btn btn-primary" onclick="window.openCenter()">Open Control Center</button>
+            <h2>Quiz Builder</h2>
+            <div style="display: flex; gap: 12px;">
+                <button class="btn btn-danger" onclick="window.deleteQuizData()">
+                    <i class="fa-solid fa-trash-can"></i> Delete Quiz
+                </button>
+                <button class="btn btn-gold" onclick="window.publishQuiz()">
+                    <i class="fa-solid fa-paper-plane"></i> Publish Live
+                </button>
             </div>
         </div>
 
         <div class="premium-card">
             <div class="input-group">
-                <label>Assessment Title</label>
-                <input type="text" id="quizTitle" placeholder="e.g. Science Monthly Test">
+                <label>ASSESSMENT TITLE</label>
+                <input type="text" id="quizTitle" placeholder="e.g. Science Monthly Unit Test">
             </div>
             <div style="display: flex; gap: 20px;">
                 <div class="input-group" style="flex: 1;">
-                    <label>Target Class</label>
+                    <label>TARGET CLASS</label>
                     <select id="quizGrade">
-                        <option value="" disabled selected>Select Class</option>
+                        <option value="" disabled selected>Select Grade</option>
                         <option value="LKG">LKG</option><option value="UKG">UKG</option>
-                        <option value="Grade 1">Grade 1</option>
-                        <option value="Grade 5">Grade 5</option>
+                        <option value="Grade 1">Grade 1</option><option value="Grade 5">Grade 5</option>
+                        <option value="Grade 8">Grade 8</option>
                     </select>
                 </div>
                 <div class="input-group" style="flex: 1;">
-                    <label>Passing %</label>
+                    <label>PASSING PERCENTAGE (%)</label>
                     <input type="number" id="passPercent" value="40">
                 </div>
             </div>
@@ -78,20 +196,31 @@
 
         <div id="questionsContainer">
             <div class="premium-card question-block" data-q-id="1">
-                <label>Question 1</label>
-                <textarea class="questionText" placeholder="Enter question..."></textarea>
+                <label>QUESTION 1</label>
+                <textarea class="questionText" placeholder="Enter the assessment question..."></textarea>
                 <div class="options-grid">
-                    <div class="option-item"><input type="radio" name="c_1" value="0" checked><input type="text" class="opt" placeholder="Option 1 (Correct)"></div>
-                    <div class="option-item"><input type="radio" name="c_1" value="1"><input type="text" class="opt" placeholder="Option 2"></div>
+                    <div class="option-item"><input type="radio" name="c_1" value="0" checked><input type="text" class="opt" placeholder="Correct Option"></div>
+                    <div class="option-item"><input type="radio" name="c_1" value="1"><input type="text" class="opt" placeholder="Distractor 1"></div>
+                    <div class="option-item"><input type="radio" name="c_1" value="2"><input type="text" class="opt" placeholder="Distractor 2"></div>
+                    <div class="option-item"><input type="radio" name="c_1" value="3"><input type="text" class="opt" placeholder="Distractor 3"></div>
                 </div>
             </div>
         </div>
-        <button class="btn btn-outline" onclick="window.addNewQuestion()" style="width: 100%;">+ Add New Question</button>
-    </div>
+
+        <button class="btn btn-outline" style="width: 100%; border-style: dashed;" onclick="window.addNewQuestion()">
+            <i class="fa-solid fa-plus"></i> Add New Question
+        </button>
+    </main>
+
+    <footer>
+        <p style="font-weight: 700; letter-spacing: 2px;">PARAMOUNT INSTITUTIONS</p>
+        <div class="footer-line"></div>
+        <p style="font-size: 0.8rem; opacity: 0.6;">&copy; 2026 Admin Portal | Powered by ZeroSeven Academy</p>
+    </footer>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDRYk9KOK-ga0c88dnYMsAoifW2NJTd_Y8",
@@ -105,56 +234,42 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // --- ATTACH TO WINDOW SO HTML BUTTONS CAN SEE THEM ---
-        
         window.publishQuiz = async function() {
-    console.log("Publish button clicked...");
-    const targetClass = document.getElementById('quizGrade').value;
-    const title = document.getElementById('quizTitle').value;
+            const targetClass = document.getElementById('quizGrade').value;
+            const title = document.getElementById('quizTitle').value;
 
-    if (!title || !targetClass) {
-        alert("Please fill in Title and Class!");
-        return;
-    }
+            if (!title || !targetClass) { alert("Missing Title or Class!"); return; }
 
-    const questions = [];
-    document.querySelectorAll('.question-block').forEach((block) => {
-        const opts = Array.from(block.querySelectorAll('.opt')).map(input => input.value);
-        const qId = block.getAttribute('data-q-id');
-        const correct = block.querySelector(`input[name="c_${qId}"]:checked`).value;
-        questions.push({ 
-            text: block.querySelector('.questionText').value, 
-            options: opts, 
-            correctIndex: parseInt(correct) 
-        });
-    });
+            const questions = [];
+            document.querySelectorAll('.question-block').forEach((block) => {
+                const opts = Array.from(block.querySelectorAll('.opt')).map(input => input.value);
+                const qId = block.getAttribute('data-q-id');
+                const correct = block.querySelector(`input[name="c_${qId}"]:checked`).value;
+                questions.push({ text: block.querySelector('.questionText').value, options: opts, correctIndex: parseInt(correct) });
+            });
 
-    try {
-        console.log("Attempting Firebase upload to class:", targetClass);
-        
-        // This is the part that might be hanging
-        const docRef = doc(db, "live_quizzes", targetClass);
-        await setDoc(docRef, {
-            title: title,
-            targetClass: targetClass,
-            isLive: true,
-            activeQuestionIndex: 0,
-            questions: questions,
-            timestamp: new Date().toISOString()
-        });
+            try {
+                await setDoc(doc(db, "live_quizzes", targetClass), {
+                    title, targetClass, isLive: true, activeQuestionIndex: 0, questions, timestamp: new Date().toISOString()
+                });
+                const toast = document.getElementById("success-toast");
+                toast.classList.add("show");
+                setTimeout(() => toast.classList.remove("show"), 4000);
+            } catch (e) { console.error(e); alert("Publishing failed."); }
+        };
 
-        console.log("Database write successful!");
-        
-        // Show Success Message
-        const toast = document.getElementById("success-toast");
-        toast.classList.add("show");
-        setTimeout(() => toast.classList.remove("show"), 4500);
-
-    } catch (error) {
-        console.error("FULL ERROR DETAILS:", error);
-        alert("Firebase Error: " + error.message);
-    }
-};
+        window.deleteQuizData = async function() {
+            const targetClass = document.getElementById('quizGrade').value;
+            if (!targetClass) { alert("Select a class first to delete its quiz."); return; }
+            
+            if(confirm(`Are you sure you want to permanently delete the quiz data for ${targetClass}?`)) {
+                try {
+                    await deleteDoc(doc(db, "live_quizzes", targetClass));
+                    alert(`Quiz data for ${targetClass} has been cleared.`);
+                    location.reload();
+                } catch (e) { alert("Error deleting data."); }
+            }
+        };
 
         window.openCenter = function() {
             const grade = document.getElementById('quizGrade').value;
@@ -163,14 +278,19 @@
         };
 
         window.addNewQuestion = function() {
-            const count = document.querySelectorAll('.question-block').length + 1;
+            const count = Date.now(); // Unique ID for inputs
             const html = `
                 <div class="premium-card question-block" data-q-id="${count}">
-                    <label>Question ${count}</label>
+                    <div class="remove-q-btn" onclick="this.parentElement.remove()">
+                        <i class="fa-solid fa-circle-xmark"></i> REMOVE QUESTION
+                    </div>
+                    <label>QUESTION</label>
                     <textarea class="questionText" placeholder="Enter question..."></textarea>
                     <div class="options-grid">
-                        <div class="option-item"><input type="radio" name="c_${count}" value="0" checked><input type="text" class="opt" placeholder="Option 1"></div>
-                        <div class="option-item"><input type="radio" name="c_${count}" value="1"><input type="text" class="opt" placeholder="Option 2"></div>
+                        <div class="option-item"><input type="radio" name="c_${count}" value="0" checked><input type="text" class="opt" placeholder="Correct Option"></div>
+                        <div class="option-item"><input type="radio" name="c_${count}" value="1"><input type="text" class="opt" placeholder="Distractor"></div>
+                        <div class="option-item"><input type="radio" name="c_${count}" value="2"><input type="text" class="opt" placeholder="Distractor"></div>
+                        <div class="option-item"><input type="radio" name="c_${count}" value="3"><input type="text" class="opt" placeholder="Distractor"></div>
                     </div>
                 </div>`;
             document.getElementById('questionsContainer').insertAdjacentHTML('beforeend', html);
