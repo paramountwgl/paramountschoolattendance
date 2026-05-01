@@ -3,147 +3,148 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Paramount | Elite Admin Dashboard</title>
+    <title>Paramount Admin | Professional Assessment Suite</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --forest: #064e3b; --forest-light: #065f46; --gold: #d4af37;
-            --gold-soft: #fdfaf0; --bg: #fdfdfb; --white: #ffffff;
+            --forest: #064e3b; --gold: #d4af37; --white: #ffffff; --bg: #fdfdfb;
             --danger: #991b1b; --shadow: 0 10px 40px rgba(6, 78, 59, 0.12);
         }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg); margin: 0; display: flex; min-height: 100vh; }
 
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: var(--bg); margin: 0; display: flex; min-height: 100vh;
-        }
-
-        /* --- SIDEBAR NAVIGATION --- */
+        /* --- SIDEBAR --- */
         .sidebar {
             width: 280px; background: linear-gradient(180deg, var(--forest), #022c22);
-            color: white; display: flex; flex-direction: column; position: fixed; height: 100vh;
-            border-right: 4px solid var(--gold); z-index: 1001;
+            color: white; position: fixed; height: 100vh; border-right: 4px solid var(--gold); z-index: 1001;
         }
-
-        .sidebar-header { padding: 30px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        .logo-img { width: 60px; margin-bottom: 10px; }
-        
-        .nav-menu { flex: 1; padding: 20px; }
         .nav-item {
-            display: flex; align-items: center; gap: 15px; padding: 15px;
-            color: white; text-decoration: none; border-radius: 12px;
-            margin-bottom: 10px; transition: 0.3s; cursor: pointer; border: 1px solid transparent;
+            display: flex; align-items: center; gap: 15px; padding: 18px 25px;
+            color: white; text-decoration: none; transition: 0.3s; cursor: pointer;
         }
-        .nav-item:hover, .nav-item.active { background: rgba(212, 175, 55, 0.2); border-color: var(--gold); color: var(--gold); }
-        .logout-btn { margin: 20px; background: rgba(153, 27, 27, 0.2); border-color: var(--danger); }
+        .nav-item:hover, .nav-item.active { background: rgba(212, 175, 55, 0.2); color: var(--gold); border-left: 4px solid var(--gold); }
 
-        /* --- MAIN CONTENT AREA --- */
-        .main-wrapper { margin-left: 280px; width: calc(100% - 280px); padding: 40px; box-sizing: border-box; }
+        /* --- CONTENT --- */
+        .main-wrapper { margin-left: 280px; width: calc(100% - 280px); padding: 50px; box-sizing: border-box; }
         .content-section { display: none; animation: fadeIn 0.4s ease; }
         .content-section.active { display: block; }
-
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- PREMIUM CARDS & TABLES --- */
-        .premium-card { background: var(--white); border-radius: 24px; padding: 35px; box-shadow: var(--shadow); margin-bottom: 25px; border: 1px solid rgba(6, 78, 59, 0.05); }
-        h2 { font-family: 'Playfair Display', serif; color: var(--forest); font-size: 2rem; margin-top: 0; }
+        .premium-card { background: var(--white); border-radius: 24px; padding: 40px; box-shadow: var(--shadow); margin-bottom: 30px; border: 1px solid rgba(6, 78, 59, 0.05); }
+        h2 { font-family: 'Playfair Display', serif; color: var(--forest); font-size: 2.2rem; margin-bottom: 30px; }
 
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th { text-align: left; padding: 15px; background: var(--gold-soft); color: var(--forest); font-weight: 700; border-radius: 8px 0 0 8px; }
-        td { padding: 15px; border-bottom: 1px solid #eee; }
-        .status-pill { padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; }
-        .pill-live { background: #dcfce7; color: #166534; }
+        /* --- FORM ELEMENTS --- */
+        .grid-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+        label { display: block; font-weight: 700; color: var(--forest); font-size: 0.85rem; margin-bottom: 8px; text-transform: uppercase; }
+        input, select, textarea { width: 100%; padding: 14px; border: 2px solid #eef2f7; border-radius: 12px; font-size: 1rem; box-sizing: border-box; }
+        
+        .btn { padding: 15px 30px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; gap: 10px; }
+        .btn-gold { background: var(--gold); color: white; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3); }
+        .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4); }
 
-        /* --- REUSE BUILDER STYLES --- */
-        .input-group { margin-bottom: 20px; }
-        label { display: block; font-weight: 700; color: var(--forest); font-size: 0.85rem; margin-bottom: 8px; }
-        input, select, textarea { width: 100%; padding: 14px; border: 2px solid #e5e7eb; border-radius: 12px; box-sizing: border-box; }
-        .btn { padding: 12px 24px; border-radius: 10px; border: none; font-weight: 700; cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; gap: 8px; }
-        .btn-gold { background: var(--gold); color: white; }
-        .btn-danger { background: #fee2e2; color: var(--danger); }
+        /* --- QUESTION BUILDER --- */
+        .question-block { border-left: 6px solid var(--gold); position: relative; padding-top: 50px; margin-bottom: 25px; }
+        .remove-q { position: absolute; top: 15px; right: 20px; color: var(--danger); cursor: pointer; font-weight: 700; font-size: 0.8rem; }
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px; }
+        .opt-item { display: flex; align-items: center; background: #f8fafc; padding: 10px; border-radius: 12px; border: 1.5px solid #f1f5f9; }
+        .opt-item input[type="radio"] { width: auto; margin-right: 10px; accent-color: var(--gold); }
+
+        /* --- RECENT QUIZZES TABLE --- */
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; padding: 15px; background: #f8f9fa; color: var(--forest); }
+        td { padding: 15px; border-bottom: 1px solid #f1f1f1; }
     </style>
 </head>
 <body>
 
-    <!-- SIDEBAR -->
     <div class="sidebar">
-        <div class="sidebar-header">
-            <img src="logo.png" alt="Paramount" class="logo-img">
-            <h1 style="font-family: 'Playfair Display', serif; font-size: 1.2rem; margin: 0; color: var(--gold);">PARAMOUNT ADMIN</h1>
+        <div style="padding: 40px 30px; text-align: center;">
+            <img src="logo.png" alt="Paramount" style="width: 70px;">
+            <h1 style="font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--gold); margin-top: 10px;">ADMIN PORTAL</h1>
         </div>
-        <nav class="nav-menu">
-            <div class="nav-item active" onclick="showSection('dashboard')"><i class="fa-solid fa-gauge"></i> Dashboard</div>
-            <div class="nav-item" onclick="showSection('new-assessment')"><i class="fa-solid fa-plus-circle"></i> New Assessment</div>
-            <div class="nav-item" onclick="showSection('results')"><i class="fa-solid fa-chart-line"></i> Monthly Results</div>
-            <div class="nav-item logout-btn" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Teacher Logout</div>
+        <nav>
+            <div class="nav-item active" onclick="showSection('dashboard')"><i class="fa-solid fa-layer-group"></i> Dashboard</div>
+            <div class="nav-item" onclick="showSection('builder')"><i class="fa-solid fa-pen-fancy"></i> Create New Quiz</div>
+            <div class="nav-item" onclick="showSection('stats')"><i class="fa-solid fa-chart-pie"></i> Student Results</div>
         </nav>
     </div>
 
-    <!-- MAIN WRAPPER -->
     <div class="main-wrapper">
         
-        <!-- SECTION: DASHBOARD (RECENT QUIZZES) -->
+        <!-- DASHBOARD: RECENT QUIZZES -->
         <section id="dashboard" class="content-section active">
             <h2>Live Assessment Manager</h2>
             <div class="premium-card">
-                <p style="color: #64748b;">Manage recent activity and monitor class occupancy.</p>
-                <table id="recentQuizTable">
+                <table id="quizTable">
                     <thead>
                         <tr>
-                            <th>Class</th>
+                            <th>Quiz Title</th>
                             <th>Subject</th>
-                            <th>Scheduled Time</th>
-                            <th>Status</th>
+                            <th>Class</th>
+                            <th>Duration</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
-                    <tbody id="quizListBody">
-                        <!-- Data injected by JS -->
-                    </tbody>
+                    <tbody id="quizListBody"></tbody>
                 </table>
             </div>
         </section>
 
-        <!-- SECTION: NEW ASSESSMENT (YOUR PREVIOUS BUILDER) -->
-        <section id="new-assessment" class="content-section">
-            <h2>Create Assessment</h2>
+        <!-- BUILDER: NEW ASSESSMENT -->
+        <section id="builder" class="content-section">
+            <h2>Assessment Designer</h2>
+            
+            <!-- Metadata -->
             <div class="premium-card">
-                <div class="input-group">
-                    <label>ASSESSMENT TITLE / SUBJECT</label>
-                    <input type="text" id="quizTitle" placeholder="e.g. Mathematics Unit 1">
+                <div class="grid-row">
+                    <div class="input-group">
+                        <label>Assessment Subject</label>
+                        <input type="text" id="quizSubject" placeholder="e.g. Mathematics">
+                    </div>
+                    <div class="input-group">
+                        <label>Quiz Title (Visible to Students)</label>
+                        <input type="text" id="quizTitle" placeholder="e.g. Mid-Term Excellence Test">
+                    </div>
                 </div>
-                <div style="display: flex; gap: 20px;">
-                    <div class="input-group" style="flex: 1;">
-                        <label>CLASS</label>
+                <div class="grid-row">
+                    <div class="input-group">
+                        <label>Target Class</label>
                         <select id="quizGrade">
-                            <option value="" disabled selected>Select Grade</option>
+                            <option value="Pre-KG">Pre-KG</option>
+                            <option value="LKG">LKG</option>
+                            <option value="UKG">UKG</option>
                             <option value="Grade 1">Grade 1</option>
+                            <option value="Grade 2">Grade 2</option>
+                            <option value="Grade 3">Grade 3</option>
+                            <option value="Grade 4">Grade 4</option>
                             <option value="Grade 5">Grade 5</option>
+                            <option value="Grade 6">Grade 6</option>
+                            <option value="Grade 7">Grade 7</option>
+                            <option value="Grade 8">Grade 8</option>
                         </select>
                     </div>
-                    <div class="input-group" style="flex: 1;">
-                        <label>SCHEDULE TIME (24h)</label>
-                        <input type="datetime-local" id="quizTime">
+                    <div class="input-group">
+                        <label>Time Limit (Minutes)</label>
+                        <input type="number" id="quizDuration" placeholder="Enter minutes (e.g. 60 for 1 hour)">
                     </div>
                 </div>
-                <button class="btn btn-gold" onclick="publishQuiz()"><i class="fa-solid fa-paper-plane"></i> Publish Live</button>
+                <button class="btn btn-gold" onclick="publishQuiz()">PUBLISH TO PORTAL</button>
             </div>
-            
-            <div id="questionsContainer">
-                <!-- Question logic remains same as your previous code -->
-            </div>
-        </section>
 
-        <!-- SECTION: RESULTS -->
-        <section id="results" class="content-section">
-            <h2>Monthly Statistics</h2>
-            <div class="premium-card">
-                <label>Filter by Month</label>
-                <input type="month" id="statMonth">
-                <div id="statsGraph" style="margin-top: 30px; height: 200px; display: flex; align-items: flex-end; gap: 10px;">
-                    <!-- Placeholder for bars -->
+            <!-- Question Area -->
+            <div id="questionsContainer">
+                <div class="premium-card question-block" data-q-id="1">
+                    <label>QUESTION 1</label>
+                    <textarea class="questionText" placeholder="Enter the assessment question..."></textarea>
+                    <div class="options-grid">
+                        <div class="opt-item"><input type="radio" name="c_1" value="0" checked><input type="text" class="opt" placeholder="Correct Choice"></div>
+                        <div class="opt-item"><input type="radio" name="c_1" value="1"><input type="text" class="opt" placeholder="Option 2"></div>
+                        <div class="opt-item"><input type="radio" name="c_1" value="2"><input type="text" class="opt" placeholder="Option 3"></div>
+                        <div class="opt-item"><input type="radio" name="c_1" value="3"><input type="text" class="opt" placeholder="Option 4"></div>
+                    </div>
                 </div>
             </div>
+            <button class="btn btn-outline" style="width: 100%; border: 2px dashed var(--forest);" onclick="addNewQuestion()">+ Add Next Question</button>
         </section>
 
     </div>
@@ -164,7 +165,7 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // --- NAVIGATION LOGIC ---
+        // --- NAVIGATION ---
         window.showSection = (id) => {
             document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
@@ -172,65 +173,76 @@
             event.currentTarget.classList.add('active');
         };
 
-        // --- SCHEDULING & CONFLICT LOGIC ---
+        // --- PUBLISH & LOCKING LOGIC ---
         window.publishQuiz = async function() {
-            const targetClass = document.getElementById('quizGrade').value;
+            const subject = document.getElementById('quizSubject').value;
             const title = document.getElementById('quizTitle').value;
-            const scheduleTime = document.getElementById('quizTime').value;
+            const targetClass = document.getElementById('quizGrade').value;
+            const duration = document.getElementById('quizDuration').value;
 
-            if (!targetClass || !scheduleTime) { alert("Please set Class and Time."); return; }
+            if(!title || !targetClass || !duration) { alert("Missing metadata!"); return; }
 
-            // 1. Check for Global Conflict
-            const q = query(collection(db, "live_quizzes"), where("targetClass", "==", targetClass));
-            const existing = await getDocs(q);
-            
+            // Global Lock Check: Prevent multiple quizzes for the same class
+            const existing = await getDocs(query(collection(db, "live_quizzes"), where("targetClass", "==", targetClass)));
             if (!existing.empty) {
-                const currentQuiz = existing.docs[0].data();
-                alert(`Conflict: ${targetClass} is already scheduled for ${currentQuiz.title}. Other teachers cannot book this class at this time.`);
+                alert(`Error: ${targetClass} already has an active quiz.`);
                 return;
             }
 
-            // 2. Publish if No Conflict
-            try {
-                await setDoc(doc(db, "live_quizzes", targetClass), {
-                    title, targetClass, scheduleTime, isLive: true, timestamp: new Date().toISOString()
+            const questions = [];
+            document.querySelectorAll('.question-block').forEach((block) => {
+                const qId = block.getAttribute('data-q-id');
+                questions.push({
+                    text: block.querySelector('.questionText').value,
+                    options: Array.from(block.querySelectorAll('.opt')).map(i => i.value),
+                    correctIndex: parseInt(block.querySelector(`input[name="c_${qId}"]:checked`).value)
                 });
-                alert(`Assessment Published. ${targetClass} is now locked for ${title}.`);
-                showSection('dashboard');
-            } catch (e) { console.error(e); }
+            });
+
+            await setDoc(doc(db, "live_quizzes", targetClass), {
+                title, subject, targetClass, duration, isLive: true, questions, timestamp: new Date().toISOString()
+            });
+            alert("Quiz Live!");
+            showSection('dashboard');
         };
 
-        // --- LIVE DASHBOARD LISTENER ---
+        // --- DASHBOARD LISTENER ---
         onSnapshot(collection(db, "live_quizzes"), (snapshot) => {
             const tbody = document.getElementById('quizListBody');
             tbody.innerHTML = '';
-            snapshot.forEach(quizDoc => {
-                const quiz = quizDoc.data();
+            snapshot.forEach(doc => {
+                const quiz = doc.data();
                 tbody.innerHTML += `
                     <tr>
+                        <td><strong>${quiz.title}</strong></td>
+                        <td>${quiz.subject}</td>
                         <td>${quiz.targetClass}</td>
-                        <td>${quiz.title}</td>
-                        <td>${new Date(quiz.scheduleTime).toLocaleString()}</td>
-                        <td><span class="status-pill pill-live">Occupied</span></td>
+                        <td>${quiz.duration} Mins</td>
                         <td>
-                            <button class="btn btn-gold" onclick="reconduct('${quiz.targetClass}')">Reconduct</button>
-                            <button class="btn btn-danger" onclick="deleteQuiz('${quiz.targetClass}')">Delete</button>
+                            <button onclick="deleteQuiz('${quiz.targetClass}')" style="color:red; background:none; border:none; cursor:pointer;">Delete</button>
                         </td>
-                    </tr>
-                `;
+                    </tr>`;
             });
         });
 
         window.deleteQuiz = async (id) => {
-            if(confirm("Permanently delete this assessment and free the class?")) {
-                await deleteDoc(doc(db, "live_quizzes", id));
-            }
+            if(confirm("Delete this quiz?")) await deleteDoc(doc(db, "live_quizzes", id));
         };
 
-        window.logout = () => {
-            if(confirm("Log out of Teacher Portal?")) location.reload();
+        window.addNewQuestion = function() {
+            const id = Date.now();
+            const html = `
+                <div class="premium-card question-block" data-q-id="${id}">
+                    <span class="remove-q" onclick="this.parentElement.remove()">REMOVE</span>
+                    <label>QUESTION</label>
+                    <textarea class="questionText" placeholder="Enter question..."></textarea>
+                    <div class="options-grid">
+                        <div class="opt-item"><input type="radio" name="c_${id}" value="0" checked><input type="text" class="opt" placeholder="Option 1"></div>
+                        <div class="opt-item"><input type="radio" name="c_${id}" value="1"><input type="text" class="opt" placeholder="Option 2"></div>
+                    </div>
+                </div>`;
+            document.getElementById('questionsContainer').insertAdjacentHTML('beforeend', html);
         };
-
     </script>
 </body>
 </html>
