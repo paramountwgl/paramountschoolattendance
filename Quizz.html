@@ -187,13 +187,50 @@ input:focus {
 
         /* --- QUESTION BUILDER --- */
         .question-block { 
-    border-left: 5px solid var(--gold); 
-    padding: 30px; 
+    border-left: 6px solid var(--gold); 
+    padding: 35px; 
     background: #fafbfc;
+    position: relative;
+    animation: fadeIn 0.4s ease;
+    margin-bottom: 30px;
+    width: 100%;
+    box-sizing: border-box; /* Prevents overflow */
+    border-radius: 20px;
+    box-shadow: var(--shadow);
 }
-        .remove-q { position: absolute; top: 15px; right: 20px; color: var(--danger); cursor: pointer; font-weight: 700; font-size: 0.8rem; }
-        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px; }
-        .opt-item { display: flex; align-items: center; background: #f8fafc; padding: 10px; border-radius: 12px; border: 1.5px solid #f1f5f9; }
+       .remove-q { 
+    position: absolute; 
+    top: 20px; 
+    right: 25px; 
+    color: var(--danger); 
+    cursor: pointer; 
+    font-weight: 800; 
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 8px 12px;
+    border-radius: 10px;
+    background: rgba(190, 18, 60, 0.05);
+    transition: 0.3s;
+}
+        .remove-q:hover { 
+    background: rgba(190, 18, 60, 0.15); 
+    transform: scale(1.05);
+}
+        .options-grid { 
+    display: grid; 
+    grid-template-columns: 1fr 1fr; 
+    gap: 20px; 
+    margin-top: 20px; 
+}
+        .opt-item { 
+    display: flex; 
+    align-items: center; 
+    background: white; 
+    padding: 12px 18px; 
+    border-radius: 12px; 
+    border: 1.5px solid #f1f5f9; 
+}
         .opt-item input[type="radio"] { width: auto; margin-right: 10px; accent-color: var(--gold); }
 
         /* --- RECENT QUIZZES TABLE --- */
@@ -275,8 +312,11 @@ input:focus {
         </div>
     </div>
 
-    <!-- 2. Dynamic Questions Container -->
-    <div id="questionsContainer"></div>
+   
+  <!-- 2. Dynamic Questions Injection Point -->
+<div id="questionsContainer" style="width: 100%; box-sizing: border-box;">
+    <!-- Individual Question Cards will appear here after clicking "Add Next Question" -->
+</div>
 
     <!-- 3. Bottom Action Area -->
     <div style="margin-top: 20px; display: flex; flex-direction: column; gap: 20px; padding-bottom: 80px;">
@@ -433,19 +473,47 @@ input:focus {
 };
 
         window.addNewQuestion = function() {
-            const id = Date.now();
-            const html = `
-                <div class="premium-card question-block" data-q-id="${id}">
-                    <span class="remove-q" onclick="this.parentElement.remove()">REMOVE</span>
-                    <label>QUESTION</label>
-                    <textarea class="questionText" placeholder="Enter question..."></textarea>
-                    <div class="options-grid">
-                        <div class="opt-item"><input type="radio" name="c_${id}" value="0" checked><input type="text" class="opt" placeholder="Option 1"></div>
-                        <div class="opt-item"><input type="radio" name="c_${id}" value="1"><input type="text" class="opt" placeholder="Option 2"></div>
-                    </div>
-                </div>`;
-            document.getElementById('questionsContainer').insertAdjacentHTML('beforeend', html);
-        };
+    const id = Date.now(); // Unique ID for radio button grouping
+    const qCount = document.querySelectorAll('.question-block').length + 1;
+    
+    const html = `
+        <div class="premium-card question-block" data-q-id="${id}">
+            <span class="remove-q" onclick="this.parentElement.remove(); renumberQuestions();">
+                <i class="fa-solid fa-trash-can"></i> Remove
+            </span>
+            <label class="q-label" style="display:block; font-weight:800; color:var(--forest); font-size:0.8rem; margin-bottom:15px; letter-spacing:1px;">
+                QUESTION ${qCount}
+            </label>
+            <textarea class="questionText" placeholder="Enter the assessment question..." 
+                      style="height: 100px; margin-bottom: 20px; width:100%; padding:15px; border-radius:12px; border:1px solid #e2e8f0; font-family:inherit;"></textarea>
+            
+            <div class="options-grid">
+                <div class="opt-item">
+                    <input type="radio" name="c_${id}" value="0" checked title="Correct Answer">
+                    <input type="text" class="opt" placeholder="Correct Answer Choice">
+                </div>
+                <div class="opt-item">
+                    <input type="radio" name="c_${id}" value="1" title="Mark as Correct">
+                    <input type="text" class="opt" placeholder="Option 2">
+                </div>
+                <div class="opt-item">
+                    <input type="radio" name="c_${id}" value="2" title="Mark as Correct">
+                    <input type="text" class="opt" placeholder="Option 3">
+                </div>
+                <div class="opt-item">
+                    <input type="radio" name="c_${id}" value="3" title="Mark as Correct">
+                    <input type="text" class="opt" placeholder="Option 4">
+                </div>
+            </div>
+        </div>`;
+    
+    document.getElementById('questionsContainer').insertAdjacentHTML('beforeend', html);
+};
+        window.renumberQuestions = function() {
+    document.querySelectorAll('.question-block').forEach((block, index) => {
+        block.querySelector('.q-label').innerText = `QUESTION ${index + 1}`;
+    });
+};
     </script>
     <div id="viewModal" style="display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); backdrop-filter: blur(5px);">
     <div style="background: white; margin: 5% auto; padding: 40px; border-radius: 24px; width: 60%; max-height: 80vh; overflow-y: auto;">
