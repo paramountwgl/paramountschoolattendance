@@ -93,13 +93,15 @@ body {
         /* --- FORM ELEMENTS --- */
        .grid-row { 
     display: grid; 
-    /* Subject stays larger (1.2), Title becomes smaller (0.8) */
-    grid-template-columns: 1.2fr 0.8fr; 
-    /* This creates a hard 40px gap so they never touch */
-    gap: 40px; 
+    /* Subject stays standard (1fr), Title becomes significantly smaller (0.6fr) */
+    grid-template-columns: 1fr 0.6fr; 
+    /* This forces a wide 50px gap so they never touch */
+    gap: 50px; 
     margin-bottom: 30px; 
     width: 100%;
+    align-items: flex-end;
 }
+
         label { 
     display: block; 
     font-weight: 700; 
@@ -129,8 +131,8 @@ body {
     border: 1.5px solid #eef2f7;
     border-radius: 14px;
     background-color: #fcfdfe;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
     transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
 }
        .input-group {
     display: flex;
@@ -232,21 +234,20 @@ input:focus {
     <!-- BUILDER -->
     <section id="builder" class="content-section">
         <h2>Assessment Designer</h2>
-        
-    <div class="premium-card">
-    <!-- Row 1: Subject (Standard) and Title (Smaller) -->
+  <div class="premium-card">
+    <!-- Row 1: Subject (Standard) and Title (Small) -->
     <div class="grid-row">
         <div class="input-group">
             <label>Assessment Subject</label>
             <input type="text" id="quizSubject" placeholder="e.g. Mathematics">
         </div>
         <div class="input-group">
-            <label>Quiz Title (Visible to Students)</label>
-            <input type="text" id="quizTitle" placeholder="e.g. Mid-Term Test">
+            <label>Quiz Title</label>
+            <input type="text" id="quizTitle" placeholder="e.g. Unit Test">
         </div>
     </div>
 
-    <!-- Row 2: Grade and Publish Button -->
+    <!-- Row 2: Grade (Standard) and Publish Button (Small) -->
     <div class="grid-row">
         <div class="input-group">
             <label>Target Class</label>
@@ -255,12 +256,12 @@ input:focus {
                 <option value="LKG">LKG</option>
                 <option value="UKG">UKG</option>
                 <option value="Grade 1">Grade 1</option>
-                <!-- Other options... -->
+                <!-- Add other grades as needed -->
             </select>
         </div>
-        <div class="input-group" style="justify-content: flex-end;">
+        <div class="input-group">
             <button class="btn btn-gold" style="width: 100%; height: 56px;" onclick="publishQuiz()">
-                <i class="fa-solid fa-cloud-arrow-up"></i> PUBLISH TO PORTAL
+                <i class="fa-solid fa-cloud-arrow-up"></i> PUBLISH
             </button>
         </div>
     </div>
