@@ -347,273 +347,189 @@ input:focus {
     </div>
 </section>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, doc, setDoc, deleteDoc, collection, onSnapshot, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+   <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, doc, setDoc, deleteDoc, collection, onSnapshot, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyDRYk9KOK-ga0c88dnYMsAoifW2NJTd_Y8",
-            authDomain: "paramount-school-d55bc.firebaseapp.com",
-            projectId: "paramount-school-d55bc",
-            storageBucket: "paramount-school-d55bc.firebasestorage.app",
-            messagingSenderId: "130979432562",
-            appId: "1:130979432562:web:4cd94787b23f9daba51aeb"
-        };
+    const firebaseConfig = {
+        apiKey: "AIzaSyDRYk9KOK-ga0c88dnYMsAoifW2NJTd_Y8",
+        authDomain: "paramount-school-d55bc.firebaseapp.com",
+        projectId: "paramount-school-d55bc",
+        storageBucket: "paramount-school-d55bc.firebasestorage.app",
+        messagingSenderId: "130979432562",
+        appId: "1:130979432562:web:4cd94787b23f9daba51aeb"
+    };
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
-        // --- NAVIGATION ---
-        window.showSection = (id) => {
-            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            event.currentTarget.classList.add('active');
-        };
-        window.reconductQuiz = async (quizId) => {
-    if(confirm("Reconducting will signal a new session. Continue?")) {
-        await setDoc(doc(db, "live_quizzes", quizId), { timestamp: new Date().toISOString() }, { merge: true });
-        alert("Quiz session reset.");
-    }
-};
+    // --- NAVIGATION ---
+    window.showSection = (id) => {
+        document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+    };
 
-       window.publishQuiz = async function() {
-    const subject = document.getElementById('quizSubject').value;
-    const title = document.getElementById('quizTitle').value;
-    const targetClass = document.getElementById('quizGrade').value;
+    window.reconductQuiz = async (quizId) => {
+        if(confirm("Reconducting will signal a new session. Continue?")) {
+            await setDoc(doc(db, "live_quizzes", quizId), { timestamp: new Date().toISOString() }, { merge: true });
+            alert("Quiz session reset.");
+        }
+    };
 
-    // 1. Metadata Validation
-    if(!title || !targetClass || !subject) { 
-        alert("Missing Information: Please select a Grade, Subject, and enter a Title."); 
-        return; 
-    }
+    window.publishQuiz = async function() {
+        const subject = document.getElementById('quizSubject').value;
+        const title = document.getElementById('quizTitle').value;
+        const targetClass = document.getElementById('quizGrade').value;
 
-    const questionBlocks = document.querySelectorAll('.question-block');
-    if(questionBlocks.length === 0) {
-        alert("Error: You must add at least one question before publishing.");
-        return;
-    }
-
-    const questions = [];
-    let isValid = true;
-
-    // 2. Loop through every question block and collect data based on type
-    questionBlocks.forEach((block) => {
-        const qId = block.getAttribute('data-q-id');
-        const type = block.getAttribute('data-q-type'); // Retrieves 'options' or 'text'
-        const qText = block.querySelector('.questionText').value;
-        
-        let qData = {
-            text: qText,
-            type: type 
-        };
-
-        if (type === 'options') {
-            // Collect Multiple Choice Data
-            qData.options = Array.from(block.querySelectorAll('.opt')).map(i => i.value);
-            qData.correctIndex = parseInt(block.querySelector(`input[name="c_${qId}"]:checked`).value);
-            
-            // Validate options aren't empty
-            if(qData.options.some(opt => !opt)) isValid = false;
-        } else {
-            // Collect Text Entry Data
-            qData.expectedAnswer = block.querySelector('.manual-answer-hint').value;
+        if(!title || !targetClass || !subject) { 
+            alert("Missing Information: Please select a Grade, Subject, and enter a Title."); 
+            return; 
         }
 
-        if(!qText) isValid = false;
-        questions.push(qData);
-    });
-
-    if(!isValid) {
-        alert("Incomplete Questions: Please ensure all questions and options have text.");
-        return;
-    }
-
-    // 3. Check for existing quiz and save to Firebase
-    try {
-        const existing = await getDocs(query(collection(db, "live_quizzes"), where("targetClass", "==", targetClass)));
-        if (!existing.empty) {
-            alert(`Error: ${targetClass} already has an active quiz.`);
+        const questionBlocks = document.querySelectorAll('.question-block');
+        if(questionBlocks.length === 0) {
+            alert("Error: Add at least one question.");
             return;
         }
 
-        await setDoc(doc(db, "live_quizzes", targetClass), {
-            title, 
-            subject, 
-            targetClass, 
-            isLive: true, 
-            questions, 
-            timestamp: new Date().toISOString()
+        const questions = [];
+        let isValid = true;
+
+        questionBlocks.forEach((block) => {
+            const qId = block.getAttribute('data-q-id');
+            const type = block.getAttribute('data-q-type'); 
+            const qText = block.querySelector('.questionText').value;
+            
+            let qData = { text: qText, type: type };
+
+            if (type === 'options') {
+                qData.options = Array.from(block.querySelectorAll('.opt')).map(i => i.value);
+                const checkedRadio = block.querySelector(`input[name="c_${qId}"]:checked`);
+                
+                if(!checkedRadio || qData.options.some(opt => !opt)) {
+                    isValid = false;
+                } else {
+                    qData.correctIndex = parseInt(checkedRadio.value);
+                }
+            } else {
+                qData.expectedAnswer = block.querySelector('.manual-answer-hint').value;
+            }
+
+            if(!qText) isValid = false;
+            questions.push(qData);
         });
-        
-        alert("Success: Assessment is now live for " + targetClass);
-        showSection('dashboard'); 
-    } catch (e) {
-        console.error("Publishing Error: ", e);
-        alert("Failed to publish assessment.");
-    }
-};
-      onSnapshot(collection(db, "live_quizzes"), (snapshot) => {
-    const tbody = document.getElementById('quizListBody');
-    tbody.innerHTML = ''; 
-    
-    snapshot.forEach(docSnap => {
-        const quiz = docSnap.data();
-        const quizId = docSnap.id; 
-        
-        tbody.innerHTML += `
-    <tr>
-        <td><strong>${quiz.title}</strong></td>
-        <td><span style="color: #64748b;">${quiz.subject}</span></td>
-        <td><span class="header-tag" style="background:#f1f5f9; color:var(--forest); padding:6px 12px; border-radius:20px; font-size:0.8rem;">${quiz.targetClass}</span></td>
-        <td style="display:flex; gap:12px; justify-content:center; align-items:center;">
-            <button class="btn btn-info" onclick='viewQuiz(${JSON.stringify(quiz)})'>
-                <i class="fa-solid fa-eye"></i>
-            </button>
-            <button class="btn btn-reconduct" onclick="reconductQuiz('${quizId}')">
-                <i class="fa-solid fa-rotate-right"></i>
-            </button>
-            <button class="btn btn-danger" style="background:var(--danger); color:white;" onclick="deleteQuiz('${quizId}')">
-                <i class="fa-solid fa-trash"></i>
-            </button>
-        </td>
-    </tr>`;
-    });
-});
-       window.deleteQuiz = async (targetClass) => {
-    if(confirm(`Are you sure? This will delete the ${targetClass} quiz AND all student records/times.`)) {
-        try {
-            // 1. Delete the main quiz document
-            await deleteDoc(doc(db, "live_quizzes", targetClass));
-            
-            // 2. Clear local session for the teacher view
-            alert("Quiz deleted. To fully clear student 'Start Times' for a new session, ensure you also clear the 'start_times' sub-collection in your Firebase Console.");
-        } catch (e) {
-            console.error("Error deleting quiz:", e);
+
+        if(!isValid) {
+            alert("Incomplete Questions: Please ensure all text boxes and options are filled.");
+            return;
         }
-    }
-};       
-        
-       window.viewQuiz = (quiz) => {
-    document.getElementById('modalQuizTitle').innerText = quiz.title;
-    const conductedDate = new Date(quiz.timestamp).toLocaleString();
 
-    let html = `
-        <div style="background: #fdfaf0; padding: 20px; border-radius: 16px; border: 1px solid #d4af37; margin-bottom: 25px;">
-            <h3 style="margin-top: 0; color: #064e3b; font-size: 1rem;">ASSESSMENT OVERVIEW</h3>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.9rem; color: #4b5563;">
-                <p><strong>Subject:</strong> ${quiz.subject}</p>
-                <p><strong>Target Class:</strong> ${quiz.targetClass}</p>
-                <p><strong>Date Conducted:</strong> ${conductedDate}</p>
-                <!-- Time Limit Paragraph Removed -->
-            </div>
-        </div>
-        <hr style="border: 0; border-top: 1px solid #e5e7eb; margin: 20px 0;">
-        <h3 style="color: #064e3b; font-size: 1rem;">QUESTIONS LIST</h3>
-    `;
-
-    // 4. Loop through the questions and options
-    quiz.questions.forEach((q, i) => {
-        html += `
-            <div style="margin-bottom: 20px; padding: 15px; border-bottom: 1px solid #f1f1f1;">
-                <p style="font-weight: 700; margin-bottom: 8px;">Q${i+1}: ${q.text}</p>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px; font-size: 0.85rem;">
-                    ${q.options.map((opt, optIdx) => `
-                        <div style="color: ${optIdx === q.correctIndex ? '#059669' : '#6b7280'}; font-weight: ${optIdx === q.correctIndex ? '700' : '400'}">
-                            ${optIdx === q.correctIndex ? '✓' : '•'} ${opt}
-                        </div>
-                    `).join('')}
-                </div>
-            </div>
-        `;
-    });
-
-    // 5. Inject the HTML into the modal and show it
-    document.getElementById('modalBody').innerHTML = html;
-    document.getElementById('viewModal').style.display = 'block';
-};
-
-        window.addNewQuestion = function() {
-    const id = Date.now();
-    const qCount = document.querySelectorAll('.question-block').length + 1;
-    
-    const html = `
-        <div class="premium-card question-block" data-q-id="${id}" data-q-type="options">
-            <div class="q-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <label class="q-label" style="font-weight:800; color:var(--forest); font-size:0.8rem; letter-spacing:1px; margin:0;">
-                    QUESTION ${qCount}
-                </label>
-                <div style="display: flex; gap: 15px; align-items: center;">
-                    <!-- TYPE TOGGLE -->
-                    <div class="type-toggle" style="background: #f1f5f9; padding: 5px; border-radius: 10px; display: flex; gap: 5px;">
-                        <button type="button" onclick="setQuestionType(${id}, 'options')" class="toggle-btn active-toggle" id="btn-opt-${id}">Multiple Choice</button>
-                        <button type="button" onclick="setQuestionType(${id}, 'text')" class="toggle-btn" id="btn-txt-${id}">Text Entry</button>
-                    </div>
-                    <span class="remove-q" onclick="this.closest('.question-block').remove(); renumberQuestions();" style="position:static; padding: 8px 12px; background: rgba(190, 18, 60, 0.05); border-radius: 10px; cursor:pointer; color:var(--danger); font-size:0.7rem; font-weight:800;">
-                        REMOVE
-                    </span>
-                </div>
-            </div>
-
-            <textarea class="questionText" placeholder="Enter the assessment question..." 
-                      style="height: 80px; margin-bottom: 20px; width:100%; padding:15px; border-radius:12px; border:1px solid #e2e8f0; font-family:inherit;"></textarea>
+        try {
+            // Updated to use setDoc directly - this overwrites existing instead of failing
+            await setDoc(doc(db, "live_quizzes", targetClass), {
+                title, subject, targetClass, isLive: true, questions, timestamp: new Date().toISOString()
+            });
             
-            <!-- OPTIONS VIEW (Default) -->
-            <div id="options-view-${id}" class="options-grid">
-                <div class="opt-item">
-                    <input type="radio" name="c_${id}" value="0" checked>
-                    <input type="text" class="opt" placeholder="Correct Choice">
-                </div>
-                <div class="opt-item">
-                    <input type="radio" name="c_${id}" value="1">
-                    <input type="text" class="opt" placeholder="Option 2">
-                </div>
-                <div class="opt-item">
-                    <input type="radio" name="c_${id}" value="2">
-                    <input type="text" class="opt" placeholder="Option 3">
-                </div>
-                <div class="opt-item">
-                    <input type="radio" name="c_${id}" value="3">
-                    <input type="text" class="opt" placeholder="Option 4">
-                </div>
-            </div>
+            alert("Success: Assessment is now live!");
+            showSection('dashboard'); 
+        } catch (e) {
+            console.error("Publishing Error: ", e);
+            alert("Failed to publish: " + e.message);
+        }
+    };
 
-            <!-- MANUAL ENTRY VIEW (Hidden by Default) -->
-            <div id="text-view-${id}" style="display:none; background: #fff; padding: 20px; border: 1.5px dashed #cbd5e1; border-radius: 12px;">
-                <p style="font-size: 0.8rem; color: #64748b; margin-top:0;">Students will see a text box to type their answer for this question.</p>
-                <input type="text" class="manual-answer-hint" placeholder="Expected Answer Hint (Optional - for your records)" style="border:1px solid #e2e8f0; width:100%;">
-            </div>
-        </div>`;
-    
-    document.getElementById('questionsContainer').insertAdjacentHTML('beforeend', html);
-};
-        window.setQuestionType = function(qId, type) {
-    const block = document.querySelector(`[data-q-id="${qId}"]`);
-    const optView = document.getElementById(`options-view-${qId}`);
-    const txtView = document.getElementById(`text-view-${qId}`);
-    const btnOpt = document.getElementById(`btn-opt-${qId}`);
-    const btnTxt = document.getElementById(`btn-txt-${qId}`);
-
-    block.setAttribute('data-q-type', type);
-
-    if (type === 'options') {
-        optView.style.display = 'grid';
-        txtView.style.display = 'none';
-        btnOpt.classList.add('active-toggle');
-        btnTxt.classList.remove('active-toggle');
-    } else {
-        optView.style.display = 'none';
-        txtView.style.display = 'block';
-        btnTxt.classList.add('active-toggle');
-        btnOpt.classList.remove('active-toggle');
-    }
-};
-        window.renumberQuestions = function() {
-    document.querySelectorAll('.question-block').forEach((block, index) => {
-        block.querySelector('.q-label').innerText = `QUESTION ${index + 1}`;
+    onSnapshot(collection(db, "live_quizzes"), (snapshot) => {
+        const tbody = document.getElementById('quizListBody');
+        tbody.innerHTML = ''; 
+        snapshot.forEach(docSnap => {
+            const quiz = docSnap.data();
+            const quizId = docSnap.id; 
+            tbody.innerHTML += `
+                <tr>
+                    <td><strong>${quiz.title}</strong></td>
+                    <td><span style="color: #64748b;">${quiz.subject}</span></td>
+                    <td><span class="header-tag" style="background:#f1f5f9; color:var(--forest); padding:6px 12px; border-radius:20px; font-size:0.8rem;">${quiz.targetClass}</span></td>
+                    <td style="display:flex; gap:12px; justify-content:center; align-items:center;">
+                        <button class="btn btn-info" onclick='viewQuiz(${JSON.stringify(quiz)})'><i class="fa-solid fa-eye"></i></button>
+                        <button class="btn btn-reconduct" onclick="reconductQuiz('${quizId}')"><i class="fa-solid fa-rotate-right"></i></button>
+                        <button class="btn btn-danger" style="background:var(--danger); color:white;" onclick="deleteQuiz('${quizId}')"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                </tr>`;
+        });
     });
-};
-    </script>
+
+    window.deleteQuiz = async (targetClass) => {
+        if(confirm(`Delete ${targetClass} quiz?`)) {
+            await deleteDoc(doc(db, "live_quizzes", targetClass));
+            alert("Quiz deleted.");
+        }
+    };       
+        
+    window.viewQuiz = (quiz) => {
+        document.getElementById('modalQuizTitle').innerText = quiz.title;
+        let html = `<div style="background:#fdfaf0; padding:20px; border-radius:16px; border:1px solid #d4af37; margin-bottom:25px;">
+            <p><strong>Subject:</strong> ${quiz.subject} | <strong>Class:</strong> ${quiz.targetClass}</p>
+        </div><h3 style="color:#064e3b;">QUESTIONS LIST</h3>`;
+
+        quiz.questions.forEach((q, i) => {
+            html += `<div style="margin-bottom:15px; border-bottom:1px solid #eee; padding-bottom:10px;">
+                <p><strong>Q${i+1}:</strong> ${q.text} <small>(${q.type.toUpperCase()})</small></p>`;
+            if(q.type === 'options') {
+                html += `<ul style="font-size:0.85rem; list-style:none; padding-left:10px;">
+                    ${q.options.map((opt, idx) => `<li style="color:${idx===q.correctIndex?'green':'black'}">${opt} ${idx===q.correctIndex?'✓':''}</li>`).join('')}
+                </ul>`;
+            }
+            html += `</div>`;
+        });
+        document.getElementById('modalBody').innerHTML = html;
+        document.getElementById('viewModal').style.display = 'block';
+    };
+
+    window.addNewQuestion = function() {
+        const id = Date.now();
+        const qCount = document.querySelectorAll('.question-block').length + 1;
+        const html = `
+            <div class="premium-card question-block" data-q-id="${id}" data-q-type="options">
+                <div class="q-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                    <label class="q-label">QUESTION ${qCount}</label>
+                    <div style="display:flex; gap:15px; align-items:center;">
+                        <div class="type-toggle" style="background:#f1f5f9; padding:5px; border-radius:10px; display:flex; gap:5px;">
+                            <button type="button" onclick="setQuestionType(${id}, 'options')" class="toggle-btn active-toggle" id="btn-opt-${id}">Options</button>
+                            <button type="button" onclick="setQuestionType(${id}, 'text')" class="toggle-btn" id="btn-txt-${id}">Text</button>
+                        </div>
+                        <span class="remove-q" onclick="this.closest('.question-block').remove(); renumberQuestions();">REMOVE</span>
+                    </div>
+                </div>
+                <textarea class="questionText" placeholder="Enter question..." style="width:100%; height:80px; border-radius:12px; border:1px solid #ddd; padding:10px;"></textarea>
+                <div id="options-view-${id}" class="options-grid">
+                    <div class="opt-item"><input type="radio" name="c_${id}" value="0" checked><input type="text" class="opt" placeholder="Correct Choice"></div>
+                    <div class="opt-item"><input type="radio" name="c_${id}" value="1"><input type="text" class="opt" placeholder="Option 2"></div>
+                    <div class="opt-item"><input type="radio" name="c_${id}" value="2"><input type="text" class="opt" placeholder="Option 3"></div>
+                    <div class="opt-item"><input type="radio" name="c_${id}" value="3"><input type="text" class="opt" placeholder="Option 4"></div>
+                </div>
+                <div id="text-view-${id}" style="display:none; margin-top:15px;">
+                    <input type="text" class="manual-answer-hint" placeholder="Answer Hint (Optional)" style="width:100%; padding:12px; border-radius:10px; border:1.5px dashed #ccc;">
+                </div>
+            </div>`;
+        document.getElementById('questionsContainer').insertAdjacentHTML('beforeend', html);
+    };
+
+    window.setQuestionType = function(qId, type) {
+        const block = document.querySelector(`[data-q-id="${qId}"]`);
+        block.setAttribute('data-q-type', type);
+        document.getElementById(`options-view-${qId}`).style.display = type === 'options' ? 'grid' : 'none';
+        document.getElementById(`text-view-${qId}`).style.display = type === 'text' ? 'block' : 'none';
+        document.getElementById(`btn-opt-${qId}`).classList.toggle('active-toggle', type === 'options');
+        document.getElementById(`btn-txt-${qId}`).classList.toggle('active-toggle', type === 'text');
+    };
+
+    window.renumberQuestions = function() {
+        document.querySelectorAll('.question-block').forEach((block, index) => {
+            block.querySelector('.q-label').innerText = `QUESTION ${index + 1}`;
+        });
+    };
+</script>
     <div id="viewModal" style="display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); backdrop-filter: blur(5px);">
     <div style="background: white; margin: 5% auto; padding: 40px; border-radius: 24px; width: 60%; max-height: 80vh; overflow-y: auto;">
         <h2 id="modalQuizTitle" style="margin-top:0; color:#064e3b;">Quiz Details</h2>
