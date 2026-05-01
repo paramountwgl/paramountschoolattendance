@@ -466,12 +466,221 @@ input:focus {
             });
         }
 
-        // --- Other Window Functions (Publish, Clear, AddQuestion etc) Go Here ---
-        window.publishQuiz = async function() { /* ... your existing logic ... */ };
-        window.clearDesigner = function() { /* ... your existing logic ... */ };
-        window.addNewQuestion = function() { /* ... your existing logic ... */ };
-        // Ensure you paste your full functions here from your previous code
-    </script>
+        function renderChart(labels, data) {
+    const ctx = document.getElementById('performanceChart').getContext('2d');
+    
+    if (myChart) myChart.destroy(); // Clean up old chart
+
+    myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Student Score %',
+                data: data,
+                backgroundColor: '#d4af37',
+                borderRadius: 10,
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: { beginAtZero: true, max: 100 }
+            }
+        }
+    });
+}
+
+    window.reconductQuiz = async (quizId) => {
+        if(confirm("Reconducting will signal a new session. Continue?")) {
+            await setDoc(doc(db, "live_quizzes", quizId), { timestamp: new Date().toISOString() }, { merge: true });
+            alert("Quiz session reset.");
+        }
+    };
+
+    window.publishQuiz = async function() {
+        const subject = document.getElementById('quizSubject').value;
+        const title = document.getElementById('quizTitle').value;
+        const targetClass = document.getElementById('quizGrade').value;
+
+        if(!title || !targetClass || !subject) { 
+            alert("Missing Information: Please select a Grade, Subject, and enter a Title."); 
+            return; 
+        }
+
+        const questionBlocks = document.querySelectorAll('.question-block');
+        if(questionBlocks.length === 0) {
+            alert("Error: Add at least one question.");
+            return;
+        }
+
+        const questions = [];
+        let isValid = true;
+
+        questionBlocks.forEach((block) => {
+            const qId = block.getAttribute('data-q-id');
+            const type = block.getAttribute('data-q-type'); 
+            const qText = block.querySelector('.questionText').value;
+            
+            let qData = { text: qText, type: type };
+
+            if (type === 'options') {
+                qData.options = Array.from(block.querySelectorAll('.opt')).map(i => i.value);
+                const checkedRadio = block.querySelector(`input[name="c_${qId}"]:checked`);
+                
+                if(!checkedRadio || qData.options.some(opt => !opt)) {
+                    isValid = false;
+                } else {
+                    qData.correctIndex = parseInt(checkedRadio.value);
+                }
+            } else {
+                qData.expectedAnswer = block.querySelector('.manual-answer-hint').value;
+            }
+
+            if(!qText) isValid = false;
+            questions.push(qData);
+        });
+
+        if(!isValid) {
+            alert("Incomplete Questions: Please ensure all text boxes and options are filled.");
+            return;
+        }
+
+        try {
+            // Updated to use setDoc directly - this overwrites existing instead of failing
+            await setDoc(doc(db, "live_quizzes", targetClass), {
+                title, subject, targetClass, isLive: true, questions, timestamp: new Date().toISOString()
+            });
+            
+            alert("Success: Assessment is now live!");
+            showSection('dashboard'); 
+        } catch (e) {
+            console.error("Publishing Error: ", e);
+            alert("Failed to publish: " + e.message);
+        }
+    };
+
+    onSnapshot(collection(db, "live_quizzes"), (snapshot) => {
+        const tbody = document.getElementById('quizListBody');
+        tbody.innerHTML = ''; 
+        snapshot.forEach(docSnap => {
+            const quiz = docSnap.data();
+            const quizId = docSnap.id; 
+            tbody.innerHTML += `
+                <tr>
+                    <td><strong>${quiz.title}</strong></td>
+                    <td><span style="color: #64748b;">${quiz.subject}</span></td>
+                    <td><span class="header-tag" style="background:#f1f5f9; color:var(--forest); padding:6px 12px; border-radius:20px; font-size:0.8rem;">${quiz.targetClass}</span></td>
+                    <td style="display:flex; gap:12px; justify-content:center; align-items:center;">
+                        <button class="btn btn-info" onclick='viewQuiz(${JSON.stringify(quiz)})'><i class="fa-solid fa-eye"></i></button>
+                        <button class="btn btn-reconduct" onclick="reconductQuiz('${quizId}')"><i class="fa-solid fa-rotate-right"></i></button>
+                        <button class="btn btn-danger" style="background:var(--danger); color:white;" onclick="deleteQuiz('${quizId}')"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                </tr>`;
+        });
+    });
+
+    window.deleteQuiz = async (targetClass) => {
+        if(confirm(`Delete ${targetClass} quiz?`)) {
+            await deleteDoc(doc(db, "live_quizzes", targetClass));
+            alert("Quiz deleted.");
+        }
+    };       
+        
+    window.viewQuiz = (quiz) => {
+        document.getElementById('modalQuizTitle').innerText = quiz.title;
+        let html = `<div style="background:#fdfaf0; padding:20px; border-radius:16px; border:1px solid #d4af37; margin-bottom:25px;">
+            <p><strong>Subject:</strong> ${quiz.subject} | <strong>Class:</strong> ${quiz.targetClass}</p>
+        </div><h3 style="color:#064e3b;">QUESTIONS LIST</h3>`;
+
+        quiz.questions.forEach((q, i) => {
+            html += `<div style="margin-bottom:15px; border-bottom:1px solid #eee; padding-bottom:10px;">
+                <p><strong>Q${i+1}:</strong> ${q.text} <small>(${q.type.toUpperCase()})</small></p>`;
+            if(q.type === 'options') {
+                html += `<ul style="font-size:0.85rem; list-style:none; padding-left:10px;">
+                    ${q.options.map((opt, idx) => `<li style="color:${idx===q.correctIndex?'green':'black'}">${opt} ${idx===q.correctIndex?'✓':''}</li>`).join('')}
+                </ul>`;
+            }
+            html += `</div>`;
+        });
+        document.getElementById('modalBody').innerHTML = html;
+        document.getElementById('viewModal').style.display = 'block';
+    };
+       
+       window.clearDesigner = function() {
+    if(confirm("Are you sure you want to clear all data? This will reset the metadata and remove all added questions.")) {
+        // Reset Dropdowns and Inputs
+        document.getElementById('quizGrade').selectedIndex = 0;
+        document.getElementById('quizSubject').selectedIndex = 0;
+        document.getElementById('quizTitle').value = "";
+        
+        // Clear the questions container
+        document.getElementById('questionsContainer').innerHTML = "";
+        
+        // Scroll back to top smoothly
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+};
+
+    window.addNewQuestion = function() {
+    const id = Date.now();
+    const qCount = document.querySelectorAll('.question-block').length + 1;
+    const html = `
+        <div class="premium-card question-block" data-q-id="${id}" data-q-type="options">
+            <div class="q-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <label class="q-label">QUESTION ${qCount}</label>
+                
+                <!-- BUTTON GROUP -->
+                <div style="display:flex; gap:12px; align-items:center;">
+                    <!-- REMOVE BUTTON (Placed on the left) -->
+                    <button type="button" onclick="this.closest('.question-block').remove(); renumberQuestions();" 
+                        style="background:#fee2e2; color:#be123c; border:none; padding:8px 16px; border-radius:10px; font-size:0.7rem; font-weight:800; cursor:pointer; text-transform:uppercase; transition:0.3s;">
+                        <i class="fa-solid fa-trash-can"></i> REMOVE
+                    </button>
+
+                    <!-- TYPE TOGGLE -->
+                    <div class="type-toggle" style="background:#f1f5f9; padding:5px; border-radius:10px; display:flex; gap:5px;">
+                        <button type="button" onclick="setQuestionType(${id}, 'options')" class="toggle-btn active-toggle" id="btn-opt-${id}">Options</button>
+                        <button type="button" onclick="setQuestionType(${id}, 'text')" class="toggle-btn" id="btn-txt-${id}">Text</button>
+                    </div>
+                </div>
+            </div>
+
+            <textarea class="questionText" placeholder="Enter question here..." 
+                style="width:100%; height:80px; border-radius:12px; border:1px solid #e2e8f0; padding:15px; font-family:inherit; font-size:0.95rem; margin-bottom:20px;"></textarea>
+            
+            <div id="options-view-${id}" class="options-grid">
+                <div class="opt-item"><input type="radio" name="c_${id}" value="0" checked><input type="text" class="opt" placeholder="Correct Choice"></div>
+                <div class="opt-item"><input type="radio" name="c_${id}" value="1"><input type="text" class="opt" placeholder="Option 2"></div>
+                <div class="opt-item"><input type="radio" name="c_${id}" value="2"><input type="text" class="opt" placeholder="Option 3"></div>
+                <div class="opt-item"><input type="radio" name="c_${id}" value="3"><input type="text" class="opt" placeholder="Option 4"></div>
+            </div>
+
+            <div id="text-view-${id}" style="display:none; margin-top:15px;">
+                <input type="text" class="manual-answer-hint" placeholder="Answer Hint (Optional)" 
+                    style="width:100%; padding:14px; border-radius:12px; border:1.5px dashed #cbd5e1; background:#fcfdfe;">
+            </div>
+        </div>`;
+    document.getElementById('questionsContainer').insertAdjacentHTML('beforeend', html);
+};
+
+    window.setQuestionType = function(qId, type) {
+        const block = document.querySelector(`[data-q-id="${qId}"]`);
+        block.setAttribute('data-q-type', type);
+        document.getElementById(`options-view-${qId}`).style.display = type === 'options' ? 'grid' : 'none';
+        document.getElementById(`text-view-${qId}`).style.display = type === 'text' ? 'block' : 'none';
+        document.getElementById(`btn-opt-${qId}`).classList.toggle('active-toggle', type === 'options');
+        document.getElementById(`btn-txt-${qId}`).classList.toggle('active-toggle', type === 'text');
+    };
+
+    window.renumberQuestions = function() {
+        document.querySelectorAll('.question-block').forEach((block, index) => {
+            block.querySelector('.q-label').innerText = `QUESTION ${index + 1}`;
+        });
+    };
+</script>
 
     <div id="viewModal" style="display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); backdrop-filter: blur(5px);">
     <div style="background: white; margin: 5% auto; padding: 40px; border-radius: 24px; width: 60%; max-height: 80vh; overflow-y: auto;">
