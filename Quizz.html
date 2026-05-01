@@ -454,19 +454,6 @@ input:focus {
         };
 
         function renderChart(labels, data) {
-            const ctx = document.getElementById('performanceChart').getContext('2d');
-            if (myChart) myChart.destroy();
-            myChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{ label: 'Score %', data: data, backgroundColor: '#d4af37', borderRadius: 10 }]
-                },
-                options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, max: 100 } } }
-            });
-        }
-
-        function renderChart(labels, data) {
     const ctx = document.getElementById('performanceChart').getContext('2d');
     
     if (myChart) myChart.destroy(); // Clean up old chart
