@@ -66,8 +66,9 @@ body {
         .main-wrapper { 
     margin-left: 280px; 
     width: calc(100% - 280px); 
-    padding: 40px 60px; 
-    box-sizing: border-box; 
+    padding: 40px; 
+    box-sizing: border-box; /* Critical: Includes padding in width calculation */
+    overflow-x: hidden; /* Prevents horizontal leaking */
 }
         .content-section { display: none; animation: fadeIn 0.4s ease; }
         .content-section.active { display: block; }
@@ -76,11 +77,12 @@ body {
        .premium-card { 
     background: var(--white); 
     border-radius: 20px; 
-    padding: 40px; 
+    padding: 35px; 
     box-shadow: var(--shadow); 
-    margin-bottom: 25px; 
+    margin-bottom: 30px; 
     border: 1px solid #f1f5f9;
-    width: 100%;
+    width: 100%; /* Stays within main-wrapper bounds */
+    box-sizing: border-box; 
 }
 
         h2 { 
@@ -91,15 +93,12 @@ body {
     letter-spacing: -0.02em;
 }
 
-   .grid-row { 
+  .grid-row { 
     display: grid; 
-    /* Two equal columns for a balanced, premium feel */
     grid-template-columns: 1fr 1fr; 
-    /* Strictly separate boxes with a 35px gap */
-    gap: 35px; 
-    margin-bottom: 35px; 
+    gap: 30px; 
+    margin-bottom: 25px; 
     width: 100%;
-    align-items: flex-end;
     box-sizing: border-box;
 }
         
@@ -112,14 +111,9 @@ body {
     text-transform: uppercase; 
     letter-spacing: 0.05em;
 }
-        input, select, textarea { 
-    width: 100%; 
-    padding: 14px 18px; 
-    border: 1px solid #e2e8f0; 
-    border-radius: 12px; 
-    font-size: 0.95rem; 
-    color: #1e293b;
-    transition: 0.2s border-color;
+        input, select, textarea {
+    max-width: 100%;
+    box-sizing: border-box;
 }
         input:focus, select:focus { 
     outline: none; 
@@ -241,10 +235,12 @@ input:focus {
             </table>
         </div>
     </section>
+<!-- BUILDER SECTION -->
 <section id="builder" class="content-section">
     <h2>Assessment Designer</h2>
+    
+    <!-- 1. Metadata Selection -->
     <div class="premium-card">
-        <!-- Row 1: Dropdowns for Grade and Subject -->
         <div class="grid-row">
             <div class="input-group">
                 <label>Target Class</label>
@@ -264,40 +260,32 @@ input:focus {
                 <label>Assessment Subject</label>
                 <select id="quizSubject">
                     <option value="" disabled selected>Select Subject</option>
-                    <option value="Telugu">Telugu</option>
-                    <option value="Hindi">Hindi</option>
                     <option value="English">English</option>
                     <option value="Mathematics">Mathematics</option>
                     <option value="Science">Science</option>
                     <option value="Social Studies">Social Studies</option>
                     <option value="General Knowledge">General Knowledge</option>
-                    <option value="physics">Physics</option>
-                    <option value="Biology">Biology</option>
+                    <option value="Computers">Computers</option>
                 </select>
             </div>
         </div>
-
-        <!-- Row 2: Title and Publish Button -->
-        <div class="grid-row">
-            <div class="input-group">
-                <label>Quiz Title (Visible to Students)</label>
-                <input type="text" id="quizTitle" placeholder="e.g. Mid-Term Excellence Assessment">
-            </div>
-            <div class="input-group">
-                <button class="btn btn-gold" onclick="publishQuiz()">
-                    <i class="fa-solid fa-cloud-arrow-up"></i> PUBLISH TO STUDENT PORTAL
-                </button>
-            </div>
+        <div class="input-wrapper-full">
+            <label>Quiz Title (Visible to Students)</label>
+            <input type="text" id="quizTitle" placeholder="e.g. End of Term Excellence Assessment">
         </div>
     </div>
 
-    <div id="questionsContainer">
-        <!-- Questions load here -->
-    </div>
-    
-    <div style="padding: 20px 0;">
+    <!-- 2. Dynamic Questions Container -->
+    <div id="questionsContainer"></div>
+
+    <!-- 3. Bottom Action Area -->
+    <div style="margin-top: 20px; display: flex; flex-direction: column; gap: 20px; padding-bottom: 80px;">
         <button class="btn btn-outline" onclick="addNewQuestion()">
             <i class="fa-solid fa-plus"></i> ADD NEXT QUESTION
+        </button>
+        
+        <button class="btn btn-gold" onclick="publishQuiz()" style="height: 65px; font-size: 1.1rem;">
+            <i class="fa-solid fa-cloud-arrow-up"></i> FINAL PUBLISH TO STUDENT PORTAL
         </button>
     </div>
 </section>
