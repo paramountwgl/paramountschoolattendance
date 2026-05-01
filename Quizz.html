@@ -216,12 +216,15 @@
         };
 
         // --- DASHBOARD LISTENER ---
-        onSnapshot(collection(db, "live_quizzes"), (snapshot) => {
-            const tbody = document.getElementById('quizListBody');
-            tbody.innerHTML = '';
-            snapshot.forEach(doc => {
-                const quiz = doc.data();
-                tbody.innerHTML += `
+       onSnapshot(collection(db, "live_quizzes"), (snapshot) => {
+    const tbody = document.getElementById('quizListBody');
+    tbody.innerHTML = ''; // Clears the table before reloading
+    
+    snapshot.forEach(docSnap => {
+        const quiz = docSnap.data();
+        const quizId = docSnap.id; // CRITICAL: This defines the ID so buttons work
+        
+        tbody.innerHTML += `
             <tr>
                 <td><strong>${quiz.title}</strong></td>
                 <td>${quiz.subject}</td>
