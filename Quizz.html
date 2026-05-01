@@ -214,11 +214,8 @@ input:focus {
     box-sizing: border-box; /* Prevents overflow */
     border-radius: 20px;
     box-shadow: var(--shadow);
-}
-       .remove-q { 
-    position: absolute; 
-    top: 20px; 
-    right: 25px; 
+}.remove-q { 
+    /* Remove position: absolute if it was there */
     color: var(--danger); 
     cursor: pointer; 
     font-weight: 800; 
@@ -231,8 +228,8 @@ input:focus {
     transition: 0.3s;
 }
         .remove-q:hover { 
-    background: rgba(190, 18, 60, 0.15); 
-    transform: scale(1.05);
+    background: #fee2e2;
+    color: #991b1b;
 }
         .options-grid { 
     display: grid; 
@@ -487,33 +484,46 @@ input:focus {
     };
 
     window.addNewQuestion = function() {
-        const id = Date.now();
-        const qCount = document.querySelectorAll('.question-block').length + 1;
-        const html = `
-            <div class="premium-card question-block" data-q-id="${id}" data-q-type="options">
-                <div class="q-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-                    <label class="q-label">QUESTION ${qCount}</label>
-                    <div style="display:flex; gap:15px; align-items:center;">
-                        <div class="type-toggle" style="background:#f1f5f9; padding:5px; border-radius:10px; display:flex; gap:5px;">
-                            <button type="button" onclick="setQuestionType(${id}, 'options')" class="toggle-btn active-toggle" id="btn-opt-${id}">Options</button>
-                            <button type="button" onclick="setQuestionType(${id}, 'text')" class="toggle-btn" id="btn-txt-${id}">Text</button>
-                        </div>
-                        <span class="remove-q" onclick="this.closest('.question-block').remove(); renumberQuestions();">REMOVE</span>
+    const id = Date.now();
+    const qCount = document.querySelectorAll('.question-block').length + 1;
+    const html = `
+        <div class="premium-card question-block" data-q-id="${id}" data-q-type="options">
+            <div class="q-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <label class="q-label">QUESTION ${qCount}</label>
+                
+                <!-- BUTTON GROUP -->
+                <div style="display:flex; gap:12px; align-items:center;">
+                    <!-- REMOVE BUTTON (Placed on the left) -->
+                    <button type="button" onclick="this.closest('.question-block').remove(); renumberQuestions();" 
+                        style="background:#fee2e2; color:#be123c; border:none; padding:8px 16px; border-radius:10px; font-size:0.7rem; font-weight:800; cursor:pointer; text-transform:uppercase; transition:0.3s;">
+                        <i class="fa-solid fa-trash-can"></i> REMOVE
+                    </button>
+
+                    <!-- TYPE TOGGLE -->
+                    <div class="type-toggle" style="background:#f1f5f9; padding:5px; border-radius:10px; display:flex; gap:5px;">
+                        <button type="button" onclick="setQuestionType(${id}, 'options')" class="toggle-btn active-toggle" id="btn-opt-${id}">Options</button>
+                        <button type="button" onclick="setQuestionType(${id}, 'text')" class="toggle-btn" id="btn-txt-${id}">Text</button>
                     </div>
                 </div>
-                <textarea class="questionText" placeholder="Enter question..." style="width:100%; height:80px; border-radius:12px; border:1px solid #ddd; padding:10px;"></textarea>
-                <div id="options-view-${id}" class="options-grid">
-                    <div class="opt-item"><input type="radio" name="c_${id}" value="0" checked><input type="text" class="opt" placeholder="Correct Choice"></div>
-                    <div class="opt-item"><input type="radio" name="c_${id}" value="1"><input type="text" class="opt" placeholder="Option 2"></div>
-                    <div class="opt-item"><input type="radio" name="c_${id}" value="2"><input type="text" class="opt" placeholder="Option 3"></div>
-                    <div class="opt-item"><input type="radio" name="c_${id}" value="3"><input type="text" class="opt" placeholder="Option 4"></div>
-                </div>
-                <div id="text-view-${id}" style="display:none; margin-top:15px;">
-                    <input type="text" class="manual-answer-hint" placeholder="Answer Hint (Optional)" style="width:100%; padding:12px; border-radius:10px; border:1.5px dashed #ccc;">
-                </div>
-            </div>`;
-        document.getElementById('questionsContainer').insertAdjacentHTML('beforeend', html);
-    };
+            </div>
+
+            <textarea class="questionText" placeholder="Enter question here..." 
+                style="width:100%; height:80px; border-radius:12px; border:1px solid #e2e8f0; padding:15px; font-family:inherit; font-size:0.95rem; margin-bottom:20px;"></textarea>
+            
+            <div id="options-view-${id}" class="options-grid">
+                <div class="opt-item"><input type="radio" name="c_${id}" value="0" checked><input type="text" class="opt" placeholder="Correct Choice"></div>
+                <div class="opt-item"><input type="radio" name="c_${id}" value="1"><input type="text" class="opt" placeholder="Option 2"></div>
+                <div class="opt-item"><input type="radio" name="c_${id}" value="2"><input type="text" class="opt" placeholder="Option 3"></div>
+                <div class="opt-item"><input type="radio" name="c_${id}" value="3"><input type="text" class="opt" placeholder="Option 4"></div>
+            </div>
+
+            <div id="text-view-${id}" style="display:none; margin-top:15px;">
+                <input type="text" class="manual-answer-hint" placeholder="Answer Hint (Optional)" 
+                    style="width:100%; padding:14px; border-radius:12px; border:1.5px dashed #cbd5e1; background:#fcfdfe;">
+            </div>
+        </div>`;
+    document.getElementById('questionsContainer').insertAdjacentHTML('beforeend', html);
+};
 
     window.setQuestionType = function(qId, type) {
         const block = document.querySelector(`[data-q-id="${qId}"]`);
