@@ -93,10 +93,10 @@ body {
         /* --- FORM ELEMENTS --- */
        .grid-row { 
     display: grid; 
-    /* Subject gets 40% width, Title gets 60% width */
-    grid-template-columns: 0.8fr 1.2fr; 
-    /* This creates the physical separation gap */
-    gap: 30px; 
+    /* Subject stays larger (1.2), Title becomes smaller (0.8) */
+    grid-template-columns: 1.2fr 0.8fr; 
+    /* This creates a hard 40px gap so they never touch */
+    gap: 40px; 
     margin-bottom: 30px; 
     width: 100%;
 }
@@ -132,11 +132,12 @@ body {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
     transition: all 0.3s ease;
 }
-        ..input-group {
+       .input-group {
     display: flex;
     flex-direction: column;
     width: 100%; 
 }
+
         
 input:focus {
     border-color: var(--gold);
@@ -232,8 +233,8 @@ input:focus {
     <section id="builder" class="content-section">
         <h2>Assessment Designer</h2>
         
-       <div class="premium-card">
-    <!-- Row 1: Subject (Smaller) and Title (Larger) -->
+    <div class="premium-card">
+    <!-- Row 1: Subject (Standard) and Title (Smaller) -->
     <div class="grid-row">
         <div class="input-group">
             <label>Assessment Subject</label>
@@ -241,7 +242,7 @@ input:focus {
         </div>
         <div class="input-group">
             <label>Quiz Title (Visible to Students)</label>
-            <input type="text" id="quizTitle" placeholder="e.g. Mid-Term Excellence Test">
+            <input type="text" id="quizTitle" placeholder="e.g. Mid-Term Test">
         </div>
     </div>
 
@@ -254,7 +255,7 @@ input:focus {
                 <option value="LKG">LKG</option>
                 <option value="UKG">UKG</option>
                 <option value="Grade 1">Grade 1</option>
-                <!-- Add other grades as needed -->
+                <!-- Other options... -->
             </select>
         </div>
         <div class="input-group" style="justify-content: flex-end;">
