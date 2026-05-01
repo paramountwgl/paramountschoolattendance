@@ -107,39 +107,53 @@
         // --- ATTACH TO WINDOW SO HTML BUTTONS CAN SEE THEM ---
         
         window.publishQuiz = async function() {
-            console.log("Publish button clicked...");
-            const targetClass = document.getElementById('quizGrade').value;
-            const title = document.getElementById('quizTitle').value;
+    console.log("Publish button clicked...");
+    const targetClass = document.getElementById('quizGrade').value;
+    const title = document.getElementById('quizTitle').value;
 
-            if (!title || !targetClass) {
-                alert("Missing Title or Class!"); return;
-            }
+    if (!title || !targetClass) {
+        alert("Please fill in Title and Class!");
+        return;
+    }
 
-            const questions = [];
-            document.querySelectorAll('.question-block').forEach((block) => {
-                const opts = Array.from(block.querySelectorAll('.opt')).map(input => input.value);
-                const qId = block.getAttribute('data-q-id');
-                const correct = block.querySelector(`input[name="c_${qId}"]:checked`).value;
-                questions.push({ text: block.querySelector('.questionText').value, options: opts, correctIndex: parseInt(correct) });
-            });
+    const questions = [];
+    document.querySelectorAll('.question-block').forEach((block) => {
+        const opts = Array.from(block.querySelectorAll('.opt')).map(input => input.value);
+        const qId = block.getAttribute('data-q-id');
+        const correct = block.querySelector(`input[name="c_${qId}"]:checked`).value;
+        questions.push({ 
+            text: block.querySelector('.questionText').value, 
+            options: opts, 
+            correctIndex: parseInt(correct) 
+        });
+    });
 
-            try {
-                console.log("Attempting Firebase upload...");
-                await setDoc(doc(db, "live_quizzes", targetClass), {
-                    title, targetClass, isLive: true, activeQuestionIndex: 0, questions, timestamp: new Date().toISOString()
-                });
-                
-                // Show Success Message
-                const toast = document.getElementById("success-toast");
-                toast.classList.add("show");
-                setTimeout(() => toast.classList.remove("show"), 4000);
-                
-                console.log("Upload Success!");
-            } catch (e) {
-                console.error("Firebase Error:", e);
-                alert("Upload failed. Check your browser console (F12) for errors.");
-            }
-        };
+    try {
+        console.log("Attempting Firebase upload to class:", targetClass);
+        
+        // This is the part that might be hanging
+        const docRef = doc(db, "live_quizzes", targetClass);
+        await setDoc(docRef, {
+            title: title,
+            targetClass: targetClass,
+            isLive: true,
+            activeQuestionIndex: 0,
+            questions: questions,
+            timestamp: new Date().toISOString()
+        });
+
+        console.log("Database write successful!");
+        
+        // Show Success Message
+        const toast = document.getElementById("success-toast");
+        toast.classList.add("show");
+        setTimeout(() => toast.classList.remove("show"), 4500);
+
+    } catch (error) {
+        console.error("FULL ERROR DETAILS:", error);
+        alert("Firebase Error: " + error.message);
+    }
+};
 
         window.openCenter = function() {
             const grade = document.getElementById('quizGrade').value;
