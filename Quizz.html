@@ -1,8 +1,9 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <title>Paramount Admin | Professional Assessment Suite</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -305,6 +306,10 @@ input:focus {
                     <option value="Grade 3">Grade 3</option>
                     <option value="Grade 4">Grade 4</option>
                     <option value="Grade 5">Grade 5</option>
+                    <option value="Grade 6">Grade 6</option>
+                    <option value="Grade 7">Grade 7</option>
+                    <option value="Grade 8">Grade 8</option>
+                    
                 </select>
             </div>
             <div class="input-group">
@@ -320,6 +325,55 @@ input:focus {
                 </select>
             </div>
         </div>
+        <!-- STATS / RESULTS SECTION -->
+    <section id="stats" class="content-section">
+        <h2>Class Performance Analytics</h2>
+        <div class="premium-card">
+            <div class="grid-row">
+                <div class="input-group">
+                    <label>Select Grade to Analyze</label>
+                    <select id="statsGrade" onchange="loadClassResults()">
+                        <option value="" disabled selected>Select Grade</option>
+                    <option value="Pre-KG">Pre-KG</option>
+                    <option value="LKG">LKG</option>
+                    <option value="UKG">UKG</option>
+                    <option value="Grade 1">Grade 1</option>
+                    <option value="Grade 2">Grade 2</option>
+                    <option value="Grade 3">Grade 3</option>
+                    <option value="Grade 4">Grade 4</option>
+                    <option value="Grade 5">Grade 5</option>
+                    <option value="Grade 6">Grade 6</option>
+                    <option value="Grade 7">Grade 7</option>
+                    <option value="Grade 8">Grade 8</option>
+                    </select>
+                </div>
+                <div id="classOverview" style="display:flex; flex-direction:column; justify-content:center;">
+                    <p style="margin:0; font-weight:700; color:var(--forest);">Submissions: <span id="statCount">0</span></p>
+                    <p style="margin:0; font-weight:700; color:var(--gold);">Class Average: <span id="statAvg">0%</span></p>
+                </div>
+            </div>
+            
+            <!-- Chart Container -->
+            <div style="height: 300px; margin-top: 30px;">
+                <canvas id="performanceChart"></canvas>
+            </div>
+        </div>
+
+        <div class="premium-card">
+            <label>Detailed Student Scoreboard</label>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Roll No</th>
+                        <th>Student Name</th>
+                        <th>Score</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="statsTableBody"></tbody>
+            </table>
+        </div>
+    </section>
         <div class="input-wrapper-full">
             <label>Quiz Title (Visible to Students)</label>
             <input type="text" id="quizTitle" placeholder="e.g. End of Term Excellence Assessment">
@@ -372,6 +426,100 @@ input:focus {
         document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
         document.getElementById(id).classList.add('active');
     };
+       let myChart = null;
+
+window.loadClassResults = async function() {
+    const targetClass = document.getElementById('statsGrade').value;
+    const tableBody = document.getElementById('statsTableBody');
+    const responseRef = collection(db, `live_quizzes/${targetClass}/responses`);
+    
+    // Get all response documents for this class
+    const querySnapshot = await getDocs(responseRef);
+    const studentScores = {}; // To group Q1, Q2, etc., by student
+    
+    querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        const studentId = data.rollNo;
+        
+        if (!studentScores[studentId]) {
+            studentScores[studentId] = { 
+                name: data.studentName, 
+                correct: 0, 
+                total: 0, 
+                status: "Ongoing" 
+            };
+        }
+        
+        // If it's a question response
+        if (data.qIdx !== undefined) {
+            studentScores[studentId].total++;
+            if (data.correct) studentScores[studentId].correct++;
+        }
+        
+        // If it's a status document
+        if (data.status) {
+            studentScores[studentId].status = data.status;
+        }
+    });
+
+    // Process data for Table and Chart
+    tableBody.innerHTML = '';
+    const labels = [];
+    const scores = [];
+    let classTotalScore = 0;
+    let studentCount = 0;
+
+    for (const roll in studentScores) {
+        const student = studentScores[roll];
+        const percentage = student.total > 0 ? Math.round((student.correct / student.total) * 100) : 0;
+        
+        labels.push(student.name);
+        scores.push(percentage);
+        classTotalScore += percentage;
+        studentCount++;
+
+        tableBody.innerHTML += `
+            <tr>
+                <td>${roll}</td>
+                <td>${student.name}</td>
+                <td style="font-weight:700; color:var(--forest);">${percentage}%</td>
+                <td><span style="padding:4px 8px; border-radius:10px; font-size:0.7rem; background:#f1f5f9;">${student.status}</span></td>
+            </tr>`;
+    }
+
+    // Update Overview Stats
+    document.getElementById('statCount').innerText = studentCount;
+    document.getElementById('statAvg').innerText = studentCount > 0 ? Math.round(classTotalScore / studentCount) + "%" : "0%";
+
+    renderChart(labels, scores);
+};
+
+function renderChart(labels, data) {
+    const ctx = document.getElementById('performanceChart').getContext('2d');
+    
+    if (myChart) myChart.destroy(); // Clean up old chart
+
+    myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Student Score %',
+                data: data,
+                backgroundColor: '#d4af37',
+                borderRadius: 10,
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: { beginAtZero: true, max: 100 }
+            }
+        }
+    });
+}
 
     window.reconductQuiz = async (quizId) => {
         if(confirm("Reconducting will signal a new session. Continue?")) {
