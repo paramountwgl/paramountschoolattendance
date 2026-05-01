@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Paramount | Quiz Creator & Publisher</title>
+    <title>Paramount | Quiz Creator</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="icon" type="image/png" href="logo.png">
     <style>
@@ -25,6 +25,7 @@
         .btn { padding: 12px 25px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; transition: 0.3s; }
         .btn-primary { background: var(--primary); color: white; }
         .btn-accent { background: var(--accent); color: white; }
+        .btn-outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
         .delete-q { position: absolute; top: 10px; right: 10px; color: #ff5252; cursor: pointer; font-size: 0.8rem; }
     </style>
 </head>
@@ -39,7 +40,9 @@
         <div class="header-flex">
             <h1>Quiz Builder</h1>
             <div style="display: flex; gap: 10px;">
-                <button class="btn btn-primary" onclick="publishQuiz()">Publish & Open Center</button>
+                <!-- SEPARATED BUTTONS -->
+                <button class="btn btn-outline" onclick="publishQuiz()">Publish Quiz</button>
+                <button class="btn btn-primary" onclick="openControlCenter()">Open Control Center</button>
             </div>
         </div>
 
@@ -83,19 +86,20 @@
         <button class="btn" style="background:#e8eaf6; color:var(--primary);" onclick="addQuestion()">+ Add Question</button>
     </div>
 
-    <!-- FIREBASE SDK -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // TODO: REPLACE WITH YOUR FIREBASE CONFIG
+        // IMPORTANT: You must replace these with your actual Firebase project keys
         const firebaseConfig = {
-            apiKey: "AIzaSy...",
-            authDomain: "your-project.firebaseapp.com",
-            projectId: "your-project-id",
-            storageBucket: "your-project.appspot.com",
-            messagingSenderId: "123456789",
-            appId: "1:123456789:web:abcdef"
+            apiKey: "AIzaSyDRYk9KOK-ga0c88dnYMsAoifW2NJTd_Y8",
+            authDomain: "paramount-school-d55bc.firebaseapp.com",
+            databaseURL: "https://paramount-school-d55bc-default-rtdb.firebaseio.com",
+            projectId: "paramount-school-d55bc",
+            storageBucket: "paramount-school-d55bc.firebasestorage.app",
+            messagingSenderId: "130979432562",
+            appId: "1:130979432562:web:4cd94787b23f9daba51aeb",
+            measurementId: "G-ZMZHXB5GFM""
         };
 
         const app = initializeApp(firebaseConfig);
@@ -118,19 +122,25 @@
             document.getElementById('questionsContainer').insertAdjacentHTML('beforeend', html);
         }
 
+        // BUTTON 1: JUST PUBLISH TO DATABASE
         window.publishQuiz = async function() {
             const targetClass = document.getElementById('quizGrade').value;
             const title = document.getElementById('quizTitle').value;
 
             if (!title || !targetClass) {
-                alert("Please fill in Title and Class."); return;
+                alert("Please fill in Title and Class before publishing."); return;
             }
 
             const questions = [];
-            document.querySelectorAll('.question-block').forEach((block, i) => {
+            document.querySelectorAll('.question-block').forEach((block) => {
                 const opts = Array.from(block.querySelectorAll('.opt')).map(input => input.value);
-                const correct = block.querySelector(`input[type="radio"]:checked`).value;
-                questions.push({ text: block.querySelector('.questionText').value, options: opts, correctIndex: parseInt(correct) });
+                const qId = block.getAttribute('data-q-id');
+                const correct = block.querySelector(`input[name="c_${qId}"]:checked`).value;
+                questions.push({ 
+                    text: block.querySelector('.questionText').value, 
+                    options: opts, 
+                    correctIndex: parseInt(correct) 
+                });
             });
 
             const quizData = {
@@ -143,13 +153,23 @@
             };
 
             try {
-                // Pushes to 'live_quizzes' collection using Class Name as Document ID
                 await setDoc(doc(db, "live_quizzes", targetClass), quizData);
-                alert("Published! Redirecting...");
-                window.location.href = "live-quizz-dashboard.html";
+                alert("Quiz Published Successfully to " + targetClass);
             } catch (e) {
-                alert("Error: Check Console"); console.error(e);
+                alert("Upload Failed. Make sure your Firebase Config is correct.");
+                console.error(e);
             }
+        }
+
+        // BUTTON 2: JUST REDIRECT TO CONTROL CENTER
+        window.openControlCenter = function() {
+            const targetClass = document.getElementById('quizGrade').value;
+            if (!targetClass) {
+                alert("Please select a Class first so the Control Center knows which quiz to manage.");
+                return;
+            }
+            // Redirects to your dashboard file
+            window.location.href = "live-quizz-dashboard.html";
         }
     </script>
 </body>
