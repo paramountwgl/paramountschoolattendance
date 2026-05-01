@@ -333,14 +333,20 @@ input:focus {
 </div>
 
     <!-- 3. Bottom Action Area -->
+    <!-- 3. Bottom Action Area -->
     <div style="margin-top: 20px; display: flex; flex-direction: column; gap: 20px; padding-bottom: 80px;">
         <button class="btn btn-outline" onclick="addNewQuestion()">
             <i class="fa-solid fa-plus"></i> ADD NEXT QUESTION
         </button>
         
-        <button class="btn btn-gold" onclick="publishQuiz()" style="height: 65px; font-size: 1.1rem;">
-            <i class="fa-solid fa-cloud-arrow-up"></i> FINAL PUBLISH TO STUDENT PORTAL
-        </button>
+        <div style="display: grid; grid-template-columns: 1fr 3fr; gap: 20px;">
+            <button class="btn" onclick="clearDesigner()" style="background: #f1f5f9; color: #475569; border-radius: 14px; height: 65px;">
+                <i class="fa-solid fa-eraser"></i> RESET
+            </button>
+            <button class="btn btn-gold" onclick="publishQuiz()" style="height: 65px; font-size: 1.1rem;">
+                <i class="fa-solid fa-cloud-arrow-up"></i> FINAL PUBLISH TO STUDENT PORTAL
+            </button>
+        </div>
     </div>
 </section>
 
@@ -482,6 +488,21 @@ input:focus {
         document.getElementById('modalBody').innerHTML = html;
         document.getElementById('viewModal').style.display = 'block';
     };
+       
+       window.clearDesigner = function() {
+    if(confirm("Are you sure you want to clear all data? This will reset the metadata and remove all added questions.")) {
+        // Reset Dropdowns and Inputs
+        document.getElementById('quizGrade').selectedIndex = 0;
+        document.getElementById('quizSubject').selectedIndex = 0;
+        document.getElementById('quizTitle').value = "";
+        
+        // Clear the questions container
+        document.getElementById('questionsContainer').innerHTML = "";
+        
+        // Scroll back to top smoothly
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+};
 
     window.addNewQuestion = function() {
     const id = Date.now();
