@@ -11,6 +11,9 @@
             --forest: #064e3b; --gold: #d4af37; --white: #ffffff; --bg: #fdfdfb;
             --danger: #991b1b; --shadow: 0 10px 40px rgba(6, 78, 59, 0.12);
         }
+        .btn-info { background: #0284c7; color: white; }
+        .btn-reconduct { background: #10b981; color: white; }
+        .btn i { margin-right: 5px; }
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg); margin: 0; display: flex; min-height: 100vh; }
 
         /* --- SIDEBAR --- */
@@ -219,15 +222,25 @@
             snapshot.forEach(doc => {
                 const quiz = doc.data();
                 tbody.innerHTML += `
-                    <tr>
-                        <td style="display:flex; gap:10px; justify-content:center;">
-    <button class="btn btn-info" onclick='viewQuiz(${JSON.stringify(quiz)})'><i class="fa-solid fa-eye"></i> View</button>
-    <button class="btn btn-reconduct" onclick="reconductQuiz('${quizId}')"><i class="fa-solid fa-rotate-right"></i> Reconduct</button>
-    <button class="btn btn-danger" onclick="deleteQuiz('${quizId}')"><i class="fa-solid fa-trash"></i> Delete</button>
-</td>
-                    </tr>`;
-            });
-        });
+            <tr>
+                <td><strong>${quiz.title}</strong></td>
+                <td>${quiz.subject}</td>
+                <td>${quiz.targetClass}</td>
+                <td>${quiz.duration} Mins</td>
+                <td style="display:flex; gap:10px; justify-content:center;">
+                    <button class="btn btn-info" onclick='viewQuiz(${JSON.stringify(quiz)})'>
+                        <i class="fa-solid fa-eye"></i> View
+                    </button>
+                    <button class="btn btn-reconduct" style="background:#10b981; color:white;" onclick="reconductQuiz('${quizId}')">
+                        <i class="fa-solid fa-rotate-right"></i> Reconduct
+                    </button>
+                    <button class="btn btn-danger" onclick="deleteQuiz('${quizId}')">
+                        <i class="fa-solid fa-trash"></i> Delete
+                    </button>
+                </td>
+            </tr>`;
+    });
+});
 
         window.deleteQuiz = async (id) => {
             if(confirm("Delete this quiz?")) await deleteDoc(doc(db, "live_quizzes", id));
