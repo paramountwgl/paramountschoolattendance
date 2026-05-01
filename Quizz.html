@@ -91,10 +91,11 @@ body {
 }
 
         /* --- FORM ELEMENTS --- */
-        .grid-row { 
+       .grid-row { 
     display: grid; 
-    /* This creates two equal columns with a clear 30px gap between them */
-    grid-template-columns: 1fr 1fr; 
+    /* Subject gets 40% width, Title gets 60% width */
+    grid-template-columns: 0.8fr 1.2fr; 
+    /* This creates the physical separation gap */
     gap: 30px; 
     margin-bottom: 30px; 
     width: 100%;
@@ -131,10 +132,9 @@ body {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
     transition: all 0.3s ease;
 }
-        .input-group {
+        ..input-group {
     display: flex;
     flex-direction: column;
-    /* Ensures the group stays contained and doesn't bleed into the next column */
     width: 100%; 
 }
         
@@ -232,40 +232,38 @@ input:focus {
     <section id="builder" class="content-section">
         <h2>Assessment Designer</h2>
         
-        <div class="premium-card">
-            <div class="grid-row">
-                <div class="input-group">
-                    <label>Assessment Subject</label>
-                    <input type="text" id="quizSubject" placeholder="e.g. Mathematics">
-                </div>
-                <div class="input-group">
-                    <label>Quiz Title (Visible to Students)</label>
-                    <input type="text" id="quizTitle" placeholder="e.g. Mid-Term Excellence Test">
-                </div>
-            </div>
-            <div class="grid-row" style="margin-top: 20px;">
-                <div class="input-group">
-                    <label>Target Class</label>
-                    <select id="quizGrade">
-                        <option value="Pre-KG">Pre-KG</option>
-                        <option value="LKG">LKG</option>
-                        <option value="UKG">UKG</option>
-                        <option value="Grade 1">Grade 1</option>
-                        <option value="Grade 2">Grade 2</option>
-                        <option value="Grade 3">Grade 3</option>
-                        <option value="Grade 4">Grade 4</option>
-                        <option value="Grade 5">Grade 5</option>
-                    </select>
-                </div>
-                <!-- Action Button inside the Metadata Card -->
-                <div class="input-group" style="display: flex; align-items: flex-end;">
-                    <button class="btn btn-gold" style="width: 100%; height: 50px;" onclick="publishQuiz()">
-                        <i class="fa-solid fa-cloud-arrow-up"></i> Publish to Portal
-                    </button>
-                </div>
-            </div>
+       <div class="premium-card">
+    <!-- Row 1: Subject (Smaller) and Title (Larger) -->
+    <div class="grid-row">
+        <div class="input-group">
+            <label>Assessment Subject</label>
+            <input type="text" id="quizSubject" placeholder="e.g. Mathematics">
         </div>
+        <div class="input-group">
+            <label>Quiz Title (Visible to Students)</label>
+            <input type="text" id="quizTitle" placeholder="e.g. Mid-Term Excellence Test">
+        </div>
+    </div>
 
+    <!-- Row 2: Grade and Publish Button -->
+    <div class="grid-row">
+        <div class="input-group">
+            <label>Target Class</label>
+            <select id="quizGrade">
+                <option value="Pre-KG">Pre-KG</option>
+                <option value="LKG">LKG</option>
+                <option value="UKG">UKG</option>
+                <option value="Grade 1">Grade 1</option>
+                <!-- Add other grades as needed -->
+            </select>
+        </div>
+        <div class="input-group" style="justify-content: flex-end;">
+            <button class="btn btn-gold" style="width: 100%; height: 56px;" onclick="publishQuiz()">
+                <i class="fa-solid fa-cloud-arrow-up"></i> PUBLISH TO PORTAL
+            </button>
+        </div>
+    </div>
+</div>
         <div id="questionsContainer">
             <!-- Questions load here -->
         </div>
