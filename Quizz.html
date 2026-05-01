@@ -3,299 +3,153 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Paramount | Quiz Creator</title>
+    <title>Paramount | Quiz Creator & Publisher</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-   <link rel="icon" type="image/png" href="logo.png">
+    <link rel="icon" type="image/png" href="logo.png">
     <style>
         :root {
-            --primary: #1a237e; /* Premium Navy */
-            --accent: #00c853;  /* Success Green */
-            --bg: #f4f7fe;
-            --white: #ffffff;
-            --text: #2c3e50;
-            --shadow: 0 10px 30px rgba(0,0,0,0.08);
+            --primary: #1a237e; --accent: #00c853; --bg: #f4f7fe;
+            --white: #ffffff; --text: #2c3e50; --shadow: 0 10px 30px rgba(0,0,0,0.08);
         }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            margin: 0;
-            display: flex;
-        }
-
-        /* Sidebar Styling */
-        .sidebar {
-            width: 260px;
-            background: var(--primary);
-            height: 100vh;
-            color: white;
-            position: fixed;
-            padding: 30px 20px;
-        }
-
-        .sidebar h2 {
-            font-size: 1.2rem;
-            letter-spacing: 1px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            padding-bottom: 20px;
-        }
-
-        /* Main Content */
-        .main-content {
-            margin-left: 300px;
-            padding: 40px;
-            width: calc(100% - 340px);
-        }
-
-        .header-flex {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-        }
-
-        .premium-card {
-            background: var(--white);
-            border-radius: 16px;
-            padding: 30px;
-            box-shadow: var(--shadow);
-            margin-bottom: 25px;
-        }
-
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); margin: 0; display: flex; }
+        .sidebar { width: 260px; background: var(--primary); height: 100vh; color: white; position: fixed; padding: 30px 20px; }
+        .main-content { margin-left: 300px; padding: 40px; width: calc(100% - 340px); }
+        .header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .premium-card { background: var(--white); border-radius: 16px; padding: 30px; box-shadow: var(--shadow); margin-bottom: 25px; }
         .input-group { margin-bottom: 20px; }
-        
-        label { 
-            display: block; 
-            font-weight: 600; 
-            margin-bottom: 8px; 
-            font-size: 0.9rem;
-            color: var(--primary);
-        }
-
-        input[type="text"], input[type="number"], select, textarea {
-            width: 100%;
-            padding: 12px;
-            border: 1.5px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: all 0.3s;
-        }
-
-        input:focus { border-color: var(--primary); outline: none; }
-
-        /* Question Blocks */
-        .question-block {
-            border-left: 5px solid var(--primary);
-            position: relative;
-        }
-
-        .options-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-top: 15px;
-        }
-
-        .option-item {
-            display: flex;
-            align-items: center;
-            background: #f9f9f9;
-            padding: 10px;
-            border-radius: 8px;
-        }
-
-        .option-item input[type="radio"] { margin-right: 10px; cursor: pointer; }
-
-        /* Buttons */
-        .btn {
-            padding: 12px 25px;
-            border-radius: 8px;
-            border: none;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
+        label { display: block; font-weight: 600; margin-bottom: 8px; color: var(--primary); }
+        input, select, textarea { width: 100%; padding: 12px; border: 1.5px solid #e0e0e0; border-radius: 8px; font-size: 1rem; box-sizing: border-box; }
+        .question-block { border-left: 5px solid var(--primary); position: relative; }
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px; }
+        .option-item { display: flex; align-items: center; background: #f9f9f9; padding: 10px; border-radius: 8px; }
+        .btn { padding: 12px 25px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; transition: 0.3s; }
         .btn-primary { background: var(--primary); color: white; }
         .btn-accent { background: var(--accent); color: white; }
-        .btn-add { background: #e8eaf6; color: var(--primary); margin-top: 10px; }
-
-        .btn:hover { opacity: 0.9; transform: translateY(-2px); }
-
-        .delete-q {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            color: #ff5252;
-            cursor: pointer;
-            font-weight: bold;
-        }
+        .delete-q { position: absolute; top: 10px; right: 10px; color: #ff5252; cursor: pointer; font-size: 0.8rem; }
     </style>
 </head>
 <body>
 
     <div class="sidebar">
         <h2>PARAMOUNT</h2>
-        <p style="font-size: 0.8rem; opacity: 0.7;">Quiz Management Portal</p>
-        <div style="margin-top: 50px;">
-            <p>Dashboard</p>
-            <p><strong>Create Quiz</strong></p>
-            <p>Previous Results</p>
-        </div>
+        <p style="opacity: 0.7;">Management Portal</p>
     </div>
 
     <div class="main-content">
         <div class="header-flex">
-    <h1>New Assessment</h1>
-    <div style="display: flex; gap: 10px;">
-        <!-- New Control Center Button -->
-        <button class="btn btn-primary" onclick="goToControlCenter()" style="background: var(--accent);">
-            Open Control Center 
-        </button>
-        <button class="btn btn-accent" onclick="saveQuiz()">
-            Save & Generate Link
-        </button>
-    </div>
-</div>
+            <h1>Quiz Builder</h1>
+            <div style="display: flex; gap: 10px;">
+                <button class="btn btn-primary" onclick="publishQuiz()">Publish & Open Center</button>
+            </div>
+        </div>
 
-        <!-- Quiz Meta Data -->
         <div class="premium-card">
             <div class="input-group">
-                <label>Assessment Title (Visible to Parents)</label>
-                <input type="text" id="quizTitle" placeholder="e.g. Mathematics Weekly Unit Test - April 2026">
+                <label>Assessment Title</label>
+                <input type="text" id="quizTitle" placeholder="e.g. Science Monthly Test">
             </div>
             <div style="display: flex; gap: 20px;">
                 <div class="input-group" style="flex: 1;">
-    <label>Publish to Class</label>
-    <select id="quizGrade">
-        <option value="" disabled selected>Select Class</option>
-        <option value="Pre-KG">Pre-KG</option>
-        <option value="LKG">LKG</option>
-        <option value="UKG">UKG</option>
-        <option value="Grade 1">Grade 1</option>
-        <option value="Grade 2">Grade 2</option>
-        <option value="Grade 3">Grade 3</option>
-        <option value="Grade 4">Grade 4</option>
-        <option value="Grade 5">Grade 5</option>
-        <option value="Grade 6">Grade 6</option>
-        <option value="Grade 7">Grade 7</option>
-        <option value="Grade 8">Grade 8</option>
-    </select>
-</div>
+                    <label>Target Class</label>
+                    <select id="quizGrade">
+                        <option value="" disabled selected>Select Class</option>
+                        <option value="LKG">LKG</option><option value="UKG">UKG</option>
+                        <option value="Grade 1">Grade 1</option><option value="Grade 2">Grade 2</option>
+                        <option value="Grade 3">Grade 3</option><option value="Grade 4">Grade 4</option>
+                        <option value="Grade 5">Grade 5</option>
+                    </select>
+                </div>
                 <div class="input-group" style="flex: 1;">
-                    <label>Passing Percentage (%)</label>
+                    <label>Passing %</label>
                     <input type="number" id="passPercent" value="40">
                 </div>
             </div>
         </div>
 
-        <!-- Questions Container -->
         <div id="questionsContainer">
-            <!-- Question 1 (Default) -->
             <div class="premium-card question-block" data-q-id="1">
-                <span class="delete-q" onclick="this.parentElement.remove()">Remove</span>
-                <div class="input-group">
-                    <label>Question 1</label>
-                    <textarea class="questionText" placeholder="Enter the question for the students..."></textarea>
-                </div>
+                <span class="delete-q" onclick="this.parentElement.remove()">[REMOVE]</span>
+                <label>Question 1</label>
+                <textarea class="questionText" placeholder="Enter question..."></textarea>
                 <div class="options-grid">
-                    <div class="option-item">
-                        <input type="radio" name="correct_1" value="0" checked>
-                        <input type="text" class="opt" placeholder="Option 1 (Correct)">
-                    </div>
-                    <div class="option-item">
-                        <input type="radio" name="correct_1" value="1">
-                        <input type="text" class="opt" placeholder="Option 2">
-                    </div>
-                    <div class="option-item">
-                        <input type="radio" name="correct_1" value="2">
-                        <input type="text" class="opt" placeholder="Option 3">
-                    </div>
-                    <div class="option-item">
-                        <input type="radio" name="correct_1" value="3">
-                        <input type="text" class="opt" placeholder="Option 4">
-                    </div>
+                    <div class="option-item"><input type="radio" name="c_1" value="0" checked><input type="text" class="opt" placeholder="Option 1 (Correct)"></div>
+                    <div class="option-item"><input type="radio" name="c_1" value="1"><input type="text" class="opt" placeholder="Option 2"></div>
+                    <div class="option-item"><input type="radio" name="c_1" value="2"><input type="text" class="opt" placeholder="Option 3"></div>
+                    <div class="option-item"><input type="radio" name="c_1" value="3"><input type="text" class="opt" placeholder="Option 4"></div>
                 </div>
             </div>
         </div>
 
-        <button class="btn btn-add" onclick="addQuestion()">+ Add Next Question</button>
+        <button class="btn" style="background:#e8eaf6; color:var(--primary);" onclick="addQuestion()">+ Add Question</button>
     </div>
 
-    <script>
-        let questionCount = 1;
+    <!-- FIREBASE SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        function addQuestion() {
-            questionCount++;
-            const container = document.getElementById('questionsContainer');
-            const qHtml = `
-                <div class="premium-card question-block" data-q-id="${questionCount}">
-                    <span class="delete-q" onclick="this.parentElement.remove()">Remove</span>
-                    <div class="input-group">
-                        <label>Question ${questionCount}</label>
-                        <textarea class="questionText" placeholder="Enter the question..."></textarea>
-                    </div>
+        // TODO: REPLACE WITH YOUR FIREBASE CONFIG
+        const firebaseConfig = {
+            apiKey: "AIzaSy...",
+            authDomain: "your-project.firebaseapp.com",
+            projectId: "your-project-id",
+            storageBucket: "your-project.appspot.com",
+            messagingSenderId: "123456789",
+            appId: "1:123456789:web:abcdef"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        window.addQuestion = function() {
+            const count = document.querySelectorAll('.question-block').length + 1;
+            const html = `
+                <div class="premium-card question-block" data-q-id="${count}">
+                    <span class="delete-q" onclick="this.parentElement.remove()">[REMOVE]</span>
+                    <label>Question ${count}</label>
+                    <textarea class="questionText" placeholder="Enter question..."></textarea>
                     <div class="options-grid">
-                        <div class="option-item"><input type="radio" name="correct_${questionCount}" value="0" checked><input type="text" class="opt" placeholder="Option 1"></div>
-                        <div class="option-item"><input type="radio" name="correct_${questionCount}" value="1"><input type="text" class="opt" placeholder="Option 2"></div>
-                        <div class="option-item"><input type="radio" name="correct_${questionCount}" value="2"><input type="text" class="opt" placeholder="Option 3"></div>
-                        <div class="option-item"><input type="radio" name="correct_${questionCount}" value="3"><input type="text" class="opt" placeholder="Option 4"></div>
+                        <div class="option-item"><input type="radio" name="c_${count}" value="0" checked><input type="text" class="opt" placeholder="Option 1"></div>
+                        <div class="option-item"><input type="radio" name="c_${count}" value="1"><input type="text" class="opt" placeholder="Option 2"></div>
+                        <div class="option-item"><input type="radio" name="c_${count}" value="2"><input type="text" class="opt" placeholder="Option 3"></div>
+                        <div class="option-item"><input type="radio" name="c_${count}" value="3"><input type="text" class="opt" placeholder="Option 4"></div>
                     </div>
                 </div>`;
-            container.insertAdjacentHTML('beforeend', qHtml);
+            document.getElementById('questionsContainer').insertAdjacentHTML('beforeend', html);
         }
-     function goToControlCenter() {
-    const title = document.getElementById('quizTitle').value;
-    const selectedClass = document.getElementById('quizGrade').value;
-    
-    // Validate that both title and class are selected
-    if (!title) {
-        alert("Please enter a Quiz Title.");
-        return;
-    }
-    if (!selectedClass) {
-        alert("Please select a target Class to publish the quiz.");
-        return;
-    }
 
-    // Logic: In a real system, you'd save the 'selectedClass' to the database here
-    // so the student page knows to only show it to that specific class.
+        window.publishQuiz = async function() {
+            const targetClass = document.getElementById('quizGrade').value;
+            const title = document.getElementById('quizTitle').value;
 
-    console.log("Publishing quiz to: " + selectedClass);
-    
-    // Redirect to the live dashboard
-    window.location.href = "live-quizz-dashboard.html";
-}
+            if (!title || !targetClass) {
+                alert("Please fill in Title and Class."); return;
+            }
 
-        function saveQuiz() {
-            const quizData = {
-                title: document.getElementById('quizTitle').value,
-                grade: document.getElementById('quizGrade').value,
-                passing: document.getElementById('passPercent').value,
-                timestamp: new Date().toISOString(),
-                questions: []
-            };
-
-            const blocks = document.querySelectorAll('.question-block');
-            blocks.forEach((block, index) => {
-                const qText = block.querySelector('.questionText').value;
-                const options = Array.from(block.querySelectorAll('.opt')).map(input => input.value);
-                const correct = block.querySelector(`input[name="correct_${block.dataset.qId}"]:checked`).value;
-
-                quizData.questions.push({
-                    id: index + 1,
-                    text: qText,
-                    options: options,
-                    correctIndex: parseInt(correct)
-                });
+            const questions = [];
+            document.querySelectorAll('.question-block').forEach((block, i) => {
+                const opts = Array.from(block.querySelectorAll('.opt')).map(input => input.value);
+                const correct = block.querySelector(`input[type="radio"]:checked`).value;
+                questions.push({ text: block.querySelector('.questionText').value, options: opts, correctIndex: parseInt(correct) });
             });
 
-            console.log("Quiz Data Prepared for Database:", quizData);
-            alert("Quiz Saved! Data is structured to generate Parent Reports later.");
-            
-            // Here you would call your Firebase function: 
-            // db.collection("quizzes").add(quizData);
+            const quizData = {
+                title: title,
+                targetClass: targetClass,
+                isLive: true,
+                activeQuestionIndex: 0,
+                questions: questions,
+                timestamp: new Date().toISOString()
+            };
+
+            try {
+                // Pushes to 'live_quizzes' collection using Class Name as Document ID
+                await setDoc(doc(db, "live_quizzes", targetClass), quizData);
+                alert("Published! Redirecting...");
+                window.location.href = "live-quizz-dashboard.html";
+            } catch (e) {
+                alert("Error: Check Console"); console.error(e);
+            }
         }
     </script>
 </body>
