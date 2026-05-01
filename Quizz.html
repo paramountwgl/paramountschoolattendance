@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Paramount | Quiz Builder</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/png" href="logo.png">
     <style>
         :root {
             --primary: #1a237e; --accent: #00c853; --bg: #f4f7fe;
@@ -24,29 +23,15 @@
         .option-item { display: flex; align-items: center; background: #f9f9f9; padding: 10px; border-radius: 8px; }
         .btn { padding: 12px 25px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; transition: 0.3s; }
         .btn-primary { background: var(--primary); color: white; }
-        .btn-accent { background: var(--accent); color: white; }
         .btn-outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
-        .delete-q { position: absolute; top: 10px; right: 10px; color: #ff5252; cursor: pointer; font-size: 0.8rem; }
 
-        /* Success Toast Notification */
         #success-toast {
-            visibility: hidden;
-            min-width: 300px;
-            background-color: var(--accent);
-            color: #fff;
-            text-align: center;
-            border-radius: 12px;
-            padding: 16px;
-            position: fixed;
-            z-index: 1000;
-            right: 30px;
-            top: 30px;
-            font-weight: 600;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            visibility: hidden; min-width: 300px; background-color: var(--accent);
+            color: #fff; text-align: center; border-radius: 12px; padding: 16px;
+            position: fixed; z-index: 1000; right: 30px; top: 30px; font-weight: 600;
         }
-        #success-toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 4s; }
+        #success-toast.show { visibility: visible; animation: fadein 0.5s; }
         @keyframes fadein { from {top: 0; opacity: 0;} to {top: 30px; opacity: 1;} }
-        @keyframes fadeout { from {top: 30px; opacity: 1;} to {top: 0; opacity: 0;} }
     </style>
 </head>
 <body>
@@ -62,8 +47,9 @@
         <div class="header-flex">
             <h1>Create Assessment</h1>
             <div style="display: flex; gap: 10px;">
-                <button class="btn btn-outline" id="publishBtn">Publish Quiz</button>
-                <button class="btn btn-primary" id="controlCenterBtn">Open Control Center</button>
+                <!-- Using onclick again but pointing to window functions -->
+                <button class="btn btn-outline" onclick="window.publishQuiz()">Publish Quiz</button>
+                <button class="btn btn-primary" onclick="window.openCenter()">Open Control Center</button>
             </div>
         </div>
 
@@ -78,7 +64,7 @@
                     <select id="quizGrade">
                         <option value="" disabled selected>Select Class</option>
                         <option value="LKG">LKG</option><option value="UKG">UKG</option>
-                        <option value="Grade 1">Grade 1</option><option value="Grade 2">Grade 2</option>
+                        <option value="Grade 1">Grade 1</option>
                         <option value="Grade 5">Grade 5</option>
                     </select>
                 </div>
@@ -96,48 +82,37 @@
                 <div class="options-grid">
                     <div class="option-item"><input type="radio" name="c_1" value="0" checked><input type="text" class="opt" placeholder="Option 1 (Correct)"></div>
                     <div class="option-item"><input type="radio" name="c_1" value="1"><input type="text" class="opt" placeholder="Option 2"></div>
-                    <div class="option-item"><input type="radio" name="c_1" value="2"><input type="text" class="opt" placeholder="Option 3"></div>
-                    <div class="option-item"><input type="radio" name="c_1" value="3"><input type="text" class="opt" placeholder="Option 4"></div>
                 </div>
             </div>
         </div>
-        <button class="btn btn-outline" id="addQuestionBtn" style="width: 100%;">+ Add New Question</button>
+        <button class="btn btn-outline" onclick="window.addNewQuestion()" style="width: 100%;">+ Add New Question</button>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // ENTER YOUR REAL KEYS HERE
         const firebaseConfig = {
             apiKey: "AIzaSyDRYk9KOK-ga0c88dnYMsAoifW2NJTd_Y8",
             authDomain: "paramount-school-d55bc.firebaseapp.com",
-            databaseURL: "https://paramount-school-d55bc-default-rtdb.firebaseio.com",
             projectId: "paramount-school-d55bc",
             storageBucket: "paramount-school-d55bc.firebasestorage.app",
             messagingSenderId: "130979432562",
             appId: "1:130979432562:web:4cd94787b23f9daba51aeb"
- 
         };
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Function: Show the Success Toast
-        function showToast() {
-            const toast = document.getElementById("success-toast");
-            toast.className = "show";
-            setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 4500);
-        }
-
-        // Logic: Publish Quiz
-        async function publishQuiz() {
+        // --- ATTACH TO WINDOW SO HTML BUTTONS CAN SEE THEM ---
+        
+        window.publishQuiz = async function() {
+            console.log("Publish button clicked...");
             const targetClass = document.getElementById('quizGrade').value;
             const title = document.getElementById('quizTitle').value;
 
             if (!title || !targetClass) {
-                alert("Please fill in the Quiz Title and Class first.");
-                return;
+                alert("Missing Title or Class!"); return;
             }
 
             const questions = [];
@@ -145,54 +120,46 @@
                 const opts = Array.from(block.querySelectorAll('.opt')).map(input => input.value);
                 const qId = block.getAttribute('data-q-id');
                 const correct = block.querySelector(`input[name="c_${qId}"]:checked`).value;
-                questions.push({ 
-                    text: block.querySelector('.questionText').value, 
-                    options: opts, 
-                    correctIndex: parseInt(correct) 
-                });
+                questions.push({ text: block.querySelector('.questionText').value, options: opts, correctIndex: parseInt(correct) });
             });
 
             try {
+                console.log("Attempting Firebase upload...");
                 await setDoc(doc(db, "live_quizzes", targetClass), {
-                    title: title,
-                    targetClass: targetClass,
-                    isLive: true,
-                    activeQuestionIndex: 0,
-                    questions: questions,
-                    timestamp: new Date().toISOString()
+                    title, targetClass, isLive: true, activeQuestionIndex: 0, questions, timestamp: new Date().toISOString()
                 });
-                showToast(); // Show the message you requested
+                
+                // Show Success Message
+                const toast = document.getElementById("success-toast");
+                toast.classList.add("show");
+                setTimeout(() => toast.classList.remove("show"), 4000);
+                
+                console.log("Upload Success!");
             } catch (e) {
-                console.error(e);
-                alert("Firebase Error: Make sure your configuration keys are correct.");
+                console.error("Firebase Error:", e);
+                alert("Upload failed. Check your browser console (F12) for errors.");
             }
-        }
+        };
 
-        // Event Listeners (Safer for Type="Module")
-        document.getElementById('publishBtn').addEventListener('click', publishQuiz);
-        
-        document.getElementById('controlCenterBtn').addEventListener('click', () => {
-            const targetClass = document.getElementById('quizGrade').value;
-            if (!targetClass) return alert("Select a class first.");
+        window.openCenter = function() {
+            const grade = document.getElementById('quizGrade').value;
+            if(!grade) return alert("Select a class first.");
             window.location.href = "live-quizz-dashboard.html";
-        });
+        };
 
-        document.getElementById('addQuestionBtn').addEventListener('click', () => {
+        window.addNewQuestion = function() {
             const count = document.querySelectorAll('.question-block').length + 1;
             const html = `
                 <div class="premium-card question-block" data-q-id="${count}">
-                    <span class="delete-q" onclick="this.parentElement.remove()">[REMOVE]</span>
                     <label>Question ${count}</label>
                     <textarea class="questionText" placeholder="Enter question..."></textarea>
                     <div class="options-grid">
                         <div class="option-item"><input type="radio" name="c_${count}" value="0" checked><input type="text" class="opt" placeholder="Option 1"></div>
                         <div class="option-item"><input type="radio" name="c_${count}" value="1"><input type="text" class="opt" placeholder="Option 2"></div>
-                        <div class="option-item"><input type="radio" name="c_${count}" value="2"><input type="text" class="opt" placeholder="Option 3"></div>
-                        <div class="option-item"><input type="radio" name="c_${count}" value="3"><input type="text" class="opt" placeholder="Option 4"></div>
                     </div>
                 </div>`;
             document.getElementById('questionsContainer').insertAdjacentHTML('beforeend', html);
-        });
+        };
     </script>
 </body>
 </html>
