@@ -255,22 +255,30 @@ input:focus {
     </style>
 </head>
 <body>
-    <div id="teacherLoginOverlay" style="position:fixed; top:0; left:0; width:100%; height:100%; background:var(--forest); z-index:9999; display:flex; justify-content:center; align-items:center; flex-direction:column; color:white;">
+   <!-- TEACHER GATEKEEPER OVERLAY -->
+<div id="teacherLoginOverlay" style="position:fixed; top:0; left:0; width:100%; height:100%; background:var(--forest); z-index:9999; display:flex; justify-content:center; align-items:center; flex-direction:column; color:white;">
     <img src="logo.png" style="width:100px; margin-bottom:20px;">
     <h1 style="font-family:'Playfair Display'; margin-bottom:10px;">Teacher Portal Access</h1>
-    <p style="opacity:0.8; margin-bottom:30px;">Select your profile to manage your classes</p>
     
     <div class="premium-card" style="width:400px; padding:40px;">
         <div class="input-group">
             <label style="color:var(--forest)">Select Your Name</label>
-            <select id="teacherSelect" style="border:1.5px solid #ddd;">
+            <select id="teacherSelect" style="border:1.5px solid #ddd; margin-bottom: 20px;">
                 <option value="" disabled selected>Identify Yourself</option>
                 <option value="teacher_primary">Ms. Aruna (Primary English)</option>
                 <option value="teacher_high">Mr. Rajesh (Higher Math/Science)</option>
                 <option value="teacher_pre">Mrs. Suman (Pre-Primary GK)</option>
             </select>
         </div>
-        <button class="btn btn-gold" onclick="handleTeacherLogin()" style="width:100%; margin-top:20px;">ACCESS MY DASHBOARD</button>
+
+        <div class="input-group">
+            <label style="color:var(--forest)">Enter Secret Password</label>
+            <input type="password" id="teacherPassword" placeholder="••••••••" style="border:1.5px solid #ddd;">
+        </div>
+
+        <button class="btn btn-gold" onclick="handleTeacherLogin()" style="width:100%; margin-top:25px;">
+            VERIFY & ACCESS DASHBOARD
+        </button>
     </div>
 </div>
     
@@ -430,16 +438,19 @@ const teacherData = {
     "teacher_primary": {
         name: "Ms. Aruna",
         subject: "English",
-        classes: ["Grade 1", "Grade 2", "Grade 3", "Grade 4", "Grade 5"]
+        password: "p123", // Change these to secure passwords
+        classes: ["Pre-KG", "LKG", "UKG", "Grade 1", "Grade 2", "Grade 3", "Grade 4", "Grade 5"]
     },
     "teacher_high": {
         name: "Mr. Rajesh",
         subject: "Mathematics",
+        password: "m456",
         classes: ["Grade 6", "Grade 7", "Grade 8"]
     },
     "teacher_pre": {
         name: "Mrs. Suman",
         subject: "General Knowledge",
+        password: "g789",
         classes: ["Pre-KG", "LKG", "UKG"]
     }
 };
@@ -449,21 +460,32 @@ let currentTeacher = null;
 // 2. LOGIN HANDLER
 window.handleTeacherLogin = function() {
     const selectedId = document.getElementById('teacherSelect').value;
-    if (!selectedId) { alert("Please select your name."); return; }
+    const enteredPass = document.getElementById('teacherPassword').value;
 
-    currentTeacher = teacherData[selectedId];
+    if (!selectedId) { 
+        alert("Please select your name first."); 
+        return; 
+    }
     
-    // Hide Overlay
-    document.getElementById('teacherLoginOverlay').style.display = 'none';
-    
-    // Update UI Labels
-    document.getElementById('activeTeacherName').innerText = currentTeacher.name;
-    
-    // Filter all Dropdowns in the app
-    populateFilteredDropdowns();
-    
-    // Refresh Dashboard to only show current teacher's subject
-    refreshDashboard();
+    const teacherProfile = teacherData[selectedId];
+
+    // Password Validation Logic
+    if (enteredPass === teacherProfile.password) {
+        currentTeacher = teacherProfile;
+        
+        // Hide Overlay
+        document.getElementById('teacherLoginOverlay').style.display = 'none';
+        
+        // Update UI
+        document.getElementById('activeTeacherName').innerText = currentTeacher.name;
+        
+        // Run Filtering
+        populateFilteredDropdowns();
+        console.log("Teacher Verified: " + currentTeacher.name);
+    } else {
+        alert("Incorrect password. Please try again.");
+        document.getElementById('teacherPassword').value = ""; // Clear the field
+    }
 };
 
 // 3. DROPDOWN FILTERING LOGIC
