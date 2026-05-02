@@ -255,18 +255,38 @@ input:focus {
     </style>
 </head>
 <body>
+    <div id="teacherLoginOverlay" style="position:fixed; top:0; left:0; width:100%; height:100%; background:var(--forest); z-index:9999; display:flex; justify-content:center; align-items:center; flex-direction:column; color:white;">
+    <img src="logo.png" style="width:100px; margin-bottom:20px;">
+    <h1 style="font-family:'Playfair Display'; margin-bottom:10px;">Teacher Portal Access</h1>
+    <p style="opacity:0.8; margin-bottom:30px;">Select your profile to manage your classes</p>
+    
+    <div class="premium-card" style="width:400px; padding:40px;">
+        <div class="input-group">
+            <label style="color:var(--forest)">Select Your Name</label>
+            <select id="teacherSelect" style="border:1.5px solid #ddd;">
+                <option value="" disabled selected>Identify Yourself</option>
+                <option value="teacher_primary">Ms. Aruna (Primary English)</option>
+                <option value="teacher_high">Mr. Rajesh (Higher Math/Science)</option>
+                <option value="teacher_pre">Mrs. Suman (Pre-Primary GK)</option>
+            </select>
+        </div>
+        <button class="btn btn-gold" onclick="handleTeacherLogin()" style="width:100%; margin-top:20px;">ACCESS MY DASHBOARD</button>
+    </div>
+</div>
+    
 
     <div class="sidebar">
-        <div style="padding: 40px 30px; text-align: center;">
-            <img src="logo.png" alt="Paramount" style="width: 70px;">
-            <h1 style="font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--gold); margin-top: 10px;">ADMIN PORTAL</h1>
-        </div>
-        <nav>
-            <div class="nav-item active" onclick="showSection('dashboard')"><i class="fa-solid fa-layer-group"></i> Dashboard</div>
-            <div class="nav-item" onclick="showSection('builder')"><i class="fa-solid fa-pen-fancy"></i> Create New Quiz</div>
-            <div class="nav-item" onclick="showSection('stats')"><i class="fa-solid fa-chart-pie"></i> Student Results</div>
-        </nav>
+    <div style="padding: 40px 30px; text-align: center;">
+        <img src="logo.png" alt="Paramount" style="width: 70px;">
+        <h1 id="activeTeacherName" style="font-family: 'Playfair Display', serif; font-size: 1.2rem; color: var(--gold); margin-top: 10px;">ADMIN PORTAL</h1>
     </div>
+    <nav>
+        <div class="nav-item active" onclick="showSection('dashboard')"><i class="fa-solid fa-layer-group"></i> My Dashboard</div>
+        <div class="nav-item" onclick="showSection('builder')"><i class="fa-solid fa-pen-fancy"></i> Create Assessment</div>
+        <div class="nav-item" onclick="showSection('stats')"><i class="fa-solid fa-chart-pie"></i> Student Results</div>
+        <div class="nav-item" onclick="location.reload()" style="margin-top:50px; border-top:1px solid rgba(255,255,255,0.1);"><i class="fa-solid fa-right-from-bracket"></i> Switch Profile</div>
+    </nav>
+</div>
 
     <div class="main-wrapper">
         
@@ -405,6 +425,66 @@ input:focus {
         const db = getFirestore(app);
 
         let myChart = null;
+        // 1. TEACHER ASSIGNMENT MAP
+const teacherData = {
+    "teacher_primary": {
+        name: "Ms. Aruna",
+        subject: "English",
+        classes: ["Grade 1", "Grade 2", "Grade 3", "Grade 4", "Grade 5"]
+    },
+    "teacher_high": {
+        name: "Mr. Rajesh",
+        subject: "Mathematics",
+        classes: ["Grade 6", "Grade 7", "Grade 8"]
+    },
+    "teacher_pre": {
+        name: "Mrs. Suman",
+        subject: "General Knowledge",
+        classes: ["Pre-KG", "LKG", "UKG"]
+    }
+};
+
+let currentTeacher = null;
+
+// 2. LOGIN HANDLER
+window.handleTeacherLogin = function() {
+    const selectedId = document.getElementById('teacherSelect').value;
+    if (!selectedId) { alert("Please select your name."); return; }
+
+    currentTeacher = teacherData[selectedId];
+    
+    // Hide Overlay
+    document.getElementById('teacherLoginOverlay').style.display = 'none';
+    
+    // Update UI Labels
+    document.getElementById('activeTeacherName').innerText = currentTeacher.name;
+    
+    // Filter all Dropdowns in the app
+    populateFilteredDropdowns();
+    
+    // Refresh Dashboard to only show current teacher's subject
+    refreshDashboard();
+};
+
+// 3. DROPDOWN FILTERING LOGIC
+function populateFilteredDropdowns() {
+    // Select all relevant Grade/Subject dropdowns in Builder and Stats sections
+    const gradeSelects = [document.getElementById('quizGrade'), document.getElementById('statsGrade')];
+    const subjectSelects = [document.getElementById('quizSubject')];
+
+    // Filter Grade Dropdowns
+    gradeSelects.forEach(select => {
+        select.innerHTML = '<option value="" disabled selected>Select Grade</option>';
+        currentTeacher.classes.forEach(cls => {
+            select.innerHTML += `<option value="${cls}">${cls}</option>`;
+        });
+    });
+
+    // Filter Subject Dropdowns (Locked to their assigned subject)
+    subjectSelects.forEach(select => {
+        select.innerHTML = `<option value="${currentTeacher.subject}" selected>${currentTeacher.subject}</option>`;
+    });
+}
 
         window.showSection = (id) => {
             document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
@@ -549,25 +629,35 @@ input:focus {
         }
     };
 
-    onSnapshot(collection(db, "live_quizzes"), (snapshot) => {
-        const tbody = document.getElementById('quizListBody');
-        tbody.innerHTML = ''; 
-        snapshot.forEach(docSnap => {
-            const quiz = docSnap.data();
-            const quizId = docSnap.id; 
-            tbody.innerHTML += `
-                <tr>
-                    <td><strong>${quiz.title}</strong></td>
-                    <td><span style="color: #64748b;">${quiz.subject}</span></td>
-                    <td><span class="header-tag" style="background:#f1f5f9; color:var(--forest); padding:6px 12px; border-radius:20px; font-size:0.8rem;">${quiz.targetClass}</span></td>
-                    <td style="display:flex; gap:12px; justify-content:center; align-items:center;">
-                        <button class="btn btn-info" onclick='viewQuiz(${JSON.stringify(quiz)})'><i class="fa-solid fa-eye"></i></button>
-                        <button class="btn btn-reconduct" onclick="reconductQuiz('${quizId}')"><i class="fa-solid fa-rotate-right"></i></button>
-                        <button class="btn btn-danger" style="background:var(--danger); color:white;" onclick="deleteQuiz('${quizId}')"><i class="fa-solid fa-trash"></i></button>
-                    </td>
-                </tr>`;
-        });
+    // Locate your onSnapshot(collection(db, "live_quizzes")... logic and update it:
+
+onSnapshot(collection(db, "live_quizzes"), (snapshot) => {
+    const tbody = document.getElementById('quizListBody');
+    tbody.innerHTML = ''; 
+    
+    snapshot.forEach(docSnap => {
+        const quiz = docSnap.data();
+        const quizId = docSnap.id; 
+        
+        // --- TEACHER FILTER LOGIC ---
+        // Only show quizzes that match the logged-in teacher's subject
+        if (currentTeacher && quiz.subject !== currentTeacher.subject) {
+            return; // Skip this quiz
+        }
+        
+        tbody.innerHTML += `
+            <tr>
+                <td><strong>${quiz.title}</strong></td>
+                <td><span style="color: #64748b;">${quiz.subject}</span></td>
+                <td><span class="header-tag" style="background:#f1f5f9; color:var(--forest); padding:6px 12px; border-radius:20px; font-size:0.8rem;">${quiz.targetClass}</span></td>
+                <td style="display:flex; gap:12px; justify-content:center; align-items:center;">
+                    <button class="btn btn-info" onclick='viewQuiz(${JSON.stringify(quiz)})'><i class="fa-solid fa-eye"></i></button>
+                    <button class="btn btn-reconduct" onclick="reconductQuiz('${quizId}')"><i class="fa-solid fa-rotate-right"></i></button>
+                    <button class="btn btn-danger" style="background:var(--danger); color:white;" onclick="deleteQuiz('${quizId}')"><i class="fa-solid fa-trash"></i></button>
+                </td>
+            </tr>`;
     });
+});
 
     window.deleteQuiz = async (targetClass) => {
         if(confirm(`Delete ${targetClass} quiz?`)) {
