@@ -691,20 +691,29 @@ onSnapshot(collection(db, "live_quizzes"), (snapshot) => {
             return; // Skip this quiz
         }
         
-        tbody.innerHTML += `
-            <tr>
-                <td><strong>${quiz.title}</strong></td>
-                <td><span style="color: #64748b;">${quiz.subject}</span></td>
-                <td><span class="header-tag" style="background:#f1f5f9; color:var(--forest); padding:6px 12px; border-radius:20px; font-size:0.8rem;">${quiz.targetClass}</span></td>
-                <td style="display:flex; gap:12px; justify-content:center; align-items:center;">
-                    <button class="btn btn-info" onclick='viewQuiz(${JSON.stringify(quiz)})'><i class="fa-solid fa-eye"></i></button>
-                    <button class="btn btn-reconduct" onclick="reconductQuiz('${quizId}')"><i class="fa-solid fa-rotate-right"></i></button>
-                    <button class="btn btn-danger" style="background:var(--danger); color:white;" onclick="deleteQuiz('${quizId}')"><i class="fa-solid fa-trash"></i></button>
-                </td>
-            </tr>`;
+       tbody.innerHTML += `
+    <tr>
+        <td><strong>${quiz.title}</strong></td>
+        <td>${quiz.subject}</td>
+        <td><span class="header-tag">${quiz.targetClass}</span></td>
+        <td style="display:flex; gap:12px; justify-content:center; align-items:center;">
+            <!-- STOP BUTTON -->
+            <button class="btn" style="background:#fff1f2; color:#e11d48; border:1px solid #fda4af;" 
+                onclick="stopAssessment('${quizId}')">
+                <i class="fa-solid fa-circle-stop"></i> STOP
+            </button>
+            <button class="btn btn-info" onclick='viewQuiz(${JSON.stringify(quiz)})'>
+                <i class="fa-solid fa-eye"></i>
+            </button>
+            <button class="btn btn-danger" onclick="deleteQuiz('${quizId}')">
+                <i class="fa-solid fa-trash"></i>
+            </button>
+        </td>
+    </tr>`;
     });
 });
 
+        
     window.deleteQuiz = async (targetClass) => {
         if(confirm(`Delete ${targetClass} quiz?`)) {
             await deleteDoc(doc(db, "live_quizzes", targetClass));
@@ -747,6 +756,16 @@ onSnapshot(collection(db, "live_quizzes"), (snapshot) => {
     }
 };
 
+        window.stopAssessment = async function(quizId) {
+    if(confirm("End assessment for all students? This will force-submit their current progress.")) {
+        try {
+            await setDoc(doc(db, "live_quizzes", quizId), { isLive: false }, { merge: true });
+            alert("Assessment stopped successfully.");
+        } catch (e) {
+            alert("Error stopping quiz: " + e.message);
+        }
+    }
+};
     window.addNewQuestion = function() {
     const id = Date.now();
     const qCount = document.querySelectorAll('.question-block').length + 1;
