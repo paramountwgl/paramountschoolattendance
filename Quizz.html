@@ -271,10 +271,16 @@ input:focus {
             </select>
         </div>
 
-        <div class="input-group">
-            <label style="color:var(--forest)">Enter Secret Password</label>
-            <input type="password" id="teacherPassword" placeholder="" style="border:1.5px solid #ddd;">
-        </div>
+        <div class="input-group" style="position: relative; margin-bottom: 20px;">
+    <label style="color:var(--forest)">Enter Secret Password</label>
+    <div style="position: relative; width: 100%;">
+        <input type="password" id="teacherPassword" placeholder="" 
+            style="border:1.5px solid #ddd; width: 100%; padding-right: 45px; box-sizing: border-box;">
+        <i class="fa-solid fa-eye" id="togglePassword" 
+            onclick="togglePasswordVisibility()" 
+            style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--forest); opacity: 0.6;"></i>
+    </div>
+</div>
 
         <button class="btn btn-gold" onclick="handleTeacherLogin()" style="width:100%; margin-top:25px;">
             VERIFY & ACCESS DASHBOARD
@@ -475,6 +481,9 @@ window.handleTeacherLogin = function() {
         
         // Hide Overlay
         document.getElementById('teacherLoginOverlay').style.display = 'none';
+        // Add this line inside your handleTeacherLogin function's 'else' (failure) block:
+        document.getElementById('teacherPassword').type = 'password';
+        document.getElementById('togglePassword').classList.replace('fa-eye-slash', 'fa-eye');
         
         // Update UI
         document.getElementById('activeTeacherName').innerText = currentTeacher.name;
@@ -514,6 +523,21 @@ function populateFilteredDropdowns() {
             document.getElementById(id).classList.add('active');
             event.currentTarget.classList.add('active');
         };
+        
+        window.togglePasswordVisibility = function() {
+    const passwordInput = document.getElementById('teacherPassword');
+    const toggleIcon = document.getElementById('togglePassword');
+    
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        toggleIcon.classList.remove('fa-eye');
+        toggleIcon.classList.add('fa-eye-slash');
+    } else {
+        passwordInput.type = 'password';
+        toggleIcon.classList.remove('fa-eye-slash');
+        toggleIcon.classList.add('fa-eye');
+    }
+};
 
         window.loadClassResults = async function() {
             const targetClass = document.getElementById('statsGrade').value;
