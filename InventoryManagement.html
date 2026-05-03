@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paramount | Inventory Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --paramount-green: #005a2b;
+            --paramount-yellow: #f9d10d;
+            --primary: #0a2351;
+            --bg: #f4f7f9;
+        }
+
+        body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; padding: 20px; color: #333; }
+
+        .container { max-width: 1200px; margin: auto; }
+
+        /* Navigation Header */
+        .nav-header {
+            background: white; padding: 20px 40px; border-radius: 15px; margin-bottom: 25px;
+            display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .back-btn {
+            text-decoration: none; color: var(--primary); font-weight: 600;
+            display: flex; align-items: center; gap: 10px; transition: 0.3s;
+        }
+        .back-btn:hover { color: var(--paramount-green); }
+
+        /* Inventory Card */
+        .section { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        
+        h2 { font-family: 'Playfair Display', serif; color: var(--primary); margin-top: 0; border-left: 5px solid var(--paramount-green); padding-left: 15px; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th { text-align: left; padding: 15px; background: #f8f9fa; color: var(--primary); border-bottom: 2px solid var(--paramount-yellow); }
+        td { padding: 15px; border-bottom: 1px solid #eee; }
+
+        .price-text { font-weight: 600; color: var(--primary); }
+        .sold-text { color: #d32f2f; font-weight: 600; }
+        .left-text { color: #2e7d32; font-weight: 700; }
+
+        /* Restock Button */
+        .btn-restock {
+            background: var(--paramount-green); color: white; border: 1px solid var(--paramount-yellow);
+            padding: 10px 15px; border-radius: 30px; font-weight: bold; cursor: pointer; transition: 0.3s;
+            font-size: 0.8rem; display: flex; align-items: center; gap: 8px;
+        }
+        .btn-restock:hover { transform: scale(1.05); background: #004a23; }
+
+        .time-stamp { font-size: 0.75rem; color: #888; display: block; margin-top: 4px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="nav-header">
+        <a href="BookStall.html" class="back-btn">
+            <i class="fas fa-arrow-left"></i> RETURN TO BILLING
+        </a>
+        <img src="logo.png" height="60" alt="Paramount Logo">
+    </div>
+
+    <div class="section">
+        <h2>Stock Control & Sales Tracking</h2>
+        <p style="color: #666; margin-bottom: 25px;">View live counts, track total revenue, and update stock levels manually.</p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Item Description</th>
+                    <th>Total Stock</th>
+                    <th>Sold</th>
+                    <th>Books Left</th>
+                    <th>Total Revenue</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="inventory-body">
+                <!-- Data will be rendered here -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    // This array represents the "State" of your store. 
+    // Manual updates via the "Restock" button will change these values live.
+    let inventoryData = [
+        { id: 1, title: "English Path Vol 1", grade: "Grade 1", mrp: 450, total: 100, sold: 15, lastUpdate: "03/05/2026, 06:15 PM" },
+        { id: 2, title: "Math Practice Book", grade: "Grade 1", mrp: 320, total: 100, sold: 22, lastUpdate: "03/05/2026, 06:15 PM" },
+        { id: 3, title: "School Diary 2026", grade: "All", mrp: 150, total: 200, sold: 45, lastUpdate: "01/05/2026, 11:20 AM" }
+    ];
+
+    function renderTable() {
+        const tbody = document.getElementById('inventory-body');
+        tbody.innerHTML = '';
+
+        inventoryData.forEach(item => {
+            const left = item.total - item.sold;
+            const revenue = item.sold * item.mrp;
+
+            tbody.innerHTML += `
+                <tr>
+                    <td>
+                        <b style="font-size: 1rem;">${item.title}</b><br>
+                        <small style="color:#777;">${item.grade} | MRP: ₹${item.mrp}</small>
+                    </td>
+                    <td style="font-weight: 600;">${item.total}</td>
+                    <td class="sold-text">-${item.sold}</td>
+                    <td class="left-text">${left} Remaining</td>
+                    <td class="price-text">₹${revenue.toLocaleString()}</td>
+                    <td>
+                        <button class="btn-restock" onclick="handleRestock(${item.id})">
+                            <i class="fas fa-sync-alt"></i> UPDATE STOCK
+                        </button>
+                        <span class="time-stamp">Last: ${item.lastUpdate}</span>
+                    </td>
+                </tr>
+            `;
+        });
+    }
+
+    function handleRestock(itemId) {
+        const item = inventoryData.find(i => i.id === itemId);
+        const newTotal = prompt(`[RESTOCK] ${item.title}\nEnter the NEW total stock number:`, item.total);
+        
+        if (newTotal !== null && !isNaN(newTotal)) {
+            item.total = parseInt(newTotal);
+            // Optionally reset sold count if it's a completely new academic year batch:
+            // item.sold = 0; 
+            
+            // Set current Date and Time
+            const now = new Date();
+            item.lastUpdate = now.toLocaleString('en-IN');
+            
+            renderTable();
+            alert(`${item.title} stock updated successfully.`);
+        }
+    }
+
+    // Load table on startup
+    window.onload = renderTable;
+</script>
+
+</body>
+</html>
