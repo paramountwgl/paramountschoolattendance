@@ -286,13 +286,19 @@
 </div>
 
     <!-- Main Dashboard -->
-    <div id="main-content">
-        <div class="header">
-            <img src="logo.png" alt="School Logo" height="80">
-            <h1>PARAMOUNT SCHOOL BOOK STALL</h1>
-            <p>Live Inventory & Digital Billing System</p>
-        </div>
-
+   <div class="header" style="display: flex; justify-content: space-between; align-items: center; padding: 20px 40px;">
+    <img src="logo.png" alt="School Logo" height="80">
+    <div class="header-titles">
+        <h1 style="font-family: 'Playfair Display', serif; color: var(--primary); margin: 0;">PARAMOUNT SCHOOL BOOK STALL</h1>
+        <p style="margin: 5px 0;">Live Inventory & Digital Billing System</p>
+    </div>
+    <!-- This is the Navigation Button that redirects to the new page -->
+    <a href="InventoryManagement.html" class="hub-card" style="text-decoration: none; background: white; padding: 15px; border-radius: 12px; border: 1px solid #eee; text-align: center; width: 140px; display: block; transition: 0.3s;">
+        <i class="fas fa-boxes" style="font-size: 1.5rem; color: var(--paramount-green); margin-bottom: 5px;"></i>
+        <span style="display: block; font-weight: 600; color: var(--primary); font-size: 0.9rem;">Stock Control</span>
+        <small style="color: #888; font-size: 0.7rem;">Counts & Restock</small>
+    </a>
+</div>
         <div class="grid">
             <!-- Left: Information & Inventory -->
             <div class="section">
