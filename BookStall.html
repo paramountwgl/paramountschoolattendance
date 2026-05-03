@@ -5,30 +5,97 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Paramount Book Stall | Management Portal</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="icon" type="image/png" href="logo.png">
     <style>
         :root {
-            --primary: #0a2351;
-            --accent: #c5a059;
-            --bg: #f4f7f9;
-            --white: #ffffff;
-            --text: #333;
+    --paramount-green: #005a2b;
+    --paramount-yellow: #f9d10d;
+    --primary: #0a2351; /* Keeping the navy for the dashboard interior */
+}
         }
 
         body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; color: var(--text); }
         
         /* --- Login Overlay --- */
         #login-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--primary); display: flex; align-items: center; justify-content: center; z-index: 9999;
-        }
-        .login-card {
-            background: white; padding: 40px; border-radius: 15px; text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3); width: 350px;
-        }
-        .login-card h2 { font-family: 'Playfair Display', serif; color: var(--primary); margin-bottom: 20px; }
-        .login-card input { width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: #f0f2f5; /* Light gray background like the browser */
+    display: flex; align-items: center; justify-content: center; z-index: 9999;
+}
 
+.login-card {
+    background: white; 
+    padding: 50px 40px; 
+    border-radius: 25px; /* Highly curved corners */
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.1); 
+    width: 400px;
+    border-bottom: 8px solid var(--paramount-green); /* Green bottom accent */
+}
+
+.login-card img {
+    height: 100px;
+    margin-bottom: 10px;
+}
+
+.login-card h2 { 
+    font-family: 'Inter', sans-serif; 
+    color: var(--paramount-green); 
+    font-weight: 900;
+    margin: 0;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.login-card .sub-tag {
+    color: var(--paramount-yellow);
+    font-weight: bold;
+    font-size: 0.8rem;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+}
+
+.login-card input { 
+    width: 100%; 
+    padding: 15px; 
+    margin-bottom: 20px; 
+    border: 1px solid #e0e0e0; 
+    border-radius: 8px; 
+    box-sizing: border-box;
+    background: #fafafa;
+    text-align: center;
+    font-size: 1rem;
+}
+
+/* The Screenshot Button Style */
+.login-btn {
+    background: var(--paramount-green);
+    color: white;
+    border: 2px solid var(--paramount-yellow); /* Yellow border as seen in image */
+    padding: 15px;
+    border-radius: 30px; /* Pill shaped */
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.login-links {
+    margin-top: 20px;
+}
+
+.login-links a {
+    display: block;
+    color: #666;
+    text-decoration: none;
+    font-size: 0.85rem;
+    margin: 5px 0;
+}
         /* --- Main Dashboard --- */
         #main-content { display: none; padding: 20px; max-width: 1200px; margin: auto; }
 
@@ -93,14 +160,27 @@
 <body>
 
     <!-- Login -->
-    <div id="login-overlay">
-        <div class="login-card">
-            <img src="logo.png" alt="Logo" height="60" onerror="this.style.display='none'">
-            <h2>Staff Login</h2>
-            <input type="Paramount@07" id="staff-pass" placeholder="Enter Portal Password">
-            <button class="btn" onclick="checkLogin()">Unlock Portal</button>
+   <!-- Login Section Styled like Admin Access Box -->
+<div id="login-overlay">
+    <div class="login-card">
+        <!-- Make sure to use your actual logo URL here -->
+        <img src="https://paramountwgl.github.io/paramountschoolattendance/logo.png" alt="Logo">
+        
+        <h2>PARAMOUNT</h2>
+        <div class="sub-tag">Book Stall Access Box</div>
+        
+        <input type="password" id="staff-pass" placeholder="Bookstall Password">
+        
+        <button class="login-btn" onclick="checkLogin()">
+            Unlock Dashboard <i class="fas fa-lock"></i>
+        </button>
+        
+        <div class="login-links">
+            <a href="#">Cancel & Return</a>
+            <a href="#">Forgot Password?</a>
         </div>
     </div>
+</div>
 
     <!-- Main Dashboard -->
     <div id="main-content">
@@ -152,9 +232,18 @@
                     <input type="text" id="p-phone" placeholder="Phone Number">
                     <input type="text" id="s-name" placeholder="Student Name">
                     <select id="s-grade" onchange="updateBillingList()">
-                        <option value="">Select Student Grade</option>
-                        <option value="Grade 1">Grade 1</option>
-                        <option value="Grade 2">Grade 2</option>
+                        <option value="" disabled selected>Select Grade</option>
+                            <option value="Pre-KG">Pre-KG</option>
+                            <option value="LKG">LKG</option>
+                            <option value="UKG">UKG</option>
+                            <option value="Grade 1">Grade 1</option>
+                            <option value="Grade 2">Grade 2</option>
+                            <option value="Grade 3">Grade 3</option>
+                            <option value="Grade 4">Grade 4</option>
+                            <option value="Grade 5">Grade 5</option>
+                            <option value="Grade 6">Grade 6</option>
+                            <option value="Grade 7">Grade 7</option>
+                            <option value="Grade 8">Grade 8</option>
                     </select>
                 </div>
 
