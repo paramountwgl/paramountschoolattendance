@@ -88,6 +88,7 @@
 </div>
 
 <script>
+    localStorage.removeItem('paramount_inventory'); // Add this, refresh once, then delete it.
     
     let inventoryData = JSON.parse(localStorage.getItem('paramount_inventory')) || [
         { id: 1, title: "Textbooks", grade: "Pre-KG", mrp: 3200, total: 0, sold: 0, lastUpdate: "Never" },
@@ -199,7 +200,7 @@
 
     // Refresh table on load
     window.onload = renderTable;
-    localStorage.removeItem('paramount_inventory'); // Add this, refresh once, then delete it.
+    
 </script>
 
 </body>
