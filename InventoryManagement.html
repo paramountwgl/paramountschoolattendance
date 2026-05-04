@@ -72,23 +72,22 @@
 </div>
 
 <script type="module">
-    // --- 1. FIREBASE CORE IMPORTS ---
+    // --- 1. FIREBASE SETUP ---
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-    // --- 2. CONFIGURATION & DATABASE INITIALIZATION ---
     const firebaseConfig = {
-        apiKey: "AIzaSyDRYk9KOK-ga0c88dnYMsAoifW2NJTd_Y8", //
-        databaseURL: "https://paramount-school-d55bc-default-rtdb.firebaseio.com", //
-        projectId: "paramount-school-d55bc" //
+        apiKey: "AIzaSyDRYk9KOK-ga0c88dnYMsAoifW2NJTd_Y8",
+        databaseURL: "https://paramount-school-d55bc-default-rtdb.firebaseio.com",
+        projectId: "paramount-school-d55bc"
     };
 
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
     const stallRef = ref(db, 'bookstall/inventory');
 
-    // --- 3. MASTER SOURCE OF TRUTH ---
-    // Any change here (titles, MRP, new books) auto-syncs globally without losing stock data.
+    // --- 2. MASTER SOURCE OF TRUTH (All 44 Items) ---
+    // Note: Standardized titles with a space before the parenthesis to match billing logic.
     const masterBooks = [
         { id: 1, title: "Set of 6 subjects (Textbooks)", grade: "Pre-KG", mrp: 3200 },
         { id: 2, title: "Set of 6 subjects (Workbooks)", grade: "Pre-KG", mrp: 4000 },
@@ -138,22 +137,22 @@
 
     let currentInventory = [];
 
-    // --- 4. GLOBAL SYNC & MERGE LOGIC ---
+    // --- 3. LIVE SYNC & RENDER ---
     onValue(stallRef, (snapshot) => {
         const cloudData = snapshot.val() || [];
         
-        // Match master code list with cloud data based on ID
+        // Match IDs to preserve stock/sold counts while applying title/MRP changes from code
         const syncedData = masterBooks.map(masterItem => {
             const existing = cloudData.find(c => c.id === masterItem.id);
             return {
                 ...masterItem,
-                total: existing ? (existing.total || 0) : 0, // Preserve stock count
-                sold: existing ? (existing.sold || 0) : 0,   // Preserve sales count
+                total: existing ? (existing.total || 0) : 0,
+                sold: existing ? (existing.sold || 0) : 0,
                 lastUpdate: existing ? (existing.lastUpdate || "Never") : "Never"
             };
         });
 
-        // If local code changes differ from cloud, push update to Firebase
+        // Force a cloud update if the local list is newer/longer than the cloud list
         if (JSON.stringify(syncedData) !== JSON.stringify(cloudData)) {
             set(stallRef, syncedData);
         }
@@ -162,7 +161,6 @@
         renderTable();
     });
 
-    // --- 5. UI RENDERING ENGINE ---
     function renderTable() {
         const tbody = document.getElementById('inventory-body');
         tbody.innerHTML = '';
@@ -170,7 +168,7 @@
             const left = item.total - item.sold;
             const revenue = item.sold * item.mrp;
             
-            // Visual Status Badges
+            // Status logic for color feedback
             const statusClass = left <= 0 ? "rgba(211, 47, 47, 0.1)" : (left < 5 ? "rgba(249, 209, 13, 0.1)" : "rgba(46, 125, 50, 0.1)");
             const statusColor = left <= 0 ? "#d32f2f" : (left < 5 ? "#b29400" : "#2e7d32");
 
@@ -193,19 +191,19 @@
         });
     }
 
-    // --- 6. INTERACTIVE TOOLS (GLOBAL ACCESS) ---
+    // --- 4. GLOBAL INTERACTIVE TOOLS ---
     window.handleRestock = (index) => {
         const item = currentInventory[index];
-        const newTotal = prompt(`[GLOBAL STOCK UPDATE] ${item.title} (${item.grade})\nEnter the Master Stock count:`, item.total);
+        const newTotal = prompt(`[GLOBAL STOCK UPDATE] ${item.title} (${item.grade})\nEnter total count:`, item.total);
         if (newTotal !== null && !isNaN(newTotal)) {
             currentInventory[index].total = parseInt(newTotal);
             currentInventory[index].lastUpdate = new Date().toLocaleString();
-            set(stallRef, currentInventory); // Push global update
+            set(stallRef, currentInventory);
         }
     };
 
     window.resetGlobalData = () => {
-        if (confirm("DANGER: This will globally reset ALL sales and stock to 0 for ALL devices. Confirm?")) {
+        if (confirm("This will globally reset ALL stock and sales to 0. Proceed?")) {
             currentInventory.forEach(i => {
                 i.sold = 0;
                 i.total = 0;
