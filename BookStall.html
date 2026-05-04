@@ -403,182 +403,207 @@
         </div>
     </div>
 
-    <script>
-        // 1. YOUR DATA - Enter your books here
-        const inventory = [
-            { grade: "Pre-KG", category: "Textbook", title: "Set of 6 subjects", mrp: 3200 },
-            { grade: "Pre-KG", category: "Workbook", title: "Set of 6 subjects", mrp: 4000 },
-            { grade: "Pre-KG", category: "Notebook", title: "Notebooks (Pack of 24)", mrp: 2000 },
-            { grade: "Pre-KG", category: "School Diary", title: "School Diary 2026-27", mrp: 500 },
-             { grade: "KG", category: "Textbook", title: "Set of 6 subjects", mrp: 3200 },
-            { grade: "KG", category: "Workbook", title: "Set of 6 subjects", mrp: 4000 },
-            { grade: "KG", category: "Notebook", title: "Notebooks (Pack of 24)", mrp: 2000 },
-            { grade: "KG", category: "School Diary", title: "School Diary 2026-27", mrp: 500 },
-            { grade: "UKG", category: "Textbook", title: "Set of 6 subjects", mrp: 3200 },
-            { grade: "UKG", category: "Workbook", title: "Set of 6 subjects", mrp: 4000 },
-            { grade: "UKG", category: "Notebook", title: "Notebooks (Pack of 24)", mrp: 2000 },
-            { grade: "UKG", category: "School Diary", title: "School Diary 2026-27", mrp: 500 },
-            { grade: "Grade 1", category: "Textbook", title: "Set of 6 subjects", mrp: 3200 },
-            { grade: "Grade 1", category: "Workbook", title: "Set of 6 subjects", mrp: 4000 },
-            { grade: "Grade 1", category: "Notebook", title: "Notebooks (Pack of 24)", mrp: 2000 },
-            { grade: "Grade 1", category: "School Diary", title: "School Diary 2026-27", mrp: 500 },
-             { grade: "Grade 2", category: "Textbook", title: "Set of 6 subjects", mrp: 3200 },
-            { grade: "Grade 2", category: "Workbook", title: "Set of 6 subjects", mrp: 4000 },
-            { grade: "Grade 2", category: "Notebook", title: "Notebooks (Pack of 24)", mrp: 2000 },
-            { grade: "Grade 2", category: "School Diary", title: "School Diary 2026-27", mrp: 500 },
-            { grade: "Grade 3", category: "Textbook", title: "Set of 6 subjects", mrp: 3200 },
-            { grade: "Grade 3", category: "Workbook", title: "Set of 6 subjects", mrp: 4000 },
-            { grade: "Grade 3", category: "Notebook", title: "Notebooks (Pack of 24)", mrp: 2000 },
-            { grade: "Grade 3", category: "School Diary", title: "School Diary 2026-27", mrp: 500 },
-             { grade: "Grade 4", category: "Textbook", title: "Set of 6 subjects", mrp: 3200 },
-            { grade: "Grade 4", category: "Workbook", title: "Set of 6 subjects", mrp: 4000 },
-            { grade: "Grade 4", category: "Notebook", title: "Notebooks (Pack of 24)", mrp: 2000 },
-            { grade: "Grade 4", category: "School Diary", title: "School Diary 2026-27", mrp: 500 },
-             { grade: "Grade 5", category: "Textbook", title: "Set of 6 subjects", mrp: 3200 },
-            { grade: "Grade 5", category: "Workbook", title: "Set of 6 subjects", mrp: 4000 },
-            { grade: "Grade 5", category: "Notebook", title: "Notebooks (Pack of 24)", mrp: 2000 },
-            { grade: "Grade 5", category: "School Diary", title: "School Diary 2026-27", mrp: 500 },
-             { grade: "Grade 6", category: "Textbook", title: "Set of 6 subjects", mrp: 3200 },
-            { grade: "Grade 6", category: "Workbook", title: "Set of 6 subjects", mrp: 4000 },
-            { grade: "Grade 6", category: "Notebook", title: "Notebooks (Pack of 24)", mrp: 2000 },
-            { grade: "Grade 6", category: "School Diary", title: "School Diary 2026-27", mrp: 500 },
-            { grade: "Grade 7", category: "Textbook", title: "Set of 6 subjects", mrp: 3200 },
-            { grade: "Grade 7", category: "Workbook", title: "Set of 6 subjects", mrp: 4000 },
-            { grade: "Grade 7", category: "Notebook", title: "Notebooks (Pack of 24)", mrp: 2000 },
-            { grade: "Grade 7", category: "School Diary", title: "School Diary 2026-27", mrp: 500 },
-             { grade: "Grade 8", category: "Textbook", title: "Set of 6 subjects", mrp: 3200 },
-            { grade: "Grade 8", category: "Workbook", title: "Set of 6 subjects", mrp: 4000 },
-            { grade: "Grade 8", category: "Notebook", title: "Notebooks (Pack of 24)", mrp: 2000 },
-            { grade: "Grade 8", category: "School Diary", title: "School Diary 2026-27", mrp: 500 },
+   <script type="module">
+    // --- 1. FIREBASE CONFIGURATION & INITIALIZATION ---
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+    // Use your actual Firebase credentials here
+    const firebaseConfig = {
+        apiKey: "AIzaSyDRYk9KOK-ga0c88dnYMsAoifW2NJTd_Y8",
+  authDomain: "paramount-school-d55bc.firebaseapp.com",
+  databaseURL: "https://paramount-school-d55bc-default-rtdb.firebaseio.com",
+  projectId: "paramount-school-d55bc",
+  storageBucket: "paramount-school-d55bc.firebasestorage.app",
+  messagingSenderId: "130979432562",
+  appId: "1:130979432562:web:4cd94787b23f9daba51aeb",
+  measurementId: "G-ZMZHXB5GFM"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const stallRef = ref(db, 'bookstall/inventory');
+
+    // Internal state to track cloud data
+    let cloudInventoryData = [];
+
+    // --- 2. DATA SOURCE ---
+    // This local array defines the items available in the UI
+    const inventory = [
+        { grade: "Pre-KG", category: "Textbook", title: "Set of 6 subjects", mrp: 3200 },
+        { grade: "Pre-KG", category: "Workbook", title: "Set of 6 subjects", mrp: 4000 },
+        { grade: "Pre-KG", category: "Notebook", title: "Notebooks (Pack of 24)", mrp: 2000 },
+        { grade: "Pre-KG", category: "School Diary", title: "School Diary 2026-27", mrp: 500 },
+        { grade: "KG", category: "Textbook", title: "Set of 6 subjects", mrp: 3200 },
+        { grade: "KG", category: "Workbook", title: "Set of 6 subjects", mrp: 4000 },
+        { grade: "KG", category: "Notebook", title: "Notebooks (Pack of 24)", mrp: 2000 },
+        { grade: "KG", category: "School Diary", title: "School Diary 2026-27", mrp: 500 },
+        { grade: "UKG", category: "Textbook", title: "Set of 6 subjects", mrp: 3200 },
+        { grade: "UKG", category: "Workbook", title: "Set of 6 subjects", mrp: 4000 },
+        { grade: "UKG", category: "Notebook", title: "Notebooks (Pack of 24)", mrp: 2000 },
+        { grade: "UKG", category: "School Diary", title: "School Diary 2026-27", mrp: 500 },
+        { grade: "Grade 1", category: "Textbook", title: "Set of 6 subjects", mrp: 3200 },
+        { grade: "Grade 1", category: "Workbook", title: "Set of 6 subjects", mrp: 4000 },
+        { grade: "Grade 1", category: "Notebook", title: "Notebooks (Pack of 24)", mrp: 2000 },
+        { grade: "Grade 1", category: "School Diary", title: "School Diary 2026-27", mrp: 500 },
+        { grade: "Grade 2", category: "Textbook", title: "Set of 6 subjects", mrp: 3200 },
+        { grade: "Grade 2", category: "Workbook", title: "Set of 6 subjects", mrp: 4000 },
+        { grade: "Grade 2", category: "Notebook", title: "Notebooks (Pack of 24)", mrp: 2000 },
+        { grade: "Grade 2", category: "School Diary", title: "School Diary 2026-27", mrp: 500 },
+        { grade: "Grade 3", category: "Textbook", title: "Set of 6 subjects", mrp: 3200 },
+        { grade: "Grade 3", category: "Workbook", title: "Set of 6 subjects", mrp: 4000 },
+        { grade: "Grade 3", category: "Notebook", title: "Notebooks (Pack of 24)", mrp: 2000 },
+        { grade: "Grade 3", category: "School Diary", title: "School Diary 2026-27", mrp: 500 },
+        { grade: "Grade 4", category: "Textbook", title: "Set of 6 subjects", mrp: 3200 },
+        { grade: "Grade 4", category: "Workbook", title: "Set of 6 subjects", mrp: 4000 },
+        { grade: "Grade 4", category: "Notebook", title: "Notebooks (Pack of 24)", mrp: 2000 },
+        { grade: "Grade 4", category: "School Diary", title: "School Diary 2026-27", mrp: 500 },
+        { grade: "Grade 5", category: "Textbook", title: "Set of 6 subjects", mrp: 3200 },
+        { grade: "Grade 5", category: "Workbook", title: "Set of 6 subjects", mrp: 4000 },
+        { grade: "Grade 5", category: "Notebook", title: "Notebooks (Pack of 24)", mrp: 2000 },
+        { grade: "Grade 5", category: "School Diary", title: "School Diary 2026-27", mrp: 500 },
+        { grade: "Grade 6", category: "Textbook", title: "Set of 6 subjects", mrp: 3200 },
+        { grade: "Grade 6", category: "Workbook", title: "Set of 6 subjects", mrp: 4000 },
+        { grade: "Grade 6", category: "Notebook", title: "Notebooks (Pack of 24)", mrp: 2000 },
+        { grade: "Grade 6", category: "School Diary", title: "School Diary 2026-27", mrp: 500 },
+        { grade: "Grade 7", category: "Textbook", title: "Set of 6 subjects", mrp: 3200 },
+        { grade: "Grade 7", category: "Workbook", title: "Set of 6 subjects", mrp: 4000 },
+        { grade: "Grade 7", category: "Notebook", title: "Notebooks (Pack of 24)", mrp: 2000 },
+        { grade: "Grade 7", category: "School Diary", title: "School Diary 2026-27", mrp: 500 },
+        { grade: "Grade 8", category: "Textbook", title: "Set of 6 subjects", mrp: 3200 },
+        { grade: "Grade 8", category: "Workbook", title: "Set of 6 subjects", mrp: 4000 },
+        { grade: "Grade 8", category: "Notebook", title: "Notebooks (Pack of 24)", mrp: 2000 },
+        { grade: "Grade 8", category: "School Diary", title: "School Diary 2026-27", mrp: 500 }
+    ];
+
+    // --- 3. LIVE SYNC LOGIC ---
+    onValue(stallRef, (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+            cloudInventoryData = data;
+        }
+    });
+
+    // --- 4. CORE FUNCTIONS (Attached to window for HTML access) ---
+
+    window.checkLogin = function() {
+        const pass = document.getElementById('staff-pass').value;
+        if(pass === "Paramount@07") {
+            document.getElementById('login-overlay').style.display = 'none';
+            document.getElementById('main-content').style.display = 'block';
+            window.updateInfoTable();
+        } else {
+            alert("Incorrect Password");
+        }
+    };
+
+    window.processSale = async function() {
+        const selectedCheckboxes = document.querySelectorAll('.bill-check:checked');
+        if (selectedCheckboxes.length === 0) return alert("Select books first!");
+
+        if (cloudInventoryData.length === 0) return alert("Error: Could not connect to Global Inventory.");
+
+        selectedCheckboxes.forEach(box => {
+            const title = box.dataset.title;
+            const grade = box.dataset.grade;
+            const cat = box.dataset.cat;
+            
+            // Find item in the cloud data using multiple match points for accuracy
+            const item = cloudInventoryData.find(i => i.title === title && i.grade === grade && i.category === cat);
+            
+            if (item) {
+                item.sold = (item.sold || 0) + 1;
+            }
+        });
+
+        // Push updated data to Firebase (Updates all devices globally)
+        await set(stallRef, cloudInventoryData);
         
-        ];
+        alert("Inventory Updated Successfully!");
+        
+        // Reset UI
+        selectedCheckboxes.forEach(box => box.checked = false);
+        document.getElementById('live-total').innerText = "0";
+        document.querySelectorAll('.billing-item-card').forEach(card => card.classList.remove('selected'));
+    };
 
-        // 2. Login Logic
-        function checkLogin() {
-            const pass = document.getElementById('staff-pass').value;
-            if(pass === "Paramount@07") {
-                document.getElementById('login-overlay').style.display = 'none';
-                document.getElementById('main-content').style.display = 'block';
-                updateInfoTable();
-            } else {
-                alert("Incorrect Password");
-            }
-        }
-function processSale() {
-    const selectedCheckboxes = document.querySelectorAll('.bill-check:checked');
-    if (selectedCheckboxes.length === 0) return alert("Select books first!");
+    window.updateInfoTable = function() {
+        const grade = document.getElementById('grade-info-filter').value;
+        const tbody = document.getElementById('info-body');
+        tbody.innerHTML = '';
+        const filtered = grade === "All" ? inventory : inventory.filter(i => i.grade === grade);
+        filtered.forEach(item => {
+            tbody.innerHTML += `<tr><td>${item.grade}</td><td>${item.category}</td><td>${item.title}</td><td>₹${item.mrp}</td></tr>`;
+        });
+    };
 
-    // Get current pending sales or start a new list
-    let pendingSales = JSON.parse(localStorage.getItem('pending_sales')) || {};
-
-   selectedCheckboxes.forEach(box => {
-    const title = box.dataset.title;
-    const grade = box.dataset.grade; // Ensure your checkboxes have data-grade
-    const salesKey = `${title}-${grade}`;
-    pendingSales[salesKey] = (pendingSales[salesKey] || 0) + 1;
-});
-
-    // Save to local storage so the Inventory page can see it
-    localStorage.setItem('pending_sales', JSON.stringify(pendingSales));
-    
-    alert("Books marked as Sold! Go to Stock Control to see updated counts.");
-    
-    // Clear the bill
-    selectedCheckboxes.forEach(box => box.checked = false);
-    document.getElementById('live-total').innerText = "0";
-    // Clear the visual 'selected' class from the cards
-document.querySelectorAll('.billing-item-card').forEach(card => card.classList.remove('selected'));
-}
-        // 3. Information Table Filter Logic
-        function updateInfoTable() {
-            const grade = document.getElementById('grade-info-filter').value;
-            const tbody = document.getElementById('info-body');
-            tbody.innerHTML = '';
-
-            const filtered = grade === "All" ? inventory : inventory.filter(i => i.grade === grade);
-            
-            filtered.forEach(item => {
-                tbody.innerHTML += `<tr>
-                    <td>${item.grade}</td>
-                    <td>${item.category}</td>
-                    <td>${item.title}</td>
-                    <td>₹${item.mrp}</td>
-                </tr>`;
-            });
+    window.updateBillingList = function() {
+        const grade = document.getElementById('s-grade').value;
+        const container = document.getElementById('billing-items-container');
+        container.innerHTML = '';
+        const filtered = inventory.filter(i => i.grade === grade);
+        
+        if(filtered.length === 0) {
+            container.innerHTML = '<p style="color:#999; text-align:center;">No books found for this grade.</p>';
+            return;
         }
 
-        // 4. Billing List Selection Logic
-        function updateBillingList() {
-            const grade = document.getElementById('s-grade').value;
-            const container = document.getElementById('billing-items-container');
-            container.innerHTML = '';
+        filtered.forEach((item) => {
+            container.innerHTML += `
+                <div class="billing-item-card" onclick="window.toggleItem(this)">
+                    <div class="item-info">
+                        <input type="checkbox" class="bill-check" 
+                            data-price="${item.mrp}" 
+                            data-title="${item.title}" 
+                            data-grade="${item.grade}"
+                            data-cat="${item.category}"
+                            onchange="window.calcTotal()"
+                            onclick="event.stopPropagation()">
+                        <div class="item-details">
+                            <b>${item.title}</b>
+                            <span>${item.category} | ${item.grade}</span>
+                        </div>
+                    </div>
+                    <div class="price-tag">₹${item.mrp}</div>
+                </div>`;
+        });
+        window.calcTotal();
+    };
 
-            const filtered = inventory.filter(i => i.grade === grade);
-            
-            if(filtered.length === 0) {
-                container.innerHTML = '<p style="color:#999; text-align:center;">No books found for this grade.</p>';
-                return;
-            }
+    window.toggleItem = function(card) {
+        const checkbox = card.querySelector('.bill-check');
+        checkbox.checked = !checkbox.checked;
+        card.classList.toggle('selected', checkbox.checked);
+        window.calcTotal();
+    };
 
-            filtered.forEach((item) => {
-    container.innerHTML += `
-        <div class="billing-item-card" onclick="toggleItem(this)">
-            <div class="item-info">
-                <input type="checkbox" class="bill-check" 
-                    data-price="${item.mrp}" 
-                    data-title="${item.title}" 
-                    data-grade="${item.grade}"  <!-- THIS LINE IS CRITICAL -->
-                    onchange="calcTotal()"
-                    onclick="event.stopPropagation()">
-                <div class="item-details">
-                    <b>${item.title}</b>
-                    <span>${item.grade}</span>
-                </div>
-            </div>
-            <div class="price-tag">₹${item.mrp}</div>
-        </div>
-    `;
-});
-            calcTotal();
-        }
+    window.calcTotal = function() {
+        let total = 0;
+        document.querySelectorAll('.bill-check:checked').forEach(box => {
+            total += parseFloat(box.dataset.price);
+        });
+        document.getElementById('live-total').innerText = total;
+    };
 
-        // 5. Live Total Calculation
-        function calcTotal() {
-            let total = 0;
-            document.querySelectorAll('.bill-check:checked').forEach(box => {
-                total += parseFloat(box.dataset.price);
-            });
-            document.getElementById('live-total').innerText = total;
-        }
+    window.printReceipt = function() {
+        const pname = document.getElementById('p-name').value;
+        const sname = document.getElementById('s-name').value;
+        if(!pname || !sname) return alert("Please enter Parent and Student names");
 
-        // 6. Print Receipt Logic
-        function printReceipt() {
-            const pname = document.getElementById('p-name').value;
-            const sname = document.getElementById('s-name').value;
-            if(!pname || !sname) { alert("Please enter Parent and Student names"); return; }
-
-            // Fill receipt details
-            document.getElementById('r-pname').innerText = pname;
-            document.getElementById('r-pphone').innerText = document.getElementById('p-phone').value;
-            document.getElementById('r-sname').innerText = sname;
-            document.getElementById('r-sgrade').innerText = document.getElementById('s-grade').value;
-            document.getElementById('r-date').innerText = new Date().toLocaleString();
-            
-            const rItems = document.getElementById('r-items');
-            rItems.innerHTML = '';
-            
-            document.querySelectorAll('.bill-check:checked').forEach(box => {
-                rItems.innerHTML += `<tr>
-                    <td>${box.dataset.title}</td>
-                    <td>${box.dataset.cat}</td>
-                    <td>₹${box.dataset.price}</td>
-                </tr>`;
-            });
-
-            document.getElementById('r-total').innerText = document.getElementById('live-total').innerText;
-            
-            window.print();
-        }
-    </script>
+        document.getElementById('r-pname').innerText = pname;
+        document.getElementById('r-pphone').innerText = document.getElementById('p-phone').value;
+        document.getElementById('r-sname').innerText = sname;
+        document.getElementById('r-sgrade').innerText = document.getElementById('s-grade').value;
+        document.getElementById('r-date').innerText = new Date().toLocaleString();
+        
+        const rItems = document.getElementById('r-items');
+        rItems.innerHTML = '';
+        document.querySelectorAll('.bill-check:checked').forEach(box => {
+            rItems.innerHTML += `<tr><td>${box.dataset.title}</td><td>${box.dataset.cat}</td><td>₹${box.dataset.price}</td></tr>`;
+        });
+        document.getElementById('r-total').innerText = document.getElementById('live-total').innerText;
+        window.print();
+    };
+</script>
 </body>
 </html>
