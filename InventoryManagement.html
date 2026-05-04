@@ -72,169 +72,148 @@
 </div>
 
 <script type="module">
+    // --- 1. FIREBASE CORE IMPORTS ---
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getDatabase, ref, onValue, set, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
+    // --- 2. CONFIGURATION & DATABASE INITIALIZATION ---
     const firebaseConfig = {
-        apiKey: "AIzaSyDRYk9KOK-ga0c88dnYMsAoifW2NJTd_Y8",
-        databaseURL: "https://paramount-school-d55bc-default-rtdb.firebaseio.com",
-        projectId: "paramount-school-d55bc"
+        apiKey: "AIzaSyDRYk9KOK-ga0c88dnYMsAoifW2NJTd_Y8", //
+        databaseURL: "https://paramount-school-d55bc-default-rtdb.firebaseio.com", //
+        projectId: "paramount-school-d55bc" //
     };
 
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
     const stallRef = ref(db, 'bookstall/inventory');
 
-    let inventoryData = [
-        { id: 1, title: "Set of 6 subjects (Textbooks)", grade: "Pre-KG", mrp: 3200, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 2, title: "Set of 6 subjects(Workbooks)", grade: "Pre-KG", mrp: 4000, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 3, title: "School Diary 2026-27", grade: "Pre-KG", mrp: 500, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 4, title: "Notebooks (Pack of 24)", grade: "Pre-KG", mrp: 2000, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 5, title: "Set of 6 subjects (Textbooks)", grade: "KG", mrp: 3200, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 6, title: "Set of 6 subjects(Workbooks)", grade: "KG", mrp: 4000, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 7, title: "School Diary 2026-27", grade: "KG", mrp: 500, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 8, title: "Notebooks (Pack of 24)", grade: "KG", mrp: 2000, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 9, title: "Set of 6 subjects (Textbooks)", grade: "UKG", mrp: 3200, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 10, title: "Set of 6 subjects(Workbooks)", grade: "UKG", mrp: 4000, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 11, title: "School Diary 2026-27", grade: "UKG", mrp: 500, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 12, title: "Notebooks (Pack of 24)", grade: "UKG", mrp: 2000, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 13, title: "Set of 6 subjects (Textbooks)", grade: "Grade 1", mrp: 3200, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 14, title: "Set of 6 subjects(Workbooks)", grade: "Grade 1", mrp: 4000, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 15, title: "School Diary 2026-27", grade: "Grade 1", mrp: 500, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 16, title: "Notebooks (Pack of 24)", grade: "Grade 1", mrp: 2000, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 17, title: "Set of 6 subjects (Textbooks)", grade: "Grade 2", mrp: 3200, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 18, title: "Set of 6 subjects(Workbooks)", grade: "Grade 2", mrp: 4000, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 19, title: "School Diary 2026-27", grade: "Grade 2", mrp: 500, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 20, title: "Notebooks (Pack of 24)", grade: "Grade 2", mrp: 2000, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 21, title: "Set of 6 subjects (Textbooks)", grade: "Grade 3", mrp: 3200, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 22, title: "Set of 6 subjects(Workbooks)", grade: "Grade 3", mrp: 4000, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 23, title: "School Diary 2026-27", grade: "Grade 3", mrp: 500, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 24, title: "Notebooks (Pack of 24)", grade: "Grade 3", mrp: 2000, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 25, title: "Set of 6 subjects (Textbooks)", grade: "Grade 4", mrp: 3200, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 26, title: "Set of 6 subjects(Workbooks)", grade: "Grade 4", mrp: 4000, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 27, title: "School Diary 2026-27", grade: "Grade 4", mrp: 500, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 28, title: "Notebooks (Pack of 24)", grade: "Grade 4", mrp: 2000, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 29, title: "Set of 6 subjects (Textbooks)", grade: "Grade 5", mrp: 3200, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 30, title: "Set of 6 subjects(Workbooks)", grade: "Grade 5", mrp: 4000, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 31, title: "School Diary 2026-27", grade: "Grade 5", mrp: 500, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 32, title: "Notebooks (Pack of 24)", grade: "Grade 5", mrp: 2000, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 33, title: "Set of 6 subjects (Textbooks)", grade: "Grade 6", mrp: 3200, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 34, title: "Set of 6 subjects(Workbooks)", grade: "Grade 6", mrp: 4000, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 35, title: "School Diary 2026-27", grade: "Grade 6", mrp: 500, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 36, title: "Notebooks (Pack of 24)", grade: "Grade 6", mrp: 2000, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 37, title: "Set of 6 subjects (Textbooks)", grade: "Grade 7", mrp: 3200, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 38, title: "Set of 6 subjects(Workbooks)", grade: "Grade 7", mrp: 4000, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 39, title: "School Diary 2026-27", grade: "Grade 7", mrp: 500, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 40, title: "Notebooks (Pack of 24)", grade: "Grade 7", mrp: 2000, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 41, title: "Set of 6 subjects (Textbooks)", grade: "Grade 8", mrp: 3200, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 42, title: "Set of 6 subjects(Workbooks)", grade: "Grade 8", mrp: 4000, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 43, title: "School Diary 2026-27", grade: "Grade 8", mrp: 500, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 44, title: "Notebooks (Pack of 24)", grade: "Grade 8", mrp: 2000, total: 0, sold: 0, lastUpdate: "Never" }
+    // --- 3. MASTER SOURCE OF TRUTH ---
+    // Any change here (titles, MRP, new books) auto-syncs globally without losing stock data.
+    const masterBooks = [
+        { id: 1, title: "Set of 6 subjects (Textbooks)", grade: "Pre-KG", mrp: 3200 },
+        { id: 2, title: "Set of 6 subjects (Workbooks)", grade: "Pre-KG", mrp: 4000 },
+        { id: 3, title: "School Diary 2026-27", grade: "Pre-KG", mrp: 500 },
+        { id: 4, title: "Notebooks (Pack of 24)", grade: "Pre-KG", mrp: 2000 },
+        { id: 5, title: "Set of 6 subjects (Textbooks)", grade: "KG", mrp: 3200 },
+        { id: 6, title: "Set of 6 subjects (Workbooks)", grade: "KG", mrp: 4000 },
+        { id: 7, title: "School Diary 2026-27", grade: "KG", mrp: 500 },
+        { id: 8, title: "Notebooks (Pack of 24)", grade: "KG", mrp: 2000 },
+        { id: 9, title: "Set of 6 subjects (Textbooks)", grade: "UKG", mrp: 3200 },
+        { id: 10, title: "Set of 6 subjects (Workbooks)", grade: "UKG", mrp: 4000 },
+        { id: 11, title: "School Diary 2026-27", grade: "UKG", mrp: 500 },
+        { id: 12, title: "Notebooks (Pack of 24)", grade: "UKG", mrp: 2000 },
+        { id: 13, title: "Set of 6 subjects (Textbooks)", grade: "Grade 1", mrp: 3200 },
+        { id: 14, title: "Set of 6 subjects (Workbooks)", grade: "Grade 1", mrp: 4000 },
+        { id: 15, title: "School Diary 2026-27", grade: "Grade 1", mrp: 500 },
+        { id: 16, title: "Notebooks (Pack of 24)", grade: "Grade 1", mrp: 2000 },
+        { id: 17, title: "Set of 6 subjects (Textbooks)", grade: "Grade 2", mrp: 3200 },
+        { id: 18, title: "Set of 6 subjects (Workbooks)", grade: "Grade 2", mrp: 4000 },
+        { id: 19, title: "School Diary 2026-27", grade: "Grade 2", mrp: 500 },
+        { id: 20, title: "Notebooks (Pack of 24)", grade: "Grade 2", mrp: 2000 },
+        { id: 21, title: "Set of 6 subjects (Textbooks)", grade: "Grade 3", mrp: 3200 },
+        { id: 22, title: "Set of 6 subjects (Workbooks)", grade: "Grade 3", mrp: 4000 },
+        { id: 23, title: "School Diary 2026-27", grade: "Grade 3", mrp: 500 },
+        { id: 24, title: "Notebooks (Pack of 24)", grade: "Grade 3", mrp: 2000 },
+        { id: 25, title: "Set of 6 subjects (Textbooks)", grade: "Grade 4", mrp: 3200 },
+        { id: 26, title: "Set of 6 subjects (Workbooks)", grade: "Grade 4", mrp: 4000 },
+        { id: 27, title: "School Diary 2026-27", grade: "Grade 4", mrp: 500 },
+        { id: 28, title: "Notebooks (Pack of 24)", grade: "Grade 4", mrp: 2000 },
+        { id: 29, title: "Set of 6 subjects (Textbooks)", grade: "Grade 5", mrp: 3200 },
+        { id: 30, title: "Set of 6 subjects (Workbooks)", grade: "Grade 5", mrp: 4000 },
+        { id: 31, title: "School Diary 2026-27", grade: "Grade 5", mrp: 500 },
+        { id: 32, title: "Notebooks (Pack of 24)", grade: "Grade 5", mrp: 2000 },
+        { id: 33, title: "Set of 6 subjects (Textbooks)", grade: "Grade 6", mrp: 3200 },
+        { id: 34, title: "Set of 6 subjects (Workbooks)", grade: "Grade 6", mrp: 4000 },
+        { id: 35, title: "School Diary 2026-27", grade: "Grade 6", mrp: 500 },
+        { id: 36, title: "Notebooks (Pack of 24)", grade: "Grade 6", mrp: 2000 },
+        { id: 37, title: "Set of 6 subjects (Textbooks)", grade: "Grade 7", mrp: 3200 },
+        { id: 38, title: "Set of 6 subjects (Workbooks)", grade: "Grade 7", mrp: 4000 },
+        { id: 39, title: "School Diary 2026-27", grade: "Grade 7", mrp: 500 },
+        { id: 40, title: "Notebooks (Pack of 24)", grade: "Grade 7", mrp: 2000 },
+        { id: 41, title: "Set of 6 subjects (Textbooks)", grade: "Grade 8", mrp: 3200 },
+        { id: 42, title: "Set of 6 subjects (Workbooks)", grade: "Grade 8", mrp: 4000 },
+        { id: 43, title: "School Diary 2026-27", grade: "Grade 8", mrp: 500 },
+        { id: 44, title: "Notebooks (Pack of 24)", grade: "Grade 8", mrp: 2000 }
     ];
 
-    // Global Sync: Listen for changes from any device
-   onValue(stallRef, (snapshot) => {
-        const data = snapshot.val();
-        
-        // --- ADD THIS LINE TEMPORARILY ---
-        initializeDatabase(); 
-        // ---------------------------------
+    let currentInventory = [];
 
-        if (data) {
-            inventoryData = data;
-            renderTable();
-        } else {
-            initializeDatabase();
+    // --- 4. GLOBAL SYNC & MERGE LOGIC ---
+    onValue(stallRef, (snapshot) => {
+        const cloudData = snapshot.val() || [];
+        
+        // Match master code list with cloud data based on ID
+        const syncedData = masterBooks.map(masterItem => {
+            const existing = cloudData.find(c => c.id === masterItem.id);
+            return {
+                ...masterItem,
+                total: existing ? (existing.total || 0) : 0, // Preserve stock count
+                sold: existing ? (existing.sold || 0) : 0,   // Preserve sales count
+                lastUpdate: existing ? (existing.lastUpdate || "Never") : "Never"
+            };
+        });
+
+        // If local code changes differ from cloud, push update to Firebase
+        if (JSON.stringify(syncedData) !== JSON.stringify(cloudData)) {
+            set(stallRef, syncedData);
         }
+
+        currentInventory = syncedData;
+        renderTable();
     });
 
+    // --- 5. UI RENDERING ENGINE ---
     function renderTable() {
         const tbody = document.getElementById('inventory-body');
         tbody.innerHTML = '';
-        inventoryData.forEach((item, index) => {
+        currentInventory.forEach((item, index) => {
             const left = item.total - item.sold;
             const revenue = item.sold * item.mrp;
+            
+            // Visual Status Badges
+            const statusClass = left <= 0 ? "rgba(211, 47, 47, 0.1)" : (left < 5 ? "rgba(249, 209, 13, 0.1)" : "rgba(46, 125, 50, 0.1)");
+            const statusColor = left <= 0 ? "#d32f2f" : (left < 5 ? "#b29400" : "#2e7d32");
+
             tbody.innerHTML += `
                 <tr>
-                    <td><b>${item.title}</b><br><small>${item.grade}</small></td>
+                    <td><b>${item.title}</b><br><small style="color:#666">${item.grade} | MRP: ₹${item.mrp}</small></td>
                     <td style="font-weight:600">${item.total}</td>
-                    <td class="sold-text">${item.sold} Sold</td>
-                    <td class="left-text">${left <= 0 ? "OUT OF STOCK" : left + " Left"}</td>
-                    <td><b>₹${revenue.toLocaleString()}</b></td>
+                    <td class="sold-text" style="color:#d32f2f; font-weight:600;">${item.sold} Sold</td>
                     <td>
-                        <button class="btn-restock" onclick="window.handleRestock(${index})">SET STOCK</button>
-                        <br><small style="color:#888; font-size:10px">Last: ${item.lastUpdate}</small>
+                        <span class="status-badge" style="background:${statusClass}; color:${statusColor}; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700;">
+                            ${left <= 0 && item.total > 0 ? "OUT OF STOCK" : left + " Remaining"}
+                        </span>
+                    </td>
+                    <td style="font-weight:700">₹${revenue.toLocaleString()}</td>
+                    <td>
+                        <button class="btn-restock" onclick="window.handleRestock(${index})" style="background:#005a2b; color:white; border:1px solid #f9d10d; padding:10px 20px; border-radius:30px; font-weight:bold; cursor:pointer;">SET STOCK</button>
+                        <br><small style="color:#aaa; font-size:10px">Last Sync: ${item.lastUpdate}</small>
                     </td>
                 </tr>`;
         });
     }
 
+    // --- 6. INTERACTIVE TOOLS (GLOBAL ACCESS) ---
     window.handleRestock = (index) => {
-        const item = inventoryData[index];
-        const newTotal = prompt(`Set Master Stock for ${item.title} (${item.grade})`, item.total);
+        const item = currentInventory[index];
+        const newTotal = prompt(`[GLOBAL STOCK UPDATE] ${item.title} (${item.grade})\nEnter the Master Stock count:`, item.total);
         if (newTotal !== null && !isNaN(newTotal)) {
-            inventoryData[index].total = parseInt(newTotal);
-            inventoryData[index].lastUpdate = new Date().toLocaleString();
-            set(stallRef, inventoryData);
+            currentInventory[index].total = parseInt(newTotal);
+            currentInventory[index].lastUpdate = new Date().toLocaleString();
+            set(stallRef, currentInventory); // Push global update
         }
     };
 
     window.resetGlobalData = () => {
-        if (confirm("DANGER: This wipes all sales and stock for ALL users. Continue?")) {
-            inventoryData.forEach(item => { item.sold = 0; item.total = 0; item.lastUpdate = "Never"; });
-            set(stallRef, inventoryData);
+        if (confirm("DANGER: This will globally reset ALL sales and stock to 0 for ALL devices. Confirm?")) {
+            currentInventory.forEach(i => {
+                i.sold = 0;
+                i.total = 0;
+                i.lastUpdate = "Never";
+            });
+            set(stallRef, currentInventory);
         }
     };
-
-    function initializeDatabase() {
-        const initialList = [
-            { id: 1, title: "Set of 6 subjects (Textbooks)", grade: "Pre-KG", mrp: 3200, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 2, title: "Set of 6 subjects(Workbooks)", grade: "Pre-KG", mrp: 4000, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 3, title: "School Diary 2026-27", grade: "Pre-KG", mrp: 500, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 4, title: "Notebooks (Pack of 24)", grade: "Pre-KG", mrp: 2000, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 5, title: "Set of 6 subjects (Textbooks)", grade: "KG", mrp: 3200, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 6, title: "Set of 6 subjects(Workbooks)", grade: "KG", mrp: 4000, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 7, title: "School Diary 2026-27", grade: "KG", mrp: 500, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 8, title: "Notebooks (Pack of 24)", grade: "KG", mrp: 2000, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 9, title: "Set of 6 subjects (Textbooks)", grade: "UKG", mrp: 3200, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 10, title: "Set of 6 subjects(Workbooks)", grade: "UKG", mrp: 4000, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 11, title: "School Diary 2026-27", grade: "UKG", mrp: 500, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 12, title: "Notebooks (Pack of 24)", grade: "UKG", mrp: 2000, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 13, title: "Set of 6 subjects (Textbooks)", grade: "Grade 1", mrp: 3200, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 14, title: "Set of 6 subjects(Workbooks)", grade: "Grade 1", mrp: 4000, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 15, title: "School Diary 2026-27", grade: "Grade 1", mrp: 500, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 16, title: "Notebooks (Pack of 24)", grade: "Grade 1", mrp: 2000, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 17, title: "Set of 6 subjects (Textbooks)", grade: "Grade 2", mrp: 3200, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 18, title: "Set of 6 subjects(Workbooks)", grade: "Grade 2", mrp: 4000, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 19, title: "School Diary 2026-27", grade: "Grade 2", mrp: 500, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 20, title: "Notebooks (Pack of 24)", grade: "Grade 2", mrp: 2000, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 21, title: "Set of 6 subjects (Textbooks)", grade: "Grade 3", mrp: 3200, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 22, title: "Set of 6 subjects(Workbooks)", grade: "Grade 3", mrp: 4000, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 23, title: "School Diary 2026-27", grade: "Grade 3", mrp: 500, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 24, title: "Notebooks (Pack of 24)", grade: "Grade 3", mrp: 2000, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 25, title: "Set of 6 subjects (Textbooks)", grade: "Grade 4", mrp: 3200, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 26, title: "Set of 6 subjects(Workbooks)", grade: "Grade 4", mrp: 4000, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 27, title: "School Diary 2026-27", grade: "Grade 4", mrp: 500, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 28, title: "Notebooks (Pack of 24)", grade: "Grade 4", mrp: 2000, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 29, title: "Set of 6 subjects (Textbooks)", grade: "Grade 5", mrp: 3200, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 30, title: "Set of 6 subjects(Workbooks)", grade: "Grade 5", mrp: 4000, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 31, title: "School Diary 2026-27", grade: "Grade 5", mrp: 500, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 32, title: "Notebooks (Pack of 24)", grade: "Grade 5", mrp: 2000, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 33, title: "Set of 6 subjects (Textbooks)", grade: "Grade 6", mrp: 3200, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 34, title: "Set of 6 subjects(Workbooks)", grade: "Grade 6", mrp: 4000, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 35, title: "School Diary 2026-27", grade: "Grade 6", mrp: 500, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 36, title: "Notebooks (Pack of 24)", grade: "Grade 6", mrp: 2000, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 37, title: "Set of 6 subjects (Textbooks)", grade: "Grade 7", mrp: 3200, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 38, title: "Set of 6 subjects(Workbooks)", grade: "Grade 7", mrp: 4000, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 39, title: "School Diary 2026-27", grade: "Grade 7", mrp: 500, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 40, title: "Notebooks (Pack of 24)", grade: "Grade 7", mrp: 2000, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 41, title: "Set of 6 subjects (Textbooks)", grade: "Grade 8", mrp: 3200, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 42, title: "Set of 6 subjects(Workbooks)", grade: "Grade 8", mrp: 4000, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 43, title: "School Diary 2026-27", grade: "Grade 8", mrp: 500, total: 0, sold: 0, lastUpdate: "Never" },
-        { id: 44, title: "Notebooks (Pack of 24)", grade: "Grade 8", mrp: 2000, total: 0, sold: 0, lastUpdate: "Never" }
-        ];
-        set(stallRef, initialList);
-    }
 </script>
 </body>
 </html>
