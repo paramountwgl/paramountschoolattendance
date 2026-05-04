@@ -88,9 +88,7 @@
 </div>
 
 <script>
-    // This array represents the "State" of your store. 
-   // 1. DATA INITIALIZATION 
-    // This logic checks if you have saved data. If not, it starts everything at 0.
+    
     let inventoryData = JSON.parse(localStorage.getItem('paramount_inventory')) || [
         { id: 1, title: "Textbooks", grade: "Grade-1", mrp: 3200, total: 0, sold: 0, lastUpdate: "Never" },
         { id: 2, title: "Workbooks", grade: "Grade-1", mrp: 4000, total: 0, sold: 0, lastUpdate: "Never" },
@@ -134,11 +132,13 @@
         tbody.innerHTML = '';
 
         inventoryData.forEach(item => {
-            // Add any new sales from the billing page to our current sold count
-            if (liveSales[item.title]) {
-                item.sold += liveSales[item.title];
-                delete liveSales[item.title]; // Clear it once we've counted it
-            }
+    // Create a unique key using Title + Grade (e.g., "Textbooks-Grade-1")
+    const salesKey = `${item.title}-${item.grade}`; 
+    
+    if (liveSales[salesKey]) {
+        item.sold += liveSales[salesKey];
+        delete liveSales[salesKey]; 
+    }
 
             const left = item.total - item.sold;
             const revenue = item.sold * item.mrp;
@@ -182,7 +182,9 @@
     }
 
     // Refresh table on load
-    window.onload = renderTable;</script>
+    window.onload = renderTable;
+    localStorage.removeItem('paramount_inventory'); // Add this, refresh once, then delete it.
+</script>
 
 </body>
 </html>
