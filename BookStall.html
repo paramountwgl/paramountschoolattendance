@@ -426,7 +426,28 @@
                 alert("Incorrect Password");
             }
         }
+function processSale() {
+    const selectedCheckboxes = document.querySelectorAll('.bill-check:checked');
+    if (selectedCheckboxes.length === 0) return alert("Select books first!");
 
+    // Get current pending sales or start a new list
+    let pendingSales = JSON.parse(localStorage.getItem('pending_sales')) || {};
+
+    selectedCheckboxes.forEach(box => {
+        const title = box.dataset.title;
+        // Increase the pending sale count for this title
+        pendingSales[title] = (pendingSales[title] || 0) + 1;
+    });
+
+    // Save to local storage so the Inventory page can see it
+    localStorage.setItem('pending_sales', JSON.stringify(pendingSales));
+    
+    alert("Books marked as Sold! Go to Stock Control to see updated counts.");
+    
+    // Clear the bill
+    selectedCheckboxes.forEach(box => box.checked = false);
+    document.getElementById('live-total').innerText = "0";
+}
         // 3. Information Table Filter Logic
         function updateInfoTable() {
             const grade = document.getElementById('grade-info-filter').value;
