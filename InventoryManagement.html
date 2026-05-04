@@ -133,13 +133,17 @@
     ];
 
     // Global Sync: Listen for changes from any device
-    onValue(stallRef, (snapshot) => {
+   onValue(stallRef, (snapshot) => {
         const data = snapshot.val();
+        
+        // --- ADD THIS LINE TEMPORARILY ---
+        initializeDatabase(); 
+        // ---------------------------------
+
         if (data) {
             inventoryData = data;
             renderTable();
         } else {
-            // Initial Data Setup if Database is empty
             initializeDatabase();
         }
     });
