@@ -88,18 +88,29 @@
 
 <script>
     // This array represents the "State" of your store. 
-    // Manual updates via the "Restock" button will change these values live.
-    let inventoryData = [
-        { id: 1, title: "English Path Vol 1", grade: "Grade 1", mrp: 450, total: 100, sold: 15, lastUpdate: "03/05/2026, 06:15 PM" },
-        { id: 2, title: "Math Practice Book", grade: "Grade 1", mrp: 320, total: 100, sold: 22, lastUpdate: "03/05/2026, 06:15 PM" },
-        { id: 3, title: "School Diary 2026", grade: "All", mrp: 150, total: 200, sold: 45, lastUpdate: "01/05/2026, 11:20 AM" }
+   // 1. DATA INITIALIZATION 
+    // This logic checks if you have saved data. If not, it starts everything at 0.
+    let inventoryData = JSON.parse(localStorage.getItem('paramount_inventory')) || [
+        { id: 1, title: "English Path Vol 1", grade: "Grade 1", mrp: 450, total: 0, sold: 0, lastUpdate: "Never" },
+        { id: 2, title: "Math Practice Book", grade: "Grade 1", mrp: 320, total: 0, sold: 0, lastUpdate: "Never" },
+        { id: 3, title: "School Diary 2026", grade: "All", mrp: 150, total: 0, sold: 0, lastUpdate: "Never" },
+        { id: 4, title: "Notebook (Pack of 5)", grade: "All", mrp: 250, total: 0, sold: 0, lastUpdate: "Never" }
     ];
 
     function renderTable() {
+        // Always pull the latest 'sold' counts from the billing page's activity
+        const liveSales = JSON.parse(localStorage.getItem('pending_sales')) || {};
+        
         const tbody = document.getElementById('inventory-body');
         tbody.innerHTML = '';
 
         inventoryData.forEach(item => {
+            // Add any new sales from the billing page to our current sold count
+            if (liveSales[item.title]) {
+                item.sold += liveSales[item.title];
+                delete liveSales[item.title]; // Clear it once we've counted it
+            }
+
             const left = item.total - item.sold;
             const revenue = item.sold * item.mrp;
 
@@ -110,41 +121,39 @@
                         <small style="color:#777;">${item.grade} | MRP: ₹${item.mrp}</small>
                     </td>
                     <td style="font-weight: 600;">${item.total}</td>
-                    <td class="sold-text">-${item.sold}</td>
-                    <td class="left-text">${left} Remaining</td>
+                    <td class="sold-text">${item.sold} Sold</td>
+                    <td class="left-text">${left <= 0 && item.total > 0 ? "OUT OF STOCK" : left + " Remaining"}</td>
                     <td class="price-text">₹${revenue.toLocaleString()}</td>
                     <td>
                         <button class="btn-restock" onclick="handleRestock(${item.id})">
-                            <i class="fas fa-sync-alt"></i> UPDATE STOCK
+                            <i class="fas fa-edit"></i> SET TOTAL STOCK
                         </button>
-                        <span class="time-stamp">Last: ${item.lastUpdate}</span>
+                        <span class="time-stamp">Last Updated: ${item.lastUpdate}</span>
                     </td>
                 </tr>
             `;
         });
+        
+        // Save state so it persists when you refresh
+        localStorage.setItem('paramount_inventory', JSON.stringify(inventoryData));
+        localStorage.setItem('pending_sales', JSON.stringify(liveSales));
     }
 
     function handleRestock(itemId) {
         const item = inventoryData.find(i => i.id === itemId);
-        const newTotal = prompt(`[RESTOCK] ${item.title}\nEnter the NEW total stock number:`, item.total);
+        const newTotal = prompt(`ENTER TOTAL STOCK FOR: ${item.title}\n(This will set the master count for this book)`, item.total);
         
         if (newTotal !== null && !isNaN(newTotal)) {
             item.total = parseInt(newTotal);
-            // Optionally reset sold count if it's a completely new academic year batch:
-            // item.sold = 0; 
-            
-            // Set current Date and Time
             const now = new Date();
             item.lastUpdate = now.toLocaleString('en-IN');
             
-            renderTable();
-            alert(`${item.title} stock updated successfully.`);
+            renderTable(); // Update UI and Save
         }
     }
 
-    // Load table on startup
-    window.onload = renderTable;
-</script>
+    // Refresh table on load
+    window.onload = renderTable;</script>
 
 </body>
 </html>
