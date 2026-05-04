@@ -404,6 +404,7 @@
     </div>
 
    <script type="module">
+    // --- 1. FIREBASE INITIALIZATION ---
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
@@ -417,9 +418,10 @@
     const db = getDatabase(app);
     const stallRef = ref(db, 'bookstall/inventory');
 
+    // --- 2. GLOBAL STATE ---
     let cloudInventoryData = [];
 
-    // Master list updated to match Inventory page exactly
+    // Master list: Used for UI display and filtering
     const inventory = [
         { grade: "Pre-KG", category: "Textbook", title: "Set of 6 subjects (Textbooks)", mrp: 3200 },
         { grade: "Pre-KG", category: "Workbook", title: "Set of 6 subjects (Workbooks)", mrp: 4000 },
@@ -467,36 +469,74 @@
         { grade: "Grade 8", category: "School Diary", title: "School Diary 2026-27", mrp: 500 }
     ];
 
+    // --- 3. FIREBASE SYNC ---
     onValue(stallRef, (snapshot) => {
         const data = snapshot.val();
-        if (data) { cloudInventoryData = data; }
+        if (data) {
+            cloudInventoryData = data;
+        }
     });
 
+    // --- 4. ACCESS CONTROL ---
+    window.checkLogin = function() {
+        const pass = document.getElementById('staff-pass').value;
+        if(pass === "Paramount@07") {
+            document.getElementById('login-overlay').style.display = 'none';
+            document.getElementById('main-content').style.display = 'block';
+            window.updateInfoTable();
+        } else {
+            alert("Incorrect Password");
+        }
+    };
+
+    // --- 5. BILLING & INVENTORY LOGIC ---
     window.processSale = async function() {
         const selected = document.querySelectorAll('.bill-check:checked');
         if (selected.length === 0) return alert("Select books first!");
-        if (cloudInventoryData.length === 0) return alert("Syncing with database... Please try again in a second.");
+        
+        if (cloudInventoryData.length === 0) {
+            return alert("Syncing with database... Please wait a moment.");
+        }
 
         selected.forEach(box => {
             const title = box.dataset.title;
             const grade = box.dataset.grade;
             
-            // Matches based on Title and Grade
+            // Critical match logic: Title + Grade must be identical to Inventory Page
             const item = cloudInventoryData.find(i => i.title === title && i.grade === grade);
             
             if (item) {
                 item.sold = (item.sold || 0) + 1;
             } else {
-                console.error("Match not found for:", title, grade);
+                console.error("Match Fail:", title, grade);
             }
         });
 
+        // Global Sync back to Firebase
         await set(stallRef, cloudInventoryData);
-        alert("Stock Updated Successfully!");
+        alert("Inventory Updated Globally!");
         
+        // Reset UI
         selected.forEach(box => box.checked = false);
         document.getElementById('live-total').innerText = "0";
         document.querySelectorAll('.billing-item-card').forEach(card => card.classList.remove('selected'));
+    };
+
+    window.updateInfoTable = function() {
+        const grade = document.getElementById('grade-info-filter').value;
+        const tbody = document.getElementById('info-body');
+        tbody.innerHTML = '';
+
+        const filtered = !grade || grade === "All" ? inventory : inventory.filter(i => i.grade === grade);
+        
+        filtered.forEach(item => {
+            tbody.innerHTML += `<tr>
+                <td>${item.grade}</td>
+                <td>${item.category}</td>
+                <td>${item.title}</td>
+                <td>₹${item.mrp}</td>
+            </tr>`;
+        });
     };
 
     window.updateBillingList = function() {
@@ -505,6 +545,11 @@
         container.innerHTML = '';
         const filtered = inventory.filter(i => i.grade === grade);
         
+        if(filtered.length === 0) {
+            container.innerHTML = '<p style="color:#999; text-align:center;">No books found for this grade.</p>';
+            return;
+        }
+
         filtered.forEach((item) => {
             container.innerHTML += `
                 <div class="billing-item-card" onclick="window.toggleItem(this)">
@@ -538,10 +583,35 @@
         document.querySelectorAll('.bill-check:checked').forEach(box => {
             total += parseFloat(box.dataset.price);
         });
-        document.getElementById('live-total').innerText = total;
+        document.getElementById('live-total').innerText = total.toLocaleString();
     };
-    
-    // (Other existing functions like checkLogin, printReceipt remain the same)
+
+    // --- 6. PRINTING LOGIC ---
+    window.printReceipt = function() {
+        const pname = document.getElementById('p-name').value;
+        const sname = document.getElementById('s-name').value;
+        if(!pname || !sname) return alert("Please enter Parent and Student names");
+
+        document.getElementById('r-pname').innerText = pname;
+        document.getElementById('r-pphone').innerText = document.getElementById('p-phone').value;
+        document.getElementById('r-sname').innerText = sname;
+        document.getElementById('r-sgrade').innerText = document.getElementById('s-grade').value;
+        document.getElementById('r-date').innerText = new Date().toLocaleString();
+        
+        const rItems = document.getElementById('r-items');
+        rItems.innerHTML = '';
+        
+        document.querySelectorAll('.bill-check:checked').forEach(box => {
+            rItems.innerHTML += `<tr>
+                <td>${box.dataset.title}</td>
+                <td>Premium Education Item</td>
+                <td>₹${parseFloat(box.dataset.price).toLocaleString()}</td>
+            </tr>`;
+        });
+
+        document.getElementById('r-total').innerText = document.getElementById('live-total').innerText;
+        window.print();
+    };
 </script>
 </body>
 </html>
