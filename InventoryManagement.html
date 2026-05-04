@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Paramount | Inventory Management</title>
+    <title>Paramount | Global Stock Control</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="icon" type="image/png" href="logo.png">
     <style>
         :root {
             --paramount-green: #005a2b;
@@ -16,59 +15,45 @@
         }
 
         body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; padding: 20px; color: #333; }
-
         .container { max-width: 1200px; margin: auto; }
 
-        /* Navigation Header */
         .nav-header {
             background: white; padding: 20px 40px; border-radius: 15px; margin-bottom: 25px;
             display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.05);
         }
 
-        .back-btn {
-            text-decoration: none; color: var(--primary); font-weight: 600;
-            display: flex; align-items: center; gap: 10px; transition: 0.3s;
-        }
-        .back-btn:hover { color: var(--paramount-green); }
+        .back-btn { text-decoration: none; color: var(--primary); font-weight: 600; display: flex; align-items: center; gap: 10px; }
 
-        /* Inventory Card */
         .section { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-        
-        h2 { font-family: 'Playfair Display', serif; color: var(--primary); margin-top: 0; border-left: 5px solid var(--paramount-green); padding-left: 15px; }
+        h2 { font-family: 'Playfair Display', serif; color: var(--primary); border-left: 5px solid var(--paramount-green); padding-left: 15px; }
 
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
         th { text-align: left; padding: 15px; background: #f8f9fa; color: var(--primary); border-bottom: 2px solid var(--paramount-yellow); }
         td { padding: 15px; border-bottom: 1px solid #eee; }
 
-        .price-text { font-weight: 600; color: var(--primary); }
         .sold-text { color: #d32f2f; font-weight: 600; }
         .left-text { color: #2e7d32; font-weight: 700; }
 
-        /* Restock Button */
         .btn-restock {
             background: var(--paramount-green); color: white; border: 1px solid var(--paramount-yellow);
-            padding: 10px 15px; border-radius: 30px; font-weight: bold; cursor: pointer; transition: 0.3s;
-            font-size: 0.8rem; display: flex; align-items: center; gap: 8px;
+            padding: 10px 20px; border-radius: 30px; font-weight: bold; cursor: pointer; transition: 0.3s;
         }
-        .btn-restock:hover { transform: scale(1.05); background: #004a23; }
-
-        .time-stamp { font-size: 0.75rem; color: #888; display: block; margin-top: 4px; }
+        .btn-reset {
+            background: #d32f2f; color: white; border: none; padding: 10px 20px; border-radius: 30px; font-weight: bold; cursor: pointer;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="nav-header">
-        <a href="BookStall.html" class="back-btn">
-            <i class="fas fa-arrow-left"></i> RETURN TO BILLING
-        </a>
-        <img src="logo.png" height="60" alt="Paramount Logo">
+        <a href="BookStall.html" class="back-btn"><i class="fas fa-arrow-left"></i> RETURN TO BILLING</a>
+        <button class="btn-reset" onclick="resetGlobalData()">RESET ALL DATA</button>
+        <img src="logo.png" height="60" alt="Logo">
     </div>
 
     <div class="section">
-        <h2>Stock Control & Sales Tracking</h2>
-        <p style="color: #666; margin-bottom: 25px;">View live counts, track total revenue, and update stock levels manually.</p>
-
+        <h2>Global Stock & Sales Tracking</h2>
         <table>
             <thead>
                 <tr>
@@ -80,17 +65,26 @@
                     <th>Action</th>
                 </tr>
             </thead>
-            <tbody id="inventory-body">
-                <!-- Data will be rendered here -->
-            </tbody>
+            <tbody id="inventory-body"></tbody>
         </table>
     </div>
 </div>
 
-<script>
-    localStorage.removeItem('paramount_inventory'); // Add this, refresh once, then delete it.
-    
-    let inventoryData = JSON.parse(localStorage.getItem('paramount_inventory')) || [
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getDatabase, ref, onValue, set, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyDRYk9KOK-ga0c88dnYMsAoifW2NJTd_Y8",
+        databaseURL: "https://paramount-school-d55bc-default-rtdb.firebaseio.com",
+        projectId: "paramount-school-d55bc"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const stallRef = ref(db, 'bookstall/inventory');
+
+    let inventoryData = [
         { id: 1, title: "Set of 6 subjects (Textbooks)", grade: "Pre-KG", mrp: 3200, total: 0, sold: 0, lastUpdate: "Never" },
         { id: 2, title: "Set of 6 subjects(Workbooks)", grade: "Pre-KG", mrp: 4000, total: 0, sold: 0, lastUpdate: "Never" },
         { id: 3, title: "School Diary 2026-27", grade: "Pre-KG", mrp: 500, total: 0, sold: 0, lastUpdate: "Never" },
@@ -137,71 +131,64 @@
         { id: 44, title: "Notebooks (Pack of 24)", grade: "Grade 8", mrp: 2000, total: 0, sold: 0, lastUpdate: "Never" }
     ];
 
-    function renderTable() {
-    // 1. Get current sales from memory
-    const liveSales = JSON.parse(localStorage.getItem('pending_sales')) || {};
-    const tbody = document.getElementById('inventory-body');
-    tbody.innerHTML = '';
-
-    inventoryData.forEach(item => {
-        // 2. Match exactly: "Textbooks-Grade-1"
-        const salesKey = `${item.title}-${item.grade}`; 
-        
-        if (liveSales[salesKey]) {
-            // Add the new sales to the existing total
-            item.sold += liveSales[salesKey];
-            
-            // 3. REMOVE the sale from pending so it isn't counted twice next time
-            delete liveSales[salesKey]; 
-            
-            // 4. Update the 'pending_sales' in storage immediately for safety
-            localStorage.setItem('pending_sales', JSON.stringify(liveSales));
+    // Global Sync: Listen for changes from any device
+    onValue(stallRef, (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+            inventoryData = data;
+            renderTable();
+        } else {
+            // Initial Data Setup if Database is empty
+            initializeDatabase();
         }
-
-        const left = item.total - item.sold;
-        const revenue = item.sold * item.mrp;
-
-        tbody.innerHTML += `
-            <tr>
-                <td>
-                    <b style="font-size: 1rem;">${item.title}</b><br>
-                    <small style="color:#777;">${item.grade} | MRP: ₹${item.mrp}</small>
-                </td>
-                <td style="font-weight: 600;">${item.total}</td>
-                <td class="sold-text">${item.sold} Sold</td>
-                <td class="left-text">${left <= 0 && item.total > 0 ? "OUT OF STOCK" : left + " Remaining"}</td>
-                <td class="price-text">₹${revenue.toLocaleString()}</td>
-                <td>
-                    <button class="btn-restock" onclick="handleRestock(${item.id})">
-                        <i class="fas fa-edit"></i> SET TOTAL STOCK
-                    </button>
-                    <span class="time-stamp">Last Updated: ${item.lastUpdate}</span>
-                </td>
-            </tr>
-        `;
     });
-    
-    // 5. Final Save of the updated inventory counts
-    localStorage.setItem('paramount_inventory', JSON.stringify(inventoryData));
-}
 
-    function handleRestock(itemId) {
-        const item = inventoryData.find(i => i.id === itemId);
-        const newTotal = prompt(`ENTER TOTAL STOCK FOR: ${item.title}\n(This will set the master count for this book)`, item.total);
-        
-        if (newTotal !== null && !isNaN(newTotal)) {
-            item.total = parseInt(newTotal);
-            const now = new Date();
-            item.lastUpdate = now.toLocaleString('en-IN');
-            
-            renderTable(); // Update UI and Save
-        }
+    function renderTable() {
+        const tbody = document.getElementById('inventory-body');
+        tbody.innerHTML = '';
+        inventoryData.forEach((item, index) => {
+            const left = item.total - item.sold;
+            const revenue = item.sold * item.mrp;
+            tbody.innerHTML += `
+                <tr>
+                    <td><b>${item.title}</b><br><small>${item.grade}</small></td>
+                    <td style="font-weight:600">${item.total}</td>
+                    <td class="sold-text">${item.sold} Sold</td>
+                    <td class="left-text">${left <= 0 ? "OUT OF STOCK" : left + " Left"}</td>
+                    <td><b>₹${revenue.toLocaleString()}</b></td>
+                    <td>
+                        <button class="btn-restock" onclick="window.handleRestock(${index})">SET STOCK</button>
+                        <br><small style="color:#888; font-size:10px">Last: ${item.lastUpdate}</small>
+                    </td>
+                </tr>`;
+        });
     }
 
-    // Refresh table on load
-    window.onload = renderTable;
-    
-</script>
+    window.handleRestock = (index) => {
+        const item = inventoryData[index];
+        const newTotal = prompt(`Set Master Stock for ${item.title} (${item.grade})`, item.total);
+        if (newTotal !== null && !isNaN(newTotal)) {
+            inventoryData[index].total = parseInt(newTotal);
+            inventoryData[index].lastUpdate = new Date().toLocaleString();
+            set(stallRef, inventoryData);
+        }
+    };
 
+    window.resetGlobalData = () => {
+        if (confirm("DANGER: This wipes all sales and stock for ALL users. Continue?")) {
+            inventoryData.forEach(item => { item.sold = 0; item.total = 0; item.lastUpdate = "Never"; });
+            set(stallRef, inventoryData);
+        }
+    };
+
+    function initializeDatabase() {
+        const initialList = [
+            { id: 1, title: "Textbooks", grade: "Pre-KG", mrp: 3200, total: 0, sold: 0, lastUpdate: "Never" },
+            { id: 2, title: "Workbooks", grade: "Pre-KG", mrp: 4000, total: 0, sold: 0, lastUpdate: "Never" },
+            // ... (Add all 44 items here as you defined them)
+        ];
+        set(stallRef, initialList);
+    }
+</script>
 </body>
 </html>
