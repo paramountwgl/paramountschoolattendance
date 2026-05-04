@@ -486,6 +486,8 @@ function processSale() {
     // Clear the bill
     selectedCheckboxes.forEach(box => box.checked = false);
     document.getElementById('live-total').innerText = "0";
+    // Clear the visual 'selected' class from the cards
+document.querySelectorAll('.billing-item-card').forEach(card => card.classList.remove('selected'));
 }
         // 3. Information Table Filter Logic
         function updateInfoTable() {
@@ -518,17 +520,25 @@ function processSale() {
                 return;
             }
 
-            filtered.forEach((item, index) => {
-                container.innerHTML += `
-                    <div class="billing-item">
-                        <label class="checkbox-container">
-                            <input type="checkbox" class="bill-check" data-price="${item.mrp}" data-title="${item.title}" data-cat="${item.category}" onchange="calcTotal()">
-                            <span>${item.title} (${item.category})</span>
-                        </label>
-                        <span>₹${item.mrp}</span>
-                    </div>
-                `;
-            });
+            filtered.forEach((item) => {
+    container.innerHTML += `
+        <div class="billing-item-card" onclick="toggleItem(this)">
+            <div class="item-info">
+                <input type="checkbox" class="bill-check" 
+                    data-price="${item.mrp}" 
+                    data-title="${item.title}" 
+                    data-grade="${item.grade}"  <!-- THIS LINE IS CRITICAL -->
+                    onchange="calcTotal()"
+                    onclick="event.stopPropagation()">
+                <div class="item-details">
+                    <b>${item.title}</b>
+                    <span>${item.grade}</span>
+                </div>
+            </div>
+            <div class="price-tag">₹${item.mrp}</div>
+        </div>
+    `;
+});
             calcTotal();
         }
 
