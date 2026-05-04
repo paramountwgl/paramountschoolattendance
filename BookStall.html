@@ -471,11 +471,12 @@ function processSale() {
     // Get current pending sales or start a new list
     let pendingSales = JSON.parse(localStorage.getItem('pending_sales')) || {};
 
-    selectedCheckboxes.forEach(box => {
-        const title = box.dataset.title;
-        // Increase the pending sale count for this title
-        pendingSales[title] = (pendingSales[title] || 0) + 1;
-    });
+   selectedCheckboxes.forEach(box => {
+    const title = box.dataset.title;
+    const grade = box.dataset.grade; // Ensure your checkboxes have data-grade
+    const salesKey = `${title}-${grade}`;
+    pendingSales[salesKey] = (pendingSales[salesKey] || 0) + 1;
+});
 
     // Save to local storage so the Inventory page can see it
     localStorage.setItem('pending_sales', JSON.stringify(pendingSales));
