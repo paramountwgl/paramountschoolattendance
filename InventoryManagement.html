@@ -125,48 +125,52 @@
     ];
 
     function renderTable() {
-        // Always pull the latest 'sold' counts from the billing page's activity
-        const liveSales = JSON.parse(localStorage.getItem('pending_sales')) || {};
-        
-        const tbody = document.getElementById('inventory-body');
-        tbody.innerHTML = '';
+    // 1. Get current sales from memory
+    const liveSales = JSON.parse(localStorage.getItem('pending_sales')) || {};
+    const tbody = document.getElementById('inventory-body');
+    tbody.innerHTML = '';
 
-        inventoryData.forEach(item => {
-    // Create a unique key using Title + Grade (e.g., "Textbooks-Grade-1")
-    const salesKey = `${item.title}-${item.grade}`; 
+    inventoryData.forEach(item => {
+        // 2. Match exactly: "Textbooks-Grade-1"
+        const salesKey = `${item.title}-${item.grade}`; 
+        
+        if (liveSales[salesKey]) {
+            // Add the new sales to the existing total
+            item.sold += liveSales[salesKey];
+            
+            // 3. REMOVE the sale from pending so it isn't counted twice next time
+            delete liveSales[salesKey]; 
+            
+            // 4. Update the 'pending_sales' in storage immediately for safety
+            localStorage.setItem('pending_sales', JSON.stringify(liveSales));
+        }
+
+        const left = item.total - item.sold;
+        const revenue = item.sold * item.mrp;
+
+        tbody.innerHTML += `
+            <tr>
+                <td>
+                    <b style="font-size: 1rem;">${item.title}</b><br>
+                    <small style="color:#777;">${item.grade} | MRP: ₹${item.mrp}</small>
+                </td>
+                <td style="font-weight: 600;">${item.total}</td>
+                <td class="sold-text">${item.sold} Sold</td>
+                <td class="left-text">${left <= 0 && item.total > 0 ? "OUT OF STOCK" : left + " Remaining"}</td>
+                <td class="price-text">₹${revenue.toLocaleString()}</td>
+                <td>
+                    <button class="btn-restock" onclick="handleRestock(${item.id})">
+                        <i class="fas fa-edit"></i> SET TOTAL STOCK
+                    </button>
+                    <span class="time-stamp">Last Updated: ${item.lastUpdate}</span>
+                </td>
+            </tr>
+        `;
+    });
     
-    if (liveSales[salesKey]) {
-        item.sold += liveSales[salesKey];
-        delete liveSales[salesKey]; 
-    }
-
-            const left = item.total - item.sold;
-            const revenue = item.sold * item.mrp;
-
-            tbody.innerHTML += `
-                <tr>
-                    <td>
-                        <b style="font-size: 1rem;">${item.title}</b><br>
-                        <small style="color:#777;">${item.grade} | MRP: ₹${item.mrp}</small>
-                    </td>
-                    <td style="font-weight: 600;">${item.total}</td>
-                    <td class="sold-text">${item.sold} Sold</td>
-                    <td class="left-text">${left <= 0 && item.total > 0 ? "OUT OF STOCK" : left + " Remaining"}</td>
-                    <td class="price-text">₹${revenue.toLocaleString()}</td>
-                    <td>
-                        <button class="btn-restock" onclick="handleRestock(${item.id})">
-                            <i class="fas fa-edit"></i> SET TOTAL STOCK
-                        </button>
-                        <span class="time-stamp">Last Updated: ${item.lastUpdate}</span>
-                    </td>
-                </tr>
-            `;
-        });
-        
-        // Save state so it persists when you refresh
-        localStorage.setItem('paramount_inventory', JSON.stringify(inventoryData));
-        localStorage.setItem('pending_sales', JSON.stringify(liveSales));
-    }
+    // 5. Final Save of the updated inventory counts
+    localStorage.setItem('paramount_inventory', JSON.stringify(inventoryData));
+}
 
     function handleRestock(itemId) {
         const item = inventoryData.find(i => i.id === itemId);
