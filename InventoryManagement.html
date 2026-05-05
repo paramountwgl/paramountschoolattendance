@@ -261,24 +261,20 @@ const db = getDatabase(app);
 const salesRef = ref(db, 'bookstall/sales');
 
 // 1. LISTEN FOR DATA
-// 1. LISTEN FOR DATA
 onValue(salesRef, (snapshot) => {
     const data = snapshot.val();
     const tbody = document.getElementById('sales-log-body');
     const emptyMsg = document.getElementById('empty-msg');
+    
     tbody.innerHTML = '';
-
-    if (!data) {
-        emptyMsg.style.display = 'block';
-        return;
-    }
+    if (!data) { emptyMsg.style.display = 'block'; return; }
     emptyMsg.style.display = 'none';
 
     window.currentSales = data;
     const salesArray = Object.entries(data).reverse();
 
     salesArray.forEach(([id, sale], index) => {
-        // MOVE RECEIPT NO LOGIC HERE
+        // Define receiptNo INSIDE the loop
         const receiptNo = sale.receiptNumber || 'N/A';
         const date = sale.timestamp ? new Date(sale.timestamp).toLocaleString() : "N/A";
         const sNo = salesArray.length - index;
@@ -289,31 +285,20 @@ onValue(salesRef, (snapshot) => {
                 <td style="font-weight:bold; color:var(--paramount-green);">${receiptNo}</td>
                 <td style="color: #666; font-size: 0.85rem;">${date}</td>
                 <td class="parent-name">${sale.parentName}</td>
-                <td class="student-name">${sale.studentName}</td>
-                <td>
-                    <div class="contact-box">
-                        <i class="fab fa-whatsapp"></i> ${sale.phone}
-                    </div>
-                </td>
+                <td>${sale.studentName}</td>
+                <td><div class="contact-box"><i class="fab fa-whatsapp"></i> ${sale.phone}</div></td>
                 <td><span class="grade-badge">${sale.grade}</span></td>
-                <td style="font-weight:bold; color: var(--primary);">₹${sale.total}</td>
+                <td style="font-weight:bold;">₹${sale.total}</td>
                 <td>
-                    <div style="display:flex; gap:10px; align-items:center;">
-                        <button onclick='previewBill("${id}")' class="btn-action btn-preview" title="View Bill">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                        <button onclick='generateAndSend("${id}")' class="btn-action btn-whatsapp" title="Send WhatsApp">
-                            <i class="fab fa-whatsapp"></i>
-                        </button>
-                        <button onclick="window.deleteRecord('${id}')" class="btn-action btn-delete" title="Delete">
-                            <i class="fas fa-trash-alt"></i>
-                        </button>
+                    <div style="display:flex; gap:10px;">
+                        <button onclick='previewBill("${id}")' class="btn-action btn-preview"><i class="fas fa-eye"></i></button>
+                        <button onclick='generateAndSend("${id}")' class="btn-action btn-whatsapp"><i class="fab fa-whatsapp"></i></button>
+                        <button onclick="window.deleteRecord('${id}')" class="btn-action btn-delete"><i class="fas fa-trash-alt"></i></button>
                     </div>
                 </td>
             </tr>`;
     });
 });
-
 // 2. PDF GENERATION & WHATSAPP LOGIC
 window.generateAndSend = async function(id) {
     const sale = window.currentSales[id];
@@ -448,8 +433,8 @@ window.previewBill = function(id) {
         document.body.appendChild(closeBtn);
     }
 };
-    function populateTemplate(sale) {
-    // 1. Map Receipt and Basic Info
+   function populateTemplate(sale) {
+    // Basic Details
     document.getElementById('pdf-receipt-no').innerText = sale.receiptNumber || "N/A";
     document.getElementById('pdf-pname').innerText = sale.parentName || "N/A";
     document.getElementById('pdf-phone').innerText = sale.phone || "N/A";
@@ -457,28 +442,26 @@ window.previewBill = function(id) {
     document.getElementById('pdf-grade').innerText = sale.grade || "N/A";
     document.getElementById('pdf-total').innerText = sale.total || "0";
 
-    // 2. Format and Map Date/Time
+    // Date formatting
     const formattedDate = sale.timestamp ? new Date(sale.timestamp).toLocaleString([], { 
         year: 'numeric', month: '2-digit', day: '2-digit', 
         hour: '2-digit', minute: '2-digit', hour12: true 
     }) : "N/A";
     document.getElementById('pdf-date').innerText = formattedDate;
 
-    // 3. Map Individual Books and Prices to the Table
+    // Items Table
     const itemsTbody = document.getElementById('pdf-items');
+    itemsTbody.innerHTML = ''; // Clear previous items
+
     if (sale.items && Array.isArray(sale.items)) {
-        itemsTbody.innerHTML = sale.items.map(i => `
-            <tr>
-                <td style="padding:10px 15px; border-bottom:1px solid #eee; text-align:left;">
-                    <div style="font-weight:600; color:#333; font-size:0.9rem;">${i.title}</div>
-                </td>
-                <td style="padding:10px 15px; border-bottom:1px solid #eee; text-align:right; font-weight:700; color: #005a2b; font-size:0.9rem; white-space:nowrap;">
-                    ₹${parseFloat(i.price).toLocaleString()}
-                </td>
-            </tr>
-        `).join('');
-    } else {
-        itemsTbody.innerHTML = '<tr><td colspan="2" style="text-align:center; padding:10px;">No items found</td></tr>';
+        sale.items.forEach(item => {
+            const row = `
+                <tr>
+                    <td style="padding: 12px 15px; border-bottom: 1px solid #eee; font-weight: 500;">${item.title}</td>
+                    <td style="padding: 12px 15px; border-bottom: 1px solid #eee; text-align: right; font-weight: 700; color: #444;">₹${parseFloat(item.price).toLocaleString()}</td>
+                </tr>`;
+            itemsTbody.innerHTML += row;
+        });
     }
 }
     
