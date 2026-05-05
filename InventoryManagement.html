@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <title>Paramount | Customer Sales Ledger</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -129,38 +131,74 @@
 </head>
 <body>
 
-<div class="container">
-    <div class="nav-header">
-        <a href="BookStall.html" class="back-btn"><i class="fas fa-chevron-left"></i> BILLING DASHBOARD</a>
-        <img src="logo.png" height="75" alt="Paramount Logo">
+<section class="section">
+    <h2>Recent Sales & Billing</h2>
+    <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+            <tr style="background: #f4f4f4;">
+                <th>S.No</th>
+                <th>Date/Time</th>
+                <th>Parent Name</th>
+                <th>Student Name</th>
+                <th>Phone Number</th>
+                <th>Grade</th>
+                <th>Amount</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+         <tbody id="sales-log-body"></tbody>
+    </table>
+</section>
+
+<!-- Hidden Premium Bill Template for PDF Export -->
+<!-- Hidden Premium Bill Template for PDF Export -->
+<div id="premium-bill-template" style="display:none; width: 800px; padding: 50px; background: white; font-family: 'Inter', sans-serif; border: 1px solid #eee;">
+    
+    <!-- Header -->
+    <div style="text-align: center; border-bottom: 4px solid #005a2b; padding-bottom: 20px; margin-bottom: 30px;">
+        <img src="logo.png" height="100" style="margin-bottom: 10px;">
+        <h1 style="color: #005a2b; margin: 0; font-size: 2.5rem; font-family: 'Playfair Display', serif;">PARAMOUNT SCHOOL</h1>
+        <p style="letter-spacing: 3px; color: #555; font-weight: 600; margin-top: 5px;">OFFICIAL STORE RECEIPT</p>
     </div>
 
-    <div class="section">
-        <h2>Paramount Sales Ledger</h2>
-        <p class="subtitle">Official archive of distribution records and student digital receipts.</p>
-        
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th width="15%">Parent Name</th>
-                        <th width="15%">Contact No.</th>
-                        <th width="15%">Student Name</th>
-                        <th width="10%">Grade</th>
-                        <th width="25%">Tittle of the Book </th>
-                        <th width="10%">Amount</th>
-                        <th width="10%">Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="sales-body">
-                    <!-- Data entries injected here -->
-                </tbody>
-            </table>
+    <!-- Info Sections -->
+    <div style="display: flex; justify-content: space-between; margin-bottom: 40px; line-height: 1.6;">
+        <div style="width: 50%;">
+            <h3 style="color: #005a2b; border-bottom: 2px solid #f9d10d; display: inline-block; margin-bottom: 10px;">Customer Details</h3>
+            <p style="margin: 5px 0;"><strong>Parent Name:</strong> <span id="pdf-pname"></span></p>
+            <p style="margin: 5px 0;"><strong>Phone Number:</strong> <span id="pdf-phone"></span></p>
         </div>
-        <div id="empty-msg" style="display:none;">
-            <i class="fas fa-receipt" style="font-size: 4rem; margin-bottom: 20px; opacity: 0.3;"></i>
-            <p>The ledger is currently empty. Start billing to see records.</p>
+        <div style="width: 40%; text-align: right;">
+            <h3 style="color: #005a2b; border-bottom: 2px solid #f9d10d; display: inline-block; margin-bottom: 10px;">Student Details</h3>
+            <p style="margin: 5px 0;"><strong>Student Name:</strong> <span id="pdf-sname"></span></p>
+            <p style="margin: 5px 0;"><strong>Grade:</strong> <span id="pdf-grade"></span></p>
+            <p style="margin: 5px 0;"><strong>Bill Date:</strong> <span id="pdf-date"></span></p>
         </div>
+    </div>
+
+    <!-- Items Table -->
+    <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+        <thead>
+            <tr style="background: #005a2b; color: white;">
+                <th style="padding: 15px; text-align: left; border-radius: 8px 0 0 0;">Book Title</th>
+                <th style="padding: 15px; text-align: right; border-radius: 0 8px 0 0;">Price</th>
+            </tr>
+        </thead>
+        <tbody id="pdf-items">
+            <!-- Items injected here -->
+        </tbody>
+    </table>
+
+    <!-- Total Section -->
+    <div style="margin-top: 30px; padding: 20px; background: #f9f9f9; border-radius: 12px; text-align: right;">
+        <span style="font-size: 1.2rem; color: #666;">Grand Total:</span>
+        <span style="font-size: 2rem; font-weight: 800; color: #005a2b; margin-left: 15px;">₹<span id="pdf-total"></span></span>
+    </div>
+
+    <!-- Footer -->
+    <div style="margin-top: 60px; text-align: center; border-top: 1px solid #eee; padding-top: 20px;">
+        <p style="color: #005a2b; font-weight: 600; margin: 0;">Thank you for your purchase!</p>
+        <p style="font-size: 0.8rem; color: #999; margin-top: 5px;">This is a computer-generated document from Paramount English Medium School.</p>
     </div>
 </div>
 
@@ -204,6 +242,79 @@
                 `*Grand Total:* ₹${sale.totalAmount}\n\n` +
                 `_Generated by Paramount Group of Institutions Admin._`
             );
+            const salesLogRef = ref(db, 'bookstall/sales');
+
+// Listen for new sales
+onValue(salesLogRef, (snapshot) => {
+    const data = snapshot.val();
+    const tbody = document.getElementById('sales-log-body');
+    tbody.innerHTML = '';
+    
+    if (data) {
+        const salesArray = Object.entries(data).reverse(); // Newest first
+        
+        salesArray.forEach(([id, sale], index) => {
+            const date = new Date(sale.timestamp).toLocaleString();
+            // Calculate S.No based on total length
+            const sNo = salesArray.length - index; 
+
+            tbody.innerHTML += `
+                <tr style="border-bottom: 1px solid #eee;">
+                    <td>${sNo}</td>
+                    <td>${date}</td>
+                    <td><strong>${sale.parentName}</strong></td>
+                    <td>${sale.studentName}</td>
+                    <td>${sale.phone}</td>
+                    <td><span style="background:#eef; padding:3px 8px; border-radius:4px;">${sale.grade}</span></td>
+                    <td style="font-weight:bold;">₹${sale.total}</td>
+                    <td>
+                        <button onclick='generateAndSend("${id}")' style="background:none; border:none; color:#25D366; font-size:1.6rem; cursor:pointer; transition: 0.2s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">
+                            <i class="fab fa-whatsapp"></i>
+                        </button>
+                    </td>
+                </tr>`;
+        });
+        window.currentSales = data;
+    }
+});
+
+window.generateAndSend = async function(id) {
+    const sale = window.currentSales[id];
+    const { jsPDF } = window.jspdf;
+
+    // 1. Populate Template
+    document.getElementById('pdf-pname').innerText = sale.parentName;
+    document.getElementById('pdf-sname').innerText = sale.studentName;
+    document.getElementById('pdf-grade').innerText = sale.grade;
+    document.getElementById('pdf-phone').innerText = sale.phone;
+    document.getElementById('pdf-date').innerText = new Date(sale.timestamp).toLocaleDateString();
+    document.getElementById('pdf-total').innerText = sale.total;
+    
+    const itemsTbody = document.getElementById('pdf-items');
+    itemsTbody.innerHTML = sale.items.map(i => `
+        <tr>
+            <td style="padding:10px; border-bottom:1px solid #eee;">${i.title}</td>
+            <td style="padding:10px; border-bottom:1px solid #eee; text-align:right;">₹${i.price}</td>
+        </tr>
+    `).join('');
+
+    // 2. Convert to PDF
+    const template = document.getElementById('premium-bill-template');
+    template.style.display = 'block';
+    
+    const canvas = await html2canvas(template);
+    const imgData = canvas.toDataURL('image/png');
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    pdf.addImage(imgData, 'PNG', 0, 0, 210, (canvas.height * 210) / canvas.width);
+    
+    // Download PDF
+    pdf.save(`Bill_${sale.studentName}.pdf`);
+    template.style.display = 'none';
+
+    // 3. Redirect to WhatsApp
+    const message = `Thank you for purchasing from the Paramount store. The attached PDF is your bill for your purchase.%0A%0A*Summary*%0AStudent: ${sale.studentName}%0ATotal: ₹${sale.total}`;
+    window.open(`https://wa.me/91${sale.phone}?text=${message}`, '_blank');
+};
             
             const waLink = `https://wa.me/91${sale.parentPhone}?text=${message}`;
 
