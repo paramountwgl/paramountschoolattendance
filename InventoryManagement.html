@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Paramount | Global Stock Control</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <title>Paramount | Customer Sales Ledger</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="icon" type="image/png" href="logo.png">
     <style>
@@ -12,69 +12,161 @@
             --paramount-green: #005a2b;
             --paramount-yellow: #f9d10d;
             --primary: #0a2351;
-            --bg: #f4f7f9;
+            --bg: #eff2f7;
+            --glossy-white: rgba(255, 255, 255, 0.95);
+            --glass-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.2);
         }
 
-        body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; padding: 20px; color: #333; }
-        .container { max-width: 1200px; margin: auto; }
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: radial-gradient(circle at top right, #e0e5ec, #eff2f7);
+            margin: 0; padding: 30px; color: #1a1a1a; min-height: 100vh;
+        }
+
+        .container { max-width: 1450px; margin: auto; }
 
         .nav-header {
-            background: white; padding: 20px 40px; border-radius: 15px; margin-bottom: 25px;
-            display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            background: var(--glossy-white);
+            backdrop-filter: blur(15px);
+            padding: 20px 40px; border-radius: 24px; margin-bottom: 35px;
+            display: flex; justify-content: space-between; align-items: center; 
+            box-shadow: var(--glass-shadow); border: 1px solid rgba(255, 255, 255, 0.4);
         }
 
-        .back-btn { text-decoration: none; color: var(--primary); font-weight: 600; display: flex; align-items: center; gap: 10px; }
-
-        .section { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-        h2 { font-family: 'Playfair Display', serif; color: var(--primary); border-left: 5px solid var(--paramount-green); padding-left: 15px; }
-
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th { text-align: left; padding: 15px; background: #f8f9fa; color: var(--primary); border-bottom: 2px solid var(--paramount-yellow); }
-        td { padding: 15px; border-bottom: 1px solid #eee; }
-
-        .sold-text { color: #d32f2f; font-weight: 600; }
-        .left-text { color: #2e7d32; font-weight: 700; }
-
-        .btn-restock {
-            background: var(--paramount-green); color: white; border: 1px solid var(--paramount-yellow);
-            padding: 10px 20px; border-radius: 30px; font-weight: bold; cursor: pointer; transition: 0.3s;
+        .back-btn { 
+            text-decoration: none; color: var(--primary); font-weight: 700; 
+            display: flex; align-items: center; gap: 12px; transition: 0.4s;
+            padding: 10px 20px; border-radius: 12px; background: #fff;
+            border: 1px solid #eee;
         }
-        .btn-reset {
-            background: #d32f2f; color: white; border: none; padding: 10px 20px; border-radius: 30px; font-weight: bold; cursor: pointer;
+        .back-btn:hover { background: #f0f0f0; transform: translateX(-5px); }
+
+        .section { 
+            background: var(--glossy-white); backdrop-filter: blur(15px);
+            padding: 45px; border-radius: 35px; box-shadow: var(--glass-shadow);
+            border: 1px solid rgba(255, 255, 255, 0.3);
         }
+
+        h2 { 
+            font-family: 'Playfair Display', serif; color: var(--primary); font-size: 2.6rem;
+            margin: 0 0 10px 0; border-left: 8px solid var(--paramount-green); 
+            padding-left: 20px; line-height: 1.1;
+        }
+
+        .subtitle { color: #666; font-size: 1.1rem; margin-bottom: 40px; font-weight: 400; }
+
+        .table-container { overflow-x: auto; border-radius: 20px; }
+        
+        table { width: 100%; border-collapse: separate; border-spacing: 0 15px; min-width: 1200px; }
+        
+        th { 
+            text-align: left; padding: 15px 20px; color: var(--primary); 
+            font-weight: 800; font-size: 0.85rem; text-transform: uppercase; 
+            letter-spacing: 1.2px; opacity: 0.8;
+        }
+
+        /* Glass row styling */
+        tbody tr { transition: 0.3s; }
+        
+        td { 
+            padding: 20px; background: white; 
+            border-top: 1px solid rgba(0,0,0,0.03);
+            border-bottom: 1px solid rgba(0,0,0,0.03);
+            font-size: 0.95rem; vertical-align: middle;
+        }
+
+        td:first-child { border-left: 1px solid rgba(0,0,0,0.03); border-radius: 20px 0 0 20px; }
+        td:last-child { border-right: 1px solid rgba(0,0,0,0.03); border-radius: 0 20px 20px 0; }
+
+        tr:hover td { 
+            background: #fff; 
+            transform: translateY(-3px); 
+            box-shadow: 0 15px 30px rgba(0,0,0,0.05);
+            border-color: var(--paramount-yellow);
+        }
+
+        /* Specific Column Styles */
+        .parent-name { font-weight: 700; color: var(--primary); font-size: 1.05rem; }
+        .contact-box { color: #25D366; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+        .student-name { font-weight: 600; color: #333; }
+        .grade-badge { 
+            background: var(--primary); color: white; padding: 5px 12px; 
+            border-radius: 8px; font-size: 0.75rem; font-weight: 700;
+            display: inline-block; letter-spacing: 0.5px;
+        }
+
+        .book-pill { 
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            color: #444; padding: 6px 12px; border-radius: 8px; 
+            font-size: 0.8rem; font-weight: 600; display: inline-block; 
+            margin: 3px; border: 1px solid #ddd;
+        }
+
+        .total-badge {
+            background: #fff8e1; color: #ff8f00; padding: 10px 18px;
+            border-radius: 12px; font-weight: 800; font-size: 1.2rem;
+            border: 1px solid #ffe082; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        /* Action Buttons */
+        .btn-whatsapp { 
+            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+            color: white; border: none; padding: 12px 20px; border-radius: 15px; 
+            font-weight: 700; cursor: pointer; transition: 0.3s; font-size: 0.85rem; 
+            text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+        }
+        .btn-whatsapp:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4); }
+
+        .btn-delete { 
+            background: #fff; color: #ff5252; border: 1px solid #ffdada; 
+            padding: 12px; border-radius: 15px; cursor: pointer; transition: 0.3s;
+        }
+        .btn-delete:hover { background: #ff5252; color: white; border-color: #ff5252; }
+
+        #empty-msg { text-align: center; padding: 80px; color: #999; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="nav-header">
-        <a href="BookStall.html" class="back-btn"><i class="fas fa-arrow-left"></i> RETURN TO BILLING</a>
-        <button class="btn-reset" onclick="resetGlobalData()">RESET ALL DATA</button>
-        <img src="logo.png" height="60" alt="Logo">
+        <a href="BookStall.html" class="back-btn"><i class="fas fa-chevron-left"></i> BILLING DASHBOARD</a>
+        <img src="logo.png" height="75" alt="Paramount Logo">
     </div>
 
     <div class="section">
-        <h2>Global Stock & Sales Tracking</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Item Description</th>
-                    <th>Total Stock</th>
-                    <th>Sold</th>
-                    <th>Books Left</th>
-                    <th>Total Revenue</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody id="inventory-body"></tbody>
-        </table>
+        <h2>Paramount Sales Ledger</h2>
+        <p class="subtitle">Official archive of distribution records and student digital receipts.</p>
+        
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th width="15%">Parent Name</th>
+                        <th width="15%">Contact No.</th>
+                        <th width="15%">Student Name</th>
+                        <th width="10%">Grade</th>
+                        <th width="25%">Tittle of the Book </th>
+                        <th width="10%">Amount</th>
+                        <th width="10%">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="sales-body">
+                    <!-- Data entries injected here -->
+                </tbody>
+            </table>
+        </div>
+        <div id="empty-msg" style="display:none;">
+            <i class="fas fa-receipt" style="font-size: 4rem; margin-bottom: 20px; opacity: 0.3;"></i>
+            <p>The ledger is currently empty. Start billing to see records.</p>
+        </div>
     </div>
 </div>
 
 <script type="module">
-    // --- 1. FIREBASE SETUP ---
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    import { getDatabase, ref, onValue, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyDRYk9KOK-ga0c88dnYMsAoifW2NJTd_Y8",
@@ -84,132 +176,67 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
-    const stallRef = ref(db, 'bookstall/inventory');
+    const salesRef = ref(db, 'bookstall/sales');
 
-    // --- 2. MASTER SOURCE OF TRUTH (All 44 Items) ---
-    // Note: Standardized titles with a space before the parenthesis to match billing logic.
-    const masterBooks = [
-        { id: 1, title: "Set of 6 subjects (Textbooks)", grade: "Pre-KG", mrp: 3200 },
-        { id: 2, title: "Set of 6 subjects (Workbooks)", grade: "Pre-KG", mrp: 4000 },
-        { id: 3, title: "School Diary 2026-27", grade: "Pre-KG", mrp: 500 },
-        { id: 4, title: "Notebooks (Pack of 24)", grade: "Pre-KG", mrp: 2000 },
-        { id: 5, title: "Set of 6 subjects (Textbooks)", grade: "KG", mrp: 3200 },
-        { id: 6, title: "Set of 6 subjects (Workbooks)", grade: "KG", mrp: 4000 },
-        { id: 7, title: "School Diary 2026-27", grade: "KG", mrp: 500 },
-        { id: 8, title: "Notebooks (Pack of 24)", grade: "KG", mrp: 2000 },
-        { id: 9, title: "Set of 6 subjects (Textbooks)", grade: "UKG", mrp: 3200 },
-        { id: 10, title: "Set of 6 subjects (Workbooks)", grade: "UKG", mrp: 4000 },
-        { id: 11, title: "School Diary 2026-27", grade: "UKG", mrp: 500 },
-        { id: 12, title: "Notebooks (Pack of 24)", grade: "UKG", mrp: 2000 },
-        { id: 13, title: "Set of 6 subjects (Textbooks)", grade: "Grade 1", mrp: 3200 },
-        { id: 14, title: "Set of 6 subjects (Workbooks)", grade: "Grade 1", mrp: 4000 },
-        { id: 15, title: "School Diary 2026-27", grade: "Grade 1", mrp: 500 },
-        { id: 16, title: "Notebooks (Pack of 24)", grade: "Grade 1", mrp: 2000 },
-        { id: 17, title: "Set of 6 subjects (Textbooks)", grade: "Grade 2", mrp: 3200 },
-        { id: 18, title: "Set of 6 subjects (Workbooks)", grade: "Grade 2", mrp: 4000 },
-        { id: 19, title: "School Diary 2026-27", grade: "Grade 2", mrp: 500 },
-        { id: 20, title: "Notebooks (Pack of 24)", grade: "Grade 2", mrp: 2000 },
-        { id: 21, title: "Set of 6 subjects (Textbooks)", grade: "Grade 3", mrp: 3200 },
-        { id: 22, title: "Set of 6 subjects (Workbooks)", grade: "Grade 3", mrp: 4000 },
-        { id: 23, title: "School Diary 2026-27", grade: "Grade 3", mrp: 500 },
-        { id: 24, title: "Notebooks (Pack of 24)", grade: "Grade 3", mrp: 2000 },
-        { id: 25, title: "Set of 6 subjects (Textbooks)", grade: "Grade 4", mrp: 3200 },
-        { id: 26, title: "Set of 6 subjects (Workbooks)", grade: "Grade 4", mrp: 4000 },
-        { id: 27, title: "School Diary 2026-27", grade: "Grade 4", mrp: 500 },
-        { id: 28, title: "Notebooks (Pack of 24)", grade: "Grade 4", mrp: 2000 },
-        { id: 29, title: "Set of 6 subjects (Textbooks)", grade: "Grade 5", mrp: 3200 },
-        { id: 30, title: "Set of 6 subjects (Workbooks)", grade: "Grade 5", mrp: 4000 },
-        { id: 31, title: "School Diary 2026-27", grade: "Grade 5", mrp: 500 },
-        { id: 32, title: "Notebooks (Pack of 24)", grade: "Grade 5", mrp: 2000 },
-        { id: 33, title: "Set of 6 subjects (Textbooks)", grade: "Grade 6", mrp: 3200 },
-        { id: 34, title: "Set of 6 subjects (Workbooks)", grade: "Grade 6", mrp: 4000 },
-        { id: 35, title: "School Diary 2026-27", grade: "Grade 6", mrp: 500 },
-        { id: 36, title: "Notebooks (Pack of 24)", grade: "Grade 6", mrp: 2000 },
-        { id: 37, title: "Set of 6 subjects (Textbooks)", grade: "Grade 7", mrp: 3200 },
-        { id: 38, title: "Set of 6 subjects (Workbooks)", grade: "Grade 7", mrp: 4000 },
-        { id: 39, title: "School Diary 2026-27", grade: "Grade 7", mrp: 500 },
-        { id: 40, title: "Notebooks (Pack of 24)", grade: "Grade 7", mrp: 2000 },
-        { id: 41, title: "Set of 6 subjects (Textbooks)", grade: "Grade 8", mrp: 3200 },
-        { id: 42, title: "Set of 6 subjects (Workbooks)", grade: "Grade 8", mrp: 4000 },
-        { id: 43, title: "School Diary 2026-27", grade: "Grade 8", mrp: 500 },
-        { id: 44, title: "Notebooks (Pack of 24)", grade: "Grade 8", mrp: 2000 }
-    ];
-
-    let currentInventory = [];
-
-    // --- 3. LIVE SYNC & RENDER ---
-    onValue(stallRef, (snapshot) => {
-        const cloudData = snapshot.val() || [];
-        
-        // Match IDs to preserve stock/sold counts while applying title/MRP changes from code
-        const syncedData = masterBooks.map(masterItem => {
-            const existing = cloudData.find(c => c.id === masterItem.id);
-            return {
-                ...masterItem,
-                total: existing ? (existing.total || 0) : 0,
-                sold: existing ? (existing.sold || 0) : 0,
-                lastUpdate: existing ? (existing.lastUpdate || "Never") : "Never"
-            };
-        });
-
-        // Force a cloud update if the local list is newer/longer than the cloud list
-        if (JSON.stringify(syncedData) !== JSON.stringify(cloudData)) {
-            set(stallRef, syncedData);
-        }
-
-        currentInventory = syncedData;
-        renderTable();
-    });
-
-    function renderTable() {
-        const tbody = document.getElementById('inventory-body');
+    onValue(salesRef, (snapshot) => {
+        const data = snapshot.val();
+        const tbody = document.getElementById('sales-body');
+        const emptyMsg = document.getElementById('empty-msg');
         tbody.innerHTML = '';
-        currentInventory.forEach((item, index) => {
-            const left = item.total - item.sold;
-            const revenue = item.sold * item.mrp;
+
+        if (!data) {
+            emptyMsg.style.display = 'block';
+            return;
+        }
+        emptyMsg.style.display = 'none';
+
+        const records = Object.entries(data).reverse();
+
+        records.forEach(([id, sale]) => {
+            const bookListHtml = sale.items.map(item => `<span class="book-pill">${item.title}</span>`).join('');
             
-            // Status logic for color feedback
-            const statusClass = left <= 0 ? "rgba(211, 47, 47, 0.1)" : (left < 5 ? "rgba(249, 209, 13, 0.1)" : "rgba(46, 125, 50, 0.1)");
-            const statusColor = left <= 0 ? "#d32f2f" : (left < 5 ? "#b29400" : "#2e7d32");
+            const message = encodeURIComponent(
+                `*PARAMOUNT SCHOOL - DIGITAL RECEIPT*\n\n` +
+                `Dear *${sale.parentName}*,\n` +
+                `The following books have been issued for *${sale.studentName}*:\n\n` +
+                `*Grade:* ${sale.studentGrade}\n` +
+                `*Items:* \n${sale.items.map(i => "• " + i.title).join('\n')}\n\n` +
+                `*Grand Total:* ₹${sale.totalAmount}\n\n` +
+                `_Generated by Paramount Group of Institutions Admin._`
+            );
+            
+            const waLink = `https://wa.me/91${sale.parentPhone}?text=${message}`;
 
             tbody.innerHTML += `
                 <tr>
-                    <td><b>${item.title}</b><br><small style="color:#666">${item.grade} | MRP: ₹${item.mrp}</small></td>
-                    <td style="font-weight:600">${item.total}</td>
-                    <td class="sold-text" style="color:#d32f2f; font-weight:600;">${item.sold} Sold</td>
+                    <td class="parent-name">${sale.parentName}</td>
                     <td>
-                        <span class="status-badge" style="background:${statusClass}; color:${statusColor}; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700;">
-                            ${left <= 0 && item.total > 0 ? "OUT OF STOCK" : left + " Remaining"}
-                        </span>
+                        <div class="contact-box">
+                            <i class="fab fa-whatsapp"></i> +91 ${sale.parentPhone}
+                        </div>
                     </td>
-                    <td style="font-weight:700">₹${revenue.toLocaleString()}</td>
+                    <td class="student-name">${sale.studentName}</td>
+                    <td><span class="grade-badge">${sale.studentGrade}</span></td>
+                    <td>${bookListHtml}</td>
+                    <td><span class="total-badge">₹${sale.totalAmount}</span></td>
                     <td>
-                        <button class="btn-restock" onclick="window.handleRestock(${index})" style="background:#005a2b; color:white; border:1px solid #f9d10d; padding:10px 20px; border-radius:30px; font-weight:bold; cursor:pointer;">SET STOCK</button>
-                        <br><small style="color:#aaa; font-size:10px">Last Sync: ${item.lastUpdate}</small>
+                        <div style="display:flex; gap:12px;">
+                            <a href="${waLink}" target="_blank" class="btn-whatsapp" title="Send Receipt">
+                                <i class="fab fa-whatsapp"></i> BILL
+                            </a>
+                            <button class="btn-delete" onclick="window.deleteRecord('${id}')" title="Delete Entry">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
                     </td>
-                </tr>`;
+                </tr>
+            `;
         });
-    }
+    });
 
-    // --- 4. GLOBAL INTERACTIVE TOOLS ---
-    window.handleRestock = (index) => {
-        const item = currentInventory[index];
-        const newTotal = prompt(`[GLOBAL STOCK UPDATE] ${item.title} (${item.grade})\nEnter total count:`, item.total);
-        if (newTotal !== null && !isNaN(newTotal)) {
-            currentInventory[index].total = parseInt(newTotal);
-            currentInventory[index].lastUpdate = new Date().toLocaleString();
-            set(stallRef, currentInventory);
-        }
-    };
-
-    window.resetGlobalData = () => {
-        if (confirm("This will globally reset ALL stock and sales to 0. Proceed?")) {
-            currentInventory.forEach(i => {
-                i.sold = 0;
-                i.total = 0;
-                i.lastUpdate = "Never";
-            });
-            set(stallRef, currentInventory);
+    window.deleteRecord = (id) => {
+        if(confirm("Permanent Action: Remove this transaction from the Paramount Ledger?")) {
+            remove(ref(db, `bookstall/sales/${id}`));
         }
     };
 </script>
