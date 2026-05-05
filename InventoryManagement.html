@@ -181,6 +181,9 @@
             </div>
         </div>
     </div>
+        <button onclick="window.generateArchivePDF(false)" style="background: var(--primary); color: white; border: none; padding: 12px 25px; border-radius: 12px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: 0.3s;">
+        <i class="fas fa-file-pdf"></i> Download PDF Ledger
+    </button>
 
     <!-- Right Group: Wipe & Archive Button -->
     <button onclick="window.wipeAndArchive()" style="background: #ff5252; color: white; border: none; padding: 12px 25px; border-radius: 12px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: 0.3s; box-shadow: 0 4px 15px rgba(255, 82, 82, 0.2);">
@@ -368,62 +371,109 @@ onValue(salesRef, (snapshot) => {
     revenueDisplay.innerText = formattedRevenue;
 }); // <--- THIS WAS THE MISSING CLOSING BRACKET
 // 2. PDF GENERATION & WHATSAPP LOGIC
-window.generateAndSend = async function(id) {
-    const sale = window.currentSales[id];
-    const { jsPDF } = window.jspdf;
-    const template = document.getElementById('premium-bill-template');
+// Unified Function for both Download and Wipe
+window.generateArchivePDF = async function(isWipeAction) {
+    const sales = window.currentSales;
+    if (!sales || Object.keys(sales).length === 0) {
+        return alert("The ledger is currently empty. Nothing to export.");
+    }
 
-    // 1. Logic Fix: Populate the template using your standard function
-    populateTemplate(sale);
-
-    // 2. Logic Fix: Prepare the template for high-quality capture
-    template.style.display = 'block';
-    template.style.position = 'absolute';
-    template.style.left = '-9999px'; // Move off-screen
-    template.style.width = '800px'; 
-    template.style.maxWidth = 'none';
-    template.style.transform = 'none';
+    // Security check only for Wipe
+    if (isWipeAction) {
+        const confirmFirst = confirm("DANGER: This will download the ledger and PERMANENTLY DELETE all records. Proceed?");
+        if (!confirmFirst) return;
+        const password = prompt("Enter Admin Password to authorize wipe:");
+        if (password !== "Ahmad@07") return alert("Unauthorized. Wipe cancelled.");
+    }
 
     try {
-        // scale: 3 for high resolution
-        const canvas = await html2canvas(template, { 
-            scale: 3, 
-            useCORS: true,
-            scrollY: -window.scrollY // Fixes potential displacement if page is scrolled
-        });
-        
-        const imgData = canvas.toDataURL('image/png');
+        const { jsPDF } = window.jspdf;
         const pdf = new jsPDF('p', 'mm', 'a4');
+        const pageWidth = pdf.internal.pageSize.getWidth();
         
-        const pdfWidth = pdf.internal.pageSize.getWidth();
-        const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+        // --- PREMIUM HEADER GENERATION ---
+        pdf.setFillColor(0, 90, 43); // Paramount Green
+        pdf.rect(0, 0, pageWidth, 40, 'F');
         
-        // Add a 10mm margin from the top of the PDF page
-        const topMargin = 10; 
-        pdf.addImage(imgData, 'PNG', 0, topMargin, pdfWidth, pdfHeight);
+        pdf.setTextColor(255, 255, 255);
+        pdf.setFont("Playfair Display", "bold");
+        pdf.setFontSize(22);
+        pdf.text("PARAMOUNT SCHOOL BOOK STORE", pageWidth / 2, 20, { align: "center" });
         
-        const fileName = `${sale.studentName}_${sale.receiptNumber}.pdf`;
+        pdf.setFontSize(10);
+        pdf.setFont("Inter", "normal");
+        pdf.text("OFFICIAL SALES LEDGER ARCHIVE", pageWidth / 2, 28, { align: "center" });
+
+        // --- SUB-HEADER INFO ---
+        pdf.setTextColor(80, 80, 80);
+        pdf.setFontSize(9);
+        const reportDate = new Date().toLocaleString();
+        pdf.text(`Report Generated: ${reportDate}`, 14, 50);
+        pdf.text(`Total Records: ${Object.keys(sales).length}`, 14, 55);
+        pdf.line(14, 58, pageWidth - 14, 58);
+
+        // --- TABULAR DATA ---
+        let y = 65;
+        // Table Headers
+        pdf.setFont("Inter", "bold");
+        pdf.setFillColor(240, 240, 240);
+        pdf.rect(14, y - 5, pageWidth - 28, 7, 'F');
+        pdf.text("S.No", 16, y);
+        pdf.text("Receipt No", 30, y);
+        pdf.text("Student Name", 65, y);
+        pdf.text("Grade", 120, y);
+        pdf.text("Amount", 170, y);
+        
+        y += 10;
+        pdf.setFont("Inter", "normal");
+        const salesArray = Object.values(sales);
+        
+        salesArray.forEach((sale, index) => {
+            // Page Break Logic
+            if (y > 275) {
+                pdf.addPage();
+                y = 20; 
+            }
+
+            pdf.text((index + 1).toString(), 16, y);
+            pdf.setTextColor(0, 90, 43); // Green for receipt numbers
+            pdf.text(sale.receiptNumber || 'N/A', 30, y);
+            pdf.setTextColor(0, 0, 0);
+            pdf.text(sale.studentName || 'N/A', 65, y);
+            pdf.text(sale.grade || 'N/A', 120, y);
+            pdf.setFont("Inter", "bold");
+            pdf.text(`Rs.${sale.total}`, 170, y);
+            pdf.setFont("Inter", "normal");
+
+            pdf.setDrawColor(230, 230, 230);
+            pdf.line(14, y + 2, pageWidth - 14, y + 2);
+            y += 8;
+        });
+
+        // --- REVENUE SUMMARY ---
+        const totalRev = document.getElementById('grand-total-revenue').innerText;
+        pdf.setFillColor(10, 35, 81); // Primary Navy
+        pdf.rect(140, y + 5, 55, 12, 'F');
+        pdf.setTextColor(255, 255, 255);
+        pdf.text(`TOTAL: Rs.${totalRev}`, 145, y + 13);
+
+        // --- SAVE PDF ---
+        const fileName = isWipeAction ? `FINAL_Archive_${new Date().getTime()}.pdf` : `Ledger_Backup_${new Date().getTime()}.pdf`;
         pdf.save(fileName);
-        
-        template.style.display = 'none'; // Hide template again
 
-        // 5. Logic Fix: Automated WhatsApp Redirection
-        const formattedDate = document.getElementById('pdf-date').innerText;
-        const message = encodeURIComponent(
-            `Thank you for purchasing from the Paramount store. The below attached PDF is your bill for your purchase.\n\n` +
-            `*Receipt No:* ${sale.receiptNumber}\n` +
-            `*Student:* ${sale.studentName}\n` +
-            `*Date:* ${formattedDate}\n` +
-            `*Total:* ₹${sale.total}`
-        );
-
-        // Uses the parent's phone number submitted in the portal
-        window.open(`https://wa.me/91${sale.phone}?text=${message}`, '_blank');
+        // --- WIPE DATABASE (ONLY IF isWipeAction is true) ---
+        if (isWipeAction) {
+            const updates = {};
+            updates['bookstall/sales'] = null;
+            updates['bookstall/counter'] = 0;
+            await update(ref(db), updates);
+            alert("Archive saved and database wiped successfully.");
+            location.reload();
+        }
 
     } catch (err) {
-        console.error("PDF Generation Error:", err);
-        alert("Error creating PDF. Please check your internet connection for the logo.");
-        template.style.display = 'none';
+        console.error("PDF Export Error:", err);
+        alert("Failed to generate PDF. Error: " + err.message);
     }
 };
     // Function to Preview the Bill
