@@ -332,8 +332,8 @@ window.generateAndSend = async function(id) {
         pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
         
         // 4. Logic Fix: Save the PDF with a unique timestamp
-        const fileTimestamp = new Date().getTime();
-        pdf.save(`Bill_${sale.studentName}_${fileTimestamp}.pdf`);
+         const fileName = `${sale.studentName}_${sale.receiptNumber}.pdf`;
+        pdf.save(fileName);
         
         template.style.display = 'none'; // Hide template again
 
