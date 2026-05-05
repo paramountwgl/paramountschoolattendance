@@ -478,7 +478,15 @@
             document.getElementById('p-name').value = '';
             document.getElementById('p-phone').value = '';
             document.getElementById('s-name').value = '';
+            
+            // --- ADD THIS LINE TO RESET THE DROPDOWN ---
+            document.getElementById('s-grade').value = ''; 
+            
             document.getElementById('live-total').innerText = "0";
+            
+            // This clears the book cards display
+            document.getElementById('billing-items-container').innerHTML = '';
+
             document.querySelectorAll('.bill-check').forEach(b => {
                 b.checked = false;
                 b.closest('.billing-item-card').classList.remove('selected');
