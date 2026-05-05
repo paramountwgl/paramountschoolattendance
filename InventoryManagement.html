@@ -392,12 +392,7 @@ window.generateArchivePDF = async function(isWipeAction) {
         // --- 1. PREMIUM HEADER WITH LOGO ---
         pdf.setFillColor(0, 90, 43); // Paramount Green
         pdf.rect(0, 0, pageWidth, 45, 'F');
-        
-
-        
-        // Wait for logo to load to ensure it appears in PDF
-        await new Promise((resolve) => { logoImg.onload = resolve; });
-
+ 
         // Draw Logo (Left side of title
 
         pdf.setTextColor(255, 255, 255);
