@@ -397,12 +397,12 @@
         </div>
     </div>
 
-  <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-// Add 'get' and 'push' to this list
-import { getDatabase, ref, push, get, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+  <!-- Replace your entire <script> section with this exact code -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    // 1. ALL NECESSARY IMPORTS IN ONE PLACE
+    import { getDatabase, ref, push, get, update, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-// ... existing firebaseConfig and app initialization ...
     const firebaseConfig = {
         apiKey: "AIzaSyDRYk9KOK-ga0c88dnYMsAoifW2NJTd_Y8",
         databaseURL: "https://paramount-school-d55bc-default-rtdb.firebaseio.com",
@@ -413,9 +413,81 @@ import { getDatabase, ref, push, get, update } from "https://www.gstatic.com/fir
     const db = getDatabase(app);
     const stallRef = ref(db, 'bookstall/inventory');
 
-    // --- 2. GLOBAL STATE ---
     let cloudInventoryData = [];
 
+    // --- 2. CORRECTED LOGIN LOGIC ---
+    // We attach it to 'window' so the button can "see" it
+    window.checkLogin = function() {
+        // Change 'admin-pin' to 'staff-pass' to match your HTML ID
+        const pin = document.getElementById('staff-pass').value;
+        if (pin === "Paramount@07") {
+            document.getElementById('login-overlay').style.display = 'none';
+            document.getElementById('main-content').style.display = 'block';
+        } else {
+            alert("Incorrect PIN. Access Denied.");
+        }
+    };
+
+    // --- 3. UPDATED DATA SUBMISSION ---
+    window.processSale = async function() {
+        const pname = document.getElementById('p-name').value;
+        const pphone = document.getElementById('p-phone').value;
+        const sname = document.getElementById('s-name').value;
+        const sgrade = document.getElementById('s-grade').value;
+        const selected = document.querySelectorAll('.bill-check:checked');
+
+        if (!pname || !pphone || !sname || !sgrade || selected.length === 0) {
+            return alert("Please fill all details and select items.");
+        }
+
+        try {
+            const counterRef = ref(db, 'bookstall/counter');
+            const snapshot = await get(counterRef);
+            let currentCount = snapshot.exists() ? snapshot.val() : 0;
+            let newCount = currentCount + 1;
+            
+            const receiptNo = "PR-" + newCount.toString().padStart(6, '0');
+
+            const purchasedItems = Array.from(selected).map(box => ({
+                title: box.dataset.title,
+                price: box.dataset.price
+            }));
+
+            const saleRecord = {
+                receiptNumber: receiptNo,
+                parentName: pname,
+                phone: pphone,
+                studentName: sname,
+                grade: sgrade,
+                items: purchasedItems,
+                total: document.getElementById('live-total').innerText,
+                timestamp: new Date().toISOString()
+            };
+
+            const updates = {};
+            updates['bookstall/counter'] = newCount;
+            updates['bookstall/sales/' + push(ref(db, 'bookstall/sales')).key] = saleRecord;
+            
+            await update(ref(db), updates);
+            alert(`Data submitted! Receipt: ${receiptNo}`);
+            
+            // UI Reset
+            document.getElementById('p-name').value = '';
+            document.getElementById('p-phone').value = '';
+            document.getElementById('s-name').value = '';
+            document.getElementById('live-total').innerText = "0";
+            document.querySelectorAll('.bill-check').forEach(b => {
+                b.checked = false;
+                b.closest('.billing-item-card').classList.remove('selected');
+            });
+
+        } catch (e) {
+            console.error(e);
+            alert("Submission failed: " + e.message);
+        }
+    };
+
+    // --- 4. DATA LISTENING & UI ---
     const inventory = [
         { grade: "Pre-KG", category: "Textbook", title: "Set of 6 subjects (Textbooks)", mrp: 3200 },
         { grade: "Pre-KG", category: "Workbook", title: "Set of 6 subjects (Workbooks)", mrp: 4000 },
@@ -468,80 +540,6 @@ import { getDatabase, ref, push, get, update } from "https://www.gstatic.com/fir
         if (data) cloudInventoryData = data;
     });
 
-    // --- 3. ACCESS CONTROL ---
-   window.checkLogin = function() {
-    const pin = document.getElementById('admin-pin').value;
-    if (pin === "Paramount@07") {
-        // Your logic to hide the login box and show the dashboard
-        document.getElementById('login-box').style.display = 'none';
-        document.getElementById('main-dashboard').style.display = 'block';
-    } else {
-        alert("Incorrect PIN. Access Denied.");
-    }
-};
-
-    // --- 4. SUBMISSION LOGIC ---
-    window.processSale = async function() {
-    const pname = document.getElementById('p-name').value;
-    const pphone = document.getElementById('p-phone').value;
-    const sname = document.getElementById('s-name').value;
-    const sgrade = document.getElementById('s-grade').value;
-    const selected = document.querySelectorAll('.bill-check:checked');
-
-    if (!pname || !pphone || !sname || !sgrade || selected.length === 0) {
-        return alert("Please fill all details and select items.");
-    }
-
-    try {
-        // 1. Get the current counter value from Firebase
-        const counterRef = ref(db, 'bookstall/counter');
-        const snapshot = await get(counterRef);
-        let currentCount = snapshot.exists() ? snapshot.val() : 0;
-        
-        // 2. Increment the count
-        let newCount = currentCount + 1;
-        
-        // 3. Format it as 6 digits (e.g., 000001)
-        const receiptNo = "PR-" + newCount.toString().padStart(6, '0');
-
-        const purchasedItems = Array.from(selected).map(box => ({
-            title: box.dataset.title,
-            price: box.dataset.price
-        }));
-
-        const saleRecord = {
-            receiptNumber: receiptNo,
-            parentName: pname,
-            phone: pphone,
-            studentName: sname,
-            grade: sgrade,
-            items: purchasedItems,
-            total: document.getElementById('live-total').innerText,
-            timestamp: new Date().toISOString()
-        };
-
-        // 4. Update the counter AND push the sale in one transaction
-        const updates = {};
-        updates['bookstall/counter'] = newCount;
-        updates['bookstall/sales/' + push(ref(db, 'bookstall/sales')).key] = saleRecord;
-        
-        await update(ref(db), updates);
-
-        alert(`Data submitted! Receipt: ${receiptNo}`);
-        
-        // Reset UI
-        document.getElementById('p-name').value = '';
-        document.getElementById('p-phone').value = '';
-        document.getElementById('s-name').value = '';
-        document.getElementById('live-total').innerText = "0";
-        document.querySelectorAll('.bill-check').forEach(b => b.checked = false);
-
-    } catch (e) {
-        console.error(e);
-        alert("Submission failed: " + e.message);
-    }
-};
-    // --- 5. UI UTILITIES ---
     window.updateInfoTable = function() {
         const grade = document.getElementById('grade-info-filter').value;
         const tbody = document.getElementById('info-body');
@@ -570,7 +568,6 @@ import { getDatabase, ref, push, get, update } from "https://www.gstatic.com/fir
                         <input type="checkbox" class="bill-check" 
                             data-price="${item.mrp}" 
                             data-title="${item.title}" 
-                            data-grade="${item.grade}"
                             onchange="window.calcTotal()"
                             onclick="event.stopPropagation()">
                         <div class="item-details">
