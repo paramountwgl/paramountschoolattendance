@@ -241,7 +241,7 @@
 <div id="premium-bill-template" style="display:none; width: 800px; padding: 80px 50px 50px 50px; background: white; font-family: 'Inter', sans-serif; color: #333;">
     <!-- Header -->
     <div style="text-align: center; border-bottom: 4px solid #005a2b; padding-bottom: 20px; margin-bottom: 30px;">
-        <img src="logo.png" height="100" style="margin-bottom: 10px;">
+        
         <h1 style="color: #005a2b; margin: 0; font-size: 2.2rem; font-family: 'Playfair Display', serif;">PARAMOUNT BOOK STORE</h1>
         <p style="letter-spacing: 3px; color: #666; font-weight: 600; margin-top: 5px;">OFFICIAL STORE RECEIPT</p>
     </div>
@@ -290,7 +290,7 @@
     <!-- Footer -->
     <div style="margin-top: 50px; text-align: center; border-top: 1px solid #eee; padding-top: 20px;">
         <p style="color: #005a2b; font-weight: 700; margin: 0; font-size: 1.1rem;">Thank you for your purchase!</p>
-        <p style="font-size: 0.85rem; color: #888; margin-top: 8px;">This is a computer-generated document from Paramount Book Store.</p>
+        <p style="font-size: 0.85rem; color: #888; margin-top: 8px;">This is a computer-generated document from official Book Store.</p>
     </div>
 </div>
 
@@ -393,15 +393,12 @@ window.generateArchivePDF = async function(isWipeAction) {
         pdf.setFillColor(0, 90, 43); // Paramount Green
         pdf.rect(0, 0, pageWidth, 45, 'F');
         
-        // Load Logo Image
-        const logoImg = new Image();
-        logoImg.src = 'logo.png';
+
         
         // Wait for logo to load to ensure it appears in PDF
         await new Promise((resolve) => { logoImg.onload = resolve; });
 
-        // Draw Logo (Left side of title)
-        pdf.addImage(logoImg, 'PNG', 15, 10, 25, 25); 
+        // Draw Logo (Left side of title
 
         pdf.setTextColor(255, 255, 255);
         pdf.setFont("Playfair Display", "bold");
@@ -609,7 +606,7 @@ window.wipeAndArchive = async function() {
         // 2. Build the Simple Archive List (Compressed for many records)
         pdf.setFontSize(18);
         pdf.setTextColor(0, 90, 43); // Paramount Green
-        pdf.text("Paramount Book Stall - Full Sales Archive", 14, 20);
+        pdf.text("Book Stall - Full Sales Archive", 14, 20);
         
         pdf.setFontSize(10);
         pdf.setTextColor(100);
