@@ -189,6 +189,7 @@
             <tr style="background: #005a2b; color: white;">
                 <th style="padding: 15px; text-align: left; border-radius: 8px 0 0 0;">Book Title</th>
                 <th style="padding: 15px; text-align: right; border-radius: 0 8px 0 0;">Price</th>
+                <th style="width: 180px;">Action</th>
             </tr>
         </thead>
         <tbody id="pdf-items">
@@ -246,27 +247,30 @@ onValue(salesRef, (snapshot) => {
         const date = sale.timestamp ? new Date(sale.timestamp).toLocaleString() : "N/A";
         const sNo = salesArray.length - index;
 
-        tbody.innerHTML += `
-            <tr>
-                <td>${sNo}</td>
-                <td>${date}</td>
-                <td class="parent-name">${sale.parentName}</td>
-                <td class="student-name">${sale.studentName}</td>
-                <td class="contact-box"><i class="fab fa-whatsapp"></i> ${sale.phone}</td>
-                <td><span class="grade-badge">${sale.grade}</span></td>
-                <td><span class="total-badge">₹${sale.total}</span></td>
-                <td>
-                    <div style="display:flex; gap:10px;">
-                        <button onclick='generateAndSend("${id}")' class="btn-whatsapp">
-                            <i class="fab fa-whatsapp"></i> BILL
-                        </button>
-                        <button class="btn-delete" onclick="window.deleteRecord('${id}')">
-                            <i class="fas fa-trash-alt"></i>
-                        </button>
-                    </div>
-                </td>
-            </tr>
-        `;
+        // ... inside your onValue(salesRef, (snapshot) => { ...
+tbody.innerHTML += `
+    <tr style="border-bottom: 1px solid #eee;">
+        <td>${sNo}</td>
+        <td>${date}</td>
+        <td><strong>${sale.parentName}</strong></td>
+        <td>${sale.studentName}</td>
+        <td>${sale.phone}</td>
+        <td><span class="grade-badge">${sale.grade}</span></td>
+        <td style="font-weight:bold;">₹${sale.total}</td>
+        <td>
+            <div style="display:flex; gap:10px;">
+                <!-- PREVIEW BUTTON -->
+                <button onclick='previewBill("${id}")' style="background:#0a2351; color:white; border:none; padding:8px 12px; border-radius:8px; cursor:pointer; font-size:0.8rem;">
+                    <i class="fas fa-eye"></i>
+                </button>
+                
+                <!-- WHATSAPP/SEND BUTTON -->
+                <button onclick='generateAndSend("${id}")' style="background:none; border:none; color:#25D366; font-size:1.6rem; cursor:pointer; transition: 0.2s;">
+                    <i class="fab fa-whatsapp"></i>
+                </button>
+            </div>
+        </td>
+    </tr>`;
     });
 });
 
@@ -275,50 +279,126 @@ window.generateAndSend = async function(id) {
     const sale = window.currentSales[id];
     const { jsPDF } = window.jspdf;
 
-    // Populate Template
+    // 1. Populate Template with Date + Time
     document.getElementById('pdf-pname').innerText = sale.parentName;
     document.getElementById('pdf-sname').innerText = sale.studentName;
     document.getElementById('pdf-grade').innerText = sale.grade;
     document.getElementById('pdf-phone').innerText = sale.phone;
-    document.getElementById('pdf-date').innerText = sale.timestamp ? new Date(sale.timestamp).toLocaleDateString() : "N/A";
+    
+    // UPDATED: Shows Date and Time (e.g., 05/05/2026, 3:00 PM)
+    const formattedDate = sale.timestamp ? new Date(sale.timestamp).toLocaleString([], { 
+        year: 'numeric', month: '2-digit', day: '2-digit', 
+        hour: '2-digit', minute: '2-digit', hour12: true 
+    }) : "N/A";
+    
+    document.getElementById('pdf-date').innerText = formattedDate;
+    document.getElementById('pdf-total').innerText = sale.total;
+    
+    // 2. UPDATED: Individual Pricing in the PDF table
+    const itemsTbody = document.getElementById('pdf-items');
+    itemsTbody.innerHTML = sale.items.map(i => `
+        <tr>
+            <td style="padding:15px; border-bottom:1px solid #eee; text-align:left;">
+                <div style="font-weight:600; color:#333;">${i.title}</div>
+            </td>
+            <td style="padding:15px; border-bottom:1px solid #eee; text-align:right; font-weight:700; color: #005a2b;">
+                ₹${parseFloat(i.price).toLocaleString()}
+            </td>
+        </tr>
+    `).join('');
+
+    // 3. Convert to PDF
+    const template = document.getElementById('premium-bill-template');
+    template.style.display = 'block';
+    template.style.position = 'static';
+    template.style.transform = 'none';
+    template.style.boxShadow = 'none';
+    
+    try {
+        // Higher scale for better clarity on text and logo
+        const canvas = await html2canvas(template, { scale: 3, useCORS: true });
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+        
+        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+        
+        // Use Student name and timestamp for unique filename
+        const fileTimestamp = new Date().getTime();
+        pdf.save(`Bill_${sale.studentName}_${fileTimestamp}.pdf`);
+        
+        template.style.display = 'none';
+
+        // 4. Redirect to WhatsApp with specific summary
+        const message = encodeURIComponent(
+            `*PARAMOUNT SCHOOL BOOK STALL*\n\n` +
+            `Dear Parent, thank you for your purchase. The attached PDF is the official bill for *${sale.studentName}*.\n\n` +
+            `*Date/Time:* ${formattedDate}\n` +
+            `*Total Amount:* ₹${sale.total}`
+        );
+        window.open(`https://wa.me/91${sale.phone}?text=${message}`, '_blank');
+    } catch (err) {
+        console.error("PDF Generation Error:", err);
+        alert("Error creating PDF. Check your internet connection for the logo to load.");
+        template.style.display = 'none';
+    }
+};
+    // Function to Preview the Bill
+window.previewBill = function(id) {
+    const sale = window.currentSales[id];
+    
+    // 1. Populate the template with the sale data
+    document.getElementById('pdf-pname').innerText = sale.parentName;
+    document.getElementById('pdf-sname').innerText = sale.studentName;
+    document.getElementById('pdf-grade').innerText = sale.grade;
+    document.getElementById('pdf-phone').innerText = sale.phone;
+    
+    const formattedDate = sale.timestamp ? new Date(sale.timestamp).toLocaleString([], { 
+        year: 'numeric', month: '2-digit', day: '2-digit', 
+        hour: '2-digit', minute: '2-digit', hour12: true 
+    }) : "N/A";
+    document.getElementById('pdf-date').innerText = formattedDate;
     document.getElementById('pdf-total').innerText = sale.total;
     
     const itemsTbody = document.getElementById('pdf-items');
     itemsTbody.innerHTML = sale.items.map(i => `
         <tr>
-            <td style="padding:15px; border-bottom:1px solid #eee; text-align:left;">${i.title}</td>
-            <td style="padding:15px; border-bottom:1px solid #eee; text-align:right;">₹${i.price}</td>
+            <td style="padding:15px; border-bottom:1px solid #eee; text-align:left;">
+                <div style="font-weight:600; color:#333;">${i.title}</div>
+            </td>
+            <td style="padding:15px; border-bottom:1px solid #eee; text-align:right; font-weight:700; color: #005a2b;">
+                ₹${parseFloat(i.price).toLocaleString()}
+            </td>
         </tr>
     `).join('');
 
-    // Convert to PDF
+    // 2. Display the template as a popup modal
     const template = document.getElementById('premium-bill-template');
     template.style.display = 'block';
-    
-    try {
-        const canvas = await html2canvas(template, { scale: 2 });
-        const imgData = canvas.toDataURL('image/png');
-        const pdf = new jsPDF('p', 'mm', 'a4');
-        pdf.addImage(imgData, 'PNG', 0, 0, 210, (canvas.height * 210) / canvas.width);
-        
-        pdf.save(`Bill_${sale.studentName}.pdf`);
-        template.style.display = 'none';
+    template.style.position = 'fixed';
+    template.style.top = '50%';
+    template.style.left = '50%';
+    template.style.transform = 'translate(-50%, -50%)';
+    template.style.zIndex = '10000';
+    template.style.boxShadow = '0 0 100px rgba(0,0,0,0.5)';
+    template.style.maxHeight = '90vh';
+    template.style.overflowY = 'auto';
 
-        // Redirect to WhatsApp
-        const message = encodeURIComponent(
-            `Thank you for purchasing from the Paramount store. The attached PDF is your bill for your purchase.\n\n` +
-            `*Summary*\n` +
-            `Student: ${sale.studentName}\n` +
-            `Total: ₹${sale.total}`
-        );
-        window.open(`https://wa.me/91${sale.phone}?text=${message}`, '_blank');
-    } catch (err) {
-        console.error("PDF Error:", err);
-        alert("Could not generate PDF. Check console.");
-        template.style.display = 'none';
+    // 3. Add a "Close Preview" button if it doesn't exist
+    if (!document.getElementById('close-preview-btn')) {
+        const closeBtn = document.createElement('button');
+        closeBtn.id = 'close-preview-btn';
+        closeBtn.innerHTML = '<i class="fas fa-times"></i> Close Preview';
+        closeBtn.style = "position:fixed; top:20px; right:20px; z-index:10001; background:#ff5252; color:white; border:none; padding:15px 25px; border-radius:50px; cursor:pointer; font-weight:bold; box-shadow: 0 4px 15px rgba(0,0,0,0.2);";
+        closeBtn.onclick = function() {
+            template.style.display = 'none';
+            closeBtn.remove();
+        };
+        document.body.appendChild(closeBtn);
     }
 };
-
 // 3. DELETE LOGIC
 window.deleteRecord = (id) => {
     if(confirm("Permanent Action: Remove this transaction from the Paramount Ledger?")) {
