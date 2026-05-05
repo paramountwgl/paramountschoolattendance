@@ -194,7 +194,7 @@
 
 <!-- Hidden Premium Bill Template for PDF Export -->
 <!-- Hidden Premium Bill Template for PDF Export -->
-<div id="premium-bill-template" style="display:none; width: 800px; padding: 50px; background: white; font-family: 'Inter', sans-serif; color: #333;">
+<div id="premium-bill-template" style="display:none; width: 800px; padding: 80px 50px 50px 50px; background: white; font-family: 'Inter', sans-serif; color: #333;">
     <!-- Header -->
     <div style="text-align: center; border-bottom: 4px solid #005a2b; padding-bottom: 20px; margin-bottom: 30px;">
         <img src="logo.png" height="100" style="margin-bottom: 10px;">
@@ -321,18 +321,24 @@ window.generateAndSend = async function(id) {
     template.style.transform = 'none';
 
     try {
-        // 3. Logic Fix: Generate PDF with CORS support for the logo
-        const canvas = await html2canvas(template, { scale: 3, useCORS: true });
+        // scale: 3 for high resolution
+        const canvas = await html2canvas(template, { 
+            scale: 3, 
+            useCORS: true,
+            scrollY: -window.scrollY // Fixes potential displacement if page is scrolled
+        });
+        
         const imgData = canvas.toDataURL('image/png');
         const pdf = new jsPDF('p', 'mm', 'a4');
         
         const pdfWidth = pdf.internal.pageSize.getWidth();
         const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
         
-        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+        // Add a 10mm margin from the top of the PDF page
+        const topMargin = 10; 
+        pdf.addImage(imgData, 'PNG', 0, topMargin, pdfWidth, pdfHeight);
         
-        // 4. Logic Fix: Save the PDF with a unique timestamp
-         const fileName = `${sale.studentName}_${sale.receiptNumber}.pdf`;
+        const fileName = `${sale.studentName}_${sale.receiptNumber}.pdf`;
         pdf.save(fileName);
         
         template.style.display = 'none'; // Hide template again
