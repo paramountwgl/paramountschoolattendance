@@ -172,6 +172,7 @@
             <thead>
                 <tr>
                     <th>S.No</th>
+                    <th>Receipt No</th>
                     <th>Date/Time</th>
                     <th>Parent Name</th>
                     <th>Student Name</th>
@@ -208,9 +209,10 @@
             <h3 style="color: #005a2b; border-bottom: 2px solid #f9d10d; display: inline-block; margin-bottom: 10px;">Customer Details</h3>
             <p style="margin: 5px 0;"><strong>Parent Name:</strong> <span id="pdf-pname"></span></p>
             <p style="margin: 5px 0;"><strong>Phone Number:</strong> <span id="pdf-phone"></span></p>
-        </div>
+            
         <div style="width: 40%; text-align: right;">
-            <h3 style="color: #005a2b; border-bottom: 2px solid #f9d10d; display: inline-block; margin-bottom: 10px;">Student Details</h3>
+    <h3 style="color: #005a2b; border-bottom: 2px solid #f9d10d; display: inline-block; margin-bottom: 10px;">Student Details</h3>
+    <p><strong>Receipt No:</strong> <span id="pdf-receipt-no" style="color:red; font-weight:bold;"></span></p>
             <p style="margin: 5px 0;"><strong>Student Name:</strong> <span id="pdf-sname"></span></p>
             <p style="margin: 5px 0;"><strong>Grade:</strong> <span id="pdf-grade"></span></p>
             <p style="margin: 5px 0;"><strong>Bill Date:</strong> <span id="pdf-date"></span></p>
@@ -260,6 +262,7 @@ const salesRef = ref(db, 'bookstall/sales');
 
 // 1. LISTEN FOR DATA
 onValue(salesRef, (snapshot) => {
+    const receiptNo = sale.receiptNumber || "N/A";
     const data = snapshot.val();
     const tbody = document.getElementById('sales-log-body');
     const emptyMsg = document.getElementById('empty-msg');
@@ -285,6 +288,7 @@ salesArray.forEach(([id, sale], index) => {
 tbody.innerHTML += `
     <tr>
         <td>${sNo}</td>
+        <td style="font-weight:bold; color:var(--paramount-green);">${receiptNo}</td>
         <td style="color: #666; font-size: 0.85rem;">${date}</td>
         <td class="parent-name">${sale.parentName}</td>
         <td class="student-name">${sale.studentName}</td>
@@ -317,6 +321,7 @@ window.generateAndSend = async function(id) {
     const sale = window.currentSales[id];
     const { jsPDF } = window.jspdf;
 // Reset for high-quality PDF generation
+   
 template.style.width = '800px'; 
 template.style.maxWidth = 'none';
 template.style.transform = 'none';
@@ -349,7 +354,7 @@ template.style.left = '-9999px'; // Move off-screen instead of hidden
             </td>
         </tr>
     `).join('');
-
+ populateTemplate(sale);
     // 3. Convert to PDF
     const template = document.getElementById('premium-bill-template');
     template.style.display = 'block';
@@ -444,7 +449,42 @@ window.previewBill = function(id) {
         };
         document.body.appendChild(closeBtn);
     }
-};// 3. DELETE LOGIC
+};
+    function populateTemplate(sale) {
+    // 1. Map Receipt and Basic Info
+    document.getElementById('pdf-receipt-no').innerText = sale.receiptNumber || "N/A";
+    document.getElementById('pdf-pname').innerText = sale.parentName || "N/A";
+    document.getElementById('pdf-phone').innerText = sale.phone || "N/A";
+    document.getElementById('pdf-sname').innerText = sale.studentName || "N/A";
+    document.getElementById('pdf-grade').innerText = sale.grade || "N/A";
+    document.getElementById('pdf-total').innerText = sale.total || "0";
+
+    // 2. Format and Map Date/Time
+    const formattedDate = sale.timestamp ? new Date(sale.timestamp).toLocaleString([], { 
+        year: 'numeric', month: '2-digit', day: '2-digit', 
+        hour: '2-digit', minute: '2-digit', hour12: true 
+    }) : "N/A";
+    document.getElementById('pdf-date').innerText = formattedDate;
+
+    // 3. Map Individual Books and Prices to the Table
+    const itemsTbody = document.getElementById('pdf-items');
+    if (sale.items && Array.isArray(sale.items)) {
+        itemsTbody.innerHTML = sale.items.map(i => `
+            <tr>
+                <td style="padding:10px 15px; border-bottom:1px solid #eee; text-align:left;">
+                    <div style="font-weight:600; color:#333; font-size:0.9rem;">${i.title}</div>
+                </td>
+                <td style="padding:10px 15px; border-bottom:1px solid #eee; text-align:right; font-weight:700; color: #005a2b; font-size:0.9rem; white-space:nowrap;">
+                    ₹${parseFloat(i.price).toLocaleString()}
+                </td>
+            </tr>
+        `).join('');
+    } else {
+        itemsTbody.innerHTML = '<tr><td colspan="2" style="text-align:center; padding:10px;">No items found</td></tr>';
+    }
+}
+    
+    // 3. DELETE LOGIC
 window.deleteRecord = (id) => {
     if(confirm("Are you sure you want to delete this record from the ledger? This cannot be undone.")) {
         remove(ref(db, `bookstall/sales/${id}`))
