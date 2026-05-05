@@ -164,6 +164,19 @@
     </style>
 </head>
 <body>
+    <div class="nav-header">
+    <div style="display: flex; align-items: center; gap: 20px;">
+        <a href="BookStall.html" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Back to Portal
+        </a>
+        <img src="logo.png" height="50" alt="Paramount Logo">
+    </div>
+
+    <!-- Wipe & Archive Button Added to Header -->
+    <button onclick="window.wipeAndArchive()" style="background: #ff5252; color: white; border: none; padding: 12px 25px; border-radius: 12px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: 0.3s; box-shadow: 0 4px 15px rgba(255, 82, 82, 0.2);">
+        <i class="fas fa-eraser"></i> Wipe & Archive Ledger
+    </button>
+</div>
 
 <section class="section">
     <h2>Recent Sales & Billing</h2>
@@ -459,6 +472,66 @@ window.previewBill = function(id) {
     }
 }
     
+window.wipeAndArchive = async function() {
+    // 1. Double Confirmation Security
+    const confirmFirst = confirm("DANGER: This will DOWNLOAD a backup and PERMANENTLY DELETE all sales records. This cannot be undone. Proceed?");
+    if (!confirmFirst) return;
+
+    const password = prompt("Enter Admin Password to authorize bulk wipe:");
+    if (password !== "Paramount@07") {
+        return alert("Incorrect Password. Action cancelled.");
+    }
+
+    try {
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const sales = window.currentSales;
+
+        if (!sales || Object.keys(sales).length === 0) {
+            return alert("The ledger is already empty.");
+        }
+
+        // 2. Build the Simple Archive List (Compressed for many records)
+        pdf.setFontSize(18);
+        pdf.setTextColor(0, 90, 43); // Paramount Green
+        pdf.text("Paramount Book Stall - Full Sales Archive", 14, 20);
+        
+        pdf.setFontSize(10);
+        pdf.setTextColor(100);
+        pdf.text(`Wipe Date: ${new Date().toLocaleString()}`, 14, 28);
+        
+        let yPos = 40;
+        pdf.setFontSize(9);
+        pdf.setTextColor(0);
+        pdf.text("Receipt No | Parent Name | Student Name | Amount | Date", 14, yPos);
+        pdf.line(14, yPos + 2, 200, yPos + 2);
+        yPos += 10;
+
+        Object.values(sales).forEach((s) => {
+            if (yPos > 275) { pdf.addPage(); yPos = 20; }
+            const rowText = `${s.receiptNumber || 'N/A'} | ${s.parentName} | ${s.studentName} | Rs.${s.total} | ${new Date(s.timestamp).toLocaleDateString()}`;
+            pdf.text(rowText, 14, yPos);
+            yPos += 7;
+        });
+
+        // 3. Trigger the mandatory backup download
+        pdf.save(`Paramount_Stall_Archive_${new Date().toISOString().split('T')[0]}.pdf`);
+
+        // 4. Wipe Sales and Reset Counter in Firebase
+        const updates = {};
+        updates['bookstall/sales'] = null; 
+        updates['bookstall/counter'] = 0;   
+        
+        await update(ref(db), updates);
+        
+        alert("Success: Ledger has been archived and cleared. Next bill will be PR-000001.");
+        location.reload(); // Refresh to show empty table
+
+    } catch (err) {
+        console.error(err);
+        alert("Error during wipe: " + err.message);
+    }
+};
     // 3. DELETE LOGIC
 window.deleteRecord = (id) => {
     if(confirm("Are you sure you want to delete this record from the ledger? This cannot be undone.")) {
