@@ -371,19 +371,17 @@ onValue(salesRef, (snapshot) => {
     revenueDisplay.innerText = formattedRevenue;
 }); // <--- THIS WAS THE MISSING CLOSING BRACKET
 // 2. PDF GENERATION & WHATSAPP LOGIC
-// Unified Function for both Download and Wipe
 window.generateArchivePDF = async function(isWipeAction) {
     const sales = window.currentSales;
     if (!sales || Object.keys(sales).length === 0) {
-        return alert("The ledger is currently empty. Nothing to export.");
+        return alert("The ledger is currently empty.");
     }
 
-    // Security check only for Wipe
     if (isWipeAction) {
         const confirmFirst = confirm("DANGER: This will download the ledger and PERMANENTLY DELETE all records. Proceed?");
         if (!confirmFirst) return;
         const password = prompt("Enter Admin Password to authorize wipe:");
-        if (password !== "Ahmad@07") return alert("Unauthorized. Wipe cancelled.");
+        if (password !== "Ahmad@07") return alert("Unauthorized.");
     }
 
     try {
@@ -391,89 +389,105 @@ window.generateArchivePDF = async function(isWipeAction) {
         const pdf = new jsPDF('p', 'mm', 'a4');
         const pageWidth = pdf.internal.pageSize.getWidth();
         
-        // --- PREMIUM HEADER GENERATION ---
+        // --- 1. PREMIUM HEADER WITH LOGO ---
         pdf.setFillColor(0, 90, 43); // Paramount Green
-        pdf.rect(0, 0, pageWidth, 40, 'F');
+        pdf.rect(0, 0, pageWidth, 45, 'F');
         
+        // Load Logo Image
+        const logoImg = new Image();
+        logoImg.src = 'logo.png';
+        
+        // Wait for logo to load to ensure it appears in PDF
+        await new Promise((resolve) => { logoImg.onload = resolve; });
+
+        // Draw Logo (Left side of title)
+        pdf.addImage(logoImg, 'PNG', 15, 10, 25, 25); 
+
         pdf.setTextColor(255, 255, 255);
         pdf.setFont("Playfair Display", "bold");
-        pdf.setFontSize(22);
-        pdf.text("PARAMOUNT SCHOOL BOOK STORE", pageWidth / 2, 20, { align: "center" });
+        pdf.setFontSize(20);
+        // Adjusted text position to sit beside the logo
+        pdf.text("PARAMOUNT SCHOOL BOOK STALL", 45, 22);
         
         pdf.setFontSize(10);
         pdf.setFont("Inter", "normal");
-        pdf.text("OFFICIAL SALES LEDGER ARCHIVE", pageWidth / 2, 28, { align: "center" });
+        pdf.text("OFFICIAL SALES LEDGER ARCHIVE - WARANGAL", 45, 29);
 
-        // --- SUB-HEADER INFO ---
+        // --- 2. REPORT META ---
         pdf.setTextColor(80, 80, 80);
         pdf.setFontSize(9);
-        const reportDate = new Date().toLocaleString();
-        pdf.text(`Report Generated: ${reportDate}`, 14, 50);
-        pdf.text(`Total Records: ${Object.keys(sales).length}`, 14, 55);
-        pdf.line(14, 58, pageWidth - 14, 58);
+        pdf.text(`Report Generated: ${new Date().toLocaleString()}`, 14, 55);
+        pdf.text(`Total Records: ${Object.keys(sales).length}`, 14, 60);
+        pdf.line(14, 63, pageWidth - 14, 63);
 
-        // --- TABULAR DATA ---
-        let y = 65;
-        // Table Headers
+        // --- 3. UPDATED TABLE WITH PHONE NUMBER ---
+        let y = 72;
         pdf.setFont("Inter", "bold");
-        pdf.setFillColor(240, 240, 240);
-        pdf.rect(14, y - 5, pageWidth - 28, 7, 'F');
+        pdf.setFillColor(245, 245, 245);
+        pdf.rect(14, y - 5, pageWidth - 28, 8, 'F');
+        
+        // Column Headers
         pdf.text("S.No", 16, y);
-        pdf.text("Receipt No", 30, y);
-        pdf.text("Student Name", 65, y);
-        pdf.text("Grade", 120, y);
-        pdf.text("Amount", 170, y);
+        pdf.text("Receipt", 28, y);
+        pdf.text("Student Name", 55, y);
+        pdf.text("Phone Number", 105, y); // New Column
+        pdf.text("Grade", 150, y);
+        pdf.text("Amount", 180, y);
         
         y += 10;
         pdf.setFont("Inter", "normal");
         const salesArray = Object.values(sales);
         
         salesArray.forEach((sale, index) => {
-            // Page Break Logic
-            if (y > 275) {
-                pdf.addPage();
-                y = 20; 
-            }
+            if (y > 275) { pdf.addPage(); y = 20; }
 
+            pdf.setTextColor(100);
             pdf.text((index + 1).toString(), 16, y);
-            pdf.setTextColor(0, 90, 43); // Green for receipt numbers
-            pdf.text(sale.receiptNumber || 'N/A', 30, y);
+            
+            pdf.setTextColor(0, 90, 43);
+            pdf.text(sale.receiptNumber || 'N/A', 28, y);
+            
             pdf.setTextColor(0, 0, 0);
-            pdf.text(sale.studentName || 'N/A', 65, y);
-            pdf.text(sale.grade || 'N/A', 120, y);
+            pdf.text(sale.studentName || 'N/A', 55, y);
+            
+            // Draw Parent Phone
+            pdf.setTextColor(100);
+            pdf.text(sale.phone || 'N/A', 105, y);
+            
+            pdf.setTextColor(0, 0, 0);
+            pdf.text(sale.grade || 'N/A', 150, y);
+            
             pdf.setFont("Inter", "bold");
-            pdf.text(`Rs.${sale.total}`, 170, y);
+            pdf.text(`Rs.${sale.total}`, 180, y);
             pdf.setFont("Inter", "normal");
 
-            pdf.setDrawColor(230, 230, 230);
+            pdf.setDrawColor(235, 235, 235);
             pdf.line(14, y + 2, pageWidth - 14, y + 2);
-            y += 8;
+            y += 9;
         });
 
-        // --- REVENUE SUMMARY ---
+        // --- 4. FINAL REVENUE ---
         const totalRev = document.getElementById('grand-total-revenue').innerText;
-        pdf.setFillColor(10, 35, 81); // Primary Navy
-        pdf.rect(140, y + 5, 55, 12, 'F');
+        pdf.setFillColor(10, 35, 81);
+        pdf.rect(145, y + 5, 50, 12, 'F');
         pdf.setTextColor(255, 255, 255);
-        pdf.text(`TOTAL: Rs.${totalRev}`, 145, y + 13);
+        pdf.text(`TOTAL: Rs.${totalRev}`, 148, y + 13);
 
-        // --- SAVE PDF ---
-        const fileName = isWipeAction ? `FINAL_Archive_${new Date().getTime()}.pdf` : `Ledger_Backup_${new Date().getTime()}.pdf`;
+        const fileName = isWipeAction ? `FINAL_Wipe_Archive.pdf` : `Ledger_Backup.pdf`;
         pdf.save(fileName);
 
-        // --- WIPE DATABASE (ONLY IF isWipeAction is true) ---
         if (isWipeAction) {
             const updates = {};
             updates['bookstall/sales'] = null;
             updates['bookstall/counter'] = 0;
             await update(ref(db), updates);
-            alert("Archive saved and database wiped successfully.");
+            alert("Database purged. Archive saved.");
             location.reload();
         }
 
     } catch (err) {
-        console.error("PDF Export Error:", err);
-        alert("Failed to generate PDF. Error: " + err.message);
+        console.error(err);
+        alert("Error: " + err.message);
     }
 };
     // Function to Preview the Bill
