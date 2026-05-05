@@ -194,55 +194,55 @@
 
 <!-- Hidden Premium Bill Template for PDF Export -->
 <!-- Hidden Premium Bill Template for PDF Export -->
-<div id="premium-bill-template" style="display:none; width: 800px; padding: 50px; background: white; font-family: 'Inter', sans-serif; border: 1px solid #eee;">
-    
+<div id="premium-bill-template" style="display:none; width: 800px; padding: 50px; background: white; font-family: 'Inter', sans-serif; color: #333;">
     <!-- Header -->
     <div style="text-align: center; border-bottom: 4px solid #005a2b; padding-bottom: 20px; margin-bottom: 30px;">
         <img src="logo.png" height="100" style="margin-bottom: 10px;">
-        <h1 style="color: #005a2b; margin: 0; font-size: 2.5rem; font-family: 'Playfair Display', serif;">PARAMOUNT SCHOOL</h1>
-        <p style="letter-spacing: 3px; color: #555; font-weight: 600; margin-top: 5px;">OFFICIAL STORE RECEIPT</p>
+        <h1 style="color: #005a2b; margin: 0; font-size: 2.2rem; font-family: 'Playfair Display', serif;">PARAMOUNT SCHOOL</h1>
+        <p style="letter-spacing: 3px; color: #666; font-weight: 600; margin-top: 5px;">OFFICIAL STORE RECEIPT</p>
     </div>
 
-    <!-- Info Sections -->
-    <div style="display: flex; justify-content: space-between; margin-bottom: 40px; line-height: 1.6;">
-        <div style="width: 50%;">
-            <h3 style="color: #005a2b; border-bottom: 2px solid #f9d10d; display: inline-block; margin-bottom: 10px;">Customer Details</h3>
-            <p style="margin: 5px 0;"><strong>Parent Name:</strong> <span id="pdf-pname"></span></p>
-            <p style="margin: 5px 0;"><strong>Phone Number:</strong> <span id="pdf-phone"></span></p>
-            
-        <div style="width: 40%; text-align: right;">
-    <h3 style="color: #005a2b; border-bottom: 2px solid #f9d10d; display: inline-block; margin-bottom: 10px;">Student Details</h3>
-    <p><strong>Receipt No:</strong> <span id="pdf-receipt-no" style="color:red; font-weight:bold;"></span></p>
-            <p style="margin: 5px 0;"><strong>Student Name:</strong> <span id="pdf-sname"></span></p>
+    <!-- Info Grid -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 40px;">
+        <div style="border-left: 4px solid #f9d10d; padding-left: 15px;">
+            <h3 style="color: #005a2b; margin: 0 0 10px 0; font-size: 1rem; text-transform: uppercase;">Customer Details</h3>
+            <p style="margin: 5px 0;"><strong>Parent:</strong> <span id="pdf-pname"></span></p>
+            <p style="margin: 5px 0;"><strong>Phone:</strong> <span id="pdf-phone"></span></p>
+        </div>
+        <div style="text-align: right; border-right: 4px solid #f9d10d; padding-right: 15px;">
+            <h3 style="color: #005a2b; margin: 0 0 10px 0; font-size: 1rem; text-transform: uppercase;">Student Details</h3>
+            <p style="margin: 5px 0;"><strong>Receipt No:</strong> <span id="pdf-receipt-no" style="color:#d32f2f; font-weight:bold;"></span></p>
+            <p style="margin: 5px 0;"><strong>Name:</strong> <span id="pdf-sname"></span></p>
             <p style="margin: 5px 0;"><strong>Grade:</strong> <span id="pdf-grade"></span></p>
-            <p style="margin: 5px 0;"><strong>Bill Date:</strong> <span id="pdf-date"></span></p>
+            <p style="margin: 5px 0;"><strong>Date:</strong> <span id="pdf-date"></span></p>
         </div>
     </div>
 
     <!-- Items Table -->
-   <!-- Adjust the items table header for better fitting -->
-<table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
-    <thead>
-        <tr style="background: #005a2b; color: white;">
-            <th style="padding: 10px 15px; text-align: left; font-size: 0.8rem; border-radius: 8px 0 0 0;">BOOK TITLE</th>
-            <th style="padding: 10px 15px; text-align: right; font-size: 0.8rem; border-radius: 0 8px 0 0;">PRICE</th>
-        </tr>
-    </thead>
-    <tbody id="pdf-items">
-        <!-- JS will inject rows here with reduced padding -->
-    </tbody>
-</table>
-
-    <!-- Total Section -->
-    <div style="margin-top: 30px; padding: 20px; background: #f9f9f9; border-radius: 12px; text-align: right;">
-        <span style="font-size: 1.2rem; color: #666;">Grand Total:</span>
-        <span style="font-size: 2rem; font-weight: 800; color: #005a2b; margin-left: 15px;">₹<span id="pdf-total"></span></span>
-    </div>
+    <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">
+        <thead>
+            <tr style="background: #005a2b; color: white;">
+                <th style="padding: 12px 15px; text-align: left; border-radius: 8px 0 0 0;">ITEM DESCRIPTION</th>
+                <th style="padding: 12px 15px; text-align: right; border-radius: 0 8px 0 0; width: 120px;">PRICE</th>
+            </tr>
+        </thead>
+        <tbody id="pdf-items">
+            <!-- Injected Rows -->
+        </tbody>
+        <tfoot>
+            <tr>
+                <td style="padding: 20px 15px; text-align: right; font-size: 1.1rem; color: #666;">Grand Total:</td>
+                <td style="padding: 20px 15px; text-align: right; font-size: 1.8rem; font-weight: 800; color: #005a2b; background: #f9f9f9; border-radius: 0 0 8px 0;">
+                    ₹<span id="pdf-total"></span>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
 
     <!-- Footer -->
-    <div style="margin-top: 60px; text-align: center; border-top: 1px solid #eee; padding-top: 20px;">
-        <p style="color: #005a2b; font-weight: 600; margin: 0;">Thank you for your purchase!</p>
-        <p style="font-size: 0.8rem; color: #999; margin-top: 5px;">This is a computer-generated document from Paramount English Medium School.</p>
+    <div style="margin-top: 50px; text-align: center; border-top: 1px solid #eee; padding-top: 20px;">
+        <p style="color: #005a2b; font-weight: 700; margin: 0; font-size: 1.1rem;">Thank you for your purchase!</p>
+        <p style="font-size: 0.85rem; color: #888; margin-top: 8px;">This is a computer-generated document from Paramount English Medium School.</p>
     </div>
 </div>
 
