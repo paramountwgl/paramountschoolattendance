@@ -156,6 +156,9 @@
     align-items: center;
     gap: 15px;
 }
+        #main-content {
+    display: none; /* Stays hidden until checkLogin() is successful */
+}
         .item-details b {
     display: block;
     color: var(--primary);
@@ -266,39 +269,33 @@
    <!-- Login Section Styled like Admin Access Box -->
 <div id="login-overlay">
     <div class="login-card">
-        <!-- Make sure to use your actual logo URL here -->
         <img src="https://paramountwgl.github.io/paramountschoolattendance/logo.png" alt="Logo">
-        
         <h2>PARAMOUNT</h2>
         <div class="sub-tag">Book Stall Access Box</div>
-        
         <input type="password" id="staff-pass" placeholder="Bookstall Password">
-        
         <button class="login-btn" onclick="checkLogin()">
             Unlock Dashboard <i class="fas fa-lock"></i>
         </button>
-        
         <div class="login-links">
             <a href="index.html">Cancel & Return</a>
-            
         </div>
     </div>
 </div>
 
-    <!-- Main Dashboard -->
+<!-- 2. ADD THIS WRAPPER HERE -->
+<div id="main-content">
    <div class="header" style="display: flex; justify-content: space-between; align-items: center; padding: 20px 40px;">
-    <img src="logo.png" alt="School Logo" height="80">
-    <div class="header-titles">
-        <h1 style="font-family: 'Playfair Display', serif; color: var(--primary); margin: 0;">PARAMOUNT SCHOOL BOOK STALL</h1>
-        <p style="margin: 5px 0;">Live Inventory & Digital Billing System</p>
+        <img src="logo.png" alt="School Logo" height="80">
+        <div class="header-titles">
+            <h1 style="font-family: 'Playfair Display', serif; color: var(--primary); margin: 0;">PARAMOUNT SCHOOL BOOK STALL</h1>
+            <p style="margin: 5px 0;">Live Inventory & Digital Billing System</p>
+        </div>
+        <a href="InventoryManagement.html" class="hub-card" style="text-decoration: none; background: white; padding: 15px; border-radius: 12px; border: 1px solid #eee; text-align: center; width: 140px; display: block; transition: 0.3s;">
+            <i class="fas fa-boxes" style="font-size: 1.5rem; color: var(--paramount-green); margin-bottom: 5px;"></i>
+            <span style="display: block; font-weight: 600; color: var(--primary); font-size: 0.9rem;">Stock Control</span>
+            <small style="color: #888; font-size: 0.7rem;">Counts & Restock</small>
+        </a>
     </div>
-    <!-- This is the Navigation Button that redirects to the new page -->
-    <a href="InventoryManagement.html" class="hub-card" style="text-decoration: none; background: white; padding: 15px; border-radius: 12px; border: 1px solid #eee; text-align: center; width: 140px; display: block; transition: 0.3s;">
-        <i class="fas fa-boxes" style="font-size: 1.5rem; color: var(--paramount-green); margin-bottom: 5px;"></i>
-        <span style="display: block; font-weight: 600; color: var(--primary); font-size: 0.9rem;">Stock Control</span>
-        <small style="color: #888; font-size: 0.7rem;">Counts & Restock</small>
-    </a>
-</div>
         <div class="grid">
             <!-- Left: Information & Inventory -->
             <div class="section">
@@ -472,16 +469,17 @@
     });
 
     // --- 3. ACCESS CONTROL ---
-    window.checkLogin = function() {
-        const pass = document.getElementById('staff-pass').value;
-        if(pass === "Paramount@07") {
-            document.getElementById('login-overlay').style.display = 'none';
-            document.getElementById('main-content').style.display = 'block';
-            window.updateInfoTable();
-        } else {
-            alert("Incorrect Password");
-        }
-    };
+   window.checkLogin = function() {
+    const pass = document.getElementById('staff-pass').value;
+    if(pass === "Paramount@07") {
+        document.getElementById('login-overlay').style.display = 'none';
+        // This line was failing because 'main-content' was missing in HTML:
+        document.getElementById('main-content').style.display = 'block'; 
+        window.updateInfoTable();
+    } else {
+        alert("Incorrect Password");
+    }
+};
 
     // --- 4. SUBMISSION LOGIC ---
     window.processSale = async function() {
