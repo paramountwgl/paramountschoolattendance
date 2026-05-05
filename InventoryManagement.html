@@ -652,7 +652,14 @@ window.wipeAndArchive = async function() {
     const { jsPDF } = window.jspdf;
     const template = document.getElementById('premium-bill-template');
 
+    // 1. Populate the template first
     populateTemplate(sale);
+
+    // 2. Create the date string needed for the message
+    const formattedDate = sale.timestamp ? new Date(sale.timestamp).toLocaleString([], { 
+        year: 'numeric', month: '2-digit', day: '2-digit', 
+        hour: '2-digit', minute: '2-digit', hour12: true 
+    }) : "N/A";
 
     template.style.display = 'block';
     template.style.position = 'absolute';
@@ -670,13 +677,11 @@ window.wipeAndArchive = async function() {
         
         template.style.display = 'none'; 
 
+        // 3. Automated WhatsApp Redirection (Fixed formattedDate Reference)
         const message = encodeURIComponent(
-            `Thank you for your purchase from the PARAMOUNT SCHOOL STORE. Your cooperation and support are greatly appreciated.
-
-                We look forward to your continued support. 
-                
-                The Below attached PDF File is your purchase bill.\n\n` +
-            
+            `*PARAMOUNT SCHOOL BOOK STORE*\n\n` +
+            `Thank you for your purchase. Your cooperation and support are greatly appreciated.\n\n` +
+            `The attached PDF file is your official purchase bill.\n\n` +
             `*Receipt No:* ${sale.receiptNumber}\n` +
             `*Student:* ${sale.studentName}\n` +
             `*Date:* ${formattedDate}\n` +
@@ -686,7 +691,7 @@ window.wipeAndArchive = async function() {
         window.open(`https://wa.me/91${sale.phone}?text=${message}`, '_blank');
     } catch (err) {
         console.error("WhatsApp Billing Error:", err);
-        alert("Could not generate individual bill.");
+        alert("Could not generate individual bill. Error: " + err.message);
         template.style.display = 'none';
     }
 };
