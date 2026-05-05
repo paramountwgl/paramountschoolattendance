@@ -262,7 +262,7 @@ const salesRef = ref(db, 'bookstall/sales');
 
 // 1. LISTEN FOR DATA
 onValue(salesRef, (snapshot) => {
-    const receiptNo = sale.receiptNumber || "N/A";
+    const receiptNo = sale.receiptNumber || 'N/A';
     const data = snapshot.val();
     const tbody = document.getElementById('sales-log-body');
     const emptyMsg = document.getElementById('empty-msg');
