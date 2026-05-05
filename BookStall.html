@@ -302,8 +302,8 @@
                 <h2>Book Information</h2>
                 <div class="filter-box">
                     <label>Filter Grade:</label>
-                    <select id="grade-info-filter" onchange="updateInfoTable()">
-                        <option value="" disabled selected>Select Grade</option>
+                   <select id="grade-info-filter" onchange="updateInfoTable()">
+                    <option value="All">All Grades</option>
                             <option value="Pre-KG">Pre-KG</option>
                             <option value="LKG">LKG</option>
                             <option value="UKG">UKG</option>
@@ -541,14 +541,19 @@
     });
 
     window.updateInfoTable = function() {
-        const grade = document.getElementById('grade-info-filter').value;
-        const tbody = document.getElementById('info-body');
-        tbody.innerHTML = '';
-        const filtered = !grade || grade === "All" ? inventory : inventory.filter(i => i.grade === grade);
-        filtered.forEach(item => {
-            tbody.innerHTML += `<tr><td>${item.grade}</td><td>${item.category}</td><td>${item.title}</td><td>₹${item.mrp}</td></tr>`;
-        });
-    };
+    const grade = document.getElementById('grade-info-filter').value;
+    const tbody = document.getElementById('info-body');
+    tbody.innerHTML = '';
+    
+    // Logic: If grade is "All", show everything. Otherwise, filter.
+    const filtered = (grade === "All" || !grade) 
+        ? inventory 
+        : inventory.filter(i => i.grade === grade);
+        
+    filtered.forEach(item => {
+        tbody.innerHTML += `<tr><td>${item.grade}</td><td>${item.category}</td><td>${item.title}</td><td>₹${item.mrp}</td></tr>`;
+    });
+};
 
     window.updateBillingList = function() {
         const grade = document.getElementById('s-grade').value;
