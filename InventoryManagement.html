@@ -307,50 +307,21 @@ onValue(salesRef, (snapshot) => {
 window.generateAndSend = async function(id) {
     const sale = window.currentSales[id];
     const { jsPDF } = window.jspdf;
-// Reset for high-quality PDF generation
-   
-template.style.width = '800px'; 
-template.style.maxWidth = 'none';
-template.style.transform = 'none';
-template.style.position = 'absolute';
-template.style.left = '-9999px'; // Move off-screen instead of hidden
-    // 1. Populate Template with Date + Time
-    document.getElementById('pdf-pname').innerText = sale.parentName;
-    document.getElementById('pdf-sname').innerText = sale.studentName;
-    document.getElementById('pdf-grade').innerText = sale.grade;
-    document.getElementById('pdf-phone').innerText = sale.phone;
-    
-    // UPDATED: Shows Date and Time (e.g., 05/05/2026, 3:00 PM)
-    const formattedDate = sale.timestamp ? new Date(sale.timestamp).toLocaleString([], { 
-        year: 'numeric', month: '2-digit', day: '2-digit', 
-        hour: '2-digit', minute: '2-digit', hour12: true 
-    }) : "N/A";
-    
-    document.getElementById('pdf-date').innerText = formattedDate;
-    document.getElementById('pdf-total').innerText = sale.total;
-    
-    // 2. UPDATED: Individual Pricing in the PDF table
-    const itemsTbody = document.getElementById('pdf-items');
-    itemsTbody.innerHTML = sale.items.map(i => `
-        <tr>
-            <td style="padding:15px; border-bottom:1px solid #eee; text-align:left;">
-                <div style="font-weight:600; color:#333;">${i.title}</div>
-            </td>
-            <td style="padding:15px; border-bottom:1px solid #eee; text-align:right; font-weight:700; color: #005a2b;">
-                ₹${parseFloat(i.price).toLocaleString()}
-            </td>
-        </tr>
-    `).join('');
- populateTemplate(sale);
-    // 3. Convert to PDF
     const template = document.getElementById('premium-bill-template');
+
+    // 1. Logic Fix: Populate the template using your standard function
+    populateTemplate(sale);
+
+    // 2. Logic Fix: Prepare the template for high-quality capture
     template.style.display = 'block';
-    template.style.position = 'static';
+    template.style.position = 'absolute';
+    template.style.left = '-9999px'; // Move off-screen
+    template.style.width = '800px'; 
+    template.style.maxWidth = 'none';
     template.style.transform = 'none';
-    template.style.boxShadow = 'none';
-    
+
     try {
-        // Higher scale for better clarity on text and logo
+        // 3. Logic Fix: Generate PDF with CORS support for the logo
         const canvas = await html2canvas(template, { scale: 3, useCORS: true });
         const imgData = canvas.toDataURL('image/png');
         const pdf = new jsPDF('p', 'mm', 'a4');
@@ -360,23 +331,28 @@ template.style.left = '-9999px'; // Move off-screen instead of hidden
         
         pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
         
-        // Use Student name and timestamp for unique filename
+        // 4. Logic Fix: Save the PDF with a unique timestamp
         const fileTimestamp = new Date().getTime();
         pdf.save(`Bill_${sale.studentName}_${fileTimestamp}.pdf`);
         
-        template.style.display = 'none';
+        template.style.display = 'none'; // Hide template again
 
-        // 4. Redirect to WhatsApp with specific summary
+        // 5. Logic Fix: Automated WhatsApp Redirection
+        const formattedDate = document.getElementById('pdf-date').innerText;
         const message = encodeURIComponent(
-            `*PARAMOUNT SCHOOL BOOK STALL*\n\n` +
-            `Dear Parent, thank you for your purchase. The attached PDF is the official bill for *${sale.studentName}*.\n\n` +
-            `*Date/Time:* ${formattedDate}\n` +
-            `*Total Amount:* ₹${sale.total}`
+            `Thank you for purchasing from the Paramount store. The below attached PDF is your bill for your purchase.\n\n` +
+            `*Receipt No:* ${sale.receiptNumber}\n` +
+            `*Student:* ${sale.studentName}\n` +
+            `*Date:* ${formattedDate}\n` +
+            `*Total:* ₹${sale.total}`
         );
+
+        // Uses the parent's phone number submitted in the portal
         window.open(`https://wa.me/91${sale.phone}?text=${message}`, '_blank');
+
     } catch (err) {
         console.error("PDF Generation Error:", err);
-        alert("Error creating PDF. Check your internet connection for the logo to load.");
+        alert("Error creating PDF. Please check your internet connection for the logo.");
         template.style.display = 'none';
     }
 };
