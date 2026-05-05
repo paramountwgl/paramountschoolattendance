@@ -398,11 +398,11 @@
     </div>
 
   <script type="module">
-    // --- 1. FIREBASE INITIALIZATION ---
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    // Added 'push' and 'set' to imports
-    import { getDatabase, ref, onValue, set, push } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+// Add 'get' and 'push' to this list
+import { getDatabase, ref, push, get, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
+// ... existing firebaseConfig and app initialization ...
     const firebaseConfig = {
         apiKey: "AIzaSyDRYk9KOK-ga0c88dnYMsAoifW2NJTd_Y8",
         databaseURL: "https://paramount-school-d55bc-default-rtdb.firebaseio.com",
