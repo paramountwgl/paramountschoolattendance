@@ -470,14 +470,13 @@ import { getDatabase, ref, push, get, update } from "https://www.gstatic.com/fir
 
     // --- 3. ACCESS CONTROL ---
    window.checkLogin = function() {
-    const pass = document.getElementById('staff-pass').value;
-    if(pass === "Paramount@07") {
-        document.getElementById('login-overlay').style.display = 'none';
-        // This line was failing because 'main-content' was missing in HTML:
-        document.getElementById('main-content').style.display = 'block'; 
-        window.updateInfoTable();
+    const pin = document.getElementById('admin-pin').value;
+    if (pin === "Paramount@07") {
+        // Your logic to hide the login box and show the dashboard
+        document.getElementById('login-box').style.display = 'none';
+        document.getElementById('main-dashboard').style.display = 'block';
     } else {
-        alert("Incorrect Password");
+        alert("Incorrect PIN. Access Denied.");
     }
 };
 
