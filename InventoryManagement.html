@@ -358,7 +358,8 @@ window.generateAndSend = async function(id) {
 };
     // Function to Preview the Bill
 window.previewBill = function(id) {
-    const sale = window.currentSales[id];
+    const sale = window.currentSales[id]; // This gets the specific record
+    populateTemplate(sale);
     
     // Populate template data
     document.getElementById('pdf-pname').innerText = sale.parentName;
