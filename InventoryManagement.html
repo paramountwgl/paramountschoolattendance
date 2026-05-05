@@ -59,26 +59,50 @@
 
         .table-container { overflow-x: auto; border-radius: 20px; }
         
-        table { width: 100%; border-collapse: separate; border-spacing: 0 15px; min-width: 1200px; }
+        table { 
+    width: 100%; 
+    border-collapse: separate; 
+    border-spacing: 0 12px; /* This creates the space BETWEEN rows */
+    margin-top: 10px; 
+}
         
-        th { 
-            text-align: left; padding: 15px 20px; color: var(--primary); 
-            font-weight: 800; font-size: 0.85rem; text-transform: uppercase; 
-            letter-spacing: 1.2px; opacity: 0.8;
-        }
+       th { 
+    text-align: left; 
+    padding: 15px 20px; 
+    color: var(--primary); 
+    font-weight: 800; 
+    font-size: 0.85rem; 
+    text-transform: uppercase; 
+    letter-spacing: 1px;
+}
 
         /* Glass row styling */
-        tbody tr { transition: 0.3s; }
+        tbody tr { 
+    background: white; 
+    transition: 0.3s; 
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+}
+        tbody tr:hover { 
+    transform: translateY(-3px); 
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+}
         
         td { 
-            padding: 20px; background: white; 
-            border-top: 1px solid rgba(0,0,0,0.03);
-            border-bottom: 1px solid rgba(0,0,0,0.03);
-            font-size: 0.95rem; vertical-align: middle;
-        }
+    padding: 20px; 
+    border-top: 1px solid #f0f0f0;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 0.95rem; 
+    vertical-align: middle; 
+}
 
-        td:first-child { border-left: 1px solid rgba(0,0,0,0.03); border-radius: 20px 0 0 20px; }
-        td:last-child { border-right: 1px solid rgba(0,0,0,0.03); border-radius: 0 20px 20px 0; }
+        td:first-child { 
+    border-left: 1px solid #f0f0f0; 
+    border-radius: 15px 0 0 15px; 
+}
+       td:last-child { 
+    border-right: 1px solid #f0f0f0; 
+    border-radius: 0 15px 15px 0; 
+}
 
         tr:hover td { 
             background: #fff; 
@@ -89,7 +113,17 @@
 
         /* Specific Column Styles */
         .parent-name { font-weight: 700; color: var(--primary); font-size: 1.05rem; }
-        .contact-box { color: #25D366; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+        .contact-box { 
+    color: #25D366; 
+    font-weight: 600; 
+    display: flex; 
+    align-items: center; 
+    gap: 8px;
+    background: #f0fdf4; /* Very light green hint */
+    padding: 8px 12px;
+    border-radius: 10px;
+    width: fit-content;
+}
         .student-name { font-weight: 600; color: #333; }
         .grade-badge { 
             background: var(--primary); color: white; padding: 5px 12px; 
@@ -247,36 +281,34 @@ salesArray.forEach(([id, sale], index) => {
     const date = sale.timestamp ? new Date(sale.timestamp).toLocaleString() : "N/A";
     const sNo = salesArray.length - index;
 
-    tbody.innerHTML += `
-        <tr style="border-bottom: 1px solid #eee;">
-            <td>${sNo}</td>
-            <td>${date}</td>
-            <td class="parent-name">${sale.parentName}</td>
-            <td class="student-name">${sale.studentName}</td>
-            <td class="contact-box"><i class="fab fa-whatsapp"></i> ${sale.phone}</td>
-            <td><span class="grade-badge">${sale.grade}</span></td>
-            <td style="font-weight:bold;">₹${sale.total}</td>
-            <td>
-                <div style="display:flex; gap:8px; align-items:center;">
-                    <!-- 1. PREVIEW -->
-                    <button onclick='previewBill("${id}")' title="Preview Bill" style="background:#0a2351; color:white; border:none; padding:8px 12px; border-radius:8px; cursor:pointer; font-size:0.8rem;">
-                        <i class="fas fa-eye"></i>
-                    </button>
-                    
-                    <!-- 2. WHATSAPP/SEND -->
-                    <button onclick='generateAndSend("${id}")' title="Send via WhatsApp" style="background:none; border:none; color:#25D366; font-size:1.6rem; cursor:pointer; transition: 0.2s;">
-                        <i class="fab fa-whatsapp"></i>
-                    </button>
-
-                    <!-- 3. DELETE (RESTORED) -->
-                    <button onclick="window.deleteRecord('${id}')" title="Delete Entry" style="background:#fff; color:#ff5252; border:1px solid #ffdada; padding:8px 10px; border-radius:8px; cursor:pointer; transition: 0.3s;">
-                        <i class="fas fa-trash-alt"></i>
-                    </button>
-                </div>
-            </td>
-        </tr>`;
-});
-     });
+   // ... inside your salesArray.forEach loop ...
+tbody.innerHTML += `
+    <tr>
+        <td>${sNo}</td>
+        <td style="color: #666; font-size: 0.85rem;">${date}</td>
+        <td class="parent-name">${sale.parentName}</td>
+        <td class="student-name">${sale.studentName}</td>
+        <td>
+            <div class="contact-box">
+                <i class="fab fa-whatsapp"></i> ${sale.phone}
+            </div>
+        </td>
+        <td><span class="grade-badge">${sale.grade}</span></td>
+        <td style="font-weight:bold; color: var(--primary);">₹${sale.total}</td>
+        <td>
+            <div style="display:flex; gap:10px; align-items:center;">
+                <button onclick='previewBill("${id}")' class="btn-action btn-preview" title="View Bill">
+                    <i class="fas fa-eye"></i>
+                </button>
+                <button onclick='generateAndSend("${id}")' class="btn-action btn-whatsapp" title="Send WhatsApp">
+                    <i class="fab fa-whatsapp"></i>
+                </button>
+                <button onclick="window.deleteRecord('${id}')" class="btn-action btn-delete" title="Delete">
+                    <i class="fas fa-trash-alt"></i>
+                </button>
+            </div>
+        </td>
+    </tr>`;
 
 // 2. PDF GENERATION & WHATSAPP LOGIC
 window.generateAndSend = async function(id) {
