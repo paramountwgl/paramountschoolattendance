@@ -309,6 +309,7 @@ const db = getDatabase(app);
 const salesRef = ref(db, 'bookstall/sales');
 
 // 1. LISTEN FOR DATA
+// 1. LISTEN FOR DATA
 onValue(salesRef, (snapshot) => {
     const data = snapshot.val();
     const tbody = document.getElementById('sales-log-body');
@@ -334,9 +335,8 @@ onValue(salesRef, (snapshot) => {
         const date = sale.timestamp ? new Date(sale.timestamp).toLocaleString() : "N/A";
         const sNo = salesArray.length - index;
         
-        // Logic Fix: Add to revenue (strip currency symbols or commas if they exist)
+        // Logic Fix: Add to revenue
         const amount = parseFloat(sale.total.toString().replace(/,/g, '')) || 0;
-        
         totalRevenue += amount;
 
         tbody.innerHTML += `
@@ -357,13 +357,16 @@ onValue(salesRef, (snapshot) => {
                     </div>
                 </td>
             </tr>`;
-        const formattedRevenue = totalRevenue.toLocaleString('en-IN', {
-    maximumFractionDigits: 0
     });
 
-    // Update the Revenue display lively
-    document.getElementById('grand-total-revenue').innerText = formattedRevenue;
-});
+    // Formatting revenue for the professional font
+    const formattedRevenue = totalRevenue.toLocaleString('en-IN', {
+        maximumFractionDigits: 0
+    });
+
+    // Update the Revenue display
+    revenueDisplay.innerText = formattedRevenue;
+}); // <--- THIS WAS THE MISSING CLOSING BRACKET
 // 2. PDF GENERATION & WHATSAPP LOGIC
 window.generateAndSend = async function(id) {
     const sale = window.currentSales[id];
