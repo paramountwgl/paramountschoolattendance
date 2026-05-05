@@ -364,20 +364,17 @@
     </div>
 
     <!-- Total Display -->
+    <!-- Total Display -->
     <div class="total-premium-bar">
         <span>GRAND TOTAL</span>
         <span>₹<span id="live-total">0</span></span>
     </div>
 
-    <!-- Final Print Action -->
-    <button class="btn-print-premium" onclick="printReceipt()">
-        <i class="fas fa-print"></i> GENERATE PREMIUM RECEIPT
+    <!-- Final Submission Action -->
+    <button class="btn-print-premium" id="submit-sale-btn" onclick="processSale()">
+        <i class="fas fa-paper-plane"></i> SUBMIT DATA TO INVENTORY LOG
     </button>
 </div>
-            <!-- Add this button inside your Quick Billing section -->
-<button class="btn-print-premium" id="sold-btn" onclick="processSale()" style="background: #444; border-color: #666; margin-top: 10px;">
-    <i class="fas fa-check-circle"></i> MARK AS SOLD & UPDATE STOCK
-</button>
 
     <!-- Receipt Print Template -->
     <div id="receipt-print">
@@ -403,11 +400,11 @@
         </div>
     </div>
 
-   <script type="module">
-       
+  <script type="module">
     // --- 1. FIREBASE INITIALIZATION ---
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    // Added 'push' and 'set' to imports
+    import { getDatabase, ref, onValue, set, push } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyDRYk9KOK-ga0c88dnYMsAoifW2NJTd_Y8",
@@ -422,16 +419,15 @@
     // --- 2. GLOBAL STATE ---
     let cloudInventoryData = [];
 
-    // Master list: Used for UI display and filtering
     const inventory = [
         { grade: "Pre-KG", category: "Textbook", title: "Set of 6 subjects (Textbooks)", mrp: 3200 },
         { grade: "Pre-KG", category: "Workbook", title: "Set of 6 subjects (Workbooks)", mrp: 4000 },
         { grade: "Pre-KG", category: "Notebook", title: "Notebooks (Pack of 24)", mrp: 2000 },
         { grade: "Pre-KG", category: "School Diary", title: "School Diary 2026-27", mrp: 500 },
-        { grade: "KG", category: "Textbook", title: "Set of 6 subjects (Textbooks)", mrp: 3200 },
-        { grade: "KG", category: "Workbook", title: "Set of 6 subjects (Workbooks)", mrp: 4000 },
-        { grade: "KG", category: "Notebook", title: "Notebooks (Pack of 24)", mrp: 2000 },
-        { grade: "KG", category: "School Diary", title: "School Diary 2026-27", mrp: 500 },
+        { grade: "LKG", category: "Textbook", title: "Set of 6 subjects (Textbooks)", mrp: 3200 },
+        { grade: "LKG", category: "Workbook", title: "Set of 6 subjects (Workbooks)", mrp: 4000 },
+        { grade: "LKG", category: "Notebook", title: "Notebooks (Pack of 24)", mrp: 2000 },
+        { grade: "LKG", category: "School Diary", title: "School Diary 2026-27", mrp: 500 },
         { grade: "UKG", category: "Textbook", title: "Set of 6 subjects (Textbooks)", mrp: 3200 },
         { grade: "UKG", category: "Workbook", title: "Set of 6 subjects (Workbooks)", mrp: 4000 },
         { grade: "UKG", category: "Notebook", title: "Notebooks (Pack of 24)", mrp: 2000 },
@@ -470,15 +466,12 @@
         { grade: "Grade 8", category: "School Diary", title: "School Diary 2026-27", mrp: 500 }
     ];
 
-    // --- 3. FIREBASE SYNC ---
     onValue(stallRef, (snapshot) => {
         const data = snapshot.val();
-        if (data) {
-            cloudInventoryData = data;
-        }
+        if (data) cloudInventoryData = data;
     });
 
-    // --- 4. ACCESS CONTROL ---
+    // --- 3. ACCESS CONTROL ---
     window.checkLogin = function() {
         const pass = document.getElementById('staff-pass').value;
         if(pass === "Paramount@07") {
@@ -490,69 +483,65 @@
         }
     };
 
-    // --- 5. BILLING & INVENTORY LOGIC ---
+    // --- 4. SUBMISSION LOGIC ---
     window.processSale = async function() {
-    const pname = document.getElementById('p-name').value;
-    const pphone = document.getElementById('p-phone').value;
-    const sname = document.getElementById('s-name').value;
-    const sgrade = document.getElementById('s-grade').value;
-    const selected = document.querySelectorAll('.bill-check:checked');
+        const pname = document.getElementById('p-name').value;
+        const pphone = document.getElementById('p-phone').value;
+        const sname = document.getElementById('s-name').value;
+        const sgrade = document.getElementById('s-grade').value;
+        const selected = document.querySelectorAll('.bill-check:checked');
 
-    if (!pname || !pphone || !sname || selected.length === 0) {
-        return alert("Please fill all details and select at least one book.");
-    }
+        if (!pname || !pphone || !sname || !sgrade || selected.length === 0) {
+            return alert("Please fill all details and select at least one item.");
+        }
 
-    // 1. Prepare Item List for the database
-    const purchasedItems = Array.from(selected).map(box => ({
-        title: box.dataset.title,
-        price: box.dataset.price
-    }));
+        // Prepare Item List
+        const purchasedItems = Array.from(selected).map(box => ({
+            title: box.dataset.title,
+            price: box.dataset.price
+        }));
 
-    const totalAmount = document.getElementById('live-total').innerText;
+        const totalAmount = document.getElementById('live-total').innerText;
 
-    // 2. Create the Sale Record
-    const saleRecord = {
-        parentName: pname,
-        phone: pphone,
-        studentName: sname,
-        grade: sgrade,
-        items: purchasedItems,
-        total: totalAmount,
-        timestamp: new Date().toISOString()
+        // Create the Sale Record
+        const saleRecord = {
+            parentName: pname,
+            phone: pphone,
+            studentName: sname,
+            grade: sgrade,
+            items: purchasedItems,
+            total: totalAmount,
+            timestamp: new Date().toISOString()
+        };
+
+        try {
+            // Push to the 'sales' node for the Inventory Page to read
+            const salesRef = ref(db, 'bookstall/sales');
+            await push(salesRef, saleRecord);
+            
+            alert("Sale data sent to Inventory Log!");
+            
+            // RESET FORM
+            document.getElementById('p-name').value = '';
+            document.getElementById('p-phone').value = '';
+            document.getElementById('s-name').value = '';
+            document.getElementById('s-grade').selectedIndex = 0;
+            document.getElementById('billing-items-container').innerHTML = '';
+            document.getElementById('live-total').innerText = "0";
+            
+        } catch (e) {
+            alert("Submission failed: " + e.message);
+        }
     };
 
-    try {
-        // 3. Push to a new node called 'sales'
-        const salesRef = ref(db, 'bookstall/sales');
-        await push(salesRef, saleRecord);
-        
-        alert("Data submitted to Inventory Log successfully!");
-        
-        // Clear fields
-        document.getElementById('p-name').value = '';
-        document.getElementById('p-phone').value = '';
-        document.getElementById('s-name').value = '';
-        selected.forEach(b => b.checked = false);
-        document.getElementById('live-total').innerText = "0";
-    } catch (e) {
-        alert("Submission failed: " + e.message);
-    }
-};
-
+    // --- 5. UI UTILITIES ---
     window.updateInfoTable = function() {
         const grade = document.getElementById('grade-info-filter').value;
         const tbody = document.getElementById('info-body');
         tbody.innerHTML = '';
-
         const filtered = !grade || grade === "All" ? inventory : inventory.filter(i => i.grade === grade);
-        
         filtered.forEach(item => {
-            tbody.innerHTML += `<tr>
-                <td>${item.grade}</td>
-                <td>${item.category}</td>
-                <td>${item.title}</td>
-                <td>₹${item.mrp}</td>
-            </tr>`;
+            tbody.innerHTML += `<tr><td>${item.grade}</td><td>${item.category}</td><td>${item.title}</td><td>₹${item.mrp}</td></tr>`;
         });
     };
 
@@ -601,33 +590,6 @@
             total += parseFloat(box.dataset.price);
         });
         document.getElementById('live-total').innerText = total.toLocaleString();
-    };
-
-    // --- 6. PRINTING LOGIC ---
-    window.printReceipt = function() {
-        const pname = document.getElementById('p-name').value;
-        const sname = document.getElementById('s-name').value;
-        if(!pname || !sname) return alert("Please enter Parent and Student names");
-
-        document.getElementById('r-pname').innerText = pname;
-        document.getElementById('r-pphone').innerText = document.getElementById('p-phone').value;
-        document.getElementById('r-sname').innerText = sname;
-        document.getElementById('r-sgrade').innerText = document.getElementById('s-grade').value;
-        document.getElementById('r-date').innerText = new Date().toLocaleString();
-        
-        const rItems = document.getElementById('r-items');
-        rItems.innerHTML = '';
-        
-        document.querySelectorAll('.bill-check:checked').forEach(box => {
-            rItems.innerHTML += `<tr>
-                <td>${box.dataset.title}</td>
-                <td>Premium Education Item</td>
-                <td>₹${parseFloat(box.dataset.price).toLocaleString()}</td>
-            </tr>`;
-        });
-
-        document.getElementById('r-total').innerText = document.getElementById('live-total').innerText;
-        window.print();
     };
 </script>
 </body>
