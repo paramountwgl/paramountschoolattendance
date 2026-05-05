@@ -213,6 +213,21 @@
             No sales records found in the ledger.
         </div>
     </div>
+    <!-- Place this right after the </div> of .table-container -->
+<div id="revenue-bar" style="background: var(--primary); color: white; padding: 25px 40px; border-radius: 20px; margin-top: 25px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 8px 25px rgba(10, 35, 81, 0.25);">
+    <div style="display: flex; align-items: center; gap: 15px;">
+        <i class="fas fa-chart-line" style="font-size: 1.5rem; color: var(--paramount-yellow);"></i>
+        <div>
+            <span style="display: block; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; opacity: 0.8;">Total Revenue</span>
+            <span style="font-size: 1.1rem; font-weight: 600;">Current Ledger Session</span>
+        </div>
+    </div>
+    <div style="text-align: right;">
+        <span style="font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 900; color: var(--paramount-yellow);">
+            ₹<span id="grand-total-revenue">0</span>
+        </span>
+    </div>
+</div>
 </section>
 
 <!-- Hidden Premium Bill Template for PDF Export -->
@@ -295,19 +310,30 @@ onValue(salesRef, (snapshot) => {
     const data = snapshot.val();
     const tbody = document.getElementById('sales-log-body');
     const emptyMsg = document.getElementById('empty-msg');
+    const revenueDisplay = document.getElementById('grand-total-revenue');
     
     tbody.innerHTML = '';
-    if (!data) { emptyMsg.style.display = 'block'; return; }
+    if (!data) { 
+        emptyMsg.style.display = 'block'; 
+        revenueDisplay.innerText = '0';
+        return; 
+    }
     emptyMsg.style.display = 'none';
 
     window.currentSales = data;
     const salesArray = Object.entries(data).reverse();
 
+    // Variable to track revenue
+    let totalRevenue = 0;
+
     salesArray.forEach(([id, sale], index) => {
-        // Define receiptNo INSIDE the loop
         const receiptNo = sale.receiptNumber || 'N/A';
         const date = sale.timestamp ? new Date(sale.timestamp).toLocaleString() : "N/A";
         const sNo = salesArray.length - index;
+        
+        // Logic Fix: Add to revenue (strip currency symbols or commas if they exist)
+        const amount = parseFloat(sale.total.toString().replace(/,/g, '')) || 0;
+        totalRevenue += amount;
 
         tbody.innerHTML += `
             <tr>
@@ -328,6 +354,9 @@ onValue(salesRef, (snapshot) => {
                 </td>
             </tr>`;
     });
+
+    // Update the Revenue display lively
+    revenueDisplay.innerText = totalRevenue.toLocaleString('en-IN');
 });
 // 2. PDF GENERATION & WHATSAPP LOGIC
 window.generateAndSend = async function(id) {
