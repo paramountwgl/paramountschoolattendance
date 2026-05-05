@@ -6,7 +6,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <title>Paramount | Customer Sales Ledger</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Playfair+Display:wght@700;900&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet"> 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="icon" type="image/png" href="logo.png">
     <style>
@@ -214,17 +214,20 @@
         </div>
     </div>
     <!-- Place this right after the </div> of .table-container -->
-<div id="revenue-bar" style="background: var(--primary); color: white; padding: 25px 40px; border-radius: 20px; margin-top: 25px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 8px 25px rgba(10, 35, 81, 0.25);">
-    <div style="display: flex; align-items: center; gap: 15px;">
-        <i class="fas fa-chart-line" style="font-size: 1.5rem; color: var(--paramount-yellow);"></i>
+<div id="revenue-bar" style="background: linear-gradient(135deg, #0a2351 0%, #061633 100%); color: white; padding: 25px 40px; border-radius: 24px; margin-top: 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 15px 35px rgba(10, 35, 81, 0.3); border: 1px solid rgba(255,255,255,0.1);">
+    <div style="display: flex; align-items: center; gap: 20px;">
+        <div style="background: rgba(249, 209, 13, 0.1); padding: 15px; border-radius: 15px;">
+            <i class="fas fa-wallet" style="font-size: 1.6rem; color: var(--paramount-yellow);"></i>
+        </div>
         <div>
-            <span style="display: block; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; opacity: 0.8;">Total Revenue</span>
-            <span style="font-size: 1.1rem; font-weight: 600;">Current Ledger Session</span>
+            <span style="display: block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; color: var(--paramount-yellow); font-weight: 700; margin-bottom: 4px;">Total Revenue</span>
+            <span style="font-size: 1.1rem; font-weight: 500; opacity: 0.9;">Current Ledger Session</span>
         </div>
     </div>
+    
     <div style="text-align: right;">
-        <span style="font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 900; color: var(--paramount-yellow);">
-            ₹<span id="grand-total-revenue">0</span>
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 2.4rem; font-weight: 700; color: #fff; text-shadow: 0 0 20px rgba(249, 209, 13, 0.3);">
+            <span style="font-size: 1.4rem; vertical-align: top; margin-right: 5px; color: var(--paramount-yellow);">₹</span><span id="grand-total-revenue">0</span>
         </span>
     </div>
 </div>
@@ -333,6 +336,7 @@ onValue(salesRef, (snapshot) => {
         
         // Logic Fix: Add to revenue (strip currency symbols or commas if they exist)
         const amount = parseFloat(sale.total.toString().replace(/,/g, '')) || 0;
+        
         totalRevenue += amount;
 
         tbody.innerHTML += `
@@ -353,10 +357,12 @@ onValue(salesRef, (snapshot) => {
                     </div>
                 </td>
             </tr>`;
+        const formattedRevenue = totalRevenue.toLocaleString('en-IN', {
+    maximumFractionDigits: 0
     });
 
     // Update the Revenue display lively
-    revenueDisplay.innerText = totalRevenue.toLocaleString('en-IN');
+    document.getElementById('grand-total-revenue').innerText = formattedRevenue;
 });
 // 2. PDF GENERATION & WHATSAPP LOGIC
 window.generateAndSend = async function(id) {
