@@ -203,20 +203,24 @@
     </div>
 
     <!-- Info Grid -->
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 40px;">
-        <div style="border-left: 4px solid #f9d10d; padding-left: 15px;">
-            <h3 style="color: #005a2b; margin: 0 0 10px 0; font-size: 1rem; text-transform: uppercase;">Customer Details</h3>
-            <p style="margin: 5px 0;"><strong>Parent:</strong> <span id="pdf-pname"></span></p>
-            <p style="margin: 5px 0;"><strong>Phone:</strong> <span id="pdf-phone"></span></p>
-        </div>
-        <div style="text-align: right; border-right: 4px solid #f9d10d; padding-right: 15px;">
-            <h3 style="color: #005a2b; margin: 0 0 10px 0; font-size: 1rem; text-transform: uppercase;">Student Details</h3>
-            <p style="margin: 5px 0;"><strong>Receipt No:</strong> <span id="pdf-receipt-no" style="color:#d32f2f; font-weight:bold;"></span></p>
-            <p style="margin: 5px 0;"><strong>Name:</strong> <span id="pdf-sname"></span></p>
-            <p style="margin: 5px 0;"><strong>Grade:</strong> <span id="pdf-grade"></span></p>
-            <p style="margin: 5px 0;"><strong>Date:</strong> <span id="pdf-date"></span></p>
-        </div>
+    <!-- Info Grid: Standardized for a Premium Look -->
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 35px; line-height: 1.8;">
+    <!-- LEFT SIDE: Customer & Billing Info -->
+    <div style="border-left: 4px solid #005a2b; padding-left: 15px;">
+        <h3 style="color: #005a2b; margin: 0 0 10px 0; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 1px;">Billing Details</h3>
+        <p style="margin: 2px 0;"><strong>Parent:</strong> <span id="pdf-pname"></span></p>
+        <p style="margin: 2px 0;"><strong>Phone:</strong> <span id="pdf-phone"></span></p>
+        <p style="margin: 2px 0; color: #666; font-size: 0.9rem;"><strong>Bill Date:</strong> <span id="pdf-date"></span></p>
     </div>
+
+    <!-- RIGHT SIDE: Student & Receipt Info -->
+    <div style="text-align: right; border-right: 4px solid #005a2b; padding-right: 15px;">
+        <h3 style="color: #005a2b; margin: 0 0 10px 0; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 1px;">Student Record</h3>
+        <p style="margin: 2px 0;"><strong>Receipt No:</strong> <span id="pdf-receipt-no" style="color: #d32f2f; font-weight: bold; font-size: 1.1rem;"></span></p>
+        <p style="margin: 2px 0;"><strong>Student:</strong> <span id="pdf-sname"></span></p>
+        <p style="margin: 2px 0;"><strong>Grade:</strong> <span id="pdf-grade"></span></p>
+    </div>
+</div>
 
     <!-- Items Table -->
     <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">
@@ -434,31 +438,38 @@ window.previewBill = function(id) {
     }
 };
    function populateTemplate(sale) {
-    // Basic Details
+    // 1. Map Receipt and Customer Info
+    // Ensure the key matches exactly what you saved in ManagementPortal.html
     document.getElementById('pdf-receipt-no').innerText = sale.receiptNumber || "N/A";
-    document.getElementById('pdf-pname').innerText = sale.parentName || "N/A";
+    document.getElementById('pdf-pname').innerText = (sale.parentName || "N/A").toUpperCase();
     document.getElementById('pdf-phone').innerText = sale.phone || "N/A";
-    document.getElementById('pdf-sname').innerText = sale.studentName || "N/A";
+    
+    // 2. Map Student Info
+    document.getElementById('pdf-sname').innerText = (sale.studentName || "N/A").toUpperCase();
     document.getElementById('pdf-grade').innerText = sale.grade || "N/A";
     document.getElementById('pdf-total').innerText = sale.total || "0";
 
-    // Date formatting
+    // 3. Format and Map Date/Time
     const formattedDate = sale.timestamp ? new Date(sale.timestamp).toLocaleString([], { 
         year: 'numeric', month: '2-digit', day: '2-digit', 
         hour: '2-digit', minute: '2-digit', hour12: true 
     }) : "N/A";
     document.getElementById('pdf-date').innerText = formattedDate;
 
-    // Items Table
+    // 4. Map Individual Books and Prices to the Table
     const itemsTbody = document.getElementById('pdf-items');
-    itemsTbody.innerHTML = ''; // Clear previous items
+    itemsTbody.innerHTML = ''; // Clear old items
 
     if (sale.items && Array.isArray(sale.items)) {
         sale.items.forEach(item => {
             const row = `
                 <tr>
-                    <td style="padding: 12px 15px; border-bottom: 1px solid #eee; font-weight: 500;">${item.title}</td>
-                    <td style="padding: 12px 15px; border-bottom: 1px solid #eee; text-align: right; font-weight: 700; color: #444;">₹${parseFloat(item.price).toLocaleString()}</td>
+                    <td style="padding: 12px 15px; border-bottom: 1px solid #eee; text-align: left;">
+                        <div style="font-weight: 600; color: #333; font-size: 0.9rem;">${item.title}</div>
+                    </td>
+                    <td style="padding: 12px 15px; border-bottom: 1px solid #eee; text-align: right; font-weight: 700; color: #005a2b; font-size: 0.95rem;">
+                        ₹${parseFloat(item.price).toLocaleString()}
+                    </td>
                 </tr>`;
             itemsTbody.innerHTML += row;
         });
