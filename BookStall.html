@@ -502,17 +502,18 @@
         }));
 
         const totalAmount = document.getElementById('live-total').innerText;
-
+         const receiptNo = "PR-" + new Date().getTime().toString().slice(-6);
         // Create the Sale Record
         const saleRecord = {
-            parentName: pname,
-            phone: pphone,
-            studentName: sname,
-            grade: sgrade,
-            items: purchasedItems,
-            total: totalAmount,
-            timestamp: new Date().toISOString()
-        };
+        receiptNumber: receiptNo, // NEW FIELD
+        parentName: pname,
+        phone: pphone,
+        studentName: sname,
+        grade: sgrade,
+        items: purchasedItems,
+        total: totalAmount,
+        timestamp: new Date().toISOString()
+    };
 
         try {
             // Push to the 'sales' node for the Inventory Page to read
