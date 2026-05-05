@@ -568,6 +568,7 @@
                         <input type="checkbox" class="bill-check" 
                             data-price="${item.mrp}" 
                             data-title="${item.title}" 
+                            data-grade="${item.grade}"
                             onchange="window.calcTotal()"
                             onclick="event.stopPropagation()">
                         <div class="item-details">
@@ -578,6 +579,7 @@
                     <div class="price-tag">₹${item.mrp}</div>
                 </div>`;
         });
+
         window.calcTotal();
     };
 
