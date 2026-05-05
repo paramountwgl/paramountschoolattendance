@@ -407,7 +407,7 @@ window.generateArchivePDF = async function(isWipeAction) {
         pdf.setFont("Playfair Display", "bold");
         pdf.setFontSize(20);
         // Adjusted text position to sit beside the logo
-        pdf.text("PARAMOUNT SCHOOL BOOK STORE", 45, 22);
+        pdf.text("BOOK STORE", 45, 22);
         
         pdf.setFontSize(10);
         pdf.setFont("Inter", "normal");
@@ -679,7 +679,7 @@ window.wipeAndArchive = async function() {
 
         // 3. Automated WhatsApp Redirection (Fixed formattedDate Reference)
         const message = encodeURIComponent(
-            `*PARAMOUNT BOOK STORE*\n\n` +
+            `*BOOK STORE*\n\n` +
             `Thank you for your purchase. Your cooperation and support are greatly appreciated.\n\n` +
             `The attached PDF file is your official purchase bill.\n\n` +
             `*Receipt No:* ${sale.receiptNumber}\n` +
