@@ -164,15 +164,25 @@
     </style>
 </head>
 <body>
-    <div class="nav-header">
-    <div style="display: flex; align-items: center; gap: 20px;">
+    <div class="nav-header" style="display: flex; justify-content: space-between; align-items: center; background: var(--glossy-white); backdrop-filter: blur(15px); padding: 20px 40px; border-radius: 24px; margin-bottom: 35px; box-shadow: var(--glass-shadow); border: 1px solid rgba(255, 255, 255, 0.4);">
+    
+    <!-- Left Group: Back Button, Logo, and School Name -->
+    <div style="display: flex; align-items: center; gap: 25px;">
         <a href="BookStall.html" class="back-btn">
             <i class="fas fa-arrow-left"></i> Back to Portal
         </a>
-        <img src="logo.png" height="50" alt="Paramount Logo">
+        
+        <!-- Branding Unit -->
+        <div style="display: flex; align-items: center; gap: 15px; border-left: 1px solid #eee; padding-left: 20px;">
+            <img src="logo.png" height="55" alt="Paramount Logo">
+            <div style="display: flex; flex-direction: column;">
+                <span style="font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 900; color: var(--paramount-green); line-height: 1; letter-spacing: 0.5px;">PARAMOUNT SCHOOL</span>
+                <span style="font-size: 0.7rem; color: #666; font-weight: 600; text-transform: uppercase; letter-spacing: 2px;">Warangal Branch</span>
+            </div>
+        </div>
     </div>
 
-    <!-- Wipe & Archive Button Added to Header -->
+    <!-- Right Group: Wipe & Archive Button -->
     <button onclick="window.wipeAndArchive()" style="background: #ff5252; color: white; border: none; padding: 12px 25px; border-radius: 12px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: 0.3s; box-shadow: 0 4px 15px rgba(255, 82, 82, 0.2);">
         <i class="fas fa-eraser"></i> Wipe & Archive Ledger
     </button>
