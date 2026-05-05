@@ -261,8 +261,8 @@ const db = getDatabase(app);
 const salesRef = ref(db, 'bookstall/sales');
 
 // 1. LISTEN FOR DATA
+// 1. LISTEN FOR DATA
 onValue(salesRef, (snapshot) => {
-    const receiptNo = sale.receiptNumber || 'N/A';
     const data = snapshot.val();
     const tbody = document.getElementById('sales-log-body');
     const emptyMsg = document.getElementById('empty-msg');
@@ -274,47 +274,45 @@ onValue(salesRef, (snapshot) => {
     }
     emptyMsg.style.display = 'none';
 
-    // Store data globally for the PDF function to access
     window.currentSales = data;
-
-    // Convert to array and reverse so newest is on top
     const salesArray = Object.entries(data).reverse();
 
-salesArray.forEach(([id, sale], index) => {
-    const date = sale.timestamp ? new Date(sale.timestamp).toLocaleString() : "N/A";
-    const sNo = salesArray.length - index;
+    salesArray.forEach(([id, sale], index) => {
+        // MOVE RECEIPT NO LOGIC HERE
+        const receiptNo = sale.receiptNumber || 'N/A';
+        const date = sale.timestamp ? new Date(sale.timestamp).toLocaleString() : "N/A";
+        const sNo = salesArray.length - index;
 
-   // ... inside your salesArray.forEach loop ...
-tbody.innerHTML += `
-    <tr>
-        <td>${sNo}</td>
-        <td style="font-weight:bold; color:var(--paramount-green);">${receiptNo}</td>
-        <td style="color: #666; font-size: 0.85rem;">${date}</td>
-        <td class="parent-name">${sale.parentName}</td>
-        <td class="student-name">${sale.studentName}</td>
-        <td>
-            <div class="contact-box">
-                <i class="fab fa-whatsapp"></i> ${sale.phone}
-            </div>
-        </td>
-        <td><span class="grade-badge">${sale.grade}</span></td>
-        <td style="font-weight:bold; color: var(--primary);">₹${sale.total}</td>
-        <td>
-            <div style="display:flex; gap:10px; align-items:center;">
-                <button onclick='previewBill("${id}")' class="btn-action btn-preview" title="View Bill">
-                    <i class="fas fa-eye"></i>
-                </button>
-                <button onclick='generateAndSend("${id}")' class="btn-action btn-whatsapp" title="Send WhatsApp">
-                    <i class="fab fa-whatsapp"></i>
-                </button>
-                <button onclick="window.deleteRecord('${id}')" class="btn-action btn-delete" title="Delete">
-                    <i class="fas fa-trash-alt"></i>
-                </button>
-            </div>
-        </td>
-    </tr>`;
+        tbody.innerHTML += `
+            <tr>
+                <td>${sNo}</td>
+                <td style="font-weight:bold; color:var(--paramount-green);">${receiptNo}</td>
+                <td style="color: #666; font-size: 0.85rem;">${date}</td>
+                <td class="parent-name">${sale.parentName}</td>
+                <td class="student-name">${sale.studentName}</td>
+                <td>
+                    <div class="contact-box">
+                        <i class="fab fa-whatsapp"></i> ${sale.phone}
+                    </div>
+                </td>
+                <td><span class="grade-badge">${sale.grade}</span></td>
+                <td style="font-weight:bold; color: var(--primary);">₹${sale.total}</td>
+                <td>
+                    <div style="display:flex; gap:10px; align-items:center;">
+                        <button onclick='previewBill("${id}")' class="btn-action btn-preview" title="View Bill">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button onclick='generateAndSend("${id}")' class="btn-action btn-whatsapp" title="Send WhatsApp">
+                            <i class="fab fa-whatsapp"></i>
+                        </button>
+                        <button onclick="window.deleteRecord('${id}')" class="btn-action btn-delete" title="Delete">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>`;
     });
-    });
+});
 
 // 2. PDF GENERATION & WHATSAPP LOGIC
 window.generateAndSend = async function(id) {
