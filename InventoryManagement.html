@@ -473,7 +473,7 @@ window.generateArchivePDF = async function(isWipeAction) {
         pdf.setTextColor(255, 255, 255);
         pdf.text(`TOTAL: Rs.${totalRev}`, 148, y + 13);
 
-        const fileName = isWipeAction ? `FINAL_Wipe_Archive.pdf` : `Ledger_Backup.pdf`;
+        const fileName = isWipeAction ? `FINAL_Wipe_Archive.pdf` : `Customers Bills Backup.pdf`;
         pdf.save(fileName);
 
         if (isWipeAction) {
