@@ -404,6 +404,7 @@
     </div>
 
    <script type="module">
+       
     // --- 1. FIREBASE INITIALIZATION ---
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
@@ -491,36 +492,52 @@
 
     // --- 5. BILLING & INVENTORY LOGIC ---
     window.processSale = async function() {
-        const selected = document.querySelectorAll('.bill-check:checked');
-        if (selected.length === 0) return alert("Select books first!");
-        
-        if (cloudInventoryData.length === 0) {
-            return alert("Syncing with database... Please wait a moment.");
-        }
+    const pname = document.getElementById('p-name').value;
+    const pphone = document.getElementById('p-phone').value;
+    const sname = document.getElementById('s-name').value;
+    const sgrade = document.getElementById('s-grade').value;
+    const selected = document.querySelectorAll('.bill-check:checked');
 
-        selected.forEach(box => {
-            const title = box.dataset.title;
-            const grade = box.dataset.grade;
-            
-            // Critical match logic: Title + Grade must be identical to Inventory Page
-            const item = cloudInventoryData.find(i => i.title === title && i.grade === grade);
-            
-            if (item) {
-                item.sold = (item.sold || 0) + 1;
-            } else {
-                console.error("Match Fail:", title, grade);
-            }
-        });
+    if (!pname || !pphone || !sname || selected.length === 0) {
+        return alert("Please fill all details and select at least one book.");
+    }
 
-        // Global Sync back to Firebase
-        await set(stallRef, cloudInventoryData);
-        alert("Inventory Updated Globally!");
-        
-        // Reset UI
-        selected.forEach(box => box.checked = false);
-        document.getElementById('live-total').innerText = "0";
-        document.querySelectorAll('.billing-item-card').forEach(card => card.classList.remove('selected'));
+    // 1. Prepare Item List for the database
+    const purchasedItems = Array.from(selected).map(box => ({
+        title: box.dataset.title,
+        price: box.dataset.price
+    }));
+
+    const totalAmount = document.getElementById('live-total').innerText;
+
+    // 2. Create the Sale Record
+    const saleRecord = {
+        parentName: pname,
+        phone: pphone,
+        studentName: sname,
+        grade: sgrade,
+        items: purchasedItems,
+        total: totalAmount,
+        timestamp: new Date().toISOString()
     };
+
+    try {
+        // 3. Push to a new node called 'sales'
+        const salesRef = ref(db, 'bookstall/sales');
+        await push(salesRef, saleRecord);
+        
+        alert("Data submitted to Inventory Log successfully!");
+        
+        // Clear fields
+        document.getElementById('p-name').value = '';
+        document.getElementById('p-phone').value = '';
+        document.getElementById('s-name').value = '';
+        selected.forEach(b => b.checked = false);
+        document.getElementById('live-total').innerText = "0";
+    } catch (e) {
+        alert("Submission failed: " + e.message);
+    }
+};
 
     window.updateInfoTable = function() {
         const grade = document.getElementById('grade-info-filter').value;
