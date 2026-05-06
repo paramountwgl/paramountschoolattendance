@@ -191,7 +191,6 @@
     // --- PREMIUM BRANDING COLORS ---
     const navy = [0, 35, 71]; 
     const gold = [197, 160, 89]; 
-    const black = [0, 0, 0];
 
     // --- HEADER SECTION ---
     doc.setFillColor(...navy);
@@ -215,6 +214,11 @@
     doc.setFont("helvetica", "normal");
     doc.setTextColor(50, 50, 50);
     
+    doc.text(`Order ID: ${order.order_id}`, 14, 60);
+    doc.text(`Student: ${order.customer_name}`, 14, 66);
+    doc.text(`Email: ${order.customer_email}`, 14, 72);
+    doc.text(`Phone: ${order.customer_phone}`, 120, 60);
+
     // Generate LIVE time at the moment of clicking the button
     const now = new Date();
     const liveDate = now.toLocaleDateString('en-IN');
@@ -231,14 +235,14 @@
     // --- PREMIUM TABLE LAYOUT ---
     const tableData = order.items.map(i => [
         i.name, 
-        `₹${i.price.toFixed(2)}`, 
+        `₹${i.price}`, 
         i.quantity, 
-        `₹${(i.price * i.quantity).toFixed(2)}`
+        `₹${i.price * i.quantity}`
     ]);
 
     doc.autoTable({
         startY: 80,
-        head: [['Product Description', 'Price (INR)', 'Qty', 'Subtotal (INR)']],
+        head: [['Product Description', 'Unit Price', 'Qty', 'Subtotal']],
         body: tableData,
         theme: 'striped',
         headStyles: { 
@@ -253,32 +257,17 @@
             3: { halign: 'right' }
         },
         foot: [[
-            { 
-                content: 'Grand Total Amount', 
-                colSpan: 3, 
-                styles: { halign: 'right', fontStyle: 'bold', textColor: [100, 100, 100] } 
-            },
-            { 
-                content: `INR ${order.grand_total.toFixed(2)}`, 
-                styles: { 
-                    halign: 'right', 
-                    fontStyle: 'bold', 
-                    fillColor: gold, 
-                    textColor: black // Changed to Black for visibility
-                } 
-            }
+            { content: 'Grand Total Amount', colSpan: 3, styles: { halign: 'right', fontStyle: 'bold' } },
+            { content: `₹${order.grand_total}`, styles: { halign: 'right', fontStyle: 'bold', fillColor: gold, textColor: navy } }
         ]],
-        styles: { fontSize: 9, cellPadding: 5 }
+        styles: { fontSize: 9, cellPadding: 4 }
     });
 
-    // --- FOOTER ---
-    const finalY = doc.lastAutoTable.finalY + 15;
-    doc.setFontSize(9);
-    doc.setTextColor(100, 100, 100);
-    doc.text("Thank you for choosing Student Accessory Store.", 14, finalY);
-    doc.text("Warangal | Established 2019", 14, finalY + 6);
+    const finalY = doc.lastAutoTable.finalY + 20;
+    doc.setFontSize(8);
+    doc.setTextColor(150, 150, 150);
+    doc.text("This is a computer-generated bill for the Paramount Group of Institutions.", 14, finalY);
 
-    // --- SAVE AND REDIRECT ---
     const fileName = `${order.customer_name.replace(/\s+/g, '_')}_${order.order_id}.pdf`;
     doc.save(fileName);
 
@@ -287,8 +276,8 @@
         `Dear Parent, the order for *${order.customer_name}* has been confirmed.\n\n` +
         `*Order ID:* ${order.order_id}\n` +
         `*Total Amount:* ₹${order.grand_total}\n\n` +
-        `Please find the attached PDF bill for your records.\n\n` +
-        `— @Student Accessory Store `
+        `Your purchase bill has been downloaded. Please attach it here for your records.\n\n` +
+        `— Paramount Group of Institutions`
     );
     window.open(`https://wa.me/${order.customer_phone}?text=${msg}`, '_blank');
 }
