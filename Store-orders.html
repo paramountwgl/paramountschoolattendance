@@ -191,64 +191,73 @@ async function generateAndSend(order) {
     // --- PREMIUM BRANDING COLORS ---
     const navy = [0, 35, 71]; 
     const gold = [197, 160, 89]; 
+    const black = [0, 0, 0];
 
-    // --- HEADER SECTION ---
+    // --- PREMIUM BORDER (Double Line) ---
+    doc.setDrawColor(...navy);
+    doc.setLineWidth(1);
+    doc.rect(5, 5, 200, 287); // Outer border
+    doc.setDrawColor(...gold);
+    doc.setLineWidth(0.5);
+    doc.rect(7, 7, 196, 283); // Inner gold accent border
+
+    // --- HEADER SECTION (Solid Navy Bar) ---
     doc.setFillColor(...navy);
-    doc.rect(0, 0, 210, 40, 'F'); 
+    doc.rect(10, 10, 190, 40, 'F'); 
     
     doc.setTextColor(255, 255, 255);
-    doc.setFontSize(22);
+    doc.setFontSize(24);
     doc.setFont("helvetica", "bold");
-    doc.text("PARAMOUNT ACCESSORIES STORE", 14, 25);
+    doc.text("PARAMOUNT ACCESSORIES STORE", 20, 35);
     
     // --- CUSTOMER DETAILS SECTION ---
     doc.setTextColor(...navy);
-    doc.setFontSize(12);
-    doc.text("CUSTOMER DETAILS", 14, 50);
+    doc.setFontSize(14);
+    doc.setFont("helvetica", "bold");
+    doc.text("CUSTOMER DETAILS", 20, 65);
     
     doc.setDrawColor(...gold);
-    doc.setLineWidth(0.5);
-    doc.line(14, 52, 60, 52); 
+    doc.setLineWidth(1);
+    doc.line(20, 68, 80, 68); // Institutional Gold Underline
 
     doc.setFontSize(10);
     doc.setFont("helvetica", "normal");
     doc.setTextColor(50, 50, 50);
     
-    doc.text(`Order ID: ${order.order_id}`, 14, 60);
-    doc.text(`Student: ${order.customer_name}`, 14, 66);
-    doc.text(`Email: ${order.customer_email}`, 14, 72);
-    doc.text(`Phone: ${order.customer_phone}`, 120, 60);
+    // Captured LIVE at time of generation
+    const now = new Date();
+    const liveDate = now.toLocaleDateString('en-IN');
+    const liveTime = now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true });
 
-    // --- CLEANED TIMESTAMP LOGIC ---
-    let orderDate = new Date(); 
-    if (order.created_at) {
-        orderDate = typeof order.created_at.toDate === 'function' 
-                    ? order.created_at.toDate() 
-                    : new Date(order.created_at);
-    }
+    // Organized Data Grid
+    doc.text(`Order ID: ${order.order_id}`, 20, 80);
+    doc.text(`Student: ${order.customer_name}`, 20, 87);
+    doc.text(`Email: ${order.customer_email}`, 20, 94);
     
-    // Use the orderDate variable here
-    doc.text(`Date: ${orderDate.toLocaleDateString('en-IN')}`, 120, 66);
-    doc.text(`Time: ${orderDate.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}`, 120, 72);
+    doc.text(`Phone: ${order.customer_phone}`, 130, 80);
+    doc.text(`Date: ${liveDate}`, 130, 87);
+    doc.text(`Time: ${liveTime}`, 130, 94);
 
-    // --- PREMIUM TABLE LAYOUT ---
+    // --- ITEM TABLE ---
     const tableData = order.items.map(i => [
         i.name, 
-        `₹${i.price}`, 
+        `₹${i.price.toFixed(2)}`, 
         i.quantity, 
-        `₹${i.price * i.quantity}`
+        `₹${(i.price * i.quantity).toFixed(2)}`
     ]);
 
     doc.autoTable({
-        startY: 80,
-        head: [['Product Description', 'Unit Price', 'Qty', 'Subtotal']],
+        startY: 105,
+        margin: { left: 20, right: 20 },
+        head: [['Product Description', 'Price (INR)', 'Qty', 'Subtotal (INR)']],
         body: tableData,
-        theme: 'striped',
+        theme: 'grid', // Cleaner grid look
         headStyles: { 
             fillColor: navy, 
             textColor: [255, 255, 255], 
             fontStyle: 'bold',
-            halign: 'center'
+            halign: 'center',
+            fontSize: 11
         },
         columnStyles: {
             1: { halign: 'center' },
@@ -256,17 +265,33 @@ async function generateAndSend(order) {
             3: { halign: 'right' }
         },
         foot: [[
-            { content: 'Grand Total Amount', colSpan: 3, styles: { halign: 'right', fontStyle: 'bold' } },
-            { content: `₹${order.grand_total}`, styles: { halign: 'right', fontStyle: 'bold', fillColor: gold, textColor: navy } }
+            { 
+                content: 'Grand Total Amount', 
+                colSpan: 3, 
+                styles: { halign: 'right', fontStyle: 'bold', textColor: [100, 100, 100] } 
+            },
+            { 
+                content: `INR ${order.grand_total.toFixed(2)}`, 
+                styles: { 
+                    halign: 'right', 
+                    fontStyle: 'bold', 
+                    fillColor: gold, 
+                    textColor: black // FIXED: Solid Black for visibility
+                } 
+            }
         ]],
-        styles: { fontSize: 9, cellPadding: 4 }
+        styles: { fontSize: 10, cellPadding: 6, lineColor: [230, 230, 230] }
     });
 
+    // --- INSTITUTIONAL FOOTER ---
     const finalY = doc.lastAutoTable.finalY + 20;
-    doc.setFontSize(8);
-    doc.setTextColor(150, 150, 150);
-    doc.text("This is a computer-generated bill for the Paramount Group of Institutions.", 14, finalY);
+    doc.setFontSize(10);
+    doc.setTextColor(120, 120, 120);
+    doc.text("Thank you for choosing Paramount School.", 20, finalY);
+    doc.setFont("helvetica", "bold");
+    doc.text("Warangal | Established 2019", 20, finalY + 8);
 
+    // --- SAVE AND WHATSAPP REDIRECT ---
     const fileName = `${order.customer_name.replace(/\s+/g, '_')}_${order.order_id}.pdf`;
     doc.save(fileName);
 
@@ -275,11 +300,11 @@ async function generateAndSend(order) {
         `Dear Parent, the order for *${order.customer_name}* has been confirmed.\n\n` +
         `*Order ID:* ${order.order_id}\n` +
         `*Total Amount:* ₹${order.grand_total}\n\n` +
-        `Your purchase bill has been downloaded. Please attach it here for your records.\n\n` +
+        `Please find the attached PDF bill for your records.\n\n` +
         `— Paramount Group of Institutions`
     );
     window.open(`https://wa.me/${order.customer_phone}?text=${msg}`, '_blank');
-}    // Attach to window for HTML onclicks
+}
     window.previewBill = previewBill;
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
