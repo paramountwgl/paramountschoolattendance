@@ -219,6 +219,14 @@
     doc.text(`Student: ${order.customer_name}`, 14, 66);
     doc.text(`Email: ${order.customer_email}`, 14, 72);
     doc.text(`Phone: ${order.customer_phone}`, 120, 60);
+       // NEW ROBUST TIMESTAMP LOGIC
+let orderDate = new Date(); // Default to now
+if (order.created_at) {
+    // Check if it's a Firestore Timestamp (has toDate) or already a Date/String
+    orderDate = typeof order.created_at.toDate === 'function' 
+                ? order.created_at.toDate() 
+                : new Date(order.created_at);
+}
     
     const timestamp = order.created_at ? order.created_at.toDate() : new Date();
     doc.text(`Date: ${timestamp.toLocaleDateString('en-IN')}`, 120, 66);
@@ -271,8 +279,8 @@
         `Dear Parent, the order for *${order.customer_name}* has been confirmed.\n\n` +
         `*Order ID:* ${order.order_id}\n` +
         `*Total Amount:* ₹${order.grand_total}\n\n` +
-        `Your premium PDF bill has been downloaded to your device. Please attach it here for your records.\n\n` +
-        `— Paramount Group of Institutions`
+        `Your purchase bill has been attached to this message. Please find the attached file.\n\n` +
+        `— @Student Accessory Store.`
     );
     window.open(`https://wa.me/${order.customer_phone}?text=${msg}`, '_blank');
 }
