@@ -184,99 +184,121 @@
         new bootstrap.Modal('#previewModal').show();
     };
 
-   async function generateAndSend(order) {
+  async function generateAndSend(order) {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
     
-    // --- PREMIUM BRANDING COLORS ---
+    // --- BRANDING COLORS ---
     const navy = [0, 35, 71]; 
     const gold = [197, 160, 89]; 
 
-    // --- HEADER SECTION ---
+    // --- 1. PREMIUM BORDER & LAYOUT ---
+    // Draw a thick Navy border around the whole page
+    doc.setDrawColor(...navy);
+    doc.setLineWidth(1);
+    doc.rect(5, 5, 200, 287); // Outer frame
+    
+    // Draw a thinner Gold inner border
+    doc.setDrawColor(...gold);
+    doc.setLineWidth(0.5);
+    doc.rect(7, 7, 196, 283); 
+
+    // --- 2. HEADER SECTION ---
     doc.setFillColor(...navy);
-    doc.rect(0, 0, 210, 40, 'F'); 
+    doc.rect(7.2, 7.2, 195.6, 35, 'F'); // Solid Header Background
     
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(22);
     doc.setFont("helvetica", "bold");
-    doc.text("PARAMOUNT ACCESSORIES STORE", 14, 25);
+    doc.text("PARAMOUNT ACCESSORIES STORE", 15, 28);
     
-    // --- CUSTOMER DETAILS SECTION ---
+    // --- 3. CUSTOMER DETAILS SECTION ---
     doc.setTextColor(...navy);
     doc.setFontSize(12);
-    doc.text("CUSTOMER DETAILS", 14, 50);
+    doc.text("CUSTOMER DETAILS", 15, 55);
     
     doc.setDrawColor(...gold);
-    doc.setLineWidth(0.5);
-    doc.line(14, 52, 60, 52); 
+    doc.setLineWidth(0.8);
+    doc.line(15, 57, 65, 57); // Underline
 
     doc.setFontSize(10);
     doc.setFont("helvetica", "normal");
     doc.setTextColor(50, 50, 50);
     
-    doc.text(`Order ID: ${order.order_id}`, 14, 60);
-    doc.text(`Student: ${order.customer_name}`, 14, 66);
-    doc.text(`Email: ${order.customer_email}`, 14, 72);
-    doc.text(`Phone: ${order.customer_phone}`, 120, 60);
-
-    // --- CLEANED TIMESTAMP LOGIC ---
+    // Left Column
+    doc.text(`Order ID: ${order.order_id}`, 15, 65);
+    doc.text(`Student: ${order.customer_name}`, 15, 71);
+    doc.text(`Email: ${order.customer_email}`, 15, 77);
+    
+    // Right Column
+    doc.text(`Phone: ${order.customer_phone}`, 120, 65);
+    
     let orderDate = new Date(); 
     if (order.created_at) {
         orderDate = typeof order.created_at.toDate === 'function' 
                     ? order.created_at.toDate() 
                     : new Date(order.created_at);
     }
-    
-    // Use the orderDate variable here
-    doc.text(`Date: ${orderDate.toLocaleDateString('en-IN')}`, 120, 66);
-    doc.text(`Time: ${orderDate.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}`, 120, 72);
+    doc.text(`Date: ${orderDate.toLocaleDateString('en-IN')}`, 120, 71);
+    doc.text(`Time: ${orderDate.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}`, 120, 77);
 
-    // --- PREMIUM TABLE LAYOUT ---
+    // --- 4. PREMIUM TABLE WITH FIXED PRICES ---
+    // We use "INR" instead of the "₹" symbol to prevent the encoding error
     const tableData = order.items.map(i => [
         i.name, 
-        `₹${i.price}`, 
+        `${i.price}.00`, 
         i.quantity, 
-        `₹${i.price * i.quantity}`
+        `${(i.price * i.quantity)}.00`
     ]);
 
     doc.autoTable({
-        startY: 80,
-        head: [['Product Description', 'Unit Price', 'Qty', 'Subtotal']],
+        startY: 85,
+        margin: { left: 15, right: 15 },
+        head: [['Product Description', 'Price (INR)', 'Qty', 'Subtotal (INR)']],
         body: tableData,
-        theme: 'striped',
+        theme: 'grid', // Grid theme looks more "fitted" for official bills
         headStyles: { 
             fillColor: navy, 
             textColor: [255, 255, 255], 
             fontStyle: 'bold',
             halign: 'center'
         },
+        styles: { 
+            fontSize: 10, 
+            cellPadding: 5,
+            lineColor: [220, 220, 220],
+            lineWidth: 0.1
+        },
         columnStyles: {
             1: { halign: 'center' },
             2: { halign: 'center' },
             3: { halign: 'right' }
         },
+        // Footer with solid colors
         foot: [[
-            { content: 'Grand Total Amount', colSpan: 3, styles: { halign: 'right', fontStyle: 'bold' } },
-            { content: `₹${order.grand_total}`, styles: { halign: 'right', fontStyle: 'bold', fillColor: gold, textColor: navy } }
-        ]],
-        styles: { fontSize: 9, cellPadding: 4 }
+            { content: 'Grand Total Amount', colSpan: 3, styles: { halign: 'right', fontStyle: 'bold', fillColor: [240, 240, 240] } },
+            { content: `INR ${order.grand_total}.00`, styles: { halign: 'right', fontStyle: 'bold', fillColor: gold, textColor: navy } }
+        ]]
     });
 
+    // --- 5. FOOTER SIGNATURE & BRANDING ---
     const finalY = doc.lastAutoTable.finalY + 20;
-    doc.setFontSize(8);
-    doc.setTextColor(150, 150, 150);
-    doc.text("This is a computer-generated bill for the Paramount Group of Institutions.", 14, finalY);
+    doc.setFontSize(9);
+    doc.setTextColor(100, 100, 100);
+    doc.text("Thank you for choosing Paramount School.", 15, finalY);
+    doc.text("Warangal | Established 2019", 15, finalY + 6);
 
+    // --- DOWNLOAD & WHATSAPP REDIRECT ---
     const fileName = `${order.customer_name.replace(/\s+/g, '_')}_${order.order_id}.pdf`;
     doc.save(fileName);
 
     const msg = encodeURIComponent(
         `*OFFICIAL INVOICE* 📄\n\n` +
-        `Dear Parent, the order for *${order.customer_name}* has been confirmed.\n\n` +
+        `Order confirmed for *${order.customer_name}*.\n\n` +
         `*Order ID:* ${order.order_id}\n` +
-        `*Total Amount:* ₹${order.grand_total}\n\n` +
-        `Your purchase bill has been Attached to this message. Please find the attached file .\n\n` +
-        `— @Student Accessory Store`
+        `*Total:* INR ${order.grand_total}.00\n\n` +
+        `The professional bill has been downloaded with a secure border layout. Please attach it here.\n\n` +
+        `— Paramount Group of Institutions`
     );
     window.open(`https://wa.me/${order.customer_phone}?text=${msg}`, '_blank');
 }
