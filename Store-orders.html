@@ -202,15 +202,21 @@ async function generateAndSend(order) {
     doc.setLineWidth(0.5);
     doc.rect(7, 7, 196, 283); 
 
-    // --- HEADER SECTION (Solid Navy Bar) ---
+     // --- HEADER SECTION (Solid Navy Bar) ---
     doc.setFillColor(...navy);
     doc.rect(10, 10, 190, 40, 'F'); 
     
     doc.setTextColor(255, 255, 255);
-    doc.setFontSize(24);
     doc.setFont("helvetica", "bold");
-    doc.text("PARAMOUNT ACCESSORIES STORE", 20, 35);
-    
+
+    // Main Title
+    doc.setFontSize(22);
+    doc.text("STUDENT ACCESSORIES STORE", 105, 28, { align: "center" });
+
+    // New Subtitle
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "normal");
+    doc.text("OFFICIAL STORE RECEIPT", 105, 38, { align: "center" });
     // --- CUSTOMER DETAILS SECTION ---
     doc.setTextColor(...navy);
     doc.setFontSize(14);
@@ -292,7 +298,7 @@ async function generateAndSend(order) {
     
     doc.setFontSize(11);
     doc.setTextColor(100, 100, 100);
-    doc.text("Thank you for choosing Paramount School.", pageWidth / 2, finalY, { align: "center" });
+    doc.text("Thank you for choosing Student Accessory Store.", pageWidth / 2, finalY, { align: "center" });
     
     doc.setFont("helvetica", "bold");
     doc.setTextColor(...navy);
@@ -308,7 +314,7 @@ async function generateAndSend(order) {
         `*Order ID:* ${order.order_id}\n` +
         `*Total Amount:* INR ${order.grand_total}\n\n` +
         `Please find the attached PDF bill for your records.\n\n` +
-        `— Paramount Group of Institutions`
+        `— @Students Accessory Store.`
     );
     window.open(`https://wa.me/${order.customer_phone}?text=${msg}`, '_blank');
 }
