@@ -192,14 +192,15 @@ async function generateAndSend(order) {
     const navy = [0, 35, 71]; 
     const gold = [197, 160, 89]; 
     const black = [0, 0, 0];
+    const white = [255, 255, 255];
 
     // --- PREMIUM BORDER (Double Line) ---
     doc.setDrawColor(...navy);
     doc.setLineWidth(1);
-    doc.rect(5, 5, 200, 287); // Outer border
+    doc.rect(5, 5, 200, 287); 
     doc.setDrawColor(...gold);
     doc.setLineWidth(0.5);
-    doc.rect(7, 7, 196, 283); // Inner gold accent border
+    doc.rect(7, 7, 196, 283); 
 
     // --- HEADER SECTION (Solid Navy Bar) ---
     doc.setFillColor(...navy);
@@ -218,7 +219,7 @@ async function generateAndSend(order) {
     
     doc.setDrawColor(...gold);
     doc.setLineWidth(1);
-    doc.line(20, 68, 80, 68); // Institutional Gold Underline
+    doc.line(20, 68, 80, 68); 
 
     doc.setFontSize(10);
     doc.setFont("helvetica", "normal");
@@ -238,23 +239,23 @@ async function generateAndSend(order) {
     doc.text(`Date: ${liveDate}`, 130, 87);
     doc.text(`Time: ${liveTime}`, 130, 94);
 
-    // --- ITEM TABLE ---
+    // --- ITEM TABLE (Fixed Symbol Error) ---
     const tableData = order.items.map(i => [
         i.name, 
-        `₹${i.price.toFixed(2)}`, 
+        `INR ${Number(i.price).toFixed(2)}`, 
         i.quantity, 
-        `₹${(i.price * i.quantity).toFixed(2)}`
+        `INR ${(Number(i.price) * Number(i.quantity)).toFixed(2)}`
     ]);
 
     doc.autoTable({
         startY: 105,
         margin: { left: 20, right: 20 },
-        head: [['Product Description', 'Price (INR)', 'Qty', 'Subtotal (INR)']],
+        head: [['Product Description', 'Price', 'Qty', 'Subtotal']],
         body: tableData,
-        theme: 'grid', // Cleaner grid look
+        theme: 'grid', 
         headStyles: { 
             fillColor: navy, 
-            textColor: [255, 255, 255], 
+            textColor: white, 
             fontStyle: 'bold',
             halign: 'center',
             fontSize: 11
@@ -268,28 +269,34 @@ async function generateAndSend(order) {
             { 
                 content: 'Grand Total Amount', 
                 colSpan: 3, 
-                styles: { halign: 'right', fontStyle: 'bold', textColor: [100, 100, 100] } 
+                styles: { halign: 'right', fontStyle: 'bold', textColor: [50, 50, 50], fillColor: white } 
             },
             { 
-                content: `INR ${order.grand_total.toFixed(2)}`, 
+                content: `INR ${Number(order.grand_total).toFixed(2)}`, 
                 styles: { 
                     halign: 'right', 
                     fontStyle: 'bold', 
-                    fillColor: gold, 
-                    textColor: black // FIXED: Solid Black for visibility
+                    fillColor: white, // Background is now white
+                    textColor: black, // Text is now solid black
+                    lineWidth: 0.1,
+                    lineColor: [200, 200, 200]
                 } 
             }
         ]],
-        styles: { fontSize: 10, cellPadding: 6, lineColor: [230, 230, 230] }
+        styles: { fontSize: 10, cellPadding: 6, lineColor: [230, 230, 230], textColor: [0, 0, 0] }
     });
 
-    // --- INSTITUTIONAL FOOTER ---
-    const finalY = doc.lastAutoTable.finalY + 20;
-    doc.setFontSize(10);
-    doc.setTextColor(120, 120, 120);
-    doc.text("Thank you for choosing Paramount School.", 20, finalY);
+    // --- CENTERED INSTITUTIONAL FOOTER ---
+    const finalY = doc.lastAutoTable.finalY + 25;
+    const pageWidth = doc.internal.pageSize.getWidth();
+    
+    doc.setFontSize(11);
+    doc.setTextColor(100, 100, 100);
+    doc.text("Thank you for choosing Paramount School.", pageWidth / 2, finalY, { align: "center" });
+    
     doc.setFont("helvetica", "bold");
-    doc.text("Warangal | Established 2019", 20, finalY + 8);
+    doc.setTextColor(...navy);
+    doc.text("Warangal | Established 2019", pageWidth / 2, finalY + 8, { align: "center" });
 
     // --- SAVE AND WHATSAPP REDIRECT ---
     const fileName = `${order.customer_name.replace(/\s+/g, '_')}_${order.order_id}.pdf`;
@@ -299,7 +306,7 @@ async function generateAndSend(order) {
         `*OFFICIAL INVOICE* 📄\n\n` +
         `Dear Parent, the order for *${order.customer_name}* has been confirmed.\n\n` +
         `*Order ID:* ${order.order_id}\n` +
-        `*Total Amount:* ₹${order.grand_total}\n\n` +
+        `*Total Amount:* INR ${order.grand_total}\n\n` +
         `Please find the attached PDF bill for your records.\n\n` +
         `— Paramount Group of Institutions`
     );
