@@ -184,7 +184,7 @@
         new bootstrap.Modal('#previewModal').show();
     };
 
-  async function generateAndSend(order) {
+ async function generateAndSend(order) {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
     
@@ -219,18 +219,17 @@
     doc.text(`Email: ${order.customer_email}`, 14, 72);
     doc.text(`Phone: ${order.customer_phone}`, 120, 60);
 
-    // Generate LIVE time at the moment of clicking the button
-    const now = new Date();
-    const liveDate = now.toLocaleDateString('en-IN');
-    const liveTime = now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true });
-
-    doc.text(`Order ID: ${order.order_id}`, 14, 60);
-    doc.text(`Student: ${order.customer_name}`, 14, 66);
-    doc.text(`Email: ${order.customer_email}`, 14, 72);
+    // --- CLEANED TIMESTAMP LOGIC ---
+    let orderDate = new Date(); 
+    if (order.created_at) {
+        orderDate = typeof order.created_at.toDate === 'function' 
+                    ? order.created_at.toDate() 
+                    : new Date(order.created_at);
+    }
     
-    doc.text(`Phone: ${order.customer_phone}`, 120, 60);
-    doc.text(`Date: ${liveDate}`, 120, 66);
-    doc.text(`Time: ${liveTime}`, 120, 72);
+    // Use the orderDate variable here
+    doc.text(`Date: ${orderDate.toLocaleDateString('en-IN')}`, 120, 66);
+    doc.text(`Time: ${orderDate.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}`, 120, 72);
 
     // --- PREMIUM TABLE LAYOUT ---
     const tableData = order.items.map(i => [
