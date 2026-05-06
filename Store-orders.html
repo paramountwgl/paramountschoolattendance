@@ -189,12 +189,12 @@
     const doc = new jsPDF();
     
     // --- PREMIUM BRANDING COLORS ---
-    const navy = [0, 35, 71]; // #002347
-    const gold = [197, 160, 89]; // #C5A059
+    const navy = [0, 35, 71]; 
+    const gold = [197, 160, 89]; 
 
     // --- HEADER SECTION ---
     doc.setFillColor(...navy);
-    doc.rect(0, 0, 210, 40, 'F'); // Solid Navy Top Bar
+    doc.rect(0, 0, 210, 40, 'F'); 
     
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(22);
@@ -208,29 +208,28 @@
     
     doc.setDrawColor(...gold);
     doc.setLineWidth(0.5);
-    doc.line(14, 52, 60, 52); // Gold underline for subtitle
+    doc.line(14, 52, 60, 52); 
 
     doc.setFontSize(10);
     doc.setFont("helvetica", "normal");
     doc.setTextColor(50, 50, 50);
     
-    // Grid-style organization for details
     doc.text(`Order ID: ${order.order_id}`, 14, 60);
     doc.text(`Student: ${order.customer_name}`, 14, 66);
     doc.text(`Email: ${order.customer_email}`, 14, 72);
     doc.text(`Phone: ${order.customer_phone}`, 120, 60);
-       // NEW ROBUST TIMESTAMP LOGIC
-let orderDate = new Date(); // Default to now
-if (order.created_at) {
-    // Check if it's a Firestore Timestamp (has toDate) or already a Date/String
-    orderDate = typeof order.created_at.toDate === 'function' 
-                ? order.created_at.toDate() 
-                : new Date(order.created_at);
-}
+
+    // --- CLEANED TIMESTAMP LOGIC ---
+    let orderDate = new Date(); 
+    if (order.created_at) {
+        orderDate = typeof order.created_at.toDate === 'function' 
+                    ? order.created_at.toDate() 
+                    : new Date(order.created_at);
+    }
     
-    const timestamp = order.created_at ? order.created_at.toDate() : new Date();
-    doc.text(`Date: ${timestamp.toLocaleDateString('en-IN')}`, 120, 66);
-    doc.text(`Time: ${timestamp.toLocaleTimeString('en-IN')}`, 120, 72);
+    // Use the orderDate variable here
+    doc.text(`Date: ${orderDate.toLocaleDateString('en-IN')}`, 120, 66);
+    doc.text(`Time: ${orderDate.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}`, 120, 72);
 
     // --- PREMIUM TABLE LAYOUT ---
     const tableData = order.items.map(i => [
@@ -256,7 +255,6 @@ if (order.created_at) {
             2: { halign: 'center' },
             3: { halign: 'right' }
         },
-        // FIXED FOOTER CALCULATION
         foot: [[
             { content: 'Grand Total Amount', colSpan: 3, styles: { halign: 'right', fontStyle: 'bold' } },
             { content: `₹${order.grand_total}`, styles: { halign: 'right', fontStyle: 'bold', fillColor: gold, textColor: navy } }
@@ -264,13 +262,11 @@ if (order.created_at) {
         styles: { fontSize: 9, cellPadding: 4 }
     });
 
-    // --- FOOTER SIGNATURE ---
     const finalY = doc.lastAutoTable.finalY + 20;
     doc.setFontSize(8);
     doc.setTextColor(150, 150, 150);
     doc.text("This is a computer-generated bill for the Paramount Group of Institutions.", 14, finalY);
 
-    // --- DOWNLOAD & WHATSAPP REDIRECT ---
     const fileName = `${order.customer_name.replace(/\s+/g, '_')}_${order.order_id}.pdf`;
     doc.save(fileName);
 
@@ -279,8 +275,8 @@ if (order.created_at) {
         `Dear Parent, the order for *${order.customer_name}* has been confirmed.\n\n` +
         `*Order ID:* ${order.order_id}\n` +
         `*Total Amount:* ₹${order.grand_total}\n\n` +
-        `Your purchase bill has been attached to this message. Please find the attached file.\n\n` +
-        `— @Student Accessory Store.`
+        `Your purchase bill has been Attached to this message. Please find the attached file .\n\n` +
+        `— @Student Accessory Store`
     );
     window.open(`https://wa.me/${order.customer_phone}?text=${msg}`, '_blank');
 }
