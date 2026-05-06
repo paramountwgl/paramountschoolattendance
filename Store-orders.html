@@ -184,34 +184,98 @@
         new bootstrap.Modal('#previewModal').show();
     };
 
-    async function generateAndSend(order) {
-        // 1. Generate PDF
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
-        
-        doc.setFontSize(20);
-        doc.text("STUDENT ACCESSORIES STORE", 14, 22);
-        doc.setFontSize(10);
-        doc.text(`Order ID: ${order.order_id}`, 14, 30);
-        doc.text(`Student Name: ${order.customer_name}`, 14, 35);
-        doc.text(`Date: ${new Date().toLocaleDateString()}`, 14, 40);
+   async function generateAndSend(order) {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    
+    // --- PREMIUM BRANDING COLORS ---
+    const navy = [0, 35, 71]; // #002347
+    const gold = [197, 160, 89]; // #C5A059
 
-        const tableData = order.items.map(i => [i.name, i.price, i.quantity, i.price * i.quantity]);
-        doc.autoTable({
-            startY: 50,
-            head: [['Item', 'Price', 'Qty', 'Total']],
-            body: tableData,
-            foot: [['', '', 'Grand Total', `₹${order.grand_total}`]]
-        });
+    // --- HEADER SECTION ---
+    doc.setFillColor(...navy);
+    doc.rect(0, 0, 210, 40, 'F'); // Solid Navy Top Bar
+    
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(22);
+    doc.setFont("helvetica", "bold");
+    doc.text("PARAMOUNT ACCESSORIES STORE", 14, 25);
+    
+    // --- CUSTOMER DETAILS SECTION ---
+    doc.setTextColor(...navy);
+    doc.setFontSize(12);
+    doc.text("CUSTOMER DETAILS", 14, 50);
+    
+    doc.setDrawColor(...gold);
+    doc.setLineWidth(0.5);
+    doc.line(14, 52, 60, 52); // Gold underline for subtitle
 
-        const fileName = `${order.customer_name.replace(/\s+/g, '_')}_${order.order_id}.pdf`;
-        doc.save(fileName);
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(50, 50, 50);
+    
+    // Grid-style organization for details
+    doc.text(`Order ID: ${order.order_id}`, 14, 60);
+    doc.text(`Student: ${order.customer_name}`, 14, 66);
+    doc.text(`Email: ${order.customer_email}`, 14, 72);
+    doc.text(`Phone: ${order.customer_phone}`, 120, 60);
+    
+    const timestamp = order.created_at ? order.created_at.toDate() : new Date();
+    doc.text(`Date: ${timestamp.toLocaleDateString('en-IN')}`, 120, 66);
+    doc.text(`Time: ${timestamp.toLocaleTimeString('en-IN')}`, 120, 72);
 
-        // 2. Open WhatsApp
-        const msg = encodeURIComponent(`*ORDER CONFIRMED* ✅\n\nThank you for shopping from the Student Accessory Store.\n\n*Order ID:* ${order.order_id}\n*Student Name:* ${order.customer_name}\n*Grand Total:* ₹${order.grand_total}\n\nYour Purchase bill has been attached below .\n\n— `);
-        window.open(`https://wa.me/${order.customer_phone}?text=${msg}`, '_blank');
-    }
+    // --- PREMIUM TABLE LAYOUT ---
+    const tableData = order.items.map(i => [
+        i.name, 
+        `₹${i.price}`, 
+        i.quantity, 
+        `₹${i.price * i.quantity}`
+    ]);
 
+    doc.autoTable({
+        startY: 80,
+        head: [['Product Description', 'Unit Price', 'Qty', 'Subtotal']],
+        body: tableData,
+        theme: 'striped',
+        headStyles: { 
+            fillColor: navy, 
+            textColor: [255, 255, 255], 
+            fontStyle: 'bold',
+            halign: 'center'
+        },
+        columnStyles: {
+            1: { halign: 'center' },
+            2: { halign: 'center' },
+            3: { halign: 'right' }
+        },
+        // FIXED FOOTER CALCULATION
+        foot: [[
+            { content: 'Grand Total Amount', colSpan: 3, styles: { halign: 'right', fontStyle: 'bold' } },
+            { content: `₹${order.grand_total}`, styles: { halign: 'right', fontStyle: 'bold', fillColor: gold, textColor: navy } }
+        ]],
+        styles: { fontSize: 9, cellPadding: 4 }
+    });
+
+    // --- FOOTER SIGNATURE ---
+    const finalY = doc.lastAutoTable.finalY + 20;
+    doc.setFontSize(8);
+    doc.setTextColor(150, 150, 150);
+    doc.text("This is a computer-generated bill for the Paramount Group of Institutions.", 14, finalY);
+
+    // --- DOWNLOAD & WHATSAPP REDIRECT ---
+    const fileName = `${order.customer_name.replace(/\s+/g, '_')}_${order.order_id}.pdf`;
+    doc.save(fileName);
+
+    const msg = encodeURIComponent(
+        `*OFFICIAL INVOICE* 📄\n\n` +
+        `Dear Parent, the order for *${order.customer_name}* has been confirmed.\n\n` +
+        `*Order ID:* ${order.order_id}\n` +
+        `*Total Amount:* ₹${order.grand_total}\n\n` +
+        `Your premium PDF bill has been downloaded to your device. Please attach it here for your records.\n\n` +
+        `— Paramount Group of Institutions`
+    );
+    window.open(`https://wa.me/${order.customer_phone}?text=${msg}`, '_blank');
+}
     // Attach to window for HTML onclicks
     window.previewBill = previewBill;
 </script>
