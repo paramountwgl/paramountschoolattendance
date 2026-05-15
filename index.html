@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Paramount School | Executive Hub</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Paramount | Executive Hub</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="icon" type="image/png" href="logo.png">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
@@ -34,24 +34,19 @@
             border-bottom: 4px solid var(--p-gold);
             position: sticky; top: 0; z-index: 1000;
         }
-        .logo-img { 
-            height: clamp(40px, 12vw, 60px); 
-            width: auto;
-            aspect-ratio: 1/1; /* Prevents layout shifting during image load */
-            object-fit: contain;
-        }
+        .logo-img { height: clamp(40px, 12vw, 60px); }
         .header-title h1 { font-family: 'Cinzel', serif; color: white; margin: 0; font-size: clamp(0.9rem, 4vw, 1.4rem); letter-spacing: 1px; }
         .header-title p { color: var(--p-gold); margin: 0; font-size: 0.6rem; font-weight: 700; text-transform: uppercase; }
 
-        /* FLUID HUB GRID (Fixed to prevent uneven stretching on final row) */
+        /* FLUID HUB GRID */
         .hub-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            /* Desktop: 4 columns | Tablet: 3 columns | Mobile: 2 columns */
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
             gap: 15px;
             max-width: 1100px;
             margin: 20px auto;
             padding: 15px;
-            justify-content: center;
         }
 
         /* PREMIUM BUTTON CARDS */
@@ -63,17 +58,11 @@
             text-decoration: none;
             border: 1px solid #eee;
             box-shadow: 0 8px 20px rgba(0,0,0,0.05);
-            transition: transform 0.2s, background-color 0.2s;
+            transition: 0.3s;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
             gap: 12px;
-        }
-
-        /* Smooth hover enhancements for premium layout desktop environments */
-        @media (min-width: 768px) {
-            .hub-card:hover { transform: translateY(-3px); box-shadow: 0 12px 24px rgba(0,0,0,0.08); }
         }
 
         .hub-card:active { transform: scale(0.95); background: #f0f0f0; }
@@ -104,13 +93,14 @@
         .home-card {
             background: var(--p-blue);
             border-color: var(--p-gold);
+            grid-column: span 1; /* Keeps it in the grid flow */
         }
         .home-card i, .home-card span { color: var(--p-gold) !important; }
 
         /* MOBILE SPECIFIC OVERRIDES */
         @media (max-width: 480px) {
             .hub-grid {
-                grid-template-columns: repeat(2, 1fr); /* Clean 2x2 grid tracking alignment */
+                grid-template-columns: 1fr 1fr; /* Forces exactly 2 columns */
                 gap: 12px;
                 padding: 12px;
             }
@@ -124,10 +114,10 @@
 
 <header>
     <div style="display:flex; align-items:center; gap:10px;">
-        <img src="logo.png" alt="Paramount Logo" class="logo-img">
+        <img src="logo.png" class="logo-img">
         <div class="header-title">
-            <h1>PARAMOUNT E/M HIGH SCHOOL</h1>
-            <p>Faculty Portal</p>
+            <h1>PARAMOUNT</h1>
+            <p>Faculty Suite</p>
         </div>
     </div>
 </header>
