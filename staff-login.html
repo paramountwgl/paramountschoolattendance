@@ -3,48 +3,209 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Faculty Portal | Paramount School</title>
-   <link rel="icon" type="image/png" href="logo.png">
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Cinzel:wght@700&display=swap" rel="stylesheet">
+  <title>Executive Portal | Paramount School</title>
+  <link rel="icon" type="image/png" href="logo.png">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Cinzel:wght@700;900&display=swap" rel="stylesheet">
   <style>
-    :root { --p-green: #004d26; --p-gold: #ffd700; --p-blue: #003366; --white: #ffffff; }
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Montserrat', sans-serif; }
-    body { background-color: #0c1a12; color: white; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; }
-    
-    .auth-panel { width: 100%; max-width: 480px; background: rgba(255, 255, 255, 0.03); border: 2px solid var(--p-gold); border-radius: 24px; padding: 35px 30px; backdrop-filter: blur(20px); text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
-    .portal-title { font-family: 'Cinzel', serif; font-size: 1.6rem; color: var(--p-gold); margin-bottom: 6px; }
-    .portal-subtitle { font-size: 0.85rem; color: #cbd5e1; margin-bottom: 25px; }
-    
-    .google-auth-btn { width: 100%; padding: 14px; background: #ffffff; border: none; border-radius: 12px; color: #1f2937; font-size: 0.95rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 25px; transition: 0.3s; }
-    .google-auth-btn:hover { background: #f1f5f9; transform: translateY(-2px); }
-    .divider { display: flex; align-items: center; text-align: center; margin-bottom: 25px; color: #64748b; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1.5px; }
-    .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
-    .divider:not(:empty)::before { margin-right: .75em; }
-    .divider:not(:empty)::after { margin-left: .75em; }
+    :root { 
+      --p-green: #004d26; 
+      --p-gold: #ffd700; 
+      --p-blue: #003366; 
+      --glass-bg: rgba(12, 26, 18, 0.45);
+      --glass-border: rgba(255, 215, 0, 0.15);
+      --glow-green: rgba(0, 77, 38, 0.6);
+      --glow-gold: rgba(255, 215, 0, 0.4);
+    }
 
-    .form-group { margin-bottom: 16px; text-align: left; }
-    .form-group label { display: block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: #ffd700; margin-bottom: 6px; font-weight: 600; }
-    .input-wrapper input { width: 100%; padding: 12px 16px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 12px; color: white; font-size: 0.9rem; outline: none; transition: 0.3s; }
-    .input-wrapper input:focus { border-color: var(--p-gold); background: rgba(255, 255, 255, 0.1); }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Montserrat', sans-serif; }
     
-    .action-btn { width: 100%; padding: 14px; background: linear-gradient(135deg, var(--p-green), #006633); border: 1px solid var(--p-gold); border-radius: 12px; color: white; font-size: 0.95rem; font-weight: 600; cursor: pointer; margin-top: 10px; transition: 0.3s; }
-    .action-btn:hover { transform: translateY(-2px); background: linear-gradient(135deg, #006633, var(--p-green)); box-shadow: 0 0 15px rgba(255, 215, 0, 0.2); }
+    body { 
+      background-color: #030a06; 
+      color: #f1f5f9; 
+      min-height: 100vh; 
+      display: flex; 
+      flex-direction: column; 
+      justify-content: center; 
+      align-items: center; 
+      padding: 20px; 
+      position: relative;
+      overflow-x: hidden;
+      perspective: 1000px;
+    }
+
+    /* 3D COSMIC BACKGROUND MATRIX */
+    .bg-matrix { 
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+      background: radial-gradient(circle at 50% 30%, #002b12 0%, #040d07 70%, #010502 100%);
+      z-index: -3; 
+    }
+    .orb {
+      position: fixed; border-radius: 50%; filter: blur(80px); opacity: 0.4; z-index: -2;
+      animation: floatOrb 15s ease-in-out infinite alternate;
+    }
+    .orb-1 { width: 400px; height: 400px; background: var(--p-green); top: -10%; left: -10%; }
+    .orb-2 { width: 500px; height: 500px; background: #001f3f; bottom: -10%; right: -10%; animation-delay: -5s; }
+    .orb-3 { width: 300px; height: 300px; background: #4a3700; top: 40%; left: 60%; animation-delay: -10s; }
+
+    @keyframes floatOrb {
+      0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+      100% { transform: translate(80px, 50px) scale(1.15) rotate(360deg); }
+    }
+
+    /* VIBRANT STARFIELD ANIMATION */
+    .starfield { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+    .star { position: absolute; background: #ffffff; border-radius: 50%; opacity: 0; animation: starPulse var(--d) infinite ease-in-out; }
+    @keyframes starPulse { 0%, 100% { opacity: 0; transform: scale(0.5); } 50% { opacity: var(--o); transform: scale(1.2); } }
+
+    /* ULTRA LUXURY SPATIAL GLASS PANEL */
+    .auth-panel { 
+      width: 100%; 
+      max-width: 480px; 
+      background: var(--glass-bg); 
+      border: 1px solid var(--glass-border); 
+      border-top: 1px solid rgba(255, 215, 0, 0.4);
+      border-left: 1px solid rgba(255, 215, 0, 0.3);
+      border-radius: 32px; 
+      padding: 45px 35px; 
+      backdrop-filter: blur(30px) saturate(160%); 
+      -webkit-backdrop-filter: blur(30px) saturate(160%);
+      text-align: center; 
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), 
+                  inset 0 1px 0 rgba(255, 255, 255, 0.1),
+                  0 0 40px rgba(0, 77, 38, 0.15); 
+      transform-style: preserve-3d;
+      transform: translateZ(0);
+      transition: border-color 0.5s ease, box-shadow 0.5s ease;
+    }
+    .auth-panel:hover {
+      border-color: rgba(255, 215, 0, 0.4);
+      box-shadow: 0 35px 70px rgba(0, 0, 0, 0.7), 
+                  inset 0 1px 0 rgba(255, 255, 255, 0.15),
+                  0 0 50px rgba(255, 215, 0, 0.1); 
+    }
+
+    /* INSTITUTIONAL BRAND EMBLEM LAYER */
+    .brand-glow-container {
+      position: relative; width: 100px; height: 100px; margin: 0 auto 25px auto;
+      transform: translateZ(30px);
+    }
+    .brand-glow-container::before {
+      content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      background: var(--p-gold); border-radius: 50%; filter: blur(15px); opacity: 0.3;
+      animation: logoGlow 4s infinite alternate;
+    }
+    .panel-logo {
+      width: 100%; height: 100%; object-fit: contain; border-radius: 50%;
+      border: 2px solid var(--p-gold); background: #030a06; padding: 4px;
+      position: relative; z-index: 1;
+    }
+
+    @keyframes logoGlow { 0% { filter: blur(12px); opacity: 0.2; } 100% { filter: blur(18px); opacity: 0.45; } }
+
+    .portal-title { font-family: 'Cinzel', serif; font-size: 1.75rem; font-weight: 900; color: #ffffff; letter-spacing: 1px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); transform: translateZ(25px); }
+    .portal-subtitle { font-size: 0.85rem; font-weight: 500; color: #94a3b8; margin-bottom: 30px; letter-spacing: 0.5px; transform: translateZ(20px); }
     
-    .toggle-link { margin-top: 25px; font-size: 0.85rem; color: #cbd5e1; }
-    .toggle-link span { color: var(--p-gold); cursor: pointer; font-weight: 600; text-decoration: underline; }
-    .msg-box { padding: 12px; border-radius: 12px; font-size: 0.85rem; margin-bottom: 16px; display: none; text-align: left; line-height: 1.4; }
-    .error { background: rgba(239, 68, 68, 0.15); border: 1px solid #ef4444; color: #fca5a5; }
-    .success { background: rgba(16, 185, 129, 0.15); border: 1px solid #10b981; color: #a7f3d0; }
+    /* PREMIUM TACTILE 3D BUTTON: GOOGLE */
+    .google-auth-btn { 
+      width: 100%; padding: 15px; background: #ffffff; border: none; border-radius: 16px; 
+      color: #1e293b; font-size: 0.95rem; font-weight: 700; cursor: pointer; 
+      display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 30px; 
+      position: relative; transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+      box-shadow: 0 4px 0 #cbd5e1, 0 8px 16px rgba(0,0,0,0.3);
+      transform: translateZ(15px);
+    }
+    .google-auth-btn:hover { background: #f8fafc; transform: translateZ(15px) translateY(-2px); box-shadow: 0 6px 0 #cbd5e1, 0 12px 20px rgba(0,0,0,0.35); }
+    .google-auth-btn:active { transform: translateZ(15px) translateY(2px); box-shadow: 0 2px 0 #cbd5e1, 0 4px 8px rgba(0,0,0,0.25); }
+
+    .divider { 
+      display: flex; align-items: center; text-align: center; margin-bottom: 25px; 
+      color: #64748b; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; 
+    }
+    .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
+    .divider:not(:empty)::before { margin-right: 1em; }
+    .divider:not(:empty)::after { margin-left: 1em; }
+
+    /* NEOMORPHIC HIGH-GLOSS FORM WRAPPERS */
+    .form-group { margin-bottom: 20px; text-align: left; transform: translateZ(10px); }
+    .form-group label { display: block; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--p-gold); margin-bottom: 8px; text-shadow: 0 1px 2px rgba(0,0,0,0.4); }
     
-    .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: flex; align-items: center; justify-content: center; display: none; z-index: 1000; }
-    .modal-content { background: #002b12; border: 2px solid var(--p-gold); border-radius: 20px; padding: 30px; max-width: 400px; width: 90%; text-align: center; }
+    .input-wrapper { position: relative; width: 100%; }
+    .input-wrapper input { 
+      width: 100%; padding: 14px 18px; 
+      background: rgba(255, 255, 255, 0.03); 
+      border: 1px solid rgba(255, 255, 255, 0.12); 
+      border-radius: 16px; color: #ffffff; font-size: 0.95rem; font-weight: 500; outline: none; 
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);
+    }
+    .input-wrapper input:focus { 
+      border-color: var(--p-gold); 
+      background: rgba(255, 255, 255, 0.06); 
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.4), 0 0 15px rgba(255, 215, 0, 0.15); 
+    }
+    .input-wrapper input::placeholder { color: rgba(255,255,255,0.25); }
+    
+    /* SOLID PHYSICAL 3D SUBMIT BUTTON */
+    .action-btn { 
+      width: 100%; padding: 16px; 
+      background: linear-gradient(135deg, #005c2e 0%, #003318 100%); 
+      border: 1px solid rgba(255,215,0,0.3); border-radius: 16px; 
+      color: #ffffff; font-size: 0.95rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+      cursor: pointer; margin-top: 15px; 
+      transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+      box-shadow: 0 5px 0 #002611, 0 10px 20px rgba(0,0,0,0.4);
+      transform: translateZ(15px);
+      text-shadow: 0 1px 2px rgba(0,0,0,0.6);
+    }
+    .action-btn:hover { 
+      background: linear-gradient(135deg, #006e37 0%, #004220 100%);
+      border-color: rgba(255,215,0,0.5);
+      transform: translateZ(15px) translateY(-2px); 
+      box-shadow: 0 7px 0 #002611, 0 14px 25px rgba(0,0,0,0.45); 
+    }
+    .action-btn:active { 
+      transform: translateZ(15px) translateY(3px); 
+      box-shadow: 0 2px 0 #002611, 0 5px 10px rgba(0,0,0,0.3); 
+    }
+    
+    .toggle-link { margin-top: 25px; font-size: 0.82rem; font-weight: 500; color: #cbd5e1; transform: translateZ(5px); }
+    .toggle-link span { color: var(--p-gold); cursor: pointer; font-weight: 700; text-decoration: none; transition: 0.2s; }
+    .toggle-link span:hover { text-shadow: 0 0 10px var(--glow-gold); color: #fff; }
+
+    /* INTERACTIVE STATUS GLASS BOXES */
+    .msg-box { padding: 14px 18px; border-radius: 16px; font-size: 0.85rem; font-weight: 600; margin-bottom: 20px; display: none; text-align: left; line-height: 1.5; transform: translateZ(20px); animation: panelSlide 0.4s ease-out; }
+    .error { background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.4); color: #fca5a5; box-shadow: 0 0 20px rgba(239, 68, 68, 0.1); }
+    .success { background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.4); color: #a7f3d0; box-shadow: 0 0 20px rgba(16, 185, 129, 0.1); }
+    
+    @keyframes panelSlide { from { opacity: 0; transform: translateZ(20px) translateY(-10px); } to { opacity: 1; transform: translateZ(20px) translateY(0); } }
+
+    /* HIGH-GLOSS VERIFICATION GATE MODAL */
+    .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(2, 8, 4, 0.85); backdrop-filter: blur(20px); display: flex; align-items: center; justify-content: center; display: none; z-index: 1000; opacity: 0; transition: opacity 0.3s ease; }
+    .modal-content { 
+      background: rgba(12, 38, 22, 0.75); border: 2px solid var(--p-gold); border-radius: 28px; 
+      padding: 40px 35px; max-width: 420px; width: 92%; text-align: center; 
+      box-shadow: 0 30px 60px rgba(0,0,0,0.7), 0 0 50px rgba(255,215,0,0.15);
+      transform: scale(0.8) translateY(20px); transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .modal.active { opacity: 1; }
+    .modal.active .modal-content { transform: scale(1) translateY(0); }
   </style>
   
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 </head>
 <body>
 
-  <div class="auth-panel">
+  <div class="bg-matrix"></div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="starfield" id="starfield"></div>
+
+  <div class="auth-panel" id="tiltPanel">
+    <div class="brand-glow-container">
+      <img src="logo.png" alt="Paramount Emblem" class="panel-logo">
+    </div>
+    
     <h2 class="portal-title" id="titleText">Faculty Hub Access</h2>
     <p class="portal-subtitle" id="subtitleText">Sign in with your verified institutional parameters</p>
 
@@ -79,8 +240,8 @@
       <button type="submit" class="action-btn" id="submitBtn">Verify Access Token</button>
     </form>
 
-    <p class="toggle-link" style="margin-top:15px;">
-      <span id="forgotBtn" style="font-size:0.8rem;">Forgot Password / Recover Account</span>
+    <p class="toggle-link" style="margin-top:20px;">
+      <span id="forgotBtn">Forgot Password / Recover Account</span>
     </p>
 
     <p class="toggle-link" id="toggleViewBox">
@@ -90,11 +251,11 @@
 
   <div class="modal" id="verificationModal">
     <div class="modal-content">
-      <h3 style="color:var(--p-gold); margin-bottom:10px;">Security Verification Challenge</h3>
-      <p style="font-size:0.85rem; margin-bottom:20px; color:#cbd5e1;">A secure registration document containing a 6-digit dynamic key has been forwarded directly to <strong>admin@paramountschooledu.in</strong>. Enter that code below to finalize validation profiles.</p>
+      <h3 style="color:var(--p-gold); font-size:1.3rem; margin-bottom:12px; font-weight:700;">Security Verification Challenge</h3>
+      <p style="font-size:0.85rem; margin-bottom:25px; color:#cbd5e1; line-height:1.6;">A secure registration document containing a 6-digit dynamic key has been forwarded directly to <strong>admin@paramountschooledu.in</strong>. Enter that code below to finalize validation profiles.</p>
       <div class="form-group">
-        <label>6-Digit Administration Key</label>
-        <div class="input-wrapper"><input type="text" id="verificationCodeInput" maxlength="6" style="text-align:center; font-size:1.5rem; letter-spacing:4px;" placeholder="000000"></div>
+        <label style="text-align: center;">6-Digit Administration Key</label>
+        <div class="input-wrapper"><input type="text" id="verificationCodeInput" maxlength="6" style="text-align:center; font-size:1.6rem; letter-spacing:6px; font-weight:800; color:var(--p-gold);" placeholder="000000"></div>
       </div>
       <button type="button" class="action-btn" id="confirmVerificationBtn">Verify & Authorize Profile</button>
     </div>
@@ -183,7 +344,6 @@
           const userCredential = await signInWithEmailAndPassword(auth, email, password);
           const userDoc = await getDoc(doc(db, "authorized_faculty", userCredential.user.uid));
           if (userDoc.exists()) {
-            // ✅ Fix 1: Route verified logins directly to index.html
             window.location.href = './index.html';
           } else {
             await auth.signOut();
@@ -209,7 +369,7 @@
               requestedName: fullName,
               timestamp: new Date().toISOString()
             });
-            verificationModal.style.display = 'flex';
+            openModal();
           })
           .catch((err) => {
             showMsg(errorBox, `❌ Email delivery service error encountered: ${err.text || err.message}`);
@@ -235,13 +395,12 @@
             enrolledAt: new Date().toISOString()
           });
 
-          verificationModal.style.display = 'none';
+          closeModal();
           showMsg(successBox, "🎉 Profile Whitelisted! Registration complete. Transferring your terminal context to dashboard views...");
-          // ✅ Fix 2: Route successful dynamic OTP registrations to index.html
           setTimeout(() => window.location.href = './index.html', 1500);
         } catch(err) {
           showMsg(errorBox, `❌ Error creating account database entry block: ${err.message}`);
-          verificationModal.style.display = 'none';
+          closeModal();
         }
       } else {
         alert("❌ Entered key code sequence is invalid. Confirm input matches your administrator's code exactly.");
@@ -252,7 +411,6 @@
       signInWithPopup(auth, provider).then(async (result) => {
         const userDoc = await getDoc(doc(db, "authorized_faculty", result.user.uid));
         if (userDoc.exists()) {
-          // ✅ Fix 3: Route verified Google logins directly to index.html
           window.location.href = './index.html';
         } else {
           const randomOTP = Math.floor(100000 + Math.random() * 900000).toString();
@@ -272,11 +430,50 @@
 
           emailjs.send('service_7gt2g74', 'template_3p55cem', templateParams)
             .then(async () => {
-              verificationModal.style.display = 'flex';
+              openModal();
             })
             .catch(err => showMsg(errorBox, `❌ Service tracking delivery fault: ${err.message}`));
         }
       }).catch(err => showMsg(errorBox, `❌ Provider logging interaction fault: ${err.message}`));
+    });
+
+    // OPEN/CLOSE MODAL ENGINE WITH ANIMATION SPEED PROTECTION
+    function openModal() {
+      verificationModal.style.display = 'flex';
+      setTimeout(() => verificationModal.classList.add('active'), 10);
+    }
+    function closeModal() {
+      verificationModal.classList.remove('active');
+      setTimeout(() => verificationModal.style.display = 'none', 300);
+    }
+
+    // GENERATE INTERACTIVE COSMIC STARFIELD 
+    const starfield = document.getElementById('starfield');
+    const starCount = 65;
+    for (let i = 0; i < starCount; i++) {
+      const star = document.createElement('div');
+      star.className = 'star';
+      star.style.width = star.style.height = (Math.random() * 2.5 + 1) + 'px';
+      star.style.top = (Math.random() * 100) + 'vh';
+      star.style.left = (Math.random() * 100) + 'vw';
+      star.style.setProperty('--d', (Math.random() * 4 + 3) + 's');
+      star.style.setProperty('--o', (Math.random() * 0.6 + 0.3));
+      starfield.appendChild(star);
+    }
+
+    // TACTILE INTERACTIVE GYROSCOPIC 3D TILT EFFECT
+    const panel = document.getElementById('tiltPanel');
+    document.addEventListener('mousemove', (e) => {
+      const xAxis = (window.innerWidth / 2 - e.pageX) / 25;
+      const yAxis = (window.innerHeight / 2 - e.pageY) / 25;
+      panel.style.transform = `rotateY(${xAxis}deg) rotateX(${-yAxis}deg)`;
+    });
+    document.addEventListener('mouseleave', () => {
+      panel.style.transform = `rotateY(0deg) rotateX(0deg)`;
+      panel.style.transition = 'all 0.5s ease';
+    });
+    panel.addEventListener('mouseenter', () => {
+      panel.style.transition = 'none';
     });
   </script>
 </body>
