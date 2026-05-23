@@ -35,10 +35,11 @@
     .error { background: rgba(239, 68, 68, 0.15); border: 1px solid #ef4444; color: #fca5a5; }
     .success { background: rgba(16, 185, 129, 0.15); border: 1px solid #10b981; color: #a7f3d0; }
     
-    /* Verification overlay view modal */
     .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: flex; align-items: center; justify-content: center; display: none; z-index: 1000; }
     .modal-content { background: #002b12; border: 2px solid var(--p-gold); border-radius: 20px; padding: 30px; max-width: 400px; width: 90%; text-align: center; }
   </style>
+  
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 </head>
 <body>
 
@@ -66,7 +67,7 @@
 
       <div class="form-group">
         <label>Institutional Email</label>
-        <div class="input-wrapper"><input type="email" id="email" placeholder="name@paramountschooledu.in" required /></div>
+        <div class="input-wrapper"><input type="email" id="email" placeholder="name@gmail.com" required /></div>
       </div>
 
       <div class="form-group">
@@ -86,11 +87,10 @@
     </p>
   </div>
 
-  <!-- Security Verification Gateway Challenge Modal UI -->
   <div class="modal" id="verificationModal">
     <div class="modal-content">
       <h3 style="color:var(--p-gold); margin-bottom:10px;">Security Verification Challenge</h3>
-      <p style="font-size:0.85rem; margin-bottom:20px; color:#cbd5e1;">A secure dynamic key has been forwarded to the supervisor's dashboard desk at <strong>admin@paramountschooledu.in</strong>. Enter the matching passcode sequence below to complete confirmation.</p>
+      <p style="font-size:0.85rem; margin-bottom:20px; color:#cbd5e1;">A secure registration document containing a 6-digit dynamic key has been forwarded directly to <strong>admin@paramountschooledu.in</strong>. Enter that code below to finalize validation profiles.</p>
       <div class="form-group">
         <label>6-Digit Administration Key</label>
         <div class="input-wrapper"><input type="text" id="verificationCodeInput" maxlength="6" style="text-align:center; font-size:1.5rem; letter-spacing:4px;" placeholder="000000"></div>
@@ -104,7 +104,6 @@
     import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, sendPasswordResetEmail, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
     import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
-    // Standard Firebase configuration values from your digital library app setup
     const firebaseConfig = {
       apiKey: "AIzaSyAzUOh21Ec31kKmf42Tcw-xs4fVZyPh2fM", 
       authDomain: "paramount-school-d55bc.firebaseapp.com",
@@ -120,6 +119,9 @@
     const db = getFirestore(app);
     const provider = new GoogleAuthProvider();
 
+    // 🌟 Initialize EmailJS Engine Interface with your public token profile
+    emailjs.init({ publicKey: "b7YyWsmcBvZzSArYg" });
+
     let isLoginMode = true;
     let pendingRegistrationData = null;
 
@@ -129,17 +131,17 @@
     const titleText = document.getElementById('titleText');
     const subtitleText = document.getElementById('subtitleText');
     const submitBtn = document.getElementById('submitBtn');
-    const toggleBtn = document.getElementById('toggleBtn');
     const toggleViewBox = document.getElementById('toggleViewBox');
     const verificationModal = document.getElementById('verificationModal');
 
     function showMsg(box, text) { box.textContent = text; box.style.display = 'block'; setTimeout(() => box.style.display = 'none', 7000); }
 
-    // Toggle logic switching between login profile interface views
-    toggleBtn.addEventListener('click', () => {
+    function handleFormToggle() {
       isLoginMode = !isLoginMode;
       errorBox.style.display = 'none';
       successBox.style.display = 'none';
+      document.getElementById('authForm').reset();
+      
       if(isLoginMode) {
         titleText.textContent = "Faculty Hub Access";
         subtitleText.textContent = "Sign in with your verified institutional parameters";
@@ -153,11 +155,12 @@
         registerFields.style.display = 'block';
         toggleViewBox.innerHTML = 'Already authorized? <span id="toggleBtn">Login Here</span>';
       }
-      // Re-bind click event to runtime generated HTML element
-      document.getElementById('toggleBtn').addEventListener('click', arguments.callee);
+    }
+
+    document.body.addEventListener('click', function(e) {
+      if (e.target && e.target.id === 'toggleBtn') { handleFormToggle(); }
     });
 
-    // Forgot Password Link Mechanism
     document.getElementById('forgotBtn').addEventListener('click', () => {
       const emailVal = document.getElementById('email').value.trim();
       if(!emailVal) {
@@ -169,58 +172,62 @@
         .catch(err => showMsg(errorBox, `❌ Recovery System Fault: ${err.message.replace("Firebase: ", "")}`));
     });
 
-    // Main Submit Action Interceptor Logic Flow
     document.getElementById('authForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
-      const fullName = document.getElementById('fullName').value.trim();
+      const fullName = document.getElementById('fullName').value.trim() || "Faculty Member";
 
       if (isLoginMode) {
-        // Log-in execution architecture flow validation step 
         try {
           const userCredential = await signInWithEmailAndPassword(auth, email, password);
-          // Check if user entry explicitly exists within authorized personnel collection tables
           const userDoc = await getDoc(doc(db, "authorized_faculty", userCredential.user.uid));
           if (userDoc.exists()) {
             window.location.href = './faculty-hub.html';
           } else {
             await auth.signOut();
-            showMsg(errorBox, "❌ Authentication validation failure: Account profile is not whitelisted by school administration.");
+            showMsg(errorBox, "❌ Access Denied: This account profile is not whitelisted inside the Faculty Registry.");
           }
         } catch(err) {
-          showMsg(errorBox, "❌ Credentials signature misaligned. Re-check passwords parameters.");
+          showMsg(errorBox, "❌ Authentication validation failure. Re-check login parameters.");
         }
       } else {
-        // Step 1 of Custom Multi-Factor Enrollment: Generate administrative authorization request token matching code values
         const randomOTP = Math.floor(100000 + Math.random() * 900000).toString();
         pendingRegistrationData = { email, password, fullName, otp: randomOTP };
 
-        try {
-          // Write directly to a global notifications collection table inside Firestore. 
-          // You will immediately see this random OTP code under the "admin_verifications" document collection in your Firebase dashboard console!
-          await setDoc(doc(db, "admin_verifications", email.replace(/[^a-zA-Z0-9]/g, "_")), {
-            requestedEmail: email,
-            requestedName: fullName,
-            activationOTP: randomOTP,
-            timestamp: new Date().toISOString()
+        const templateParams = {
+          teacher_name: fullName,
+          teacher_email: email,
+          otp_code: randomOTP
+        };
+
+        // 🌟 Route the system authorization packet payload straight to your admin email desk
+        emailjs.send('service_7gt2g74', 'YOUR_EMAILJS_TEMPLATE_ID', templateParams)
+          .then(async () => {
+            await setDoc(doc(db, "admin_verifications", email.replace(/[^a-zA-Z0-9]/g, "_")), {
+              requestedEmail: email,
+              requestedName: fullName,
+              timestamp: new Date().toISOString()
+            });
+            verificationModal.style.display = 'flex';
+          })
+          .catch((err) => {
+            showMsg(errorBox, `❌ Email delivery service error encountered: ${err.text || err.message}`);
           });
-          
-          verificationModal.style.display = 'flex';
-        } catch (err) {
-          showMsg(errorBox, `❌ Application error initializing gateway checks: ${err.message}`);
-        }
       }
     });
 
-    // Step 2: Form validation matching key entries inside generated workspace challenges
     document.getElementById('confirmVerificationBtn').addEventListener('click', async () => {
       const userEnteredCode = document.getElementById('verificationCodeInput').value.trim();
       if (userEnteredCode === pendingRegistrationData.otp) {
         try {
-          const userCredential = await createUserWithEmailAndPassword(auth, pendingRegistrationData.email, pendingRegistrationData.password);
+          let userCredential;
+          if(pendingRegistrationData.isGoogle) {
+             userCredential = { user: { uid: pendingRegistrationData.uid, email: pendingRegistrationData.email }};
+          } else {
+             userCredential = await createUserWithEmailAndPassword(auth, pendingRegistrationData.email, pendingRegistrationData.password);
+          }
           
-          // Whitelist profile entry fields seamlessly inside global Firestore architecture tables
           await setDoc(doc(db, "authorized_faculty", userCredential.user.uid), {
             name: pendingRegistrationData.fullName,
             email: pendingRegistrationData.email,
@@ -229,44 +236,45 @@
           });
 
           verificationModal.style.display = 'none';
-          showMsg(successBox, "🎉 Verified! Account registration successfully logged. Returning to access portal screen views...");
+          showMsg(successBox, "🎉 Profile Whitelisted! Registration complete. Transferring your terminal context to dashboard views...");
           setTimeout(() => window.location.href = './faculty-hub.html', 1500);
         } catch(err) {
-          showMsg(errorBox, `❌ Profile instantiation system errors occurring: ${err.message}`);
+          showMsg(errorBox, `❌ Error creating account database entry block: ${err.message}`);
           verificationModal.style.display = 'none';
         }
       } else {
-        alert("❌ Entered key code sequence is invalid. Confirm data input entries match exact code signature given.");
+        alert("❌ Entered key code sequence is invalid. Confirm input matches your administrator's code exactly.");
       }
     });
 
-    // Google Sign-In Gatekeeper
     document.getElementById('googleBtn').addEventListener('click', () => {
       signInWithPopup(auth, provider).then(async (result) => {
         const userDoc = await getDoc(doc(db, "authorized_faculty", result.user.uid));
         if (userDoc.exists()) {
           window.location.href = './faculty-hub.html';
         } else {
-          // New Google users need an administrative doc entry first
           const randomOTP = Math.floor(100000 + Math.random() * 900000).toString();
           pendingRegistrationData = { 
             email: result.user.email, 
             uid: result.user.uid, 
-            fullName: result.user.displayName || "Faculty Teacher", 
+            fullName: result.user.displayName || "Google Faculty User", 
             otp: randomOTP,
             isGoogle: true
           };
           
-          await setDoc(doc(db, "admin_verifications", result.user.email.replace(/[^a-zA-Z0-9]/g, "_")), {
-            requestedEmail: result.user.email,
-            requestedName: pendingRegistrationData.fullName,
-            activationOTP: randomOTP,
-            timestamp: new Date().toISOString()
-          });
-          
-          verificationModal.style.display = 'flex';
+          const templateParams = {
+            teacher_name: pendingRegistrationData.fullName,
+            teacher_email: pendingRegistrationData.email,
+            otp_code: randomOTP
+          };
+
+          emailjs.send('service_7gt2g74', 'template_3p55cem', templateParams)
+            .then(async () => {
+              verificationModal.style.display = 'flex';
+            })
+            .catch(err => showMsg(errorBox, `❌ Service tracking delivery fault: ${err.message}`));
         }
-      }).catch(err => showMsg(errorBox, `❌ Provider login failures logging user profile entry parameters: ${err.message}`));
+      }).catch(err => showMsg(errorBox, `❌ Provider logging interaction fault: ${err.message}`));
     });
   </script>
 </body>
