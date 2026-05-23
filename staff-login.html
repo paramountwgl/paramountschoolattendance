@@ -265,7 +265,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, signInWithRedirect, getRedirectResult, sendPasswordResetEmail, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, signInWithRedirect, getRedirectResult, onAuthStateChanged, sendPasswordResetEmail, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
     import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -298,20 +298,18 @@
 
     function showMsg(box, text) { box.textContent = text; box.style.display = 'block'; setTimeout(() => box.style.display = 'none', 7000); }
 
-    // 🌟 UNIFIED LIFECYCLE CONTROLLER ENGINE: Handles mobile landing operations flawlessly
-    async function initAuthFlow() {
-      // Initialize external communication modules safely
-      emailjs.init({ publicKey: "b7YyWsmcBvZzSArYg" });
-
-      try {
-        const result = await getRedirectResult(auth);
-        if (result && result.user) {
-          const user = result.user;
+    // 🌟 THE LIFECYCLE FIX: High-performance session hook designed to instantly capture logins on mobile hardware
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        try {
           const userDoc = await getDoc(doc(db, "authorized_faculty", user.uid));
-          
           if (userDoc.exists()) {
+            // User is validated and whitelisted, send them straight to the hub dashboard
             window.location.replace('./index.html');
           } else {
+            // Caught an active registration request from a fresh Google account redirect loop
+            if (pendingRegistrationData && pendingRegistrationData.isGoogle) return;
+            
             const randomOTP = Math.floor(100000 + Math.random() * 900000).toString();
             pendingRegistrationData = { 
               email: user.email, 
@@ -331,7 +329,17 @@
               .then(() => { openModal(); })
               .catch(err => showMsg(errorBox, `❌ Service tracking delivery fault: ${err.message}`));
           }
+        } catch (error) {
+          showMsg(errorBox, "❌ Session intercept verification failure.");
         }
+      }
+    });
+
+    // Mobile specific asynchronous redirect token catcher loop processing parameters
+    async function initAuthFlow() {
+      emailjs.init({ publicKey: "b7YyWsmcBvZzSArYg" });
+      try {
+        await getRedirectResult(auth);
       } catch (err) {
         if (err.code !== 'auth/redirect-cancelled-by-user') {
           showMsg(errorBox, `❌ Mobile Redirect Capture Fault: ${err.message}`);
@@ -339,7 +347,6 @@
       }
     }
 
-    // Run lifecycle controllers upon core render clearances
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', initAuthFlow);
     } else {
@@ -413,7 +420,6 @@
 
         emailjs.send('service_7gt2g74', 'template_3p55cem', templateParams)
           .then(async () => {
-            // ✅ SANITIZED PATTERN: Corrected alphanumeric parsing mapping sequence parameters
             const sanitizedDocId = email.replace(/[^a-zA-Z0-9]/g, "_");
             await setDoc(doc(db, "admin_verifications", sanitizedDocId), {
               requestedEmail: email,
