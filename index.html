@@ -277,15 +277,15 @@
           // Profile exists in authentication, but has NOT been verified via dynamic admin code yet
           alert("🔒 Access Rejected: Your account has not been whitelisted by the system administrator.");
           await signOut(auth);
-          window.location.href = './faculty-login.html';
+          window.location.href = './staff-login.html';
         }
       } catch (error) {
         alert("❌ Profile check error encountered: " + error.message);
-        window.location.href = './faculty-login.html';
+        window.location.href = './staff-login.html';
       }
     } else {
       // No active active session found. Automatically push the client away to login page
-      window.location.href = './faculty-login.html';
+      window.location.href = './staff-login.html';
     }
   });
 
@@ -293,7 +293,7 @@
   document.getElementById('logoutActionBtn').addEventListener('click', async () => {
       if (confirm("Are you sure you want to end your dashboard session?")) {
           await signOut(auth);
-          window.location.href = './faculty-login.html';
+          window.location.href = './staff-login.html';
       }
   });
 </script>
