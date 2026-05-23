@@ -59,7 +59,7 @@
     .star { position: absolute; background: #ffffff; border-radius: 50%; opacity: 0; animation: hyperPulse var(--spd) infinite ease-in-out; }
     @keyframes hyperPulse { 0%, 100% { opacity: 0; transform: translateY(0) scale(0.3); } 50% { opacity: var(--op); transform: translateY(-20px) scale(1.3); } }
 
-    /* ULTRA-LUXURY GLASSMORPHISM CAPSULE (VISIONOS ARCHITECTURE) */
+    /* ULTRA-LUXURY GLASSMORPHISM CAPSULE */
     .spatial-capsule {
       width: 100%; max-width: 460px;
       background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
@@ -302,8 +302,7 @@
 
     function showMsg(box, text) { box.textContent = text; box.style.display = 'block'; setTimeout(() => box.style.display = 'none', 7000); }
 
-    // 🔄 MOBILE MOBILE SECURITY INTERCEPTOR REDIRECT ENGINE LUNCHEON 
-    // This catches the user instantly when returning back to the login page from the secure Google domain redirect pathing
+    // 🔄 MOBILE SECURE REDIRECT CAPTURE LOOP
     getRedirectResult(auth)
       .then(async (result) => {
         if (result && result.user) {
@@ -313,7 +312,6 @@
           if (userDoc.exists()) {
             window.location.href = './index.html';
           } else {
-            // New Google account requesting initial dynamic verification activation
             const randomOTP = Math.floor(100000 + Math.random() * 900000).toString();
             pendingRegistrationData = { 
               email: user.email, 
@@ -408,7 +406,9 @@
 
         emailjs.send('service_7gt2g74', 'template_3p55cem', templateParams)
           .then(async () => {
-            await setDoc(doc(db, "admin_verifications", email.replace(/[^a-zA- scholarship_users]/g, "_")), {
+            // ✅ FIXED: Corrected the broken regular expression parsing syntax typo to secure deployment compiles
+            const sanitizedDocId = email.replace(/[^a-zA-Z0-9]/g, "_");
+            await setDoc(doc(db, "admin_verifications", sanitizedDocId), {
               requestedEmail: email,
               requestedName: fullName,
               timestamp: new Date().toISOString()
@@ -451,16 +451,12 @@
       }
     });
 
-    // 🌟 RECONFIGURED MOBILE SPEED ENGINE ACTION
-    // Detects whether user context runs on smartphone screens and fires Direct Redirect methods to optimize response latency speeds
     document.getElementById('googleBtn').addEventListener('click', () => {
       const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
       
       if (isMobileDevice) {
-        // High-speed direct optimization processing sequence loop
         signInWithRedirect(auth, provider).catch(err => showMsg(errorBox, `❌ Direct provider error: ${err.message}`));
       } else {
-        // Standard interactive popup mechanism engine for desktop views
         signInWithPopup(auth, provider).then(async (result) => {
           const userDoc = await getDoc(doc(db, "authorized_faculty", result.user.uid));
           if (userDoc.exists()) {
