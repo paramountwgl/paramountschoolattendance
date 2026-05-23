@@ -155,7 +155,7 @@
 <body>
 
 <div id="loadingShield">
-    <div><i class="fas fa-shield-alt fa-spin" style="margin-right:10px;"></i> Validating Faculty Token Clearance....</div>
+    <div><i class="fas fa-shield-alt fa-spin" style="margin-right:10px;"></i> Validating Faculty Token Clearance...</div>
 </div>
 
 <header>
@@ -262,12 +262,15 @@
 
   const loadingShield = document.getElementById('loadingShield');
 
+  // Listen for user state mutations
   onAuthStateChanged(auth, async (user) => {
     if (user) {
       try {
+        // Cross-examine the UID signature against the authorized white-list table
         const userDoc = await getDoc(doc(db, "authorized_faculty", user.uid));
         
         if (userDoc.exists()) {
+          // Relieve shield blocker smoothly
           loadingShield.style.display = 'none';
         } else {
           alert("🔒 Access Rejected: Your account has not been whitelisted by the system administrator.");
@@ -279,10 +282,12 @@
         window.location.href = './staff-login.html';
       }
     } else {
+      // Clear navigation bypass attempts immediately
       window.location.href = './staff-login.html';
     }
   });
 
+  // End dynamic session tokens safely
   document.getElementById('logoutActionBtn').addEventListener('click', async () => {
       if (confirm("Are you sure you want to end your dashboard session?")) {
           await signOut(auth);
