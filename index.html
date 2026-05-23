@@ -6,7 +6,7 @@
     <title>Paramount School | Executive Hub</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="icon" type="image/png" href="logo.png">
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root { 
             --p-green: #004d26; 
@@ -39,11 +39,19 @@
         .logo-img { 
             height: clamp(40px, 12vw, 60px); 
             width: auto;
-            aspect-ratio: 1/1; /* Prevents layout shifting during image load */
+            aspect-ratio: 1/1;
             object-fit: contain;
         }
         .header-title h1 { font-family: 'Cinzel', serif; color: white; margin: 0; font-size: clamp(0.9rem, 4vw, 1.4rem); letter-spacing: 1px; }
         .header-title p { color: var(--p-gold); margin: 0; font-size: 0.6rem; font-weight: 700; text-transform: uppercase; }
+
+        /* HEADER CONTROLS INTERFACE BUILD */
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            position: relative;
+        }
 
         /* PREMIUM LOGOUT BUTTON */
         .logout-btn {
@@ -65,6 +73,85 @@
             background: var(--p-gold);
             color: var(--p-green);
         }
+
+        /* 🌟 LUXURY USER PROFILE TRIGGER AVATAR */
+        .profile-trigger {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 2px solid var(--p-gold);
+            background: linear-gradient(135deg, #002b12 0%, #004d26 100%);
+            color: var(--p-gold);
+            font-weight: 800;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .profile-trigger:hover {
+            transform: scale(1.08);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+        }
+        .profile-trigger img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* 🌟 ULTRA-PREMIUM DROPDOWN GLASS CARD */
+        .profile-dropdown {
+            position: absolute;
+            top: 60px;
+            right: 0;
+            width: 290px;
+            background: rgba(12, 38, 22, 0.85);
+            border: 1px solid rgba(255, 215, 0, 0.25);
+            border-top: 2px solid var(--p-gold);
+            border-radius: 24px;
+            padding: 25px 20px;
+            backdrop-filter: blur(25px) saturate(150%);
+            -webkit-backdrop-filter: blur(25px) saturate(150%);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 30px rgba(0,77,38,0.2);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            z-index: 2000;
+            transform: translateY(-10px);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .profile-dropdown.active {
+            display: flex;
+            transform: translateY(0);
+            opacity: 1;
+        }
+        .dropdown-avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            border: 2px solid var(--p-gold);
+            background: #020804;
+            color: var(--p-gold);
+            font-size: 1.8rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            margin-bottom: 14px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+        }
+        .dropdown-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .dropdown-name { font-size: 1rem; font-weight: 800; color: #ffffff; margin-bottom: 4px; letter-spacing: 0.5px; }
+        .dropdown-role { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; color: var(--p-gold); letter-spacing: 1.5px; background: rgba(255, 215, 0, 0.1); padding: 4px 12px; border-radius: 20px; margin-bottom: 14px; }
+        .dropdown-divider { width: 100%; border-bottom: 1px solid rgba(255,255,255,0.08); margin-bottom: 14px; }
+        .dropdown-email-label { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; color: #64748b; letter-spacing: 1px; margin-bottom: 2px; }
+        .dropdown-email { font-size: 0.8rem; font-weight: 600; color: #cbd5e1; font-family: monospace; word-break: break-all; }
 
         /* FLUID HUB GRID */
         .hub-grid {
@@ -95,40 +182,16 @@
             gap: 12px;
         }
 
-        /* Smooth hover enhancements for premium layout desktop environments */
         @media (min-width: 768px) {
             .hub-card:hover { transform: translateY(-3px); box-shadow: 0 12px 24px rgba(0,0,0,0.08); }
         }
-
         .hub-card:active { transform: scale(0.95); background: #f0f0f0; }
-
-        .hub-card i {
-            font-size: 2.2rem;
-            color: var(--p-green);
-            filter: drop-shadow(0 4px 8px rgba(0, 77, 38, 0.1));
-        }
-
-        .hub-card span {
-            font-family: 'Cinzel', serif;
-            font-size: 0.85rem;
-            font-weight: 800;
-            color: var(--p-green);
-            line-height: 1.2;
-        }
-
-        .hub-card small {
-            font-size: 0.55rem;
-            font-weight: 700;
-            color: #999;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
+        .hub-card i { font-size: 2.2rem; color: var(--p-green); filter: drop-shadow(0 4px 8px rgba(0, 77, 38, 0.1)); }
+        .hub-card span { font-family: 'Cinzel', serif; font-size: 0.85rem; font-weight: 800; color: var(--p-green); line-height: 1.2; }
+        .hub-card small { font-size: 0.55rem; font-weight: 700; color: #999; text-transform: uppercase; letter-spacing: 1px; }
 
         /* HOME BUTTON HIGHLIGHT */
-        .home-card {
-            background: var(--p-blue);
-            border-color: var(--p-gold);
-        }
+        .home-card { background: var(--p-blue); border-color: var(--p-gold); }
         .home-card i, .home-card span { color: var(--p-gold) !important; }
 
         /* LOADING SHIELD SCREEN OVERLAY */
@@ -139,13 +202,8 @@
             font-size: 1.2rem; font-weight: 600; font-family: 'Montserrat', sans-serif;
         }
 
-        /* MOBILE SPECIFIC OVERRIDES */
         @media (max-width: 480px) {
-            .hub-grid {
-                grid-template-columns: repeat(2, 1fr); /* Clean 2x2 grid tracking alignment */
-                gap: 12px;
-                padding: 12px;
-            }
+            .hub-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 12px; }
             .hub-card { padding: 20px 5px; }
             .hub-card i { font-size: 1.8rem; }
             .hub-card span { font-size: 0.75rem; }
@@ -166,9 +224,23 @@
             <p>Faculty Portal</p>
         </div>
     </div>
-    <button type="button" class="logout-btn" id="logoutActionBtn">
-        <i class="fas fa-sign-out-alt"></i> Logout
-    </button>
+    
+    <div class="header-controls">
+        <button type="button" class="logout-btn" id="logoutActionBtn">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+        
+        <div class="profile-trigger" id="profileTriggerBtn">--</div>
+        
+        <div class="profile-dropdown" id="profileCardDropdown">
+            <div class="dropdown-avatar" id="dropdownAvatarBox">--</div>
+            <div class="dropdown-name" id="profileActiveName">Loading Profile...</div>
+            <div class="dropdown-role">Faculty Member</div>
+            <div class="dropdown-divider"></div>
+            <div class="dropdown-email-label">Registered Email</div>
+            <div class="dropdown-email" id="profileActiveEmail">...</div>
+        </div>
+    </div>
 </header>
 
 <div class="hub-grid">
@@ -261,16 +333,36 @@
   const db = getFirestore(app);
 
   const loadingShield = document.getElementById('loadingShield');
+  const profileTriggerBtn = document.getElementById('profileTriggerBtn');
+  const profileCardDropdown = document.getElementById('profileCardDropdown');
+  const dropdownAvatarBox = document.getElementById('dropdownAvatarBox');
+  const profileActiveName = document.getElementById('profileActiveName');
+  const profileActiveEmail = document.getElementById('profileActiveEmail');
 
-  // Listen for user state mutations
   onAuthStateChanged(auth, async (user) => {
     if (user) {
       try {
-        // Cross-examine the UID signature against the authorized white-list table
         const userDoc = await getDoc(doc(db, "authorized_faculty", user.uid));
         
         if (userDoc.exists()) {
-          // Relieve shield blocker smoothly
+          const userData = userDoc.data();
+          const displayName = userData.name || "Faculty Teacher";
+          const displayEmail = userData.email || user.email;
+          const initialLetter = displayName.charAt(0).toUpperCase();
+
+          // 1. Populate Text Metrics into card components
+          profileActiveName.textContent = displayName;
+          profileActiveEmail.textContent = displayEmail;
+
+          // 2. Resolve Profile Avatar Assets (Google photo vs Monogram initial)
+          if (user.photoURL) {
+            profileTriggerBtn.innerHTML = `<img src="${user.photoURL}" alt="User Profile">`;
+            dropdownAvatarBox.innerHTML = `<img src="${user.photoURL}" alt="User Profile">`;
+          } else {
+            profileTriggerBtn.textContent = initialLetter;
+            dropdownAvatarBox.textContent = initialLetter;
+          }
+
           loadingShield.style.display = 'none';
         } else {
           alert("🔒 Access Rejected: Your account has not been whitelisted by the system administrator.");
@@ -282,12 +374,38 @@
         window.location.href = './staff-login.html';
       }
     } else {
-      // Clear navigation bypass attempts immediately
       window.location.href = './staff-login.html';
     }
   });
 
-  // End dynamic session tokens safely
+  // 🌟 Toggle Profile Dropdown Interactive Animations 
+  profileTriggerBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (!profileCardDropdown.classList.contains('active')) {
+          profileCardDropdown.style.display = 'flex';
+          setTimeout(() => profileCardDropdown.classList.add('active'), 10);
+      } else {
+          closeDropdown();
+      }
+  });
+
+  // Close dropdown when clicking outside the panel boundaries
+  document.addEventListener('click', (e) => {
+      if (profileCardDropdown.classList.contains('active') && !profileCardDropdown.contains(e.target)) {
+          closeDropdown();
+      }
+  });
+
+  function closeDropdown() {
+      profileCardDropdown.classList.remove('active');
+      setTimeout(() => {
+          if(!profileCardDropdown.classList.contains('active')) {
+              profileCardDropdown.style.display = 'none';
+          }
+      }, 300);
+  }
+
+  // End active authentication session contexts
   document.getElementById('logoutActionBtn').addEventListener('click', async () => {
       if (confirm("Are you sure you want to end your dashboard session?")) {
           await signOut(auth);
