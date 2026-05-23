@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Faculty Portal | Paramount School</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Cinzel:wght@700&display=swap" rel="stylesheet">
+  <style>
+    :root { --p-green: #004d26; --p-gold: #ffd700; --p-blue: #003366; --white: #ffffff; }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Montserrat', sans-serif; }
+    body { background-color: #0c1a12; color: white; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; }
+    
+    .auth-panel { width: 100%; max-width: 480px; background: rgba(255, 255, 255, 0.03); border: 2px solid var(--p-gold); border-radius: 24px; padding: 35px 30px; backdrop-filter: blur(20px); text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
+    .portal-title { font-family: 'Cinzel', serif; font-size: 1.6rem; color: var(--p-gold); margin-bottom: 6px; }
+    .portal-subtitle { font-size: 0.85rem; color: #cbd5e1; margin-bottom: 25px; }
+    
+    .google-auth-btn { width: 100%; padding: 14px; background: #ffffff; border: none; border-radius: 12px; color: #1f2937; font-size: 0.95rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 25px; transition: 0.3s; }
+    .google-auth-btn:hover { background: #f1f5f9; transform: translateY(-2px); }
+    .divider { display: flex; align-items: center; text-align: center; margin-bottom: 25px; color: #64748b; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1.5px; }
+    .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+    .divider:not(:empty)::before { margin-right: .75em; }
+    .divider:not(:empty)::after { margin-left: .75em; }
+
+    .form-group { margin-bottom: 16px; text-align: left; }
+    .form-group label { display: block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: #ffd700; margin-bottom: 6px; font-weight: 600; }
+    .input-wrapper input { width: 100%; padding: 12px 16px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 12px; color: white; font-size: 0.9rem; outline: none; transition: 0.3s; }
+    .input-wrapper input:focus { border-color: var(--p-gold); background: rgba(255, 255, 255, 0.1); }
+    
+    .action-btn { width: 100%; padding: 14px; background: linear-gradient(135deg, var(--p-green), #006633); border: 1px solid var(--p-gold); border-radius: 12px; color: white; font-size: 0.95rem; font-weight: 600; cursor: pointer; margin-top: 10px; transition: 0.3s; }
+    .action-btn:hover { transform: translateY(-2px); background: linear-gradient(135deg, #006633, var(--p-green)); box-shadow: 0 0 15px rgba(255, 215, 0, 0.2); }
+    
+    .toggle-link { margin-top: 25px; font-size: 0.85rem; color: #cbd5e1; }
+    .toggle-link span { color: var(--p-gold); cursor: pointer; font-weight: 600; text-decoration: underline; }
+    .msg-box { padding: 12px; border-radius: 12px; font-size: 0.85rem; margin-bottom: 16px; display: none; text-align: left; line-height: 1.4; }
+    .error { background: rgba(239, 68, 68, 0.15); border: 1px solid #ef4444; color: #fca5a5; }
+    .success { background: rgba(16, 185, 129, 0.15); border: 1px solid #10b981; color: #a7f3d0; }
+    
+    /* Verification overlay view modal */
+    .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: flex; align-items: center; justify-content: center; display: none; z-index: 1000; }
+    .modal-content { background: #002b12; border: 2px solid var(--p-gold); border-radius: 20px; padding: 30px; max-width: 400px; width: 90%; text-align: center; }
+  </style>
+</head>
+<body>
+
+  <div class="auth-panel">
+    <h2 class="portal-title" id="titleText">Faculty Hub Access</h2>
+    <p class="portal-subtitle" id="subtitleText">Sign in with your verified institutional parameters</p>
+
+    <div class="msg-box error" id="errorBox"></div>
+    <div class="msg-box success" id="successBox"></div>
+
+    <button type="button" class="google-auth-btn" id="googleBtn">
+      <svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v3.92h6.61c-.28 1.48-1.12 2.73-2.38 3.58v3h3.84c2.24-2.06 3.67-5.1 3.67-8.43z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.84-3c-1.06.72-2.42 1.16-4.09 1.16-3.15 0-5.82-2.13-6.77-5H1.27v3.1A12 12 0 0012 24z"/><path fill="#FBBC05" d="M5.23 14.25A7.17 7.17 0 014.8 12c0-.79.13-1.57.38-2.31V6.59H1.27A11.95 11.95 0 000 12c0 1.92.45 3.74 1.27 5.41l3.96-3.16z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.43-3.43C17.95 1.19 15.24 0 12 0A12 12 0 001.27 6.59l3.96 3.16c.95-2.87 3.62-5 6.77-5z"/></svg>
+      Continue with Google
+    </button>
+
+    <div class="divider">Or Manage Credentials</div>
+
+    <form id="authForm">
+      <div id="registerFields" style="display: none;">
+        <div class="form-group">
+          <label>Full Name</label>
+          <div class="input-wrapper"><input type="text" id="fullName" placeholder="Teacher Name" /></div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Institutional Email</label>
+        <div class="input-wrapper"><input type="email" id="email" placeholder="name@paramountschooledu.in" required /></div>
+      </div>
+
+      <div class="form-group">
+        <label>Portal Password</label>
+        <div class="input-wrapper"><input type="password" id="password" placeholder="••••••••" required /></div>
+      </div>
+
+      <button type="submit" class="action-btn" id="submitBtn">Verify Access Token</button>
+    </form>
+
+    <p class="toggle-link" style="margin-top:15px;">
+      <span id="forgotBtn" style="font-size:0.8rem;">Forgot Password / Recover Account</span>
+    </p>
+
+    <p class="toggle-link" id="toggleViewBox">
+      Not registered on this console? <span id="toggleBtn">Request Enrollment</span>
+    </p>
+  </div>
+
+  <!-- Security Verification Gateway Challenge Modal UI -->
+  <div class="modal" id="verificationModal">
+    <div class="modal-content">
+      <h3 style="color:var(--p-gold); margin-bottom:10px;">Security Verification Challenge</h3>
+      <p style="font-size:0.85rem; margin-bottom:20px; color:#cbd5e1;">A secure dynamic key has been forwarded to the supervisor's dashboard desk at <strong>admin@paramountschooledu.in</strong>. Enter the matching passcode sequence below to complete confirmation.</p>
+      <div class="form-group">
+        <label>6-Digit Administration Key</label>
+        <div class="input-wrapper"><input type="text" id="verificationCodeInput" maxlength="6" style="text-align:center; font-size:1.5rem; letter-spacing:4px;" placeholder="000000"></div>
+      </div>
+      <button type="button" class="action-btn" id="confirmVerificationBtn">Verify & Authorize Profile</button>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, sendPasswordResetEmail, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+    import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+
+    // Standard Firebase configuration values from your digital library app setup
+    const firebaseConfig = {
+      apiKey: "AIzaSyAzUOh21Ec31kKmf42Tcw-xs4fVZyPh2fM", 
+      authDomain: "paramount-school-d55bc.firebaseapp.com",
+      databaseURL: "https://paramount-school-d55bc-default-rtdb.firebaseio.com",
+      projectId: "paramount-school-d55bc",
+      storageBucket: "paramount-school-d55bc.firebasestorage.app",
+      messagingSenderId: "130979432562",
+      appId: "1:130979432562:web:4cd94787b23f9daba51aeb"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const provider = new GoogleAuthProvider();
+
+    let isLoginMode = true;
+    let pendingRegistrationData = null;
+
+    const errorBox = document.getElementById('errorBox');
+    const successBox = document.getElementById('successBox');
+    const registerFields = document.getElementById('registerFields');
+    const titleText = document.getElementById('titleText');
+    const subtitleText = document.getElementById('subtitleText');
+    const submitBtn = document.getElementById('submitBtn');
+    const toggleBtn = document.getElementById('toggleBtn');
+    const toggleViewBox = document.getElementById('toggleViewBox');
+    const verificationModal = document.getElementById('verificationModal');
+
+    function showMsg(box, text) { box.textContent = text; box.style.display = 'block'; setTimeout(() => box.style.display = 'none', 7000); }
+
+    // Toggle logic switching between login profile interface views
+    toggleBtn.addEventListener('click', () => {
+      isLoginMode = !isLoginMode;
+      errorBox.style.display = 'none';
+      successBox.style.display = 'none';
+      if(isLoginMode) {
+        titleText.textContent = "Faculty Hub Access";
+        subtitleText.textContent = "Sign in with your verified institutional parameters";
+        submitBtn.textContent = "Verify Access Token";
+        registerFields.style.display = 'none';
+        toggleViewBox.innerHTML = 'Not registered on this console? <span id="toggleBtn">Request Enrollment</span>';
+      } else {
+        titleText.textContent = "Faculty Registration";
+        subtitleText.textContent = "Apply credentials below for custom administrative enrollment verification";
+        submitBtn.textContent = "Request Access Token";
+        registerFields.style.display = 'block';
+        toggleViewBox.innerHTML = 'Already authorized? <span id="toggleBtn">Login Here</span>';
+      }
+      // Re-bind click event to runtime generated HTML element
+      document.getElementById('toggleBtn').addEventListener('click', arguments.callee);
+    });
+
+    // Forgot Password Link Mechanism
+    document.getElementById('forgotBtn').addEventListener('click', () => {
+      const emailVal = document.getElementById('email').value.trim();
+      if(!emailVal) {
+        showMsg(errorBox, "❌ Please enter your email address into the standard field first to trigger system recovery keys.");
+        return;
+      }
+      sendPasswordResetEmail(auth, emailVal)
+        .then(() => showMsg(successBox, "🎉 Secure automated password reset hyperlink successfully dispatched to your email inbox! Check junk folder if unseen."))
+        .catch(err => showMsg(errorBox, `❌ Recovery System Fault: ${err.message.replace("Firebase: ", "")}`));
+    });
+
+    // Main Submit Action Interceptor Logic Flow
+    document.getElementById('authForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const fullName = document.getElementById('fullName').value.trim();
+
+      if (isLoginMode) {
+        // Log-in execution architecture flow validation step 
+        try {
+          const userCredential = await signInWithEmailAndPassword(auth, email, password);
+          // Check if user entry explicitly exists within authorized personnel collection tables
+          const userDoc = await getDoc(doc(db, "authorized_faculty", userCredential.user.uid));
+          if (userDoc.exists()) {
+            window.location.href = './faculty-hub.html';
+          } else {
+            await auth.signOut();
+            showMsg(errorBox, "❌ Authentication validation failure: Account profile is not whitelisted by school administration.");
+          }
+        } catch(err) {
+          showMsg(errorBox, "❌ Credentials signature misaligned. Re-check passwords parameters.");
+        }
+      } else {
+        // Step 1 of Custom Multi-Factor Enrollment: Generate administrative authorization request token matching code values
+        const randomOTP = Math.floor(100000 + Math.random() * 900000).toString();
+        pendingRegistrationData = { email, password, fullName, otp: randomOTP };
+
+        try {
+          // Write directly to a global notifications collection table inside Firestore. 
+          // You will immediately see this random OTP code under the "admin_verifications" document collection in your Firebase dashboard console!
+          await setDoc(doc(db, "admin_verifications", email.replace(/[^a-zA-Z0-9]/g, "_")), {
+            requestedEmail: email,
+            requestedName: fullName,
+            activationOTP: randomOTP,
+            timestamp: new Date().toISOString()
+          });
+          
+          verificationModal.style.display = 'flex';
+        } catch (err) {
+          showMsg(errorBox, `❌ Application error initializing gateway checks: ${err.message}`);
+        }
+      }
+    });
+
+    // Step 2: Form validation matching key entries inside generated workspace challenges
+    document.getElementById('confirmVerificationBtn').addEventListener('click', async () => {
+      const userEnteredCode = document.getElementById('verificationCodeInput').value.trim();
+      if (userEnteredCode === pendingRegistrationData.otp) {
+        try {
+          const userCredential = await createUserWithEmailAndPassword(auth, pendingRegistrationData.email, pendingRegistrationData.password);
+          
+          // Whitelist profile entry fields seamlessly inside global Firestore architecture tables
+          await setDoc(doc(db, "authorized_faculty", userCredential.user.uid), {
+            name: pendingRegistrationData.fullName,
+            email: pendingRegistrationData.email,
+            role: "Faculty Member",
+            enrolledAt: new Date().toISOString()
+          });
+
+          verificationModal.style.display = 'none';
+          showMsg(successBox, "🎉 Verified! Account registration successfully logged. Returning to access portal screen views...");
+          setTimeout(() => window.location.href = './faculty-hub.html', 1500);
+        } catch(err) {
+          showMsg(errorBox, `❌ Profile instantiation system errors occurring: ${err.message}`);
+          verificationModal.style.display = 'none';
+        }
+      } else {
+        alert("❌ Entered key code sequence is invalid. Confirm data input entries match exact code signature given.");
+      }
+    });
+
+    // Google Sign-In Gatekeeper
+    document.getElementById('googleBtn').addEventListener('click', () => {
+      signInWithPopup(auth, provider).then(async (result) => {
+        const userDoc = await getDoc(doc(db, "authorized_faculty", result.user.uid));
+        if (userDoc.exists()) {
+          window.location.href = './faculty-hub.html';
+        } else {
+          // New Google users need an administrative doc entry first
+          const randomOTP = Math.floor(100000 + Math.random() * 900000).toString();
+          pendingRegistrationData = { 
+            email: result.user.email, 
+            uid: result.user.uid, 
+            fullName: result.user.displayName || "Faculty Teacher", 
+            otp: randomOTP,
+            isGoogle: true
+          };
+          
+          await setDoc(doc(db, "admin_verifications", result.user.email.replace(/[^a-zA-Z0-9]/g, "_")), {
+            requestedEmail: result.user.email,
+            requestedName: pendingRegistrationData.fullName,
+            activationOTP: randomOTP,
+            timestamp: new Date().toISOString()
+          });
+          
+          verificationModal.style.display = 'flex';
+        }
+      }).catch(err => showMsg(errorBox, `❌ Provider login failures logging user profile entry parameters: ${err.message}`));
+    });
+  </script>
+</body>
+</html>
