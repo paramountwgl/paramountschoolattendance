@@ -284,10 +284,6 @@
     const provider = new GoogleAuthProvider();
     provider.setCustomParameters({ prompt: 'select_account' });
 
-    window.addEventListener('load', () => {
-      emailjs.init({ publicKey: "b7YyWsmcBvZzSArYg" });
-    });
-
     let isLoginMode = true;
     let pendingRegistrationData = null;
 
@@ -302,15 +298,19 @@
 
     function showMsg(box, text) { box.textContent = text; box.style.display = 'block'; setTimeout(() => box.style.display = 'none', 7000); }
 
-    // 🌟 MOVED TO TOP: Immediate intercept listener loop capturing mobile landing states safely
-    getRedirectResult(auth)
-      .then(async (result) => {
+    // 🌟 UNIFIED LIFECYCLE CONTROLLER ENGINE: Handles mobile landing operations flawlessly
+    async function initAuthFlow() {
+      // Initialize external communication modules safely
+      emailjs.init({ publicKey: "b7YyWsmcBvZzSArYg" });
+
+      try {
+        const result = await getRedirectResult(auth);
         if (result && result.user) {
           const user = result.user;
           const userDoc = await getDoc(doc(db, "authorized_faculty", user.uid));
           
           if (userDoc.exists()) {
-            window.location.href = './index.html';
+            window.location.replace('./index.html');
           } else {
             const randomOTP = Math.floor(100000 + Math.random() * 900000).toString();
             pendingRegistrationData = { 
@@ -332,12 +332,19 @@
               .catch(err => showMsg(errorBox, `❌ Service tracking delivery fault: ${err.message}`));
           }
         }
-      })
-      .catch((err) => {
+      } catch (err) {
         if (err.code !== 'auth/redirect-cancelled-by-user') {
-          showMsg(errorBox, `❌ Redirect handling failure: ${err.message}`);
+          showMsg(errorBox, `❌ Mobile Redirect Capture Fault: ${err.message}`);
         }
-      });
+      }
+    }
+
+    // Run lifecycle controllers upon core render clearances
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initAuthFlow);
+    } else {
+      initAuthFlow();
+    }
 
     function handleFormToggle() {
       isLoginMode = !isLoginMode;
@@ -386,7 +393,7 @@
           const userCredential = await signInWithEmailAndPassword(auth, email, password);
           const userDoc = await getDoc(doc(db, "authorized_faculty", userCredential.user.uid));
           if (userDoc.exists()) {
-            window.location.href = './index.html';
+            window.location.replace('./index.html');
           } else {
             await auth.signOut();
             showMsg(errorBox, "❌ Access Denied: This account profile is not whitelisted inside the Faculty Registry.");
@@ -406,7 +413,7 @@
 
         emailjs.send('service_7gt2g74', 'template_3p55cem', templateParams)
           .then(async () => {
-            // ✅ FIXED LOGIC TYPO: Escaped sequence regex parameter format clean
+            // ✅ SANITIZED PATTERN: Corrected alphanumeric parsing mapping sequence parameters
             const sanitizedDocId = email.replace(/[^a-zA-Z0-9]/g, "_");
             await setDoc(doc(db, "admin_verifications", sanitizedDocId), {
               requestedEmail: email,
@@ -441,7 +448,7 @@
 
           closeModal();
           showMsg(successBox, "🎉 Profile Whitelisted! Registration complete. Transferring your terminal context to dashboard views...");
-          setTimeout(() => window.location.href = './index.html', 1500);
+          setTimeout(() => window.location.replace('./index.html'), 1500);
         } catch(err) {
           showMsg(errorBox, `❌ Error creating account database entry block: ${err.message}`);
           closeModal();
@@ -460,7 +467,7 @@
         signInWithPopup(auth, provider).then(async (result) => {
           const userDoc = await getDoc(doc(db, "authorized_faculty", result.user.uid));
           if (userDoc.exists()) {
-            window.location.href = './index.html';
+            window.location.replace('./index.html');
           } else {
             const randomOTP = Math.floor(100000 + Math.random() * 900000).toString();
             pendingRegistrationData = { 
