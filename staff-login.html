@@ -265,7 +265,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, sendPasswordResetEmail, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, signInWithRedirect, getRedirectResult, sendPasswordResetEmail, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
     import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -282,8 +282,8 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
     const provider = new GoogleAuthProvider();
+    provider.setCustomParameters({ prompt: 'select_account' });
 
-    // ✅ FIXED: Wrapped inside an initialization safety lifecycle listener to eliminate ReferenceError crashes
     window.addEventListener('load', () => {
       emailjs.init({ publicKey: "b7YyWsmcBvZzSArYg" });
     });
@@ -301,6 +301,45 @@
     const verificationModal = document.getElementById('verificationModal');
 
     function showMsg(box, text) { box.textContent = text; box.style.display = 'block'; setTimeout(() => box.style.display = 'none', 7000); }
+
+    // 🔄 MOBILE MOBILE SECURITY INTERCEPTOR REDIRECT ENGINE LUNCHEON 
+    // This catches the user instantly when returning back to the login page from the secure Google domain redirect pathing
+    getRedirectResult(auth)
+      .then(async (result) => {
+        if (result && result.user) {
+          const user = result.user;
+          const userDoc = await getDoc(doc(db, "authorized_faculty", user.uid));
+          
+          if (userDoc.exists()) {
+            window.location.href = './index.html';
+          } else {
+            // New Google account requesting initial dynamic verification activation
+            const randomOTP = Math.floor(100000 + Math.random() * 900000).toString();
+            pendingRegistrationData = { 
+              email: user.email, 
+              uid: user.uid, 
+              fullName: user.displayName || "Google Faculty User", 
+              otp: randomOTP,
+              isGoogle: true
+            };
+            
+            const templateParams = {
+              teacher_name: pendingRegistrationData.fullName,
+              teacher_email: pendingRegistrationData.email,
+              otp_code: randomOTP
+            };
+
+            emailjs.send('service_7gt2g74', 'template_3p55cem', templateParams)
+              .then(() => { openModal(); })
+              .catch(err => showMsg(errorBox, `❌ Service tracking delivery fault: ${err.message}`));
+          }
+        }
+      })
+      .catch((err) => {
+        if (err.code !== 'auth/redirect-cancelled-by-user') {
+          showMsg(errorBox, `❌ Redirect handling failure: ${err.message}`);
+        }
+      });
 
     function handleFormToggle() {
       isLoginMode = !isLoginMode;
@@ -369,7 +408,7 @@
 
         emailjs.send('service_7gt2g74', 'template_3p55cem', templateParams)
           .then(async () => {
-            await setDoc(doc(db, "admin_verifications", email.replace(/[^a-zA-Z0-9]/g, "_")), {
+            await setDoc(doc(db, "admin_verifications", email.replace(/[^a-zA- scholarship_users]/g, "_")), {
               requestedEmail: email,
               requestedName: fullName,
               timestamp: new Date().toISOString()
@@ -412,34 +451,42 @@
       }
     });
 
+    // 🌟 RECONFIGURED MOBILE SPEED ENGINE ACTION
+    // Detects whether user context runs on smartphone screens and fires Direct Redirect methods to optimize response latency speeds
     document.getElementById('googleBtn').addEventListener('click', () => {
-      signInWithPopup(auth, provider).then(async (result) => {
-        const userDoc = await getDoc(doc(db, "authorized_faculty", result.user.uid));
-        if (userDoc.exists()) {
-          window.location.href = './index.html';
-        } else {
-          const randomOTP = Math.floor(100000 + Math.random() * 900000).toString();
-          pendingRegistrationData = { 
-            email: result.user.email, 
-            uid: result.user.uid, 
-            fullName: result.user.displayName || "Google Faculty User", 
-            otp: randomOTP,
-            isGoogle: true
-          };
-          
-          const templateParams = {
-            teacher_name: pendingRegistrationData.fullName,
-            teacher_email: pendingRegistrationData.email,
-            otp_code: randomOTP
-          };
+      const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      
+      if (isMobileDevice) {
+        // High-speed direct optimization processing sequence loop
+        signInWithRedirect(auth, provider).catch(err => showMsg(errorBox, `❌ Direct provider error: ${err.message}`));
+      } else {
+        // Standard interactive popup mechanism engine for desktop views
+        signInWithPopup(auth, provider).then(async (result) => {
+          const userDoc = await getDoc(doc(db, "authorized_faculty", result.user.uid));
+          if (userDoc.exists()) {
+            window.location.href = './index.html';
+          } else {
+            const randomOTP = Math.floor(100000 + Math.random() * 900000).toString();
+            pendingRegistrationData = { 
+              email: result.user.email, 
+              uid: result.user.uid, 
+              fullName: result.user.displayName || "Google Faculty User", 
+              otp: randomOTP,
+              isGoogle: true
+            };
+            
+            const templateParams = {
+              teacher_name: pendingRegistrationData.fullName,
+              teacher_email: pendingRegistrationData.email,
+              otp_code: randomOTP
+            };
 
-          emailjs.send('service_7gt2g74', 'template_3p55cem', templateParams)
-            .then(async () => {
-              openModal();
-            })
-            .catch(err => showMsg(errorBox, `❌ Service tracking delivery fault: ${err.message}`));
-        }
-      }).catch(err => showMsg(errorBox, `❌ Provider logging interaction fault: ${err.message}`));
+            emailjs.send('service_7gt2g74', 'template_3p55cem', templateParams)
+              .then(async () => { openModal(); })
+              .catch(err => showMsg(errorBox, `❌ Service tracking delivery fault: ${err.message}`));
+          }
+        }).catch(err => showMsg(errorBox, `❌ Provider logging interaction fault: ${err.message}`));
+      }
     });
 
     function openModal() {
