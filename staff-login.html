@@ -191,6 +191,8 @@
     .luxury-overlay.active { opacity: 1; }
     .luxury-overlay.active .luxury-overlay-card { transform: scale(1) translateY(0); }
   </style>
+  
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 </head>
 <body>
 
@@ -281,7 +283,10 @@
     const db = getFirestore(app);
     const provider = new GoogleAuthProvider();
 
-    emailjs.init({ publicKey: "b7YyWsmcBvZzSArYg" });
+    // ✅ FIXED: Wrapped inside an initialization safety lifecycle listener to eliminate ReferenceError crashes
+    window.addEventListener('load', () => {
+      emailjs.init({ publicKey: "b7YyWsmcBvZzSArYg" });
+    });
 
     let isLoginMode = true;
     let pendingRegistrationData = null;
@@ -446,7 +451,6 @@
       setTimeout(() => verificationModal.style.display = 'none', 400);
     }
 
-    // CINEMATIC HYPER-DYNAMIC STAR ENGINE (Fixed line spacing parameters string error syntax)
     const starfield = document.getElementById('starfield');
     const starCount = 75;
     for (let i = 0; i < starCount; i++) {
@@ -460,7 +464,6 @@
       starfield.appendChild(star);
     }
 
-    // ADVANCED FLUID GYROSCOPIC INTERACTIVE OVERLAY MATRIX
     const consoleContainer = document.getElementById('interactiveConsole');
     document.addEventListener('mousemove', (e) => {
       const xInfluence = (window.innerWidth / 2 - e.pageX) / 35;
