@@ -183,7 +183,7 @@
           const userCredential = await signInWithEmailAndPassword(auth, email, password);
           const userDoc = await getDoc(doc(db, "authorized_faculty", userCredential.user.uid));
           if (userDoc.exists()) {
-            window.location.href = './faculty-hub.html';
+            window.location.href = './staff-login.html';
           } else {
             await auth.signOut();
             showMsg(errorBox, "❌ Access Denied: This account profile is not whitelisted inside the Faculty Registry.");
@@ -237,7 +237,7 @@
 
           verificationModal.style.display = 'none';
           showMsg(successBox, "🎉 Profile Whitelisted! Registration complete. Transferring your terminal context to dashboard views...");
-          setTimeout(() => window.location.href = './faculty-hub.html', 1500);
+          setTimeout(() => window.location.href = './staff-login.html', 1500);
         } catch(err) {
           showMsg(errorBox, `❌ Error creating account database entry block: ${err.message}`);
           verificationModal.style.display = 'none';
@@ -251,7 +251,7 @@
       signInWithPopup(auth, provider).then(async (result) => {
         const userDoc = await getDoc(doc(db, "authorized_faculty", result.user.uid));
         if (userDoc.exists()) {
-          window.location.href = './faculty-hub.html';
+          window.location.href = './staff-login.html';
         } else {
           const randomOTP = Math.floor(100000 + Math.random() * 900000).toString();
           pendingRegistrationData = { 
