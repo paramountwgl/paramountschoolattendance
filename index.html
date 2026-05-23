@@ -22,6 +22,8 @@
             margin: 0; 
             background: #f4f7f6;
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
         /* RESPONSIVE HEADER */
@@ -43,7 +45,28 @@
         .header-title h1 { font-family: 'Cinzel', serif; color: white; margin: 0; font-size: clamp(0.9rem, 4vw, 1.4rem); letter-spacing: 1px; }
         .header-title p { color: var(--p-gold); margin: 0; font-size: 0.6rem; font-weight: 700; text-transform: uppercase; }
 
-        /* FLUID HUB GRID (Fixed to prevent uneven stretching on final row) */
+        /* PREMIUM LOGOUT BUTTON */
+        .logout-btn {
+            background: transparent;
+            border: 2px solid var(--p-gold);
+            color: var(--p-gold);
+            padding: 8px 16px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            border-radius: 30px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+        .logout-btn:hover {
+            background: var(--p-gold);
+            color: var(--p-green);
+        }
+
+        /* FLUID HUB GRID */
         .hub-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -52,6 +75,7 @@
             margin: 20px auto;
             padding: 15px;
             justify-content: center;
+            flex-grow: 1;
         }
 
         /* PREMIUM BUTTON CARDS */
@@ -107,6 +131,14 @@
         }
         .home-card i, .home-card span { color: var(--p-gold) !important; }
 
+        /* LOADING SHIELD SCREEN OVERLAY */
+        #loadingShield {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #0c1a12; z-index: 9999; display: flex;
+            justify-content: center; align-items: center; color: var(--p-gold);
+            font-size: 1.2rem; font-weight: 600; font-family: 'Montserrat', sans-serif;
+        }
+
         /* MOBILE SPECIFIC OVERRIDES */
         @media (max-width: 480px) {
             .hub-grid {
@@ -122,6 +154,10 @@
 </head>
 <body>
 
+<div id="loadingShield">
+    <div><i class="fas fa-shield-alt fa-spin" style="margin-right:10px;"></i> Validating Faculty Token Clearance...</div>
+</div>
+
 <header>
     <div style="display:flex; align-items:center; gap:10px;">
         <img src="logo.png" alt="Paramount Logo" class="logo-img">
@@ -130,6 +166,9 @@
             <p>Faculty Portal</p>
         </div>
     </div>
+    <button type="button" class="logout-btn" id="logoutActionBtn">
+        <i class="fas fa-sign-out-alt"></i> Logout
+    </button>
 </header>
 
 <div class="hub-grid">
@@ -205,6 +244,59 @@
         <small>Students Store</small>
     </a>
 </div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+  import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+
+  // Using your school project's structural baseline configurations
+  const firebaseConfig = {
+    apiKey: "AIzaSyAzUOh21Ec31kKmf42Tcw-xs4fVZyPh2fM",
+    authDomain: "paramount-school-d55bc.firebaseapp.com",
+    projectId: "paramount-school-d55bc"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  const loadingShield = document.getElementById('loadingShield');
+
+  // Structural check inspecting running user state criteria
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      try {
+        // Crosscheck the user context ID string inside the white-listed collection database
+        const userDoc = await getDoc(doc(db, "authorized_faculty", user.uid));
+        
+        if (userDoc.exists()) {
+          // If authorized user found, pull back the loading curtain safely
+          loadingShield.style.display = 'none';
+        } else {
+          // Profile exists in authentication, but has NOT been verified via dynamic admin code yet
+          alert("🔒 Access Rejected: Your account has not been whitelisted by the system administrator.");
+          await signOut(auth);
+          window.location.href = './faculty-login.html';
+        }
+      } catch (error) {
+        alert("❌ Profile check error encountered: " + error.message);
+        window.location.href = './faculty-login.html';
+      }
+    } else {
+      // No active active session found. Automatically push the client away to login page
+      window.location.href = './faculty-login.html';
+    }
+  });
+
+  // Attach functional logic parameter handler to Logout click target
+  document.getElementById('logoutActionBtn').addEventListener('click', async () => {
+      if (confirm("Are you sure you want to end your dashboard session?")) {
+          await signOut(auth);
+          window.location.href = './faculty-login.html';
+      }
+  });
+</script>
 
 </body>
 </html>
