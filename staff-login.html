@@ -119,7 +119,6 @@
     const db = getFirestore(app);
     const provider = new GoogleAuthProvider();
 
-    // 🌟 Initialize EmailJS Engine Interface with your public token profile
     emailjs.init({ publicKey: "b7YyWsmcBvZzSArYg" });
 
     let isLoginMode = true;
@@ -183,7 +182,8 @@
           const userCredential = await signInWithEmailAndPassword(auth, email, password);
           const userDoc = await getDoc(doc(db, "authorized_faculty", userCredential.user.uid));
           if (userDoc.exists()) {
-            window.location.href = './staff-login.html';
+            // ✅ Fixed Redirection Path
+            window.location.href = './staff-hub.html';
           } else {
             await auth.signOut();
             showMsg(errorBox, "❌ Access Denied: This account profile is not whitelisted inside the Faculty Registry.");
@@ -201,8 +201,8 @@
           otp_code: randomOTP
         };
 
-        // 🌟 Route the system authorization packet payload straight to your admin email desk
-        emailjs.send('service_7gt2g74', 'YOUR_EMAILJS_TEMPLATE_ID', templateParams)
+        // ✅ Synchronized Template ID Key
+        emailjs.send('service_7gt2g74', 'template_3p55cem', templateParams)
           .then(async () => {
             await setDoc(doc(db, "admin_verifications", email.replace(/[^a-zA-Z0-9]/g, "_")), {
               requestedEmail: email,
@@ -237,7 +237,8 @@
 
           verificationModal.style.display = 'none';
           showMsg(successBox, "🎉 Profile Whitelisted! Registration complete. Transferring your terminal context to dashboard views...");
-          setTimeout(() => window.location.href = './staff-login.html', 1500);
+          // ✅ Fixed Redirection Path
+          setTimeout(() => window.location.href = './staff-hub.html', 1500);
         } catch(err) {
           showMsg(errorBox, `❌ Error creating account database entry block: ${err.message}`);
           verificationModal.style.display = 'none';
@@ -251,7 +252,8 @@
       signInWithPopup(auth, provider).then(async (result) => {
         const userDoc = await getDoc(doc(db, "authorized_faculty", result.user.uid));
         if (userDoc.exists()) {
-          window.location.href = './staff-login.html';
+          // ✅ Fixed Redirection Path
+          window.location.href = './staff-hub.html';
         } else {
           const randomOTP = Math.floor(100000 + Math.random() * 900000).toString();
           pendingRegistrationData = { 
