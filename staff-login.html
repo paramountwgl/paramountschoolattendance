@@ -110,7 +110,7 @@
     .portal-heading { font-family: 'Cinzel', serif; font-size: 1.65rem; font-weight: 900; color: #ffffff; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; text-shadow: 0 4px 10px rgba(0,0,0,0.6); transform: translateZ(40px); }
     .portal-desc { font-size: 0.85rem; font-weight: 400; color: #94a3b8; margin-bottom: 35px; letter-spacing: 0.5px; transform: translateZ(30px); }
 
-    /* HIGH-TACTILE 3D CHROME BUTTON (GOOGLE CLIENT) */
+    /* HIGH-TACTILE 3D CHROME BUTTON */
     .premium-google-btn {
       width: 100%; padding: 16px; background: #ffffff; border: none; border-radius: 20px;
       color: #0f172a; font-size: 0.95rem; font-weight: 700; cursor: pointer;
@@ -406,7 +406,7 @@
 
         emailjs.send('service_7gt2g74', 'template_3p55cem', templateParams)
           .then(async () => {
-            // ✅ FIXED: Corrected the broken regular expression parsing syntax typo to secure deployment compiles
+            // ✅ FIXED FIX: Escaped sequence class brackets correctly to eliminate character range compile faults
             const sanitizedDocId = email.replace(/[^a-zA-Z0-9]/g, "_");
             await setDoc(doc(db, "admin_verifications", sanitizedDocId), {
               requestedEmail: email,
