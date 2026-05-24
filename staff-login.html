@@ -298,60 +298,60 @@
 
     function showMsg(box, text) { box.textContent = text; box.style.display = 'block'; setTimeout(() => box.style.display = 'none', 7000); }
 
-    // 🌟 THE LIFECYCLE FIX: High-performance session hook designed to instantly capture logins on mobile hardware
-    onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        try {
-          const userDoc = await getDoc(doc(db, "authorized_faculty", user.uid));
-          if (userDoc.exists()) {
-            // User is validated and whitelisted, send them straight to the hub dashboard
-            window.location.replace('./index.html');
-          } else {
-            // Caught an active registration request from a fresh Google account redirect loop
-            if (pendingRegistrationData && pendingRegistrationData.isGoogle) return;
-            
-            const randomOTP = Math.floor(100000 + Math.random() * 900000).toString();
-            pendingRegistrationData = { 
-              email: user.email, 
-              uid: user.uid, 
-              fullName: user.displayName || "Google Faculty User", 
-              otp: randomOTP,
-              isGoogle: true
-            };
-            
-            const templateParams = {
-              teacher_name: pendingRegistrationData.fullName,
-              teacher_email: pendingRegistrationData.email,
-              otp_code: randomOTP
-            };
-
-            emailjs.send('service_7gt2g74', 'template_3p55cem', templateParams)
-              .then(() => { openModal(); })
-              .catch(err => showMsg(errorBox, `❌ Service tracking delivery fault: ${err.message}`));
-          }
-        } catch (error) {
-          showMsg(errorBox, "❌ Session intercept verification failure.");
-        }
-      }
-    });
-
-    // Mobile specific asynchronous redirect token catcher loop processing parameters
-    async function initAuthFlow() {
+    // 🌟 TOP-LEVEL EVENT DRIVER: Runs immediately when the window context is ready
+    window.onload = async function() {
       emailjs.init({ publicKey: "b7YyWsmcBvZzSArYg" });
+
+      // Continuous monitoring channel for persistent cross-device authentication sessions
+      onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          try {
+            const userDoc = await getDoc(doc(db, "authorized_faculty", user.uid));
+            if (userDoc.exists()) {
+              window.location.replace('./index.html');
+            } else {
+              if (pendingRegistrationData && pendingRegistrationData.isGoogle) return;
+              
+              const randomOTP = Math.floor(100000 + Math.random() * 900000).toString();
+              pendingRegistrationData = { 
+                email: user.email, 
+                uid: user.uid, 
+                fullName: user.displayName || "Google Faculty User", 
+                otp: randomOTP,
+                isGoogle: true
+              };
+              
+              const templateParams = {
+                teacher_name: pendingRegistrationData.fullName,
+                teacher_email: pendingRegistrationData.email,
+                otp_code: randomOTP
+              };
+
+              emailjs.send('service_7gt2g74', 'template_3p55cem', templateParams)
+                .then(() => { openModal(); })
+                .catch(err => showMsg(errorBox, `❌ Service tracking delivery fault: ${err.message}`));
+            }
+          } catch (error) {
+            showMsg(errorBox, "❌ Security verification verification sync error.");
+          }
+        }
+      });
+
+      // Handle redirect results from mobile operations seamlessly
       try {
-        await getRedirectResult(auth);
+        const result = await getRedirectResult(auth);
+        if (result && result.user) {
+          const userDoc = await getDoc(doc(db, "authorized_faculty", result.user.uid));
+          if (userDoc.exists()) {
+            window.location.replace('./index.html');
+          }
+        }
       } catch (err) {
         if (err.code !== 'auth/redirect-cancelled-by-user') {
-          showMsg(errorBox, `❌ Mobile Redirect Capture Fault: ${err.message}`);
+          showMsg(errorBox, `❌ Mobile sign-in route verification error: ${err.message}`);
         }
       }
-    }
-
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initAuthFlow);
-    } else {
-      initAuthFlow();
-    }
+    };
 
     function handleFormToggle() {
       isLoginMode = !isLoginMode;
