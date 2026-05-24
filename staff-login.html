@@ -243,52 +243,48 @@
 
     function showMsg(box, text) { box.textContent = text; box.style.display = 'block'; setTimeout(() => box.style.display = 'none', 7000); }
 
-    // 🌟 FIXED REDIRECT LISTENER HANDLER: Checks whitelist records directly, bypassing local state blockers
-    onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        try {
-          const userDoc = await getDoc(doc(db, "authorized_faculty", user.uid));
-          if (userDoc.exists()) {
-            // Success anchor: Whitelisted parameters matched. Relocate safely to dashboard index view
-            window.location.replace('index.html');
-          } else {
-            // New user trigger check: Only trigger registration template if not already executing
-            if (pendingRegistrationData) return;
-            
-            const randomOTP = Math.floor(100000 + Math.random() * 900000).toString();
-            pendingRegistrationData = { 
-              email: user.email, 
-              uid: user.uid, 
-              fullName: user.displayName || "Google Faculty User", 
-              otp: randomOTP,
-              isGoogle: true
-            };
-            
-            const templateParams = {
-              teacher_name: pendingRegistrationData.fullName,
-              teacher_email: pendingRegistrationData.email,
-              otp_code: randomOTP
-            };
+    // 🌟 SEAMLESS MULTI-DEVICE VALIDATOR ENGINE
+    async function checkUserAccess(user) {
+      if (!user) return;
+      try {
+        const userDoc = await getDoc(doc(db, "authorized_faculty", user.uid));
+        if (userDoc.exists()) {
+          // Absolute routing layout swap to prevent mobile caching loops
+          window.location.href = "index.html";
+        } else {
+          // If the profile exists in auth but isn't whitelisted, drop the token and show warning
+          if (pendingRegistrationData) return;
+          
+          const randomOTP = Math.floor(100000 + Math.random() * 900000).toString();
+          pendingRegistrationData = { 
+            email: user.email, 
+            uid: user.uid, 
+            fullName: user.displayName || "Google Faculty User", 
+            otp: randomOTP,
+            isGoogle: true
+          };
+          
+          const templateParams = {
+            teacher_name: pendingRegistrationData.fullName,
+            teacher_email: pendingRegistrationData.email,
+            otp_code: randomOTP
+          };
 
-            emailjs.send('service_7gt2g74', 'template_3p55cem', templateParams)
-              .then(() => { openModal(); })
-              .catch(err => showMsg(errorBox, `❌ Service tracking delivery fault: ${err.message}`));
-          }
-        } catch (error) {
-          showMsg(errorBox, "❌ Security verification sync error encountered.");
+          emailjs.send('service_7gt2g74', 'template_3p55cem', templateParams)
+            .then(() => { openModal(); })
+            .catch(err => showMsg(errorBox, `❌ Service tracking delivery fault: ${err.message}`));
         }
+      } catch (error) {
+        showMsg(errorBox, "❌ Security verification sync error encountered.");
       }
-    });
+    }
 
-    // Handle incoming redirect tokens on browser initialization sequence
-    async function handleMobileRedirect() {
+    // Direct active capture handle monitoring incoming redirect operations
+    async function processRedirectPayload() {
       try {
         const result = await getRedirectResult(auth);
         if (result && result.user) {
-          const userDoc = await getDoc(doc(db, "authorized_faculty", result.user.uid));
-          if (userDoc.exists()) {
-            window.location.replace('index.html');
-          }
+          await checkUserAccess(result.user);
         }
       } catch (err) {
         if (err.code !== 'auth/redirect-cancelled-by-user') {
@@ -296,7 +292,16 @@
         }
       }
     }
-    handleMobileRedirect();
+
+    // Initialize mobile catcher components immediately
+    processRedirectPayload();
+
+    // Secondary persistent validation monitor
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        await checkUserAccess(user);
+      }
+    });
 
     function handleFormToggle() {
       isLoginMode = !isLoginMode;
@@ -343,13 +348,7 @@
       if (isLoginMode) {
         try {
           const userCredential = await signInWithEmailAndPassword(auth, email, password);
-          const userDoc = await getDoc(doc(db, "authorized_faculty", userCredential.user.uid));
-          if (userDoc.exists()) {
-            window.location.replace('index.html');
-          } else {
-            await auth.signOut();
-            showMsg(errorBox, "❌ Access Denied: This account profile is not whitelisted inside the Faculty Registry.");
-          }
+          await checkUserAccess(userCredential.user);
         } catch(err) {
           showMsg(errorBox, "❌ Authentication validation failure. Re-check login parameters.");
         }
@@ -399,7 +398,7 @@
 
           closeModal();
           showMsg(successBox, "🎉 Profile Whitelisted! Registration complete. Transferring your terminal context to dashboard views...");
-          setTimeout(() => window.location.replace('index.html'), 1500);
+          setTimeout(() => { window.location.href = "index.html"; }, 1500);
         } catch(err) {
           showMsg(errorBox, `❌ Error creating account database entry block: ${err.message}`);
           closeModal();
@@ -415,29 +414,7 @@
         signInWithRedirect(auth, provider).catch(err => showMsg(errorBox, `❌ Direct provider error: ${err.message}`));
       } else {
         signInWithPopup(auth, provider).then(async (result) => {
-          const userDoc = await getDoc(doc(db, "authorized_faculty", result.user.uid));
-          if (userDoc.exists()) {
-            window.location.replace('index.html');
-          } else {
-            const randomOTP = Math.floor(100000 + Math.random() * 900000).toString();
-            pendingRegistrationData = { 
-              email: result.user.email, 
-              uid: result.user.uid, 
-              fullName: result.user.displayName || "Google Faculty User", 
-              otp: randomOTP,
-              isGoogle: true
-            };
-            
-            const templateParams = {
-              teacher_name: pendingRegistrationData.fullName,
-              teacher_email: pendingRegistrationData.email,
-              otp_code: randomOTP
-            };
-
-            emailjs.send('service_7gt2g74', 'template_3p55cem', templateParams)
-              .then(async () => { openModal(); })
-              .catch(err => showMsg(errorBox, `❌ Service tracking delivery fault: ${err.message}`));
-          }
+          await checkUserAccess(result.user);
         }).catch(err => showMsg(errorBox, `❌ Provider logging interaction fault: ${err.message}`));
       }
     });
