@@ -33,21 +33,18 @@
       position: relative;
     }
 
-    /* PREMIUM FLAT GRADIENT BACKGROUND */
     .portal-background {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       background: linear-gradient(135deg, #020617 0%, #0b132b 50%, #1c2541 100%);
       z-index: -3;
     }
     
-    /* LIGHT GLOW FIELD EFFECT (COMPUTATIONALLY LIGHT FOR MOBILE SAFARI) */
     .glow-orb {
       position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.15; z-index: -2;
     }
     .orb-1 { width: 300px; height: 300px; background: var(--primary-gold); top: -10%; left: -10%; }
     .orb-2 { width: 350px; height: 350px; background: #38bdf8; bottom: -10%; right: -10%; }
 
-    /* FLAT SAPPHIRE GLASS CONTAINER */
     .portal-card {
       width: 100%; max-width: 440px;
       background: var(--card-bg);
@@ -67,24 +64,16 @@
       .portal-card:hover { transform: translateY(-4px); box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.6); }
     }
 
-    .emblem-container {
-      position: relative; width: 90px; height: 90px; margin: 0 auto 25px auto;
-    }
-    .emblem-img { 
-      width: 100%; height: 100%; object-fit: contain; border-radius: 50%; 
-      border: 2px solid var(--primary-gold); background: #020617; padding: 6px; 
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3); 
-    }
+    .emblem-container { position: relative; width: 90px; height: 90px; margin: 0 auto 25px auto; }
+    .emblem-img { width: 100%; height: 100%; object-fit: contain; border-radius: 50%; border: 2px solid var(--primary-gold); background: #020617; padding: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
 
     .portal-heading { font-family: 'Cinzel', serif; font-size: clamp(1.3rem, 5vw, 1.6rem); font-weight: 800; color: #ffffff; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
     .portal-desc { font-size: clamp(0.78rem, 3.5vw, 0.85rem); font-weight: 400; color: #94a3b8; margin-bottom: 30px; }
 
-    /* HIGH-TACTILE FLAT FLAT AUTH BUTTON */
     .premium-google-btn {
       width: 100%; padding: 14px; background: #ffffff; border: none; border-radius: 14px; color: #0f172a; font-size: 0.95rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 25px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); transition: background-color 0.2s ease, transform 0.1s ease;
     }
     .premium-google-btn:active { transform: scale(0.98); background-color: #f1f5f9; }
-    @media (min-width: 768px) { .premium-google-btn:hover { background-color: #f8fafc; } }
 
     .premium-divider { display: flex; align-items: center; text-align: center; margin-bottom: 25px; color: #4b5563; font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; }
     .premium-divider::before, .premium-divider::after { content: ''; flex: 1; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
@@ -98,10 +87,9 @@
     .input-wrapper input:focus { border-color: var(--primary-gold); background: rgba(255, 255, 255, 0.08); }
 
     .premium-action-btn {
-      width: 100%; padding: 15px; background: var(--primary-gold); border: none; border-radius: 12px; color: var(--sapphire-blue); font-size: 0.95rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; margin-top: 5px; box-shadow: 0 4px 14px rgba(229, 184, 66, 0.3); transition: opacity 0.2s ease, transform 0.1s ease;
+      width: 100%; padding: 15px; background: var(--primary-gold); border: none; border-radius: 12px; color: var(--sapphire-blue); font-size: 0.95rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; margin-top: 5px; box-shadow: 0 4px 14 rgba(229, 184, 66, 0.3); transition: opacity 0.2s ease, transform 0.1s ease;
     }
     .premium-action-btn:active { transform: scale(0.98); }
-    @media (min-width: 768px) { .premium-action-btn:hover { opacity: 0.9; } }
 
     .status-capsule { padding: 14px 16px; border-radius: 12px; font-size: 0.82rem; font-weight: 700; margin-bottom: 20px; display: none; text-align: left; line-height: 1.4; }
     .error-card { background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.4); color: #fca5a5; }
@@ -184,7 +172,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-    import { getAuth, setPersistence, browserLocalPersistence, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, signInWithRedirect, getRedirectResult, onAuthStateChanged, sendPasswordResetEmail, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+    import { getAuth, setPersistence, browserLocalPersistence, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, onAuthStateChanged, sendPasswordResetEmail, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
     import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -219,12 +207,13 @@
 
     function showMsg(box, text) { box.textContent = text; box.style.display = 'block'; setTimeout(() => box.style.display = 'none', 7000); }
 
-    // WHITELIST INTERCEPTOR: Shared routine handles authentication clearances directly
+    // UNIVERSAL WHITE-LIST TABLE ROUTER
     async function checkUserAccess(user) {
       if (!user) return;
       try {
         const userDoc = await getDoc(doc(db, "authorized_faculty", user.uid));
         if (userDoc.exists()) {
+          // Hard replace to wipe layout caching blocks
           window.location.replace("index.html");
         } else {
           if (pendingRegistrationData) return;
@@ -249,33 +238,24 @@
             .catch(err => showMsg(errorBox, `❌ Service tracking delivery fault: ${err.message}`));
         }
       } catch (error) {
-        showMsg(errorBox, "❌ Whitelist verification failure.");
+        showMsg(errorBox, "❌ Whitelist data verification sync error.");
       }
     }
 
-    // MULTI-DEVICE DEVICE LIFECYCLE ENFORCER
-    async function initSystemHardwareFlow() {
+    // Enforce instant multi-device state synchronization parameter handles
+    async function enforceHardwarePersistence() {
       try {
         await setPersistence(auth, browserLocalPersistence);
-        
-        const result = await getRedirectResult(auth);
-        if (result && result.user) {
-          await checkUserAccess(result.user);
-          return;
-        }
-
         if (auth.currentUser) {
           await checkUserAccess(auth.currentUser);
         }
-      } catch (err) {
-        if (err.code !== 'auth/redirect-cancelled-by-user') {
-          showMsg(errorBox, `❌ Sync processing fault: ${err.message}`);
-        }
+      } catch (e) {
+        console.error("Persistence lock dropped");
       }
     }
+    enforceHardwarePersistence();
 
-    initSystemHardwareFlow();
-
+    // 🌟 ACTIVE OVERWATCH TOKEN LISTENER: Instantly triggers execution the split second a token drops
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         await checkUserAccess(user);
@@ -387,15 +367,15 @@
       }
     });
 
+    // 🌟 POP-UP INTERCEPT BYPASS ENGINE: Runs signInWithPopup universally on BOTH mobile and desktop
     document.getElementById('googleBtn').addEventListener('click', () => {
-      const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-      if (isMobileDevice) {
-        signInWithRedirect(auth, provider).catch(err => showMsg(errorBox, `❌ Direct provider error: ${err.message}`));
-      } else {
-        signInWithPopup(auth, provider).then(async (result) => {
+      signInWithPopup(auth, provider)
+        .then(async (result) => {
           await checkUserAccess(result.user);
-        }).catch(err => showMsg(errorBox, `❌ Provider logging interaction fault: ${err.message}`));
-      }
+        })
+        .catch(err => {
+          showMsg(errorBox, `❌ Google sign-in failure: ${err.message}`);
+        });
     });
 
     function openModal() {
