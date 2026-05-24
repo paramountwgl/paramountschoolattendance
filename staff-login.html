@@ -11,18 +11,18 @@
   
   <style>
     :root { 
-      --primary-gold: #ffd700;
-      --deep-emerald: #00361b;
-      --dark-abyss: #020804;
-      --glass-sheet: rgba(255, 255, 255, 0.02);
-      --glass-stroke: rgba(255, 215, 0, 0.15);
-      --premium-glow: rgba(0, 255, 102, 0.12);
+      --primary-gold: #e5b842;
+      --sapphire-blue: #0a192f;
+      --slate-dark: #0f172a;
+      --card-bg: rgba(15, 23, 42, 0.75);
+      --glass-stroke: rgba(229, 184, 66, 0.2);
+      --input-bg: rgba(255, 255, 255, 0.05);
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
     
     body { 
-      background-color: var(--dark-abyss); 
+      background-color: var(--sapphire-blue);
       color: #f8fafc; 
       min-height: 100vh; 
       display: flex; 
@@ -30,119 +30,100 @@
       justify-content: center; 
       padding: 15px; 
       overflow-x: hidden;
+      position: relative;
     }
 
-    /* CINEMATIC LIQUID SPACE MATRIX */
-    .spatial-universe {
+    /* PREMIUM FLAT GRADIENT BACKGROUND */
+    .portal-background {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: radial-gradient(circle at 50% 50%, #002b12 0%, var(--dark-abyss) 80%);
+      background: linear-gradient(135deg, #020617 0%, #0b132b 50%, #1c2541 100%);
       z-index: -3;
     }
     
-    .liquid-aurora {
-      position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.3;
-      mix-blend-mode: screen;
+    /* LIGHT GLOW FIELD EFFECT (COMPUTATIONALLY LIGHT FOR MOBILE SAFARI) */
+    .glow-orb {
+      position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.15; z-index: -2;
     }
-    .aurora-1 { width: 450px; height: 450px; background: radial-gradient(#00ff7b, var(--deep-emerald)); top: -10%; left: -10%; animation: floatAurora1 24s infinite alternate ease-in-out; }
-    .aurora-2 { width: 400px; height: 400px; background: radial-gradient(#0044ff, #001133); bottom: -10%; right: -5%; animation: floatAurora2 20s infinite alternate ease-in-out; }
-    .aurora-3 { width: 350px; height: 350px; background: radial-gradient(#ffaa00, #4a2300); top: 30%; left: 40%; animation: floatAurora1 18s infinite alternate-reverse ease-in-out; }
+    .orb-1 { width: 300px; height: 300px; background: var(--primary-gold); top: -10%; left: -10%; }
+    .orb-2 { width: 350px; height: 350px; background: #38bdf8; bottom: -10%; right: -10%; }
 
-    @keyframes floatAurora1 {
-      0% { transform: translateY(0) scale(1) rotate(0deg); }
-      100% { transform: translateY(60px) scale(1.1) rotate(90deg); }
-    }
-    @keyframes floatAurora2 {
-      0% { transform: translateY(0) scale(1.05) rotate(0deg); }
-      100% { transform: translateY(-60px) scale(0.95) rotate(-90deg); }
-    }
-
-    .starfield { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; pointer-events: none; }
-    .star { position: absolute; background: #ffffff; border-radius: 50%; opacity: 0; animation: hyperPulse var(--spd) infinite ease-in-out; }
-    @keyframes hyperPulse { 0%, 100% { opacity: 0; transform: translateY(0) scale(0.3); } 50% { opacity: var(--op); transform: translateY(-10px) scale(1.2); } }
-
-    /* ULTRA-LUXURY GLASSMORPHISM CARD */
-    .spatial-capsule {
+    /* FLAT SAPPHIRE GLASS CONTAINER */
+    .portal-card {
       width: 100%; max-width: 440px;
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.01) 100%);
+      background: var(--card-bg);
       border: 1px solid var(--glass-stroke);
-      border-top: 1px solid rgba(255, 215, 0, 0.4);
-      border-left: 1px solid rgba(255, 215, 0, 0.2);
-      border-radius: 28px;
+      border-top: 2px solid var(--primary-gold);
+      border-radius: 24px;
       padding: 40px 25px;
-      backdrop-filter: blur(25px) saturate(180%);
-      -webkit-backdrop-filter: blur(25px) saturate(180%);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       text-align: center;
-      box-shadow: 0 30px 70px rgba(0, 0, 0, 0.7),
-                  inset 0 1px 2px rgba(255, 255, 255, 0.1),
-                  0 0 50px var(--premium-glow);
-      transition: box-shadow 0.4s ease, border-color 0.4s ease;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
     @media (min-width: 768px) {
-      body { perspective: 2000px; padding: 20px; }
-      .spatial-capsule { padding: 50px 40px; border-radius: 40px; transform-style: preserve-3d; transform: translateZ(0); }
-      .liquid-aurora { filter: blur(140px); opacity: 0.35; }
-      .aurora-1 { width: 700px; height: 700px; }
-      .aurora-2 { width: 600px; height: 600px; }
-      .aurora-3 { width: 500px; height: 500px; }
+      .portal-card { padding: 50px 40px; }
+      .portal-card:hover { transform: translateY(-4px); box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.6); }
     }
 
-    .emblem-wrapper { position: relative; width: 90px; height: 90px; margin: 0 auto 25px auto; }
-    @media (min-width: 768px) { .emblem-wrapper { width: 110px; height: 110px; margin-bottom: 30px; transform: translateZ(50px); } }
-    .emblem-wrapper::before { content: ''; position: absolute; top: -4px; left: -4px; right: -4px; bottom: -4px; border: 1px solid var(--primary-gold); border-radius: 50%; opacity: 0.3; animation: orbitRing 8s linear infinite; }
-    .emblem-shadow { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--primary-gold); border-radius: 50%; filter: blur(20px); opacity: 0.3; }
-    .emblem-img { width: 100%; height: 100%; object-fit: contain; border-radius: 50%; border: 2px solid var(--primary-gold); background: #020703; padding: 5px; position: relative; z-index: 2; box-shadow: 0 8px 20px rgba(0,0,0,0.5); }
-    @keyframes orbitRing { 100% { transform: rotate(360deg); } }
+    .emblem-container {
+      position: relative; width: 90px; height: 90px; margin: 0 auto 25px auto;
+    }
+    .emblem-img { 
+      width: 100%; height: 100%; object-fit: contain; border-radius: 50%; 
+      border: 2px solid var(--primary-gold); background: #020617; padding: 6px; 
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3); 
+    }
 
-    .portal-heading { font-family: 'Cinzel', serif; font-size: clamp(1.3rem, 5vw, 1.65rem); font-weight: 900; color: #ffffff; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; text-shadow: 0 3px 8px rgba(0,0,0,0.6); }
-    .portal-desc { font-size: clamp(0.78rem, 3.5vw, 0.85rem); font-weight: 400; color: #94a3b8; margin-bottom: 30px; letter-spacing: 0.5px; }
-    @media (min-width: 768px) { .portal-heading { transform: translateZ(40px); letter-spacing: 2px; } .portal-desc { transform: translateZ(30px); margin-bottom: 35px; } }
+    .portal-heading { font-family: 'Cinzel', serif; font-size: clamp(1.3rem, 5vw, 1.6rem); font-weight: 800; color: #ffffff; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
+    .portal-desc { font-size: clamp(0.78rem, 3.5vw, 0.85rem); font-weight: 400; color: #94a3b8; margin-bottom: 30px; }
 
+    /* HIGH-TACTILE FLAT FLAT AUTH BUTTON */
     .premium-google-btn {
-      width: 100%; padding: 15px; background: #ffffff; border: none; border-radius: 16px; color: #0f172a; font-size: 0.95rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 30px; box-shadow: 0 4px 0 #cbd5e1, 0 8px 16px rgba(0,0,0,0.3); transition: all 0.2s ease;
+      width: 100%; padding: 14px; background: #ffffff; border: none; border-radius: 14px; color: #0f172a; font-size: 0.95rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 25px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); transition: background-color 0.2s ease, transform 0.1s ease;
     }
-    .premium-google-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #cbd5e1, 0 3px 6px rgba(0,0,0,0.3); }
+    .premium-google-btn:active { transform: scale(0.98); background-color: #f1f5f9; }
+    @media (min-width: 768px) { .premium-google-btn:hover { background-color: #f8fafc; } }
 
     .premium-divider { display: flex; align-items: center; text-align: center; margin-bottom: 25px; color: #4b5563; font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; }
-    .premium-divider::before, .premium-divider::after { content: ''; flex: 1; border-bottom: 1px solid rgba(255, 255, 255, 0.06); }
-    .premium-divider:not(:empty)::before { margin-right: 1.5em; }
-    .premium-divider:not(:empty)::after { margin-left: 1.5em; }
+    .premium-divider::before, .premium-divider::after { content: ''; flex: 1; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+    .premium-divider:not(:empty)::before { margin-right: 1.2em; }
+    .premium-divider:not(:empty)::after { margin-left: 1.2em; }
 
     .form-group { margin-bottom: 20px; text-align: left; }
     .form-group label { display: block; font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: var(--primary-gold); margin-bottom: 8px; }
     
-    .input-wrapper input { width: 100%; padding: 14px 16px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; color: #ffffff; font-size: 0.95rem; font-weight: 500; outline: none; box-shadow: inset 0 3px 6px rgba(0,0,0,0.6); transition: all 0.3s ease; }
-    .input-wrapper input:focus { border-color: var(--primary-gold); background: rgba(0, 0, 0, 0.5); box-shadow: inset 0 3px 6px rgba(0,0,0,0.6), 0 0 15px rgba(255, 215, 0, 0.15); }
+    .input-wrapper input { width: 100%; padding: 14px 16px; background: var(--input-bg); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: #ffffff; font-size: 0.95rem; outline: none; transition: border-color 0.2s ease, background-color 0.2s ease; }
+    .input-wrapper input:focus { border-color: var(--primary-gold); background: rgba(255, 255, 255, 0.08); }
 
     .premium-action-btn {
-      width: 100%; padding: 15px; background: linear-gradient(135deg, #004d26 0%, #001a0d 100%); border: 1px solid rgba(255, 215, 0, 0.3); border-radius: 14px; color: #ffffff; font-size: 0.95rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; margin-top: 5px; box-shadow: 0 4px 0 #001f0e, 0 10px 20px rgba(0,0,0,0.4); text-shadow: 0 2px 4px rgba(0,0,0,0.7); transition: all 0.2s ease;
+      width: 100%; padding: 15px; background: var(--primary-gold); border: none; border-radius: 12px; color: var(--sapphire-blue); font-size: 0.95rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; margin-top: 5px; box-shadow: 0 4px 14px rgba(229, 184, 66, 0.3); transition: opacity 0.2s ease, transform 0.1s ease;
     }
-    .premium-action-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #001f0e, 0 4px 8px rgba(0,0,0,0.4); }
+    .premium-action-btn:active { transform: scale(0.98); }
+    @media (min-width: 768px) { .premium-action-btn:hover { opacity: 0.9; } }
 
-    .status-capsule { padding: 14px 16px; border-radius: 14px; font-size: 0.82rem; font-weight: 700; margin-bottom: 20px; display: none; text-align: left; line-height: 1.4; }
-    .error-card { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.4); color: #fca5a5; }
-    .success-card { background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.4); color: #a7f3d0; }
+    .status-capsule { padding: 14px 16px; border-radius: 12px; font-size: 0.82rem; font-weight: 700; margin-bottom: 20px; display: none; text-align: left; line-height: 1.4; }
+    .error-card { background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.4); color: #fca5a5; }
+    .success-card { background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.4); color: #a7f3d0; }
 
-    .luxury-link { margin-top: 20px; font-size: 0.8rem; font-weight: 600; color: #cbd5e1; }
-    .luxury-link span { color: var(--primary-gold); cursor: pointer; font-weight: 800; }
+    .luxury-link { margin-top: 20px; font-size: 0.8rem; font-weight: 600; color: #94a3b8; }
+    .luxury-link span { color: var(--primary-gold); cursor: pointer; font-weight: 800; text-decoration: underline; }
 
-    .luxury-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(2, 6, 3, 0.9); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); display: flex; align-items: center; justify-content: center; display: none; z-index: 2000; opacity: 0; transition: opacity 0.3s ease; }
-    .luxury-overlay-card { background: linear-gradient(135deg, rgba(12, 38, 22, 0.95) 0%, rgba(4, 15, 8, 0.98) 100%); border: 1px solid var(--primary-gold); border-radius: 24px; padding: 35px 20px; max-width: 420px; width: 92%; text-align: center; box-shadow: 0 30px 60px rgba(0,0,0,0.8); transform: scale(0.9) translateY(15px); transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+    .luxury-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(2, 6, 23, 0.85); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center; display: none; z-index: 2000; opacity: 0; transition: opacity 0.3s ease; }
+    .luxury-overlay-card { background: var(--slate-dark); border: 1px solid var(--primary-gold); border-radius: 20px; padding: 35px 20px; max-width: 420px; width: 92%; text-align: center; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); transform: scale(0.95); transition: transform 0.3s ease; }
     .luxury-overlay.active { opacity: 1; }
-    .luxury-overlay.active .luxury-overlay-card { transform: scale(1) translateY(0); }
+    .luxury-overlay.active .luxury-overlay-card { transform: scale(1); }
   </style>
 </head>
 <body>
 
-  <div class="spatial-universe"></div>
-  <div class="liquid-aurora aurora-1"></div>
-  <div class="liquid-aurora aurora-2"></div>
-  <div class="liquid-aurora aurora-3"></div>
-  <div class="starfield" id="starfield"></div>
+  <div class="portal-background"></div>
+  <div class="glow-orb orb-1"></div>
+  <div class="glow-orb orb-2"></div>
 
-  <div class="spatial-capsule" id="interactiveConsole">
-    <div class="emblem-wrapper">
-      <div class="emblem-shadow"></div>
+  <div class="portal-card">
+    <div class="emblem-container">
       <img src="logo.png" alt="Paramount Emblem" class="emblem-img">
     </div>
     
@@ -191,11 +172,11 @@
 
   <div class="luxury-overlay" id="verificationModal">
     <div class="luxury-overlay-card">
-      <h3 style="color:var(--primary-gold); font-family:'Cinzel',serif; font-size:1.35rem; margin-bottom:14px; font-weight:900; letter-spacing:1px;">Security Verification Challenge</h3>
-      <p style="font-size:0.88rem; margin-bottom:28px; color:#cbd5e1; line-height:1.6; font-weight:500;">A secure registration document containing a 6-digit dynamic key has been forwarded directly to <strong>admin@paramountschooledu.in</strong>. Enter that code below to finalize validation profiles.</p>
+      <h3 style="color:var(--primary-gold); font-size:1.35rem; margin-bottom:14px; font-weight:800; letter-spacing:1px;">Security Verification Challenge</h3>
+      <p style="font-size:0.88rem; margin-bottom:28px; color:#cbd5e1; line-height:1.6;">A secure registration document containing a 6-digit dynamic key has been forwarded directly to <strong>admin@paramountschooledu.in</strong>. Enter that code below to finalize validation profiles.</p>
       <div class="form-group">
         <label style="text-align: center; letter-spacing:3px;">6-Digit Administration Key</label>
-        <div class="input-wrapper"><input type="text" id="verificationCodeInput" maxlength="6" style="text-align:center; font-size:1.75rem; letter-spacing:8px; font-weight:800; color:var(--primary-gold); background:rgba(0,0,0,0.6);" placeholder="000000"></div>
+        <div class="input-wrapper"><input type="text" id="verificationCodeInput" maxlength="6" style="text-align:center; font-size:1.75rem; letter-spacing:8px; font-weight:800; color:var(--primary-gold); background:rgba(0,0,0,0.4);" placeholder="000000"></div>
       </div>
       <button type="button" class="premium-action-btn" id="confirmVerificationBtn">Verify & Authorize Profile</button>
     </div>
@@ -238,13 +219,12 @@
 
     function showMsg(box, text) { box.textContent = text; box.style.display = 'block'; setTimeout(() => box.style.display = 'none', 7000); }
 
-    // 🌟 WHITELIST CHECK ENGINE: Shared validation routine for both standard entries and redirects
+    // WHITELIST INTERCEPTOR: Shared routine handles authentication clearances directly
     async function checkUserAccess(user) {
       if (!user) return;
       try {
         const userDoc = await getDoc(doc(db, "authorized_faculty", user.uid));
         if (userDoc.exists()) {
-          // Explicitly clear parent window locations to completely bypass mobile sub-domain caching locks
           window.location.replace("index.html");
         } else {
           if (pendingRegistrationData) return;
@@ -269,38 +249,33 @@
             .catch(err => showMsg(errorBox, `❌ Service tracking delivery fault: ${err.message}`));
         }
       } catch (error) {
-        showMsg(errorBox, "❌ Security verification sync error encountered.");
+        showMsg(errorBox, "❌ Whitelist verification failure.");
       }
     }
 
-    // 🌟 CORE SYSTEM LIFECYCLE INITIALIZER: Enforces structural persistence parameters across mobile browsers
+    // MULTI-DEVICE DEVICE LIFECYCLE ENFORCER
     async function initSystemHardwareFlow() {
       try {
-        // Enforce Local Persistence across hardware boundaries to secure tokens on mobile switches
         await setPersistence(auth, browserLocalPersistence);
         
-        // Listen for direct mobile return results instantly
         const result = await getRedirectResult(auth);
         if (result && result.user) {
           await checkUserAccess(result.user);
           return;
         }
 
-        // Catch active persistent user states
         if (auth.currentUser) {
           await checkUserAccess(auth.currentUser);
         }
       } catch (err) {
         if (err.code !== 'auth/redirect-cancelled-by-user') {
-          showMsg(errorBox, `❌ Device integration sync fault: ${err.message}`);
+          showMsg(errorBox, `❌ Sync processing fault: ${err.message}`);
         }
       }
     }
 
-    // Execute multi-device persistence stack instantly
     initSystemHardwareFlow();
 
-    // Constant background state sync observer
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         await checkUserAccess(user);
@@ -339,7 +314,7 @@
         return;
       }
       sendPasswordResetEmail(auth, emailVal)
-        .then(() => showMsg(successBox, "🎉 Secure automated password reset hyperlink successfully dispatched to your email inbox! Check junk folder if unseen."))
+        .then(() => showMsg(successBox, "🎉 Secure automated password reset link sent to your inbox."))
         .catch(err => showMsg(errorBox, `❌ Recovery System Fault: ${err.message.replace("Firebase: ", "")}`));
     });
 
@@ -430,32 +405,6 @@
     function closeModal() {
       verificationModal.classList.remove('active');
       setTimeout(() => verificationModal.style.display = 'none', 400);
-    }
-
-    const starfield = document.getElementById('starfield');
-    const starCount = 35;
-    for (let i = 0; i < starCount; i++) {
-      const star = document.createElement('div');
-      star.className = 'star';
-      star.style.width = star.style.height = (Math.random() * 1.8 + 1) + 'px';
-      star.style.top = (Math.random() * 100) + 'vh';
-      star.style.left = (Math.random() * 100) + 'vw';
-      star.style.setProperty('--spd', (Math.random() * 5 + 4) + 's');
-      star.style.setProperty('--op', (Math.random() * 0.6 + 0.2));
-      starfield.appendChild(star);
-    }
-
-    const consoleContainer = document.getElementById('interactiveConsole');
-    if (window.innerWidth >= 768) {
-      document.addEventListener('mousemove', (e) => {
-        const xInfluence = (window.innerWidth / 2 - e.pageX) / 35;
-        const yInfluence = (window.innerHeight / 2 - e.pageY) / 35;
-        consoleContainer.style.transform = `rotateY(${xInfluence}deg) rotateX(${-yInfluence}deg)`;
-      });
-      document.addEventListener('mouseleave', () => {
-        consoleContainer.style.transform = `rotateY(0deg) rotateX(0deg)`;
-        consoleContainer.style.transition = 'all 0.8s cubic-bezier(0.16, 1, 0.3, 1)';
-      });
     }
   </script>
 </body>
