@@ -169,151 +169,305 @@
       <button type="button" class="premium-action-btn" id="confirmVerificationBtn">Verify & Authorize Profile</button>
     </div>
   </div>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-    import { getAuth, setPersistence, browserLocalPersistence, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, onAuthStateChanged, sendPasswordResetEmail, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
-    import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+  import {
+    getAuth,
+    setPersistence,
+    browserLocalPersistence,
+    signInWithEmailAndPassword,
+    createUserWithEmailAndPassword,
+    signInWithRedirect,
+    getRedirectResult,
+    onAuthStateChanged,
+    sendPasswordResetEmail,
+    GoogleAuthProvider
+  } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyAzUOh21Ec31kKmf42Tcw-xs4fVZyPh2fM", 
+  import {
+    getFirestore,
+    doc,
+    setDoc,
+    getDoc
+  } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAzUOh21Ec31kKmf42Tcw-xs4fVZyPh2fM", 
       authDomain: "paramount-school-d55bc.firebaseapp.com",
       databaseURL: "https://paramount-school-d55bc-default-rtdb.firebaseio.com",
       projectId: "paramount-school-d55bc",
       storageBucket: "paramount-school-d55bc.firebasestorage.app",
       messagingSenderId: "130979432562",
       appId: "1:130979432562:web:4cd94787b23f9daba51aeb"
-    };
+  };
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-    const provider = new GoogleAuthProvider();
-    provider.setCustomParameters({ prompt: 'select_account' });
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
 
-    emailjs.init({ publicKey: "b7YyWsmcBvZzSArYg" });
+  const provider = new GoogleAuthProvider();
+  provider.setCustomParameters({
+    prompt: 'select_account'
+  });
 
-    let isLoginMode = true;
-    let pendingRegistrationData = null;
+  emailjs.init({
+    publicKey: "b7YyWsmcBvZzSArYg"
+  });
 
-    const errorBox = document.getElementById('errorBox');
-    const successBox = document.getElementById('successBox');
-    const registerFields = document.getElementById('registerFields');
-    const titleText = document.getElementById('titleText');
-    const subtitleText = document.getElementById('subtitleText');
-    const submitBtn = document.getElementById('submitBtn');
-    const toggleViewBox = document.getElementById('toggleViewBox');
-    const verificationModal = document.getElementById('verificationModal');
+  let isLoginMode = true;
+  let pendingRegistrationData = null;
 
-    function showMsg(box, text) { box.textContent = text; box.style.display = 'block'; setTimeout(() => box.style.display = 'none', 7000); }
+  const errorBox = document.getElementById('errorBox');
+  const successBox = document.getElementById('successBox');
+  const registerFields = document.getElementById('registerFields');
+  const titleText = document.getElementById('titleText');
+  const subtitleText = document.getElementById('subtitleText');
+  const submitBtn = document.getElementById('submitBtn');
+  const toggleViewBox = document.getElementById('toggleViewBox');
+  const verificationModal = document.getElementById('verificationModal');
 
-    // UNIVERSAL WHITE-LIST TABLE ROUTER
-    async function checkUserAccess(user) {
-      if (!user) return;
-      try {
-        const userDoc = await getDoc(doc(db, "authorized_faculty", user.uid));
-        if (userDoc.exists()) {
-          // Hard replace to wipe layout caching blocks
-          window.location.replace("index.html");
-        } else {
-          if (pendingRegistrationData) return;
-          
-          const randomOTP = Math.floor(100000 + Math.random() * 900000).toString();
-          pendingRegistrationData = { 
-            email: user.email, 
-            uid: user.uid, 
-            fullName: user.displayName || "Google Faculty User", 
-            otp: randomOTP,
-            isGoogle: true
-          };
-          
-          const templateParams = {
-            teacher_name: pendingRegistrationData.fullName,
-            teacher_email: pendingRegistrationData.email,
-            otp_code: randomOTP
-          };
+  function showMsg(box, text) {
+    box.textContent = text;
+    box.style.display = 'block';
 
-          emailjs.send('service_7gt2g74', 'template_3p55cem', templateParams)
-            .then(() => { openModal(); })
-            .catch(err => showMsg(errorBox, `❌ Service tracking delivery fault: ${err.message}`));
-        }
-      } catch (error) {
-        showMsg(errorBox, "❌ Whitelist data verification sync error.");
-      }
-    }
+    setTimeout(() => {
+      box.style.display = 'none';
+    }, 7000);
+  }
 
-    // Enforce instant multi-device state synchronization parameter handles
-    async function enforceHardwarePersistence() {
-      try {
-        await setPersistence(auth, browserLocalPersistence);
-        if (auth.currentUser) {
-          await checkUserAccess(auth.currentUser);
-        }
-      } catch (e) {
-        console.error("Persistence lock dropped");
-      }
-    }
-    enforceHardwarePersistence();
+  // =========================
+  // CHECK USER ACCESS
+  // =========================
+  async function checkUserAccess(user) {
+    if (!user) return;
 
-    // 🌟 ACTIVE OVERWATCH TOKEN LISTENER: Instantly triggers execution the split second a token drops
-    onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        await checkUserAccess(user);
-      }
-    });
+    try {
+      const userRef = doc(db, "authorized_faculty", user.uid);
+      const userDoc = await getDoc(userRef);
 
-    function handleFormToggle() {
-      isLoginMode = !isLoginMode;
-      errorBox.style.display = 'none';
-      successBox.style.display = 'none';
-      document.getElementById('authForm').reset();
-      
-      if(isLoginMode) {
-        titleText.textContent = "Faculty Hub Access";
-        subtitleText.textContent = "Sign in with your verified institutional parameters";
-        submitBtn.textContent = "Verify Access Token";
-        registerFields.style.display = 'none';
-        toggleViewBox.innerHTML = 'Not registered on this console? <span id="toggleBtn">Request Enrollment</span>';
-      } else {
-        titleText.textContent = "Faculty Registration";
-        subtitleText.textContent = "Apply credentials below for custom administrative enrollment verification";
-        submitBtn.textContent = "Request Access Token";
-        registerFields.style.display = 'block';
-        toggleViewBox.innerHTML = 'Already authorized? <span id="toggleBtn">Login Here</span>';
-      }
-    }
-
-    document.body.addEventListener('click', function(e) {
-      if (e.target && e.target.id === 'toggleBtn') { handleFormToggle(); }
-    });
-
-    document.getElementById('forgotBtn').addEventListener('click', () => {
-      const emailVal = document.getElementById('email').value.trim();
-      if(!emailVal) {
-        showMsg(errorBox, "❌ Please enter your email address into the standard field first to trigger system recovery keys.");
+      // EXISTING AUTHORIZED USER
+      if (userDoc.exists()) {
+        window.location.href = "./index.html";
         return;
       }
-      sendPasswordResetEmail(auth, emailVal)
-        .then(() => showMsg(successBox, "🎉 Secure automated password reset link sent to your inbox."))
-        .catch(err => showMsg(errorBox, `❌ Recovery System Fault: ${err.message.replace("Firebase: ", "")}`));
+
+      // NEW USER
+      if (pendingRegistrationData) return;
+
+      const randomOTP =
+        Math.floor(100000 + Math.random() * 900000).toString();
+
+      pendingRegistrationData = {
+        email: user.email,
+        uid: user.uid,
+        fullName: user.displayName || "Google Faculty User",
+        otp: randomOTP,
+        isGoogle: true
+      };
+
+      const templateParams = {
+        teacher_name: pendingRegistrationData.fullName,
+        teacher_email: pendingRegistrationData.email,
+        otp_code: randomOTP
+      };
+
+      emailjs.send(
+        'service_7gt2g74',
+        'template_3p55cem',
+        templateParams
+      )
+      .then(() => {
+        openModal();
+      })
+      .catch((err) => {
+        showMsg(
+          errorBox,
+          `❌ Email service error: ${err.message}`
+        );
+      });
+
+    } catch (error) {
+      showMsg(
+        errorBox,
+        "❌ Database verification error."
+      );
+    }
+  }
+
+  // =========================
+  // FIREBASE PERSISTENCE
+  // =========================
+  async function initializePersistence() {
+    try {
+      await setPersistence(auth, browserLocalPersistence);
+
+      if (auth.currentUser) {
+        await checkUserAccess(auth.currentUser);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  initializePersistence();
+
+  // =========================
+  // AUTH STATE LISTENER
+  // =========================
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      await checkUserAccess(user);
+    }
+  });
+
+  // =========================
+  // HANDLE MOBILE REDIRECT RESULT
+  // =========================
+  getRedirectResult(auth)
+    .then(async (result) => {
+      if (result && result.user) {
+        await checkUserAccess(result.user);
+      }
+    })
+    .catch((err) => {
+      showMsg(
+        errorBox,
+        `❌ Redirect auth error: ${err.message}`
+      );
     });
 
-    document.getElementById('authForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value;
-      const fullName = document.getElementById('fullName').value.trim() || "Faculty Member";
+  // =========================
+  // TOGGLE LOGIN / REGISTER
+  // =========================
+  function handleFormToggle() {
+    isLoginMode = !isLoginMode;
 
+    errorBox.style.display = 'none';
+    successBox.style.display = 'none';
+
+    document.getElementById('authForm').reset();
+
+    if (isLoginMode) {
+
+      titleText.textContent = "Faculty Hub Access";
+
+      subtitleText.textContent =
+        "Sign in with your verified institutional parameters";
+
+      submitBtn.textContent = "Verify Access Token";
+
+      registerFields.style.display = 'none';
+
+      toggleViewBox.innerHTML =
+        'Not registered on this console? <span id="toggleBtn">Request Enrollment</span>';
+
+    } else {
+
+      titleText.textContent = "Faculty Registration";
+
+      subtitleText.textContent =
+        "Apply credentials below for custom administrative enrollment verification";
+
+      submitBtn.textContent = "Request Access Token";
+
+      registerFields.style.display = 'block';
+
+      toggleViewBox.innerHTML =
+        'Already authorized? <span id="toggleBtn">Login Here</span>';
+    }
+  }
+
+  document.body.addEventListener('click', function(e) {
+    if (e.target && e.target.id === 'toggleBtn') {
+      handleFormToggle();
+    }
+  });
+
+  // =========================
+  // FORGOT PASSWORD
+  // =========================
+  document.getElementById('forgotBtn')
+    .addEventListener('click', () => {
+
+      const emailVal =
+        document.getElementById('email').value.trim();
+
+      if (!emailVal) {
+        showMsg(
+          errorBox,
+          "❌ Enter email first."
+        );
+        return;
+      }
+
+      sendPasswordResetEmail(auth, emailVal)
+        .then(() => {
+          showMsg(
+            successBox,
+            "🎉 Password reset email sent."
+          );
+        })
+        .catch((err) => {
+          showMsg(
+            errorBox,
+            err.message
+          );
+        });
+    });
+
+  // =========================
+  // EMAIL LOGIN / REGISTER
+  // =========================
+  document.getElementById('authForm')
+    .addEventListener('submit', async (e) => {
+
+      e.preventDefault();
+
+      const email =
+        document.getElementById('email').value.trim();
+
+      const password =
+        document.getElementById('password').value;
+
+      const fullName =
+        document.getElementById('fullName').value.trim()
+        || "Faculty Member";
+
+      // LOGIN
       if (isLoginMode) {
+
         try {
-          const userCredential = await signInWithEmailAndPassword(auth, email, password);
+          const userCredential =
+            await signInWithEmailAndPassword(
+              auth,
+              email,
+              password
+            );
+
           await checkUserAccess(userCredential.user);
+
         } catch(err) {
-          showMsg(errorBox, "❌ Authentication validation failure. Re-check login parameters.");
+
+          showMsg(
+            errorBox,
+            "❌ Invalid login credentials."
+          );
         }
+
       } else {
-        const randomOTP = Math.floor(100000 + Math.random() * 900000).toString();
-        pendingRegistrationData = { email, password, fullName, otp: randomOTP };
+
+        // REGISTER
+        const randomOTP =
+          Math.floor(100000 + Math.random() * 900000)
+          .toString();
+
+        pendingRegistrationData = {
+          email,
+          password,
+          fullName,
+          otp: randomOTP
+        };
 
         const templateParams = {
           teacher_name: fullName,
@@ -321,71 +475,162 @@
           otp_code: randomOTP
         };
 
-        emailjs.send('service_7gt2g74', 'template_3p55cem', templateParams)
-          .then(async () => {
-            const sanitizedDocId = email.replace(/[^a-zA-Z0-9]/g, "_");
-            await setDoc(doc(db, "admin_verifications", sanitizedDocId), {
+        emailjs.send(
+          'service_7gt2g74',
+          'template_3p55cem',
+          templateParams
+        )
+        .then(async () => {
+
+          const sanitizedDocId =
+            email.replace(/[^a-zA-Z0-9]/g, "_");
+
+          await setDoc(
+            doc(
+              db,
+              "admin_verifications",
+              sanitizedDocId
+            ),
+            {
               requestedEmail: email,
               requestedName: fullName,
               timestamp: new Date().toISOString()
-            });
-            openModal();
-          })
-          .catch((err) => {
-            showMsg(errorBox, `❌ Email delivery service error encountered: ${err.text || err.message}`);
-          });
+            }
+          );
+
+          openModal();
+
+        })
+        .catch((err) => {
+
+          showMsg(
+            errorBox,
+            `❌ Email service error: ${err.message}`
+          );
+        });
       }
     });
 
-    document.getElementById('confirmVerificationBtn').addEventListener('click', async () => {
-      const userEnteredCode = document.getElementById('verificationCodeInput').value.trim();
-      if (userEnteredCode === pendingRegistrationData.otp) {
-        try {
-          let userCredential;
-          if(pendingRegistrationData.isGoogle) {
-             userCredential = { user: { uid: pendingRegistrationData.uid, email: pendingRegistrationData.email }};
-          } else {
-             userCredential = await createUserWithEmailAndPassword(auth, pendingRegistrationData.email, pendingRegistrationData.password);
-          }
-          
-          await setDoc(doc(db, "authorized_faculty", userCredential.user.uid), {
+  // =========================
+  // OTP VERIFY
+  // =========================
+  document.getElementById('confirmVerificationBtn')
+    .addEventListener('click', async () => {
+
+      const enteredCode =
+        document.getElementById('verificationCodeInput')
+        .value.trim();
+
+      if (enteredCode !== pendingRegistrationData.otp) {
+        alert("❌ Invalid verification code.");
+        return;
+      }
+
+      try {
+
+        let userCredential;
+
+        // GOOGLE USER
+        if (pendingRegistrationData.isGoogle) {
+
+          userCredential = {
+            user: {
+              uid: pendingRegistrationData.uid,
+              email: pendingRegistrationData.email
+            }
+          };
+
+        } else {
+
+          // EMAIL REGISTER USER
+          userCredential =
+            await createUserWithEmailAndPassword(
+              auth,
+              pendingRegistrationData.email,
+              pendingRegistrationData.password
+            );
+        }
+
+        // SAVE AUTHORIZED USER
+        await setDoc(
+          doc(
+            db,
+            "authorized_faculty",
+            userCredential.user.uid
+          ),
+          {
             name: pendingRegistrationData.fullName,
             email: pendingRegistrationData.email,
             role: "Faculty Member",
             enrolledAt: new Date().toISOString()
-          });
+          }
+        );
 
-          closeModal();
-          showMsg(successBox, "🎉 Profile Whitelisted! Registration complete. Transferring your terminal context to dashboard views...");
-          setTimeout(() => { window.location.replace("index.html"); }, 1500);
-        } catch(err) {
-          showMsg(errorBox, `❌ Error creating account database entry block: ${err.message}`);
-          closeModal();
-        }
-      } else {
-        alert("❌ Entered key code sequence is invalid. Confirm input matches your administrator's code exactly.");
+        closeModal();
+
+        showMsg(
+          successBox,
+          "🎉 Registration complete."
+        );
+
+        setTimeout(() => {
+          window.location.href = "./index.html";
+        }, 1200);
+
+      } catch(err) {
+
+        showMsg(
+          errorBox,
+          `❌ Registration error: ${err.message}`
+        );
+
+        closeModal();
       }
     });
 
-    // 🌟 POP-UP INTERCEPT BYPASS ENGINE: Runs signInWithPopup universally on BOTH mobile and desktop
-    document.getElementById('googleBtn').addEventListener('click', () => {
-      signInWithPopup(auth, provider)
-        .then(async (result) => {
-          await checkUserAccess(result.user);
-        })
-        .catch(err => {
-          showMsg(errorBox, `❌ Google sign-in failure: ${err.message}`);
-        });
+  // =========================
+  // GOOGLE LOGIN BUTTON
+  // =========================
+  document.getElementById('googleBtn')
+    .addEventListener('click', async () => {
+
+      try {
+
+        await signInWithRedirect(
+          auth,
+          provider
+        );
+
+      } catch (err) {
+
+        showMsg(
+          errorBox,
+          `❌ Google sign-in error: ${err.message}`
+        );
+      }
     });
 
-    function openModal() {
-      verificationModal.style.display = 'flex';
-      setTimeout(() => verificationModal.classList.add('active'), 10);
-    }
-    function closeModal() {
-      verificationModal.classList.remove('active');
-      setTimeout(() => verificationModal.style.display = 'none', 400);
-    }
-  </script>
+  // =========================
+  // MODAL FUNCTIONS
+  // =========================
+  function openModal() {
+
+    verificationModal.style.display = 'flex';
+
+    setTimeout(() => {
+      verificationModal.classList.add('active');
+    }, 10);
+  }
+
+  function closeModal() {
+
+    verificationModal.classList.remove('active');
+
+    setTimeout(() => {
+      verificationModal.style.display = 'none';
+    }, 400);
+  }
+</script>
+
 </body>
 </html>
