@@ -78,7 +78,6 @@
       transition: box-shadow 0.4s ease, border-color 0.4s ease;
     }
 
-    /* 🌟 RESPONSIVE MEDIA ENHANCEMENTS: Elevate details safely on modern desktop engines */
     @media (min-width: 768px) {
       body { perspective: 2000px; padding: 20px; }
       .spatial-capsule { padding: 50px 40px; border-radius: 40px; transform-style: preserve-3d; transform: translateZ(0); }
@@ -88,31 +87,19 @@
       .aurora-3 { width: 500px; height: 500px; }
     }
 
-    .emblem-wrapper {
-      position: relative; width: 90px; height: 90px; margin: 0 auto 25px auto;
-    }
-    @media (min-width: 768px) {
-      .emblem-wrapper { width: 110px; height: 110px; margin-bottom: 30px; transform: translateZ(50px); }
-    }
-    .emblem-wrapper::before {
-      content: ''; position: absolute; top: -4px; left: -4px; right: -4px; bottom: -4px;
-      border: 1px solid var(--primary-gold); border-radius: 50%; opacity: 0.3;
-      animation: orbitRing 8s linear infinite;
-    }
+    .emblem-wrapper { position: relative; width: 90px; height: 90px; margin: 0 auto 25px auto; }
+    @media (min-width: 768px) { .emblem-wrapper { width: 110px; height: 110px; margin-bottom: 30px; transform: translateZ(50px); } }
+    .emblem-wrapper::before { content: ''; position: absolute; top: -4px; left: -4px; right: -4px; bottom: -4px; border: 1px solid var(--primary-gold); border-radius: 50%; opacity: 0.3; animation: orbitRing 8s linear infinite; }
     .emblem-shadow { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--primary-gold); border-radius: 50%; filter: blur(20px); opacity: 0.3; }
     .emblem-img { width: 100%; height: 100%; object-fit: contain; border-radius: 50%; border: 2px solid var(--primary-gold); background: #020703; padding: 5px; position: relative; z-index: 2; box-shadow: 0 8px 20px rgba(0,0,0,0.5); }
     @keyframes orbitRing { 100% { transform: rotate(360deg); } }
 
     .portal-heading { font-family: 'Cinzel', serif; font-size: clamp(1.3rem, 5vw, 1.65rem); font-weight: 900; color: #ffffff; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; text-shadow: 0 3px 8px rgba(0,0,0,0.6); }
     .portal-desc { font-size: clamp(0.78rem, 3.5vw, 0.85rem); font-weight: 400; color: #94a3b8; margin-bottom: 30px; letter-spacing: 0.5px; }
-    @media (min-width: 768px) {
-      .portal-heading { transform: translateZ(40px); letter-spacing: 2px; }
-      .portal-desc { transform: translateZ(30px); margin-bottom: 35px; }
-    }
+    @media (min-width: 768px) { .portal-heading { transform: translateZ(40px); letter-spacing: 2px; } .portal-desc { transform: translateZ(30px); margin-bottom: 35px; } }
 
-    /* HIGH-TACTILE TACTILE OPERATIONAL HOVER BUTTON INTERFACES */
     .premium-google-btn {
-      width: 100%; padding: 15px; background: #ffffff; border: none; border-radius: 16px; color: #0f172a; font-size: 0.95rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 30px; box-shadow: 0 4px 0 #cbd5e1, 0 8px 16px rgba(0,0,0,0.3); transition: all 0.2s ease; -webkit-transition: all 0.2s ease;
+      width: 100%; padding: 15px; background: #ffffff; border: none; border-radius: 16px; color: #0f172a; font-size: 0.95rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 30px; box-shadow: 0 4px 0 #cbd5e1, 0 8px 16px rgba(0,0,0,0.3); transition: all 0.2s ease;
     }
     .premium-google-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #cbd5e1, 0 3px 6px rgba(0,0,0,0.3); }
     @media (min-width: 768px) {
@@ -125,41 +112,29 @@
     .premium-divider::before, .premium-divider::after { content: ''; flex: 1; border-bottom: 1px solid rgba(255, 255, 255, 0.06); }
     .premium-divider:not(:empty)::before { margin-right: 1.2em; }
     .premium-divider:not(:empty)::after { margin-left: 1.2em; }
-    @media (min-width: 768px) { .premium-divider { margin-bottom: 30px; letter-spacing: 3px; } }
 
     .form-group { margin-bottom: 20px; text-align: left; }
     .form-group label { display: block; font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: var(--primary-gold); margin-bottom: 8px; }
-    @media (min-width: 768px) { .form-group { margin-bottom: 24px; transform: translateZ(15px); } .form-group label { letter-spacing: 2px; margin-bottom: 10px; } }
     
     .input-wrapper input { width: 100%; padding: 14px 16px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; color: #ffffff; font-size: 0.95rem; font-weight: 500; outline: none; box-shadow: inset 0 3px 6px rgba(0,0,0,0.6); transition: all 0.3s ease; }
     .input-wrapper input:focus { border-color: var(--primary-gold); background: rgba(0, 0, 0, 0.5); box-shadow: inset 0 3px 6px rgba(0,0,0,0.6), 0 0 15px rgba(255, 215, 0, 0.15); }
-    @media (min-width: 768px) { .input-wrapper input { padding: 16px 20px; border-radius: 18px; } }
 
     .premium-action-btn {
       width: 100%; padding: 15px; background: linear-gradient(135deg, #004d26 0%, #001a0d 100%); border: 1px solid rgba(255, 215, 0, 0.3); border-radius: 14px; color: #ffffff; font-size: 0.95rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; margin-top: 5px; box-shadow: 0 4px 0 #001f0e, 0 10px 20px rgba(0,0,0,0.4); text-shadow: 0 2px 4px rgba(0,0,0,0.7); transition: all 0.2s ease;
     }
     .premium-action-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #001f0e, 0 4px 8px rgba(0,0,0,0.4); }
-    @media (min-width: 768px) {
-      .premium-action-btn { padding: 18px; border-radius: 18px; margin-top: 10px; box-shadow: 0 6px 0 #001f0e, 0 15px 25px rgba(0,0,0,0.5); transform: translateZ(30px); letter-spacing: 1.5px; }
-      .premium-action-btn:hover { background: linear-gradient(135deg, #006633 0%, #002613 100%); border-color: rgba(255, 215, 0, 0.6); transform: translateZ(30px) translateY(-3px); box-shadow: 0 9px 0 #001f0e, 0 20px 35px rgba(0,0,0,0.6); }
-      .premium-action-btn:active { transform: translateZ(30px) translateY(4px); box-shadow: 0 2px 0 #001f0e, 0 6px 12px rgba(0,0,0,0.4); }
-    }
 
     .status-capsule { padding: 14px 16px; border-radius: 14px; font-size: 0.82rem; font-weight: 700; margin-bottom: 20px; display: none; text-align: left; line-height: 1.4; }
     .error-card { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.4); color: #fca5a5; }
     .success-card { background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.4); color: #a7f3d0; }
-    @media (min-width: 768px) { .status-capsule { padding: 16px 20px; border-radius: 18px; margin-bottom: 25px; transform: translateZ(35px); } }
 
     .luxury-link { margin-top: 20px; font-size: 0.8rem; font-weight: 600; color: #cbd5e1; }
     .luxury-link span { color: var(--primary-gold); cursor: pointer; font-weight: 800; }
-    @media (min-width: 768px) { .luxury-link { margin-top: 25px; font-size: 0.82rem; transform: translateZ(10px); } .luxury-link span:hover { color: #ffffff; text-shadow: 0 0 15px var(--primary-gold); } }
 
-    /* HIGH-CHROME MODAL CHALLENGE LAYER UI */
     .luxury-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(2, 6, 3, 0.9); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); display: flex; align-items: center; justify-content: center; display: none; z-index: 2000; opacity: 0; transition: opacity 0.3s ease; }
     .luxury-overlay-card { background: linear-gradient(135deg, rgba(12, 38, 22, 0.95) 0%, rgba(4, 15, 8, 0.98) 100%); border: 1px solid var(--primary-gold); border-radius: 24px; padding: 35px 20px; max-width: 420px; width: 92%; text-align: center; box-shadow: 0 30px 60px rgba(0,0,0,0.8); transform: scale(0.9) translateY(15px); transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
     .luxury-overlay.active { opacity: 1; }
     .luxury-overlay.active .luxury-overlay-card { transform: scale(1) translateY(0); }
-    @media (min-width: 768px) { .luxury-overlay-card { border: 2px solid var(--primary-gold); border-radius: 36px; padding: 45px 40px; box-shadow: 0 40px 90px rgba(0,0,0,0.8), 0 0 60px rgba(255,215,0,0.2); } }
   </style>
 </head>
 <body>
@@ -252,6 +227,8 @@
     const provider = new GoogleAuthProvider();
     provider.setCustomParameters({ prompt: 'select_account' });
 
+    emailjs.init({ publicKey: "b7YyWsmcBvZzSArYg" });
+
     let isLoginMode = true;
     let pendingRegistrationData = null;
 
@@ -266,15 +243,17 @@
 
     function showMsg(box, text) { box.textContent = text; box.style.display = 'block'; setTimeout(() => box.style.display = 'none', 7000); }
 
-    // 🌟 CORE EVENT MODULE OVERLAY HOOK: Listens to incoming operational sign-ins instantly across environments
+    // 🌟 FIXED REDIRECT LISTENER HANDLER: Checks whitelist records directly, bypassing local state blockers
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         try {
           const userDoc = await getDoc(doc(db, "authorized_faculty", user.uid));
           if (userDoc.exists()) {
+            // Success anchor: Whitelisted parameters matched. Relocate safely to dashboard index view
             window.location.replace('index.html');
           } else {
-            if (pendingRegistrationData && pendingRegistrationData.isGoogle) return;
+            // New user trigger check: Only trigger registration template if not already executing
+            if (pendingRegistrationData) return;
             
             const randomOTP = Math.floor(100000 + Math.random() * 900000).toString();
             pendingRegistrationData = { 
@@ -301,9 +280,8 @@
       }
     });
 
-    // 🌟 SEAMLESS INTERACTIVE MOBILE REDIRECT ENGINE CLEARANCE LAYER
-    async function initAuthFlow() {
-      emailjs.init({ publicKey: "b7YyWsmcBvZzSArYg" });
+    // Handle incoming redirect tokens on browser initialization sequence
+    async function handleMobileRedirect() {
       try {
         const result = await getRedirectResult(auth);
         if (result && result.user) {
@@ -318,8 +296,7 @@
         }
       }
     }
-
-    initAuthFlow();
+    handleMobileRedirect();
 
     function handleFormToggle() {
       isLoginMode = !isLoginMode;
@@ -434,7 +411,6 @@
 
     document.getElementById('googleBtn').addEventListener('click', () => {
       const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-      
       if (isMobileDevice) {
         signInWithRedirect(auth, provider).catch(err => showMsg(errorBox, `❌ Direct provider error: ${err.message}`));
       } else {
@@ -476,7 +452,7 @@
     }
 
     const starfield = document.getElementById('starfield');
-    const starCount = 45; // Reduced computational density parameters to streamline layout performance profiles on mobile hardware
+    const starCount = 45;
     for (let i = 0; i < starCount; i++) {
       const star = document.createElement('div');
       star.className = 'star';
@@ -488,7 +464,6 @@
       starfield.appendChild(star);
     }
 
-    // Dynamic 3D mouse tracking calculations are bound exclusively to large screens
     const consoleContainer = document.getElementById('interactiveConsole');
     if (window.innerWidth >= 768) {
       document.addEventListener('mousemove', (e) => {
