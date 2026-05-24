@@ -284,6 +284,7 @@
     const provider = new GoogleAuthProvider();
     provider.setCustomParameters({ prompt: 'select_account' });
 
+    // Global variable references to handle cross-device state persistence layers
     let isLoginMode = true;
     let pendingRegistrationData = null;
 
@@ -298,60 +299,50 @@
 
     function showMsg(box, text) { box.textContent = text; box.style.display = 'block'; setTimeout(() => box.style.display = 'none', 7000); }
 
-    // 🌟 TOP-LEVEL EVENT DRIVER: Runs immediately when the window context is ready
-    window.onload = async function() {
-      emailjs.init({ publicKey: "b7YyWsmcBvZzSArYg" });
-
-      // Continuous monitoring channel for persistent cross-device authentication sessions
-      onAuthStateChanged(auth, async (user) => {
-        if (user) {
-          try {
-            const userDoc = await getDoc(doc(db, "authorized_faculty", user.uid));
-            if (userDoc.exists()) {
-              window.location.replace('./index.html');
-            } else {
-              if (pendingRegistrationData && pendingRegistrationData.isGoogle) return;
-              
-              const randomOTP = Math.floor(100000 + Math.random() * 900000).toString();
-              pendingRegistrationData = { 
-                email: user.email, 
-                uid: user.uid, 
-                fullName: user.displayName || "Google Faculty User", 
-                otp: randomOTP,
-                isGoogle: true
-              };
-              
-              const templateParams = {
-                teacher_name: pendingRegistrationData.fullName,
-                teacher_email: pendingRegistrationData.email,
-                otp_code: randomOTP
-              };
-
-              emailjs.send('service_7gt2g74', 'template_3p55cem', templateParams)
-                .then(() => { openModal(); })
-                .catch(err => showMsg(errorBox, `❌ Service tracking delivery fault: ${err.message}`));
-            }
-          } catch (error) {
-            showMsg(errorBox, "❌ Security verification verification sync error.");
-          }
-        }
-      });
-
-      // Handle redirect results from mobile operations seamlessly
-      try {
-        const result = await getRedirectResult(auth);
-        if (result && result.user) {
-          const userDoc = await getDoc(doc(db, "authorized_faculty", result.user.uid));
+    // 🌟 THE UNIVERSAL LIFECYCLE CONTROLLER: Native event engine processing both mobile redirects and standard cookies instantly
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        try {
+          const userDoc = await getDoc(doc(db, "authorized_faculty", user.uid));
           if (userDoc.exists()) {
-            window.location.replace('./index.html');
+            window.location.replace('index.html');
+          } else {
+            if (pendingRegistrationData && pendingRegistrationData.isGoogle) return;
+            
+            const randomOTP = Math.floor(100000 + Math.random() * 900000).toString();
+            pendingRegistrationData = { 
+              email: user.email, 
+              uid: user.uid, 
+              fullName: user.displayName || "Google Faculty User", 
+              otp: randomOTP,
+              isGoogle: true
+            };
+            
+            const templateParams = {
+              teacher_name: pendingRegistrationData.fullName,
+              teacher_email: pendingRegistrationData.email,
+              otp_code: randomOTP
+            };
+
+            emailjs.send('service_7gt2g74', 'template_3p55cem', templateParams)
+              .then(() => { openModal(); })
+              .catch(err => showMsg(errorBox, `❌ Service tracking delivery fault: ${err.message}`));
           }
-        }
-      } catch (err) {
-        if (err.code !== 'auth/redirect-cancelled-by-user') {
-          showMsg(errorBox, `❌ Mobile sign-in route verification error: ${err.message}`);
+        } catch (error) {
+          showMsg(errorBox, "❌ Security verification sync error encountered.");
         }
       }
-    };
+    });
+
+    // Run remote configurations and process incoming mobile redirect values immediately upon module mount
+    emailjs.init({ publicKey: "b7YyWsmcBvZzSArYg" });
+    try {
+      await getRedirectResult(auth);
+    } catch (err) {
+      if (err.code !== 'auth/redirect-cancelled-by-user') {
+        showMsg(errorBox, `❌ Redirect tracking sync failure: ${err.message}`);
+      }
+    }
 
     function handleFormToggle() {
       isLoginMode = !isLoginMode;
@@ -400,7 +391,7 @@
           const userCredential = await signInWithEmailAndPassword(auth, email, password);
           const userDoc = await getDoc(doc(db, "authorized_faculty", userCredential.user.uid));
           if (userDoc.exists()) {
-            window.location.replace('./index.html');
+            window.location.replace('index.html');
           } else {
             await auth.signOut();
             showMsg(errorBox, "❌ Access Denied: This account profile is not whitelisted inside the Faculty Registry.");
@@ -454,7 +445,7 @@
 
           closeModal();
           showMsg(successBox, "🎉 Profile Whitelisted! Registration complete. Transferring your terminal context to dashboard views...");
-          setTimeout(() => window.location.replace('./index.html'), 1500);
+          setTimeout(() => window.location.replace('index.html'), 1500);
         } catch(err) {
           showMsg(errorBox, `❌ Error creating account database entry block: ${err.message}`);
           closeModal();
@@ -473,7 +464,7 @@
         signInWithPopup(auth, provider).then(async (result) => {
           const userDoc = await getDoc(doc(db, "authorized_faculty", result.user.uid));
           if (userDoc.exists()) {
-            window.location.replace('./index.html');
+            window.location.replace('index.html');
           } else {
             const randomOTP = Math.floor(100000 + Math.random() * 900000).toString();
             pendingRegistrationData = { 
