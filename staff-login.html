@@ -60,7 +60,7 @@
     .star { position: absolute; background: #ffffff; border-radius: 50%; opacity: 0; animation: hyperPulse var(--spd) infinite ease-in-out; }
     @keyframes hyperPulse { 0%, 100% { opacity: 0; transform: translateY(0) scale(0.3); } 50% { opacity: var(--op); transform: translateY(-10px) scale(1.2); } }
 
-    /* ULTRA-LUXURY GLASSMORPHISM CARD ARMORED FOR MOBILE SCREEN CONTEXTS */
+    /* ULTRA-LUXURY GLASSMORPHISM CARD */
     .spatial-capsule {
       width: 100%; max-width: 440px;
       background: linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.01) 100%);
@@ -102,16 +102,11 @@
       width: 100%; padding: 15px; background: #ffffff; border: none; border-radius: 16px; color: #0f172a; font-size: 0.95rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 30px; box-shadow: 0 4px 0 #cbd5e1, 0 8px 16px rgba(0,0,0,0.3); transition: all 0.2s ease;
     }
     .premium-google-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #cbd5e1, 0 3px 6px rgba(0,0,0,0.3); }
-    @media (min-width: 768px) {
-      .premium-google-btn { padding: 16px; border-radius: 20px; margin-bottom: 35px; box-shadow: 0 6px 0 #cbd5e1, 0 12px 24px rgba(0,0,0,0.4); transform: translateZ(25px); }
-      .premium-google-btn:hover { background: #f8fafc; transform: translateZ(25px) translateY(-3px); box-shadow: 0 9px 0 #cbd5e1, 0 16px 30px rgba(0,0,0,0.45); }
-      .premium-google-btn:active { transform: translateZ(25px) translateY(4px); box-shadow: 0 2px 0 #cbd5e1, 0 4px 10px rgba(0,0,0,0.3); }
-    }
 
     .premium-divider { display: flex; align-items: center; text-align: center; margin-bottom: 25px; color: #4b5563; font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; }
     .premium-divider::before, .premium-divider::after { content: ''; flex: 1; border-bottom: 1px solid rgba(255, 255, 255, 0.06); }
-    .premium-divider:not(:empty)::before { margin-right: 1.2em; }
-    .premium-divider:not(:empty)::after { margin-left: 1.2em; }
+    .premium-divider:not(:empty)::before { margin-right: 1.5em; }
+    .premium-divider:not(:empty)::after { margin-left: 1.5em; }
 
     .form-group { margin-bottom: 20px; text-align: left; }
     .form-group label { display: block; font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: var(--primary-gold); margin-bottom: 8px; }
@@ -208,7 +203,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, signInWithRedirect, getRedirectResult, onAuthStateChanged, sendPasswordResetEmail, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+    import { getAuth, setPersistence, browserLocalPersistence, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, signInWithRedirect, getRedirectResult, onAuthStateChanged, sendPasswordResetEmail, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
     import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -243,16 +238,15 @@
 
     function showMsg(box, text) { box.textContent = text; box.style.display = 'block'; setTimeout(() => box.style.display = 'none', 7000); }
 
-    // 🌟 SEAMLESS MULTI-DEVICE VALIDATOR ENGINE
+    // 🌟 WHITELIST CHECK ENGINE: Shared validation routine for both standard entries and redirects
     async function checkUserAccess(user) {
       if (!user) return;
       try {
         const userDoc = await getDoc(doc(db, "authorized_faculty", user.uid));
         if (userDoc.exists()) {
-          // Absolute routing layout swap to prevent mobile caching loops
-          window.location.href = "index.html";
+          // Explicitly clear parent window locations to completely bypass mobile sub-domain caching locks
+          window.location.replace("index.html");
         } else {
-          // If the profile exists in auth but isn't whitelisted, drop the token and show warning
           if (pendingRegistrationData) return;
           
           const randomOTP = Math.floor(100000 + Math.random() * 900000).toString();
@@ -279,24 +273,34 @@
       }
     }
 
-    // Direct active capture handle monitoring incoming redirect operations
-    async function processRedirectPayload() {
+    // 🌟 CORE SYSTEM LIFECYCLE INITIALIZER: Enforces structural persistence parameters across mobile browsers
+    async function initSystemHardwareFlow() {
       try {
+        // Enforce Local Persistence across hardware boundaries to secure tokens on mobile switches
+        await setPersistence(auth, browserLocalPersistence);
+        
+        // Listen for direct mobile return results instantly
         const result = await getRedirectResult(auth);
         if (result && result.user) {
           await checkUserAccess(result.user);
+          return;
+        }
+
+        // Catch active persistent user states
+        if (auth.currentUser) {
+          await checkUserAccess(auth.currentUser);
         }
       } catch (err) {
         if (err.code !== 'auth/redirect-cancelled-by-user') {
-          showMsg(errorBox, `❌ Mobile sign-in route verification error: ${err.message}`);
+          showMsg(errorBox, `❌ Device integration sync fault: ${err.message}`);
         }
       }
     }
 
-    // Initialize mobile catcher components immediately
-    processRedirectPayload();
+    // Execute multi-device persistence stack instantly
+    initSystemHardwareFlow();
 
-    // Secondary persistent validation monitor
+    // Constant background state sync observer
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         await checkUserAccess(user);
@@ -398,7 +402,7 @@
 
           closeModal();
           showMsg(successBox, "🎉 Profile Whitelisted! Registration complete. Transferring your terminal context to dashboard views...");
-          setTimeout(() => { window.location.href = "index.html"; }, 1500);
+          setTimeout(() => { window.location.replace("index.html"); }, 1500);
         } catch(err) {
           showMsg(errorBox, `❌ Error creating account database entry block: ${err.message}`);
           closeModal();
@@ -429,7 +433,7 @@
     }
 
     const starfield = document.getElementById('starfield');
-    const starCount = 45;
+    const starCount = 35;
     for (let i = 0; i < starCount; i++) {
       const star = document.createElement('div');
       star.className = 'star';
