@@ -58,11 +58,6 @@
       box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
     }
 
-    @media (min-width: 768px) {
-      .portal-card { padding: 50px 40px; transition: transform 0.3s ease, box-shadow 0.3s ease; }
-      .portal-card:hover { transform: translateY(-4px); box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.6); }
-    }
-
     .emblem-container { position: relative; width: 90px; height: 90px; margin: 0 auto 25px auto; }
     .emblem-img { width: 100%; height: 100%; object-fit: contain; border-radius: 50%; border: 2px solid var(--primary-gold); background: #020617; padding: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
 
@@ -70,7 +65,7 @@
     .portal-desc { font-size: clamp(0.78rem, 3.5vw, 0.85rem); font-weight: 400; color: #94a3b8; margin-bottom: 30px; }
 
     .premium-google-btn {
-      width: 100%; padding: 14px; background: #ffffff; border: none; border-radius: 14px; color: #0f172a; font-size: 0.95rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 25px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); transition: background-color 0.2s ease, transform 0.1s ease;
+      width: 100%; padding: 14px; background: #ffffff; border: none; border-radius: 14px; color: #0f172a; font-size: 0.95rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 25px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); transition: all 0.2s ease;
     }
     .premium-google-btn:active { transform: scale(0.98); background-color: #f1f5f9; }
 
@@ -82,11 +77,11 @@
     .form-group { margin-bottom: 20px; text-align: left; }
     .form-group label { display: block; font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: var(--primary-gold); margin-bottom: 8px; }
     
-    .input-wrapper input { width: 100%; padding: 14px 16px; background: var(--input-bg); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: #ffffff; font-size: 0.95rem; outline: none; transition: border-color 0.2s ease, background-color 0.2s ease; }
+    .input-wrapper input { width: 100%; padding: 14px 16px; background: var(--input-bg); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: #ffffff; font-size: 0.95rem; outline: none; transition: border-color 0.2s ease; }
     .input-wrapper input:focus { border-color: var(--primary-gold); background: rgba(255, 255, 255, 0.08); }
 
     .premium-action-btn {
-      width: 100%; padding: 15px; background: var(--primary-gold); border: none; border-radius: 12px; color: var(--sapphire-blue); font-size: 0.95rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; margin-top: 5px; box-shadow: 0 4px 14px rgba(229, 184, 66, 0.3); transition: opacity 0.2s ease, transform 0.1s ease;
+      width: 100%; padding: 15px; background: var(--primary-gold); border: none; border-radius: 12px; color: var(--sapphire-blue); font-size: 0.95rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; margin-top: 5px; box-shadow: 0 4px 14px rgba(229, 184, 66, 0.3); transition: all 0.2s ease;
     }
     .premium-action-btn:active { transform: scale(0.98); }
 
@@ -97,15 +92,20 @@
     .luxury-link { margin-top: 20px; font-size: 0.8rem; font-weight: 600; color: #94a3b8; }
     .luxury-link span { color: var(--primary-gold); cursor: pointer; font-weight: 800; text-decoration: underline; }
 
-    /* INLINE OPTIMIZED VERIFICATION CHANNEL SECTION STYLE */
-    .inline-verification-section {
-      margin-top: 20px;
-      padding-top: 25px;
-      border-top: 1px dashed var(--glass-stroke);
-      display: none;
-      flex-direction: column;
+    .inline-verification-section { margin-top: 20px; padding-top: 25px; border-top: 1px dashed var(--glass-stroke); display: none; flex-direction: column; animation: sectionFadeIn 0.4s ease-out forwards; }
+    
+    /* 🌟 ADMIN SPLIT GATE SECTION STYLES */
+    .admin-gate-section {
+      margin-top: 15px; display: none; flex-direction: column; gap: 16px;
       animation: sectionFadeIn 0.4s ease-out forwards;
     }
+    .admin-choice-btn {
+      width: 100%; padding: 16px; border-radius: 14px; font-size: 0.95rem; font-weight: 800;
+      text-transform: uppercase; cursor: pointer; border: none; transition: all 0.2s;
+    }
+    .choice-staff { background: #ffffff; color: var(--slate-dark); }
+    .choice-admin { background: linear-gradient(135deg, #b31919 0%, #660000 100%); color: #ffffff; border: 1px solid rgba(255,215,0,0.3); box-shadow: 0 4px 15px rgba(179,25,25,0.4); }
+
     @keyframes sectionFadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
   </style>
 </head>
@@ -164,8 +164,13 @@
       </p>
     </div>
 
+    <div class="admin-gate-section" id="adminGateChoiceContainer">
+      <button type="button" class="admin-choice-btn choice-staff" id="gateToStaffHubBtn">Staff Portal Dashboard</button>
+      <button type="button" class="admin-choice-btn choice-admin" id="gateToLiveMonitorBtn">Real-time Admin Console</button>
+    </div>
+
     <div class="inline-verification-section" id="inlineVerificationChannelContainer">
-      <h3 style="color:var(--primary-gold); font-size:1.15rem; margin-bottom:10px; font-weight:800; letter-spacing:0.5px;">Security Challenge Issued</h3>
+      <h3 style="color:var(--primary-gold); font-size:1.15rem; margin-bottom:10px; font-weight:800;">Security Challenge Issued</h3>
       <p style="font-size:0.8rem; margin-bottom:20px; color:#cbd5e1; line-height:1.5;">An administrative authorization log containing a 6-digit verification key has been routed directly to <strong>admin@paramountschooledu.in</strong>. Enter that sequence below to clear entry access checks.</p>
       <div class="form-group">
         <label style="text-align: center; display:block; letter-spacing:2px;">6-Digit Administration Key</label>
@@ -178,7 +183,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-    import { getAuth, setPersistence, browserLocalPersistence, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, onAuthStateChanged, sendPasswordResetEmail, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+    import { getAuth, setPersistence, browserLocalPersistence, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, onAuthStateChanged, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
     import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -211,34 +216,51 @@
     const toggleViewBox = document.getElementById('toggleViewBox');
     const primaryAuthInterfaceModule = document.getElementById('primaryAuthInterfaceModule');
     const inlineVerificationChannelContainer = document.getElementById('inlineVerificationChannelContainer');
+    const adminGateChoiceContainer = document.getElementById('adminGateChoiceContainer');
 
     function showMsg(box, text) { box.textContent = text; box.style.display = 'block'; setTimeout(() => box.style.display = 'none', 7000); }
 
-    // UNIVERSAL WHITE-LIST ROUTER
+    // 🌟 ROUTING HUB REFACTOR: Handles standard users vs Admin choice configurations
     async function checkUserAccess(user) {
       if (!user) return;
+      
+      // Target condition: Head Administration Profile detected
+      if (user.email === "admin@paramountschooledu.in") {
+        titleText.textContent = "Admin Control Gate";
+        subtitleText.textContent = "Select operational system environment context";
+        primaryAuthInterfaceModule.style.display = 'none';
+        adminGateChoiceContainer.style.display = 'flex';
+        
+        // Log current active session metadata straight into the tracker engine
+        await setDoc(doc(db, "active_sessions", user.uid), {
+          name: "Super Administrator",
+          email: user.email,
+          activePortal: "Login Interface Choice Gate",
+          lastActive: new Date().toISOString(),
+          status: "online"
+        });
+        return;
+      }
+
       try {
         const userDoc = await getDoc(doc(db, "authorized_faculty", user.uid));
         if (userDoc.exists()) {
+          // Log standard user interaction tracking signature
+          await setDoc(doc(db, "active_sessions", user.uid), {
+            name: userDoc.data().name || "Faculty Member",
+            email: user.email,
+            activePortal: "Executive Dashboard Hub",
+            lastActive: new Date().toISOString(),
+            status: "online"
+          });
           window.location.replace("index.html");
         } else {
           if (pendingRegistrationData) return;
           
           const randomOTP = Math.floor(100000 + Math.random() * 900000).toString();
-          pendingRegistrationData = { 
-            email: user.email, 
-            uid: user.uid, 
-            fullName: user.displayName || "Google Faculty User", 
-            otp: randomOTP,
-            isGoogle: true
-          };
+          pendingRegistrationData = { email: user.email, uid: user.uid, fullName: user.displayName || "Google Faculty User", otp: randomOTP, isGoogle: true };
           
-          const templateParams = {
-            teacher_name: pendingRegistrationData.fullName,
-            teacher_email: pendingRegistrationData.email,
-            otp_code: randomOTP
-          };
-
+          const templateParams = { teacher_name: pendingRegistrationData.fullName, teacher_email: pendingRegistrationData.email, otp_code: randomOTP };
           emailjs.send('service_7gt2g74', 'template_3p55cem', templateParams)
             .then(() => { openInlineChannel(); })
             .catch(err => showMsg(errorBox, `❌ Service tracking delivery fault: ${err.message}`));
@@ -251,19 +273,21 @@
     async function enforceHardwarePersistence() {
       try {
         await setPersistence(auth, browserLocalPersistence);
-        if (auth.currentUser) {
-          await checkUserAccess(auth.currentUser);
-        }
-      } catch (e) {
-        console.error("Persistence signature drop catch invoked");
-      }
+        if (auth.currentUser) { await checkUserAccess(auth.currentUser); }
+      } catch (e) { console.error("Persistence lock dropped"); }
     }
     enforceHardwarePersistence();
 
     onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        await checkUserAccess(user);
-      }
+      if (user) { await checkUserAccess(user); }
+    });
+
+    // CHOICE GATE ACTIONS LOOP
+    document.getElementById('gateToStaffHubBtn').addEventListener('click', () => {
+      window.location.href = "index.html";
+    });
+    document.getElementById('gateToLiveMonitorBtn').addEventListener('click', () => {
+      window.location.href = "admin-monitor.html";
     });
 
     function handleFormToggle() {
@@ -291,17 +315,6 @@
       if (e.target && e.target.id === 'toggleBtn') { handleFormToggle(); }
     });
 
-    document.getElementById('forgotBtn').addEventListener('click', () => {
-      const emailVal = document.getElementById('email').value.trim();
-      if(!emailVal) {
-        showMsg(errorBox, "❌ Please enter your email address into the standard field first to trigger system recovery keys.");
-        return;
-      }
-      sendPasswordResetEmail(auth, emailVal)
-        .then(() => showMsg(successBox, "🎉 Secure automated password reset link sent to your inbox."))
-        .catch(err => showMsg(errorBox, `❌ Recovery System Fault: ${err.message.replace("Firebase: ", "")}`));
-    });
-
     document.getElementById('authForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const email = document.getElementById('email').value.trim();
@@ -317,24 +330,14 @@
         }
       } else {
         if (pendingRegistrationData) return;
-        
         const randomOTP = Math.floor(100000 + Math.random() * 900000).toString();
         pendingRegistrationData = { email, password, fullName, otp: randomOTP };
 
-        const templateParams = {
-          teacher_name: fullName,
-          teacher_email: email,
-          otp_code: randomOTP
-        };
-
+        const templateParams = { teacher_name: fullName, teacher_email: email, otp_code: randomOTP };
         emailjs.send('service_7gt2g74', 'template_3p55cem', templateParams)
           .then(async () => {
             const sanitizedDocId = email.replace(/[^a-zA-Z0-9]/g, "_");
-            await setDoc(doc(db, "admin_verifications", sanitizedDocId), {
-              requestedEmail: email,
-              requestedName: fullName,
-              timestamp: new Date().toISOString()
-            });
+            await setDoc(doc(db, "admin_verifications", sanitizedDocId), { requestedEmail: email, requestedName: fullName, timestamp: new Date().toISOString() });
             openInlineChannel();
           })
           .catch((err) => {
@@ -369,21 +372,16 @@
           showMsg(errorBox, `❌ Error creating account database entry block: ${err.message}`);
         }
       } else {
-        alert("❌ Entered key code sequence is invalid. Confirm input matches your administrator's code exactly.");
+        alert("❌ Entered key code sequence is invalid.");
       }
     });
 
     document.getElementById('googleBtn').addEventListener('click', () => {
-      signInWithPopup(auth, provider)
-        .then(async (result) => {
-          await checkUserAccess(result.user);
-        })
-        .catch(err => {
-          showMsg(errorBox, `❌ Google sign-in failure: ${err.message}`);
-        });
+      signInWithPopup(auth, provider).then(async (result) => {
+        await checkUserAccess(result.user);
+      }).catch(err => { showMsg(errorBox, `❌ Google sign-in failure: ${err.message}`); });
     });
 
-    // Toggle inline rendering mechanisms cleanly to guarantee touch execution bounds
     function openInlineChannel() {
       primaryAuthInterfaceModule.style.display = 'none';
       inlineVerificationChannelContainer.style.display = 'flex';
