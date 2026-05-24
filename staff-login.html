@@ -6,6 +6,9 @@
   <title>Executive Portal | Paramount School</title>
   <link rel="icon" type="image/png" href="logo.png">
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  
   <style>
     :root { 
       --primary-gold: #ffd700;
@@ -110,7 +113,7 @@
     .portal-heading { font-family: 'Cinzel', serif; font-size: 1.65rem; font-weight: 900; color: #ffffff; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; text-shadow: 0 4px 10px rgba(0,0,0,0.6); transform: translateZ(40px); }
     .portal-desc { font-size: 0.85rem; font-weight: 400; color: #94a3b8; margin-bottom: 35px; letter-spacing: 0.5px; transform: translateZ(30px); }
 
-    /* HIGH-TACTILE 3D CHROME BUTTON (GOOGLE CLIENT) */
+    /* HIGH-TACTILE 3D CHROME BUTTON */
     .premium-google-btn {
       width: 100%; padding: 16px; background: #ffffff; border: none; border-radius: 20px;
       color: #0f172a; font-size: 0.95rem; font-weight: 700; cursor: pointer;
@@ -191,8 +194,6 @@
     .luxury-overlay.active { opacity: 1; }
     .luxury-overlay.active .luxury-overlay-card { transform: scale(1) translateY(0); }
   </style>
-  
-  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 </head>
 <body>
 
@@ -284,7 +285,9 @@
     const provider = new GoogleAuthProvider();
     provider.setCustomParameters({ prompt: 'select_account' });
 
-    // Global variable references to handle cross-device state persistence layers
+    // Initialize communication link parameters instantly 
+    emailjs.init({ publicKey: "b7YyWsmcBvZzSArYg" });
+
     let isLoginMode = true;
     let pendingRegistrationData = null;
 
@@ -299,12 +302,13 @@
 
     function showMsg(box, text) { box.textContent = text; box.style.display = 'block'; setTimeout(() => box.style.display = 'none', 7000); }
 
-    // 🌟 THE UNIVERSAL LIFECYCLE CONTROLLER: Native event engine processing both mobile redirects and standard cookies instantly
+    // 🌟 THE IOS & MULTI-DEVICE LIFECYCLE FIX: High-performance observer capturing user payload arrival 
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         try {
           const userDoc = await getDoc(doc(db, "authorized_faculty", user.uid));
           if (userDoc.exists()) {
+            // WHITELISTED ENTRY FOUND: Redirect cleanly using absolute window replaces to force iOS out of login state
             window.location.replace('index.html');
           } else {
             if (pendingRegistrationData && pendingRegistrationData.isGoogle) return;
@@ -334,13 +338,18 @@
       }
     });
 
-    // Run remote configurations and process incoming mobile redirect values immediately upon module mount
-    emailjs.init({ publicKey: "b7YyWsmcBvZzSArYg" });
+    // Async engine listening continuously for returning redirect tokens
     try {
-      await getRedirectResult(auth);
+      const result = await getRedirectResult(auth);
+      if (result && result.user) {
+        const userDoc = await getDoc(doc(db, "authorized_faculty", result.user.uid));
+        if (userDoc.exists()) {
+          window.location.replace('index.html');
+        }
+      }
     } catch (err) {
       if (err.code !== 'auth/redirect-cancelled-by-user') {
-        showMsg(errorBox, `❌ Redirect tracking sync failure: ${err.message}`);
+        showMsg(errorBox, `❌ Mobile sign-in route verification error: ${err.message}`);
       }
     }
 
@@ -459,6 +468,7 @@
       const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
       
       if (isMobileDevice) {
+        // Direct iOS/Safari responsive loop layout channel mapping
         signInWithRedirect(auth, provider).catch(err => showMsg(errorBox, `❌ Direct provider error: ${err.message}`));
       } else {
         signInWithPopup(auth, provider).then(async (result) => {
