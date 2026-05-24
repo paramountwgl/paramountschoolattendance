@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paramount School | Executive Live Registry Monitor</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root { --p-green: #004d26; --p-gold: #ffd700; --slate-dark: #0f172a; --white: #ffffff; }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+    body { background: #070d19; color: #f1f5f9; min-height: 100vh; padding: 30px 5%; }
+    
+    header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--p-gold); padding-bottom: 20px; margin-bottom: 35px; }
+    h1 { font-family: 'Cinzel', serif; font-size: 1.6rem; color: var(--p-gold); }
+    .back-btn { background: transparent; border: 1px solid var(--p-gold); color: var(--p-gold); padding: 8px 16px; border-radius: 20px; cursor: pointer; font-weight: 700; text-transform: uppercase; font-size: 0.8rem; }
+    .back-btn:hover { background: var(--p-gold); color: #070d19; }
+
+    .monitor-grid { display: grid; grid-template-columns: 1fr; gap: 25px; }
+    .card { background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 215, 0, 0.15); border-radius: 20px; padding: 25px; backdrop-filter: blur(10px); }
+    .card-title { font-size: 1.1rem; font-weight: 800; color: #ffffff; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 10px; }
+    
+    table { width: 100%; border-collapse: collapse; text-align: left; }
+    th { font-size: 0.75rem; text-transform: uppercase; color: var(--p-gold); font-weight: 800; padding: 12px; border-bottom: 2px solid rgba(255,255,255,0.1); }
+    td { padding: 14px 12px; font-size: 0.9rem; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    
+    .status-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 20px; font-size: 0.72rem; font-weight: 800; text-transform: uppercase; }
+    .status-online { background: rgba(16, 185, 129, 0.15); color: #34d399; }
+    .status-offline { background: rgba(100, 116, 139, 0.15); color: #94a3b8; }
+    
+    .evict-btn { background: rgba(239, 68, 68, 0.1); border: 1px solid #ef4444; color: #fca5a5; padding: 6px 14px; border-radius: 10px; font-size: 0.78rem; font-weight: 700; cursor: pointer; transition: 0.2s; }
+    .evict-btn:hover { background: #ef4444; color: white; }
+    
+    .portal-tag { background: rgba(56, 189, 248, 0.15); color: #38bdf8; padding: 4px 10px; border-radius: 6px; font-size: 0.78rem; font-weight: 600; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div>
+      <h1>Paramount Executive Core</h1>
+      <p style="font-size:0.8rem; color:#94a3b8; margin-top:2px;">Live Whitelist Registry & Session Surveillance Terminal</p>
+    </div>
+    <button class="back-btn" onclick="window.location.href='staff-login.html'"><i class="fas fa-arrow-left"></i> System Gate</button>
+  </header>
+
+  <div class="monitor-grid">
+    <div class="card">
+      <div class="card-title"><i class="fas fa-users" style="color:var(--p-gold)"></i> Active Whitelist & Activity Stream</div>
+      <table id="facultyRegistryTable">
+        <thead>
+          <tr>
+            <th>Faculty Context</th>
+            <th>Institutional Email</th>
+            <th>Current active workspace</th>
+            <th>Last System Pulse</th>
+            <th>Authorization</th>
+          </tr>
+        </thead>
+        <tbody id="registryTableBody">
+          <tr>
+            <td colspan="5" style="text-align:center; color:#64748b; padding:30px;">Mounting secure Firestore link matrix nodes...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+    import { getFirestore, collection, onSnapshot, doc, deleteDoc, query, getDocs } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAzUOh21Ec31kKmf42Tcw-xs4fVZyPh2fM",
+      authDomain: "paramount-school-d55bc.firebaseapp.com",
+      projectId: "paramount-school-d55bc"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // Lock panel context security exclusively to the head admin session
+    onAuthStateChanged(auth, (user) => {
+      if (!user || user.email !== "admin@paramountschooledu.in") {
+        alert("🔒 Unauthorized Administrative Intercept: Direct Terminal access rejected.");
+        window.location.replace("staff-login.html");
+      }
+    });
+
+    // 🌟 REALTIME MONITOR CROSS-LINK REFLECTION SYNC ENGINE
+    function syncLiveMonitor() {
+      // Stream live faculty whitelist
+      onSnapshot(collection(db, "authorized_faculty"), async (snapshot) => {
+        const tableBody = document.getElementById('registryTableBody');
+        tableBody.innerHTML = "";
+
+        if (snapshot.empty) {
+          tableBody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#64748b;">No faculty records whitelisted on database root node.</td></tr>`;
+          return;
+        }
+
+        // Fetch current snapshot state of matching active trackers
+        const sessionQuery = await getDocs(collection(db, "active_sessions"));
+        let sessions = {};
+        sessionQuery.forEach(doc => { sessions[doc.id] = doc.data(); });
+
+        snapshot.forEach((facultyDoc) => {
+          const uid = facultyDoc.id;
+          const data = facultyDoc.data();
+          const session = sessions[uid] || null;
+
+          const name = data.name || "Unknown Faculty";
+          const email = data.email || "No Email Bound";
+          
+          // Compute status variables dynamically
+          let activePortal = session ? `<span class="portal-tag">${session.activePortal}</span>` : `<span style="color:#475569">Inactive</span>`;
+          let statusBadge = session && session.status === "online" ? 
+            `<span class="status-badge status-online"><i class="fas fa-circle fa-xs"></i> Active Now</span>` : 
+            `<span class="status-badge status-offline">Offline</span>`;
+          
+          let lastPulse = session ? new Date(session.lastActive).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : "N/A";
+
+          const rowHtml = `
+            <tr>
+              <td style="font-weight:700; color:#ffffff;">${name}</td>
+              <td style="font-family:monospace; color:#cbd5e1;">${email}</td>
+              <td>${activePortal}</td>
+              <td>${statusBadge} <span style="margin-left:8px; font-size:0.8rem; color:#64748b;">${lastPulse}</span></td>
+              <td><button class="evict-btn" data-id="${uid}"><i class="fas fa-user-minus"></i> Revoke Account</button></td>
+            </tr>
+          `;
+          tableBody.insertAdjacentHTML('beforeend', rowHtml);
+        });
+
+        // Attach eviction button array actions directly
+        document.querySelectorAll('.evict-btn').forEach(button => {
+          button.addEventListener('click', async (e) => {
+            const facultyUid = e.currentTarget.getAttribute('data-id');
+            if (confirm("🚨 WARNING: Are you absolute sure you want to permanently revoke this user's institutional clearance parameters and drop their security block?")) {
+              try {
+                await deleteDoc(doc(db, "authorized_faculty", facultyUid));
+                await deleteDoc(doc(db, "active_sessions", facultyUid));
+                alert("🎉 Account access successfully revoked and cleared from Whitelist signatures.");
+              } catch (err) {
+                alert("Eviction error encountered: " + err.message);
+              }
+            }
+          });
+        });
+      });
+    }
+
+    // Initialize synchronization operations
+    syncLiveMonitor();
+  </script>
+</body>
+</html>
