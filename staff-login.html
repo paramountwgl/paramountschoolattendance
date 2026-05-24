@@ -56,11 +56,10 @@
       -webkit-backdrop-filter: blur(20px);
       text-align: center;
       box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
     @media (min-width: 768px) {
-      .portal-card { padding: 50px 40px; }
+      .portal-card { padding: 50px 40px; transition: transform 0.3s ease, box-shadow 0.3s ease; }
       .portal-card:hover { transform: translateY(-4px); box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.6); }
     }
 
@@ -87,7 +86,7 @@
     .input-wrapper input:focus { border-color: var(--primary-gold); background: rgba(255, 255, 255, 0.08); }
 
     .premium-action-btn {
-      width: 100%; padding: 15px; background: var(--primary-gold); border: none; border-radius: 12px; color: var(--sapphire-blue); font-size: 0.95rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; margin-top: 5px; box-shadow: 0 4px 14 rgba(229, 184, 66, 0.3); transition: opacity 0.2s ease, transform 0.1s ease;
+      width: 100%; padding: 15px; background: var(--primary-gold); border: none; border-radius: 12px; color: var(--sapphire-blue); font-size: 0.95rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; margin-top: 5px; box-shadow: 0 4px 14px rgba(229, 184, 66, 0.3); transition: opacity 0.2s ease, transform 0.1s ease;
     }
     .premium-action-btn:active { transform: scale(0.98); }
 
@@ -98,10 +97,16 @@
     .luxury-link { margin-top: 20px; font-size: 0.8rem; font-weight: 600; color: #94a3b8; }
     .luxury-link span { color: var(--primary-gold); cursor: pointer; font-weight: 800; text-decoration: underline; }
 
-    .luxury-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(2, 6, 23, 0.85); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center; display: none; z-index: 2000; opacity: 0; transition: opacity 0.3s ease; }
-    .luxury-overlay-card { background: var(--slate-dark); border: 1px solid var(--primary-gold); border-radius: 20px; padding: 35px 20px; max-width: 420px; width: 92%; text-align: center; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); transform: scale(0.95); transition: transform 0.3s ease; }
-    .luxury-overlay.active { opacity: 1; }
-    .luxury-overlay.active .luxury-overlay-card { transform: scale(1); }
+    /* INLINE OPTIMIZED VERIFICATION CHANNEL SECTION STYLE */
+    .inline-verification-section {
+      margin-top: 20px;
+      padding-top: 25px;
+      border-top: 1px dashed var(--glass-stroke);
+      display: none;
+      flex-direction: column;
+      animation: sectionFadeIn 0.4s ease-out forwards;
+    }
+    @keyframes sectionFadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
   </style>
 </head>
 <body>
@@ -121,353 +126,200 @@
     <div class="status-capsule error-card" id="errorBox"></div>
     <div class="status-capsule success-card" id="successBox"></div>
 
-    <button type="button" class="premium-google-btn" id="googleBtn">
-      <svg width="22" height="22" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v3.92h6.61c-.28 1.48-1.12 2.73-2.38 3.58v3h3.84c2.24-2.06 3.67-5.1 3.67-8.43z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.84-3c-1.06.72-2.42 1.16-4.09 1.16-3.15 0-5.82-2.13-6.77-5H1.27v3.1A12 12 0 0012 24z"/><path fill="#FBBC05" d="M5.23 14.25A7.17 7.17 0 014.8 12c0-.79.13-1.57.38-2.31V6.59H1.27A11.95 11.95 0 000 12c0 1.92.45 3.74 1.27 5.41l3.96-3.16z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.43-3.43C17.95 1.19 15.24 0 12 0A12 12 0 001.27 6.59l3.96 3.16c.95-2.87 3.62-5 6.77-5z"/></svg>
-      Continue with Google
-    </button>
+    <div id="primaryAuthInterfaceModule">
+      <button type="button" class="premium-google-btn" id="googleBtn">
+        <svg width="22" height="22" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v3.92h6.61c-.28 1.48-1.12 2.73-2.38 3.58v3h3.84c2.24-2.06 3.67-5.1 3.67-8.43z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.84-3c-1.06.72-2.42 1.16-4.09 1.16-3.15 0-5.82-2.13-6.77-5H1.27v3.1A12 12 0 0012 24z"/><path fill="#FBBC05" d="M5.23 14.25A7.17 7.17 0 014.8 12c0-.79.13-1.57.38-2.31V6.59H1.27A11.95 11.95 0 000 12c0 1.92.45 3.74 1.27 5.41l3.96-3.16z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.43-3.43C17.95 1.19 15.24 0 12 0A12 12 0 001.27 6.59l3.96 3.16c.95-2.87 3.62-5 6.77-5z"/></svg>
+        Continue with Google
+      </button>
 
-    <div class="premium-divider">Or Manage Credentials</div>
+      <div class="premium-divider">Or Manage Credentials</div>
 
-    <form id="authForm">
-      <div id="registerFields" style="display: none;">
-        <div class="form-group">
-          <label>Full Name</label>
-          <div class="input-wrapper"><input type="text" id="fullName" placeholder="Teacher Name" /></div>
+      <form id="authForm">
+        <div id="registerFields" style="display: none;">
+          <div class="form-group">
+            <label>Full Name</label>
+            <div class="input-wrapper"><input type="text" id="fullName" placeholder="Teacher Name" /></div>
+          </div>
         </div>
-      </div>
 
+        <div class="form-group">
+          <label>Institutional Email</label>
+          <div class="input-wrapper"><input type="email" id="email" placeholder="name@gmail.com" required /></div>
+        </div>
+
+        <div class="form-group">
+          <label>Portal Password</label>
+          <div class="input-wrapper"><input type="password" id="password" placeholder="••••••••" required /></div>
+        </div>
+
+        <button type="submit" class="premium-action-btn" id="submitBtn">Verify Access Token</button>
+      </form>
+
+      <p class="luxury-link" style="margin-top:25px;">
+        <span id="forgotBtn">Forgot Password / Recover Account</span>
+      </p>
+
+      <p class="luxury-link" id="toggleViewBox">
+        Not registered on this console? <span id="toggleBtn">Request Enrollment</span>
+      </p>
+    </div>
+
+    <div class="inline-verification-section" id="inlineVerificationChannelContainer">
+      <h3 style="color:var(--primary-gold); font-size:1.15rem; margin-bottom:10px; font-weight:800; letter-spacing:0.5px;">Security Challenge Issued</h3>
+      <p style="font-size:0.8rem; margin-bottom:20px; color:#cbd5e1; line-height:1.5;">An administrative authorization log containing a 6-digit verification key has been routed directly to <strong>admin@paramountschooledu.in</strong>. Enter that sequence below to clear entry access checks.</p>
       <div class="form-group">
-        <label>Institutional Email</label>
-        <div class="input-wrapper"><input type="email" id="email" placeholder="name@gmail.com" required /></div>
-      </div>
-
-      <div class="form-group">
-        <label>Portal Password</label>
-        <div class="input-wrapper"><input type="password" id="password" placeholder="••••••••" required /></div>
-      </div>
-
-      <button type="submit" class="premium-action-btn" id="submitBtn">Verify Access Token</button>
-    </form>
-
-    <p class="luxury-link" style="margin-top:25px;">
-      <span id="forgotBtn">Forgot Password / Recover Account</span>
-    </p>
-
-    <p class="luxury-link" id="toggleViewBox">
-      Not registered on this console? <span id="toggleBtn">Request Enrollment</span>
-    </p>
-  </div>
-
-  <div class="luxury-overlay" id="verificationModal">
-    <div class="luxury-overlay-card">
-      <h3 style="color:var(--primary-gold); font-size:1.35rem; margin-bottom:14px; font-weight:800; letter-spacing:1px;">Security Verification Challenge</h3>
-      <p style="font-size:0.88rem; margin-bottom:28px; color:#cbd5e1; line-height:1.6;">A secure registration document containing a 6-digit dynamic key has been forwarded directly to <strong>admin@paramountschooledu.in</strong>. Enter that code below to finalize validation profiles.</p>
-      <div class="form-group">
-        <label style="text-align: center; letter-spacing:3px;">6-Digit Administration Key</label>
-        <div class="input-wrapper"><input type="text" id="verificationCodeInput" maxlength="6" style="text-align:center; font-size:1.75rem; letter-spacing:8px; font-weight:800; color:var(--primary-gold); background:rgba(0,0,0,0.4);" placeholder="000000"></div>
+        <label style="text-align: center; display:block; letter-spacing:2px;">6-Digit Administration Key</label>
+        <div class="input-wrapper"><input type="text" id="verificationCodeInput" maxlength="6" style="text-align:center; font-size:1.6rem; letter-spacing:6px; font-weight:800; color:var(--primary-gold); background:rgba(0,0,0,0.3);" placeholder="000000"></div>
       </div>
       <button type="button" class="premium-action-btn" id="confirmVerificationBtn">Verify & Authorize Profile</button>
     </div>
+
   </div>
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
 
-  import {
-    getAuth,
-    setPersistence,
-    browserLocalPersistence,
-    signInWithEmailAndPassword,
-    createUserWithEmailAndPassword,
-    signInWithRedirect,
-    getRedirectResult,
-    onAuthStateChanged,
-    sendPasswordResetEmail,
-    GoogleAuthProvider
-  } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+    import { getAuth, setPersistence, browserLocalPersistence, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, onAuthStateChanged, sendPasswordResetEmail, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+    import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
-  import {
-    getFirestore,
-    doc,
-    setDoc,
-    getDoc
-  } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyAzUOh21Ec31kKmf42Tcw-xs4fVZyPh2fM", 
+    const firebaseConfig = {
+      apiKey: "AIzaSyAzUOh21Ec31kKmf42Tcw-xs4fVZyPh2fM", 
       authDomain: "paramount-school-d55bc.firebaseapp.com",
       databaseURL: "https://paramount-school-d55bc-default-rtdb.firebaseio.com",
       projectId: "paramount-school-d55bc",
       storageBucket: "paramount-school-d55bc.firebasestorage.app",
       messagingSenderId: "130979432562",
       appId: "1:130979432562:web:4cd94787b23f9daba51aeb"
-  };
+    };
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const provider = new GoogleAuthProvider();
+    provider.setCustomParameters({ prompt: 'select_account' });
 
-  const provider = new GoogleAuthProvider();
-  provider.setCustomParameters({
-    prompt: 'select_account'
-  });
+    emailjs.init({ publicKey: "b7YyWsmcBvZzSArYg" });
 
-  emailjs.init({
-    publicKey: "b7YyWsmcBvZzSArYg"
-  });
+    let isLoginMode = true;
+    let pendingRegistrationData = null;
 
-  let isLoginMode = true;
-  let pendingRegistrationData = null;
+    const errorBox = document.getElementById('errorBox');
+    const successBox = document.getElementById('successBox');
+    const registerFields = document.getElementById('registerFields');
+    const titleText = document.getElementById('titleText');
+    const subtitleText = document.getElementById('subtitleText');
+    const submitBtn = document.getElementById('submitBtn');
+    const toggleViewBox = document.getElementById('toggleViewBox');
+    const primaryAuthInterfaceModule = document.getElementById('primaryAuthInterfaceModule');
+    const inlineVerificationChannelContainer = document.getElementById('inlineVerificationChannelContainer');
 
-  const errorBox = document.getElementById('errorBox');
-  const successBox = document.getElementById('successBox');
-  const registerFields = document.getElementById('registerFields');
-  const titleText = document.getElementById('titleText');
-  const subtitleText = document.getElementById('subtitleText');
-  const submitBtn = document.getElementById('submitBtn');
-  const toggleViewBox = document.getElementById('toggleViewBox');
-  const verificationModal = document.getElementById('verificationModal');
+    function showMsg(box, text) { box.textContent = text; box.style.display = 'block'; setTimeout(() => box.style.display = 'none', 7000); }
 
-  function showMsg(box, text) {
-    box.textContent = text;
-    box.style.display = 'block';
+    // UNIVERSAL WHITE-LIST ROUTER
+    async function checkUserAccess(user) {
+      if (!user) return;
+      try {
+        const userDoc = await getDoc(doc(db, "authorized_faculty", user.uid));
+        if (userDoc.exists()) {
+          window.location.replace("index.html");
+        } else {
+          if (pendingRegistrationData) return;
+          
+          const randomOTP = Math.floor(100000 + Math.random() * 900000).toString();
+          pendingRegistrationData = { 
+            email: user.email, 
+            uid: user.uid, 
+            fullName: user.displayName || "Google Faculty User", 
+            otp: randomOTP,
+            isGoogle: true
+          };
+          
+          const templateParams = {
+            teacher_name: pendingRegistrationData.fullName,
+            teacher_email: pendingRegistrationData.email,
+            otp_code: randomOTP
+          };
 
-    setTimeout(() => {
-      box.style.display = 'none';
-    }, 7000);
-  }
-
-  // =========================
-  // CHECK USER ACCESS
-  // =========================
-  async function checkUserAccess(user) {
-    if (!user) return;
-
-    try {
-      const userRef = doc(db, "authorized_faculty", user.uid);
-      const userDoc = await getDoc(userRef);
-
-      // EXISTING AUTHORIZED USER
-      if (userDoc.exists()) {
-        window.location.href = "./index.html";
-        return;
-      }
-
-      // NEW USER
-      if (pendingRegistrationData) return;
-
-      const randomOTP =
-        Math.floor(100000 + Math.random() * 900000).toString();
-
-      pendingRegistrationData = {
-        email: user.email,
-        uid: user.uid,
-        fullName: user.displayName || "Google Faculty User",
-        otp: randomOTP,
-        isGoogle: true
-      };
-
-      const templateParams = {
-        teacher_name: pendingRegistrationData.fullName,
-        teacher_email: pendingRegistrationData.email,
-        otp_code: randomOTP
-      };
-
-      emailjs.send(
-        'service_7gt2g74',
-        'template_3p55cem',
-        templateParams
-      )
-      .then(() => {
-        openModal();
-      })
-      .catch((err) => {
-        showMsg(
-          errorBox,
-          `❌ Email service error: ${err.message}`
-        );
-      });
-
-    } catch (error) {
-      showMsg(
-        errorBox,
-        "❌ Database verification error."
-      );
-    }
-  }
-
-  // =========================
-  // FIREBASE PERSISTENCE
-  // =========================
-  async function initializePersistence() {
-    try {
-      await setPersistence(auth, browserLocalPersistence);
-
-      if (auth.currentUser) {
-        await checkUserAccess(auth.currentUser);
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  }
-
-  initializePersistence();
-
-  // =========================
-  // AUTH STATE LISTENER
-  // =========================
-  onAuthStateChanged(auth, async (user) => {
-    if (user) {
-      await checkUserAccess(user);
-    }
-  });
-
-  // =========================
-  // HANDLE MOBILE REDIRECT RESULT
-  // =========================
-  getRedirectResult(auth)
-    .then(async (result) => {
-      if (result && result.user) {
-        await checkUserAccess(result.user);
-      }
-    })
-    .catch((err) => {
-      showMsg(
-        errorBox,
-        `❌ Redirect auth error: ${err.message}`
-      );
-    });
-
-  // =========================
-  // TOGGLE LOGIN / REGISTER
-  // =========================
-  function handleFormToggle() {
-    isLoginMode = !isLoginMode;
-
-    errorBox.style.display = 'none';
-    successBox.style.display = 'none';
-
-    document.getElementById('authForm').reset();
-
-    if (isLoginMode) {
-
-      titleText.textContent = "Faculty Hub Access";
-
-      subtitleText.textContent =
-        "Sign in with your verified institutional parameters";
-
-      submitBtn.textContent = "Verify Access Token";
-
-      registerFields.style.display = 'none';
-
-      toggleViewBox.innerHTML =
-        'Not registered on this console? <span id="toggleBtn">Request Enrollment</span>';
-
-    } else {
-
-      titleText.textContent = "Faculty Registration";
-
-      subtitleText.textContent =
-        "Apply credentials below for custom administrative enrollment verification";
-
-      submitBtn.textContent = "Request Access Token";
-
-      registerFields.style.display = 'block';
-
-      toggleViewBox.innerHTML =
-        'Already authorized? <span id="toggleBtn">Login Here</span>';
-    }
-  }
-
-  document.body.addEventListener('click', function(e) {
-    if (e.target && e.target.id === 'toggleBtn') {
-      handleFormToggle();
-    }
-  });
-
-  // =========================
-  // FORGOT PASSWORD
-  // =========================
-  document.getElementById('forgotBtn')
-    .addEventListener('click', () => {
-
-      const emailVal =
-        document.getElementById('email').value.trim();
-
-      if (!emailVal) {
-        showMsg(
-          errorBox,
-          "❌ Enter email first."
-        );
-        return;
-      }
-
-      sendPasswordResetEmail(auth, emailVal)
-        .then(() => {
-          showMsg(
-            successBox,
-            "🎉 Password reset email sent."
-          );
-        })
-        .catch((err) => {
-          showMsg(
-            errorBox,
-            err.message
-          );
-        });
-    });
-
-  // =========================
-  // EMAIL LOGIN / REGISTER
-  // =========================
-  document.getElementById('authForm')
-    .addEventListener('submit', async (e) => {
-
-      e.preventDefault();
-
-      const email =
-        document.getElementById('email').value.trim();
-
-      const password =
-        document.getElementById('password').value;
-
-      const fullName =
-        document.getElementById('fullName').value.trim()
-        || "Faculty Member";
-
-      // LOGIN
-      if (isLoginMode) {
-
-        try {
-          const userCredential =
-            await signInWithEmailAndPassword(
-              auth,
-              email,
-              password
-            );
-
-          await checkUserAccess(userCredential.user);
-
-        } catch(err) {
-
-          showMsg(
-            errorBox,
-            "❌ Invalid login credentials."
-          );
+          emailjs.send('service_7gt2g74', 'template_3p55cem', templateParams)
+            .then(() => { openInlineChannel(); })
+            .catch(err => showMsg(errorBox, `❌ Service tracking delivery fault: ${err.message}`));
         }
+      } catch (error) {
+        showMsg(errorBox, "❌ Whitelist verification failure.");
+      }
+    }
 
+    async function enforceHardwarePersistence() {
+      try {
+        await setPersistence(auth, browserLocalPersistence);
+        if (auth.currentUser) {
+          await checkUserAccess(auth.currentUser);
+        }
+      } catch (e) {
+        console.error("Persistence signature drop catch invoked");
+      }
+    }
+    enforceHardwarePersistence();
+
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        await checkUserAccess(user);
+      }
+    });
+
+    function handleFormToggle() {
+      isLoginMode = !isLoginMode;
+      errorBox.style.display = 'none';
+      successBox.style.display = 'none';
+      document.getElementById('authForm').reset();
+      
+      if(isLoginMode) {
+        titleText.textContent = "Faculty Hub Access";
+        subtitleText.textContent = "Sign in with your verified institutional parameters";
+        submitBtn.textContent = "Verify Access Token";
+        registerFields.style.display = 'none';
+        toggleViewBox.innerHTML = 'Not registered on this console? <span id="toggleBtn">Request Enrollment</span>';
       } else {
+        titleText.textContent = "Faculty Registration";
+        subtitleText.textContent = "Apply credentials below for custom administrative enrollment verification";
+        submitBtn.textContent = "Request Access Token";
+        registerFields.style.display = 'block';
+        toggleViewBox.innerHTML = 'Already authorized? <span id="toggleBtn">Login Here</span>';
+      }
+    }
 
-        // REGISTER
-        const randomOTP =
-          Math.floor(100000 + Math.random() * 900000)
-          .toString();
+    document.body.addEventListener('click', function(e) {
+      if (e.target && e.target.id === 'toggleBtn') { handleFormToggle(); }
+    });
 
-        pendingRegistrationData = {
-          email,
-          password,
-          fullName,
-          otp: randomOTP
-        };
+    document.getElementById('forgotBtn').addEventListener('click', () => {
+      const emailVal = document.getElementById('email').value.trim();
+      if(!emailVal) {
+        showMsg(errorBox, "❌ Please enter your email address into the standard field first to trigger system recovery keys.");
+        return;
+      }
+      sendPasswordResetEmail(auth, emailVal)
+        .then(() => showMsg(successBox, "🎉 Secure automated password reset link sent to your inbox."))
+        .catch(err => showMsg(errorBox, `❌ Recovery System Fault: ${err.message.replace("Firebase: ", "")}`));
+    });
+
+    document.getElementById('authForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const fullName = document.getElementById('fullName').value.trim() || "Faculty Member";
+
+      if (isLoginMode) {
+        try {
+          const userCredential = await signInWithEmailAndPassword(auth, email, password);
+          await checkUserAccess(userCredential.user);
+        } catch(err) {
+          showMsg(errorBox, "❌ Authentication validation failure. Re-check login parameters.");
+        }
+      } else {
+        if (pendingRegistrationData) return;
+        
+        const randomOTP = Math.floor(100000 + Math.random() * 900000).toString();
+        pendingRegistrationData = { email, password, fullName, otp: randomOTP };
 
         const templateParams = {
           teacher_name: fullName,
@@ -475,162 +327,67 @@
           otp_code: randomOTP
         };
 
-        emailjs.send(
-          'service_7gt2g74',
-          'template_3p55cem',
-          templateParams
-        )
-        .then(async () => {
-
-          const sanitizedDocId =
-            email.replace(/[^a-zA-Z0-9]/g, "_");
-
-          await setDoc(
-            doc(
-              db,
-              "admin_verifications",
-              sanitizedDocId
-            ),
-            {
+        emailjs.send('service_7gt2g74', 'template_3p55cem', templateParams)
+          .then(async () => {
+            const sanitizedDocId = email.replace(/[^a-zA-Z0-9]/g, "_");
+            await setDoc(doc(db, "admin_verifications", sanitizedDocId), {
               requestedEmail: email,
               requestedName: fullName,
               timestamp: new Date().toISOString()
-            }
-          );
-
-          openModal();
-
-        })
-        .catch((err) => {
-
-          showMsg(
-            errorBox,
-            `❌ Email service error: ${err.message}`
-          );
-        });
+            });
+            openInlineChannel();
+          })
+          .catch((err) => {
+            showMsg(errorBox, `❌ Email delivery service error encountered: ${err.text || err.message}`);
+            pendingRegistrationData = null;
+          });
       }
     });
 
-  // =========================
-  // OTP VERIFY
-  // =========================
-  document.getElementById('confirmVerificationBtn')
-    .addEventListener('click', async () => {
-
-      const enteredCode =
-        document.getElementById('verificationCodeInput')
-        .value.trim();
-
-      if (enteredCode !== pendingRegistrationData.otp) {
-        alert("❌ Invalid verification code.");
-        return;
-      }
-
-      try {
-
-        let userCredential;
-
-        // GOOGLE USER
-        if (pendingRegistrationData.isGoogle) {
-
-          userCredential = {
-            user: {
-              uid: pendingRegistrationData.uid,
-              email: pendingRegistrationData.email
-            }
-          };
-
-        } else {
-
-          // EMAIL REGISTER USER
-          userCredential =
-            await createUserWithEmailAndPassword(
-              auth,
-              pendingRegistrationData.email,
-              pendingRegistrationData.password
-            );
-        }
-
-        // SAVE AUTHORIZED USER
-        await setDoc(
-          doc(
-            db,
-            "authorized_faculty",
-            userCredential.user.uid
-          ),
-          {
+    document.getElementById('confirmVerificationBtn').addEventListener('click', async () => {
+      const userEnteredCode = document.getElementById('verificationCodeInput').value.trim();
+      if (userEnteredCode === pendingRegistrationData.otp) {
+        try {
+          let userCredential;
+          if(pendingRegistrationData.isGoogle) {
+             userCredential = { user: { uid: pendingRegistrationData.uid, email: pendingRegistrationData.email }};
+          } else {
+             userCredential = await createUserWithEmailAndPassword(auth, pendingRegistrationData.email, pendingRegistrationData.password);
+          }
+          
+          await setDoc(doc(db, "authorized_faculty", userCredential.user.uid), {
             name: pendingRegistrationData.fullName,
             email: pendingRegistrationData.email,
             role: "Faculty Member",
             enrolledAt: new Date().toISOString()
-          }
-        );
+          });
 
-        closeModal();
-
-        showMsg(
-          successBox,
-          "🎉 Registration complete."
-        );
-
-        setTimeout(() => {
-          window.location.href = "./index.html";
-        }, 1200);
-
-      } catch(err) {
-
-        showMsg(
-          errorBox,
-          `❌ Registration error: ${err.message}`
-        );
-
-        closeModal();
+          inlineVerificationChannelContainer.style.display = 'none';
+          showMsg(successBox, "🎉 Profile Whitelisted! Registration complete. Transferring your terminal context to dashboard views...");
+          setTimeout(() => { window.location.replace("index.html"); }, 1500);
+        } catch(err) {
+          showMsg(errorBox, `❌ Error creating account database entry block: ${err.message}`);
+        }
+      } else {
+        alert("❌ Entered key code sequence is invalid. Confirm input matches your administrator's code exactly.");
       }
     });
 
-  // =========================
-  // GOOGLE LOGIN BUTTON
-  // =========================
-  document.getElementById('googleBtn')
-    .addEventListener('click', async () => {
-
-      try {
-
-        await signInWithRedirect(
-          auth,
-          provider
-        );
-
-      } catch (err) {
-
-        showMsg(
-          errorBox,
-          `❌ Google sign-in error: ${err.message}`
-        );
-      }
+    document.getElementById('googleBtn').addEventListener('click', () => {
+      signInWithPopup(auth, provider)
+        .then(async (result) => {
+          await checkUserAccess(result.user);
+        })
+        .catch(err => {
+          showMsg(errorBox, `❌ Google sign-in failure: ${err.message}`);
+        });
     });
 
-  // =========================
-  // MODAL FUNCTIONS
-  // =========================
-  function openModal() {
-
-    verificationModal.style.display = 'flex';
-
-    setTimeout(() => {
-      verificationModal.classList.add('active');
-    }, 10);
-  }
-
-  function closeModal() {
-
-    verificationModal.classList.remove('active');
-
-    setTimeout(() => {
-      verificationModal.style.display = 'none';
-    }, 400);
-  }
-</script>
-
+    // Toggle inline rendering mechanisms cleanly to guarantee touch execution bounds
+    function openInlineChannel() {
+      primaryAuthInterfaceModule.style.display = 'none';
+      inlineVerificationChannelContainer.style.display = 'flex';
+    }
+  </script>
 </body>
 </html>
